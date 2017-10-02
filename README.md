@@ -16,7 +16,7 @@ Over time, we will be publishing more versions.
 
 All setups with a ``platform`` of 'x86' should work on any Windows version XP SP2 or higher, whether x86 or x64. Please remember, that Python only supports Windows XP with versions up to 3.4.
 
-Setups with a platform of 'x64' do require a Windows x64 version.
+Setups with a platform of 'x64' do require a Windows x64 version (again, versions XP SP2 or up).
 
 If you do not want to download the complete repository (a 35 MB matter after all), e.g. because you are only interested in one specific version, **click** on the zip file for a specific Python version. Apart from some complaint ("... too big to display ..." etc.) Github should offer you a **Download** button, which you can use to download it (should be considerably below 3 MB).
 
@@ -41,7 +41,7 @@ Link|Description
 
 Directory ``doc``
 ------------------
-Contains a **CHM based documentation file**. PyMuPDF itself comes with HTML based help. If you wish to use a compiled HTML (CHM) Windows help, you will find it [here](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/doc/PyMuPDF.chm).
+Contains a **CHM based documentation file**. PyMuPDF itself comes with PDF and HTML based help. If you wish to use a compiled HTML (CHM) Windows help, you will find it [here](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/doc/PyMuPDF.chm).
 
 # License
 Material in this repository is licensed under the GNU GENERAL PUBLIC LICENSE Version 3 (or later), a copy of which is contained in file ``COPYING GNU GPL V3``.
