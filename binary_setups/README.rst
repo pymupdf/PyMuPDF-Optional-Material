@@ -7,13 +7,13 @@ Pre-requisites
 Windows (x86 or x64) version XP or higher.
 Each zip file contains the intended Python version encoded in its name, so -
 
-``pymupdf-1.11.1.d-pyXY-platform.zip``
+``pymupdf-1.11.1-pyXY-platform.zip``
 
 means: this is the setup for Python version X.Y on ``platform``, where platform is one of ``x86`` or ``x64``.
 
 Letter d is a technical file identifier.
 
-Python versions prepared include 2.7 and 3.1 through 3.6.
+Python versions prepared include 2.7 and 3.4 through 3.6.
 
 Unfortunately, each binary file ``_fitz.pyd`` "knows" the Python version it must run under. So we need to create a separate one for each Python version we want to cover. If you need support for another Python, just let us know.
 

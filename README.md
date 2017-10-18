@@ -10,7 +10,13 @@ Apart from a compiled HTML documentation file for Windows, this repository offer
 
 Directory ``binary_setups``
 ----------------------------
-Contains zip files for installing PyMuPDF on your Windows system. These files follow the naming convention ``pymupdf-1.11.1.c-pyXY-platform.zip``, where XY stands for the major and minor Python version (i.e. '27' is for any Python 2.7) and ``platform`` is the **bitness** of your Python (**not** the one of your Windows). 'c' is just a technical file identifier.
+Contains zip files for installing PyMuPDF on your Windows system.
+
+In order to reduce space requirements and upload time, we will confine ourselves to a subset of supported Python versions: from 2017-10-18, we will restrict binary's upload to Python versions 2.7 and 3.4 or up. Python 3.4 is the last version that supports Win XP, so we will probably keep this, too.
+
+If you want a version not covered here, please record an issue.
+
+The files follow the naming convention ``pymupdf-1.11.1-pyXY-platform.zip``, where XY stands for the major and minor Python version (i.e. '27' is for any Python 2.7) and ``platform`` is the **bitness** of your Python (**not** the one of your Windows).
 
 Over time, we will be publishing more versions.
 
@@ -24,20 +30,14 @@ Or just **click** (not right-click, etc.) on one of the following links.
 
 Link|Description
 ----|-------------
-[pymupdf-1.11.1.0-py27-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py27-x64.zip)|Python 2.7 64bit
-[pymupdf-1.11.1.0-py27-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py27-x86.zip)|Python 2.7 32bit
-[pymupdf-1.11.1.0-py31-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py31-x64.zip)|Python 3.1 64bit
-[pymupdf-1.11.1.0-py31-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py31-x86.zip)|Python 3.1 32bit
-[pymupdf-1.11.1.0-py32-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py32-x64.zip)|Python 3.2 64bit
-[pymupdf-1.11.1.0-py32-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py32-x86.zip)|Python 3.2 32bit
-[pymupdf-1.11.1.0-py33-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py33-x64.zip)|Python 3.3 64bit
-[pymupdf-1.11.1.0-py33-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py33-x86.zip)|Python 3.3 32bit
-[pymupdf-1.11.1.0-py34-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py34-x64.zip)|Python 3.4 64bit
-[pymupdf-1.11.1.0-py34-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py34-x86.zip)|Python 3.4 32bit
-[pymupdf-1.11.1.0-py35-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py35-x64.zip)|Python 3.5 64bit
-[pymupdf-1.11.1.0-py35-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py35-x86.zip)|Python 3.5 32bit
-[pymupdf-1.11.1.0-py36-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py36-x64.zip)|Python 3.6 64bit
-[pymupdf-1.11.1.0-py36-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1.0-py36-x86.zip)|Python 3.6 32bit
+[pymupdf-1.11.1-py27-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py27-x64.zip)|Python 2.7 64bit
+[pymupdf-1.11.1-py27-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py27-x86.zip)|Python 2.7 32bit
+[pymupdf-1.11.1-py34-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py34-x64.zip)|Python 3.4 64bit
+[pymupdf-1.11.1-py34-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py34-x86.zip)|Python 3.4 32bit
+[pymupdf-1.11.1-py35-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py35-x64.zip)|Python 3.5 64bit
+[pymupdf-1.11.1-py35-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py35-x86.zip)|Python 3.5 32bit
+[pymupdf-1.11.1-py36-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py36-x64.zip)|Python 3.6 64bit
+[pymupdf-1.11.1-py36-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/binary_setups/pymupdf-1.11.1-py36-x86.zip)|Python 3.6 32bit
 
 Directory ``doc``
 ------------------
