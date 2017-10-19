@@ -24,7 +24,7 @@ All setups with a ``platform`` of 'x86' should work on any Windows version XP SP
 
 Setups with a platform of 'x64' do require a Windows x64 version (again, versions XP SP2 or up).
 
-If you do not want to download the complete repository (a 35 MB matter after all), e.g. because you are only interested in one specific version, **click** on the zip file for a specific Python version. Apart from some complaint ("... too big to display ..." etc.) Github should offer you a **Download** button, which you can use to download it (should be considerably below 3 MB).
+If you do not want to download the complete repository (a 20 MB matter after all), e.g. because you are only interested in one specific version, **click** on the zip file for a specific Python version. Apart from some complaint ("... too big to display ..." etc.) Github should offer you a **Download** button, which you can use to download it (should be considerably below 3 MB).
 
 Or just **click** (not right-click, etc.) on one of the following links.
 
