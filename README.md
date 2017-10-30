@@ -4,29 +4,20 @@
 
 This repository contains **Windows-specific** material for [PyMuPDF](https://github.com/rk700/PyMuPDF), the Python bindings for accessing PDF files with MuPDF.
 
-Its purpose is to slim down the PyMuPDF repository to only contain material vital to create PyMuPDF in your Python installation under Windows.
-
-Apart from a compiled HTML documentation file for Windows, this repository offers ways to install PyMuPDF on Windows without having to compile or to download anything else.
+Apart from a CHM documentation file, this repository contains binary installation files.
 
 Directory ``binary_setups``
 ----------------------------
 Contains zip files for installing PyMuPDF on your Windows system.
 
-In order to reduce space requirements and upload time, we will confine ourselves to a subset of supported Python versions: from 2017-10-18, we will restrict binary's upload to Python versions 2.7 and 3.4 or up. Python 3.4 is the last version that supports Win XP, so we will probably keep this, too.
 
-If you want a version not covered here, please record an issue.
+Please record an issue, if you want another version.
 
 The files follow the naming convention ``pymupdf-1.11.1-pyXY-platform.zip``, where XY stands for the major and minor Python version (i.e. '27' is for any Python 2.7) and ``platform`` is the **bitness** of your Python (**not** the one of your Windows).
 
-Over time, we will be publishing more versions.
 
-All setups with a ``platform`` of 'x86' should work on any Windows version XP SP2 or higher, whether x86 or x64. Please remember, that Python only supports Windows XP with versions up to 3.4.
+Setups with a platform of 'x64' do require Windows x64.
 
-Setups with a platform of 'x64' do require a Windows x64 version (again, versions XP SP2 or up).
-
-If you do not want to download the complete repository (a 20 MB matter after all), e.g. because you are only interested in one specific version, **click** on the zip file for a specific Python version. Apart from some complaint ("... too big to display ..." etc.) Github should offer you a **Download** button, which you can use to download it (should be considerably below 3 MB).
-
-Or just **click** (not right-click, etc.) on one of the following links.
 
 Link|Description
 ----|-------------
@@ -41,7 +32,6 @@ Link|Description
 
 **New:** Support for standard Python Wheels
 --------------------------------------------
-If you prefer, you now can instead download wheels from the following list, and use `pip install` for installation:
 
 [PyMuPDF-1.11.1-cp27-cp27m-win32.whl](https://github.com/JorjMcKie/PyMuPDF-wheels/blob/master/PyMuPDF-1.11.1-cp27-cp27m-win32.whl)
 
