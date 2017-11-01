@@ -1,4 +1,4 @@
 Covered Version
 --------------------
 
-This documentation covers PyMuPDF features included in build date **2017-10-20** and time **13:53:03**. These values are taken from variable ``fitz.VerionDate``.
+This documentation covers PyMuPDF 1.11.1 features as of **2017-11-01, 02:32:46**.
