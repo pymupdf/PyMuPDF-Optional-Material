@@ -16,7 +16,7 @@ In PyMuPDF, there exist several ways to create a pixmap. Except one, all of them
 6. from an image inside a PDF document
 7. as a copy of another pixmap
 
-.. NOTE:: A number of image formats is supported as input. See section :ref:`ImageFiles`.
+.. NOTE:: A number of image formats is supported as input for points 3. and 4. above. See section :ref:`ImageFiles`.
 
 Have a look at the **example** section to see some pixmap usage "at work".
 
@@ -295,7 +295,6 @@ The following file types are supported as input to construct pixmaps: **BMP, JPE
 
 2. Open such files with ``doc = fitz.open(...)``. Object ``doc`` will then appear as a document containing a single page. Creating a pixmap of this page offers all options available in this context: apply a matrices, choose a colorspace, confine the pixmap to a clip area, etc.
 
-
 Details on Saving Images with ``writeImage()``
 -----------------------------------------------
 
@@ -305,7 +304,7 @@ The following table shows possible combinations of file extensions, output forma
 
 |wimgopt|
 
-.. note:: Not all image file types are available, or at least common on all platforms, e.g. PAM is mostly unknown on Windows. Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB-pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that as a PNG.
+.. note:: Not all image file types are available, or at least common on all platforms, e.g. PAM is mostly unknown on Windows. Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that as a PNG.
 
 Pixmap Example Code Snippets
 -----------------------------
@@ -334,7 +333,7 @@ This shows how pixmaps can be used for purely graphical, non-PDF purposes. The s
          pix0.x = j * pix0.width                  # modify input's x coord
          tar_pix.copyPixmap(pix0, pix0.irect)     # copy input to new loc
          # save all intermediate images to show what is happening
-         fn = "target-%s-%s.png" % (str(i), str(j))
+         fn = "target-%i-%i.png" % (i, j)
          tar_pix.writePNG(fn) 
 
 

@@ -208,7 +208,7 @@ Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :m
 
    .. method:: getPixmap(matrix = fitz.Identity, colorspace = "RGB", clip = None, alpha = True)
 
-     Creates a Pixmap from the page.
+     Creates a Pixmap from the page. This is probably the most often used method to create pixmaps.
 
      :arg matrix: A :ref:`Matrix` object. Default is the :ref:`Identity` matrix.
      :type matrix: :ref:`Matrix`
@@ -219,12 +219,18 @@ Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :m
      :arg clip: An ``Irect`` to restrict rendering of the page to the rectangle's area. If not specified, the complete page will be rendered.
      :type clip: :ref:`IRect`
 
-     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not absolutely need transparency. This will save a lot of memory (25% in case of RGB), and also processing time in most cases.
+     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the pixmap will be allocated:
+
+        * ``True``: the pixmap will be cleared with ``0x00``, including the alpha byte. This will result in **transparent** areas where the page is empty (i.e. no text, no image).
+
+        .. image:: alpha-1.png
+
+        * ``False``: the pixmap will be cleared with ``0xff``. This will result in **white** where the page has nothing to show.
+
+        .. image:: alpha-0.png
 
      :rtype: :ref:`Pixmap`
      :returns: Pixmap of the page.
-
-   .. note:: Using ``alpha`` does not only incur memory, but also processing time penalties: Pixmaps are normally used further on, to .g. either save them as images, or to display them with a GUI manager. In case of `wxPython <https://wiki.wxpython.org/ProjectPhoenix/>`_ we have observed, that for pixmaps of the same page image, it is about two times faster to create a ``wx.Bitmap`` with method ``FromBuffer`` of a non-alpha version, compared with ``FromBufferRGBA`` of an alpha pixmap. In combination, using the alpha-free alternative is at least 20% faster (this is true across all Python, wxPython and bitness versions). So, our recommendation is to do ``alpha = False``, and then ``wx.Bitmap.FromBuffer(pix.w, pix.h, pix.samples)``. Similar considerations apply for other GUI managers like TK and Qt. Processing time difference (alpha vs. non-alpha) within MuPDF itself is below 5%.
 
    .. method:: loadLinks()
 

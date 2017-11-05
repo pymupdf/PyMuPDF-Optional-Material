@@ -113,7 +113,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: getPagePixmap(pno, matrix = fitz.Identity, colorspace = "rgb", clip = None, alpha = True)
 
-      Creates a pixmap from page ``pno`` (zero-based).
+      Creates a pixmap from page ``pno`` (zero-based). Invokes :meth:`Page.getPixmap`.
 
       :arg int pno: Page number, zero-based. Any value ``< len(doc)`` is acceptable.
 
@@ -129,7 +129,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :type clip: :ref:`IRect`
 
-      :arg bool alpha: Indicates whether transparency should be included. Choose ``False`` if not absolutely required, as it saves memory considerably (25% for RGB).
+      :arg bool alpha: Indicates whether a transparent image should be created. This has an important behavior impact. See :meth:`Page.getPixmap`.
 
       :rtype: :ref:`Pixmap`
 
