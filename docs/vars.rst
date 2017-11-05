@@ -21,13 +21,13 @@ Constants
 
 .. py:data:: csGRAY
 
-    Predefined GRAY colorspace  ``fitz.Colorspace(fitz.CS_GRAY)``.
+    Predefined GRAY colorspace ``fitz.Colorspace(fitz.CS_GRAY)``.
 
     :rtype: :ref:`Colorspace`
 
 .. py:data:: csCMYK
 
-    Predefined CMYK colorspace  ``fitz.Colorspace(fitz.CS_CMYK)``.
+    Predefined CMYK colorspace ``fitz.Colorspace(fitz.CS_CMYK)``.
 
     :rtype: :ref:`Colorspace`
 
@@ -69,6 +69,11 @@ Constants
 
 .. Note:: The docstring of ``fitz`` contains information of the above which can be retrieved like so: ``print(fitz.__doc__)``, and should look like: ``PyMuPDF 1.10.0: Python bindings for the MuPDF 1.10 library, built on 2016-11-30 13:09:13``.
 
+.. py:data:: version
+
+    (VersionBind, VersionFitz, timestamp) - combined version information where ``timestamp`` is the generation point in time formatted as "YYYYMMDDhhmmss".
+
+    :rtype: tuple
 
 .. _TextAlign:
 

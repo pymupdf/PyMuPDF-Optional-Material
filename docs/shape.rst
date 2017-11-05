@@ -85,6 +85,8 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       .. image:: squiggly.png
 
+      .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/rk700/PyMuPDF/blob/master/demo/draw-sines.py>`_.
+
    .. method:: drawZigzag(p1, p2, breadth = 2)
 
       Draw a zigzag line from :ref:`Point` objects ``p1`` to ``p2``. An integer number of full zigzag periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
@@ -265,7 +267,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       .. image:: even-odd.png
 
-      .. note:: Method "even-odd" counts the overlaps of areas, and pixels in areas overlapping an odd number of times, are regarded as being inside, otherwise outside. The default method "nonzero winding" counts the number of times a pixel lies in areas orientated clockwise or counter-clockwise, respectively. If the difference of these counters is zero,the pixel is regarded outside, otherwise inside. In the top two shapes, circles are drawn in standard, counter-clockwise manner. The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
+      .. note:: Method **"even-odd"** counts the overlaps of areas. Pixels in areas overlapping an odd number of times, are regarded as being inside, otherwise outside. In contrast, the default method **"nonzero winding"** counts the number of times a pixel lies in areas orientated clockwise or counter-clockwise, respectively. If the difference of these counters is zero,the pixel is regarded outside, otherwise inside. In the top two shapes, circles are drawn in standard, counter-clockwise manner (look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
 
    .. method:: commit(overlay = True)
 
@@ -309,12 +311,6 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       :type: str
 
-   .. attribute:: page
-
-      For reference only: the owning page.
-
-      :type: :ref:`Page`
-
    .. attribute:: lastPoint
 
       For reference only: the current point of the drawing path. It is ``None`` at ``Shape`` creation and after each ``finish()`` and ``commit()``.
@@ -340,13 +336,13 @@ A drawing object is constructed by ``img = page.newShape()``. After this, as man
 
 Notes
 ~~~~~~
-1. Each ``finish()`` combines the preceding "elementary" draws into one logical shape, giving them common colors, line widths, morphing, etc. Likewise, if ``closePath`` is specified, it will connect the end point of the last draw method with the starting point of the first one.
+1. Each ``finish()`` combines the preceding "elementary" draws into one logical shape, giving it common colors, line width, morphing, etc. Likewise, if ``closePath`` is specified, it will connect the end point of the last draw method with the starting point of the first one.
 
 2. For successfully creating compound graphics, it is important that each draw method uses the end point of the previous one as its starting point. In the above pseudo code, ``draw2`` should hence use the returned :ref:`Point` of ``draw1`` as its starting point. Failing to do so, would automatically start a new path and ``finish()`` may not work as expected.
 
 3. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page - thus providing a way to control graphical layers.
 
-4. Text insertions may occur anywhere before the commit. Please remember, that text inserts are appended to ``Shape.totalcont`` directly, whereas draws will be appended by the next finish.
+4. Text insertions may occur anywhere before the commit. Please take into account, that text inserts are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``. 
 
 5. Only ``commit`` will update the page's contents, the other methods are basically string manipulations. With many draw / text operations, this will result in a much better performance, than issuing the corresponding page methods separately (they each do their own commit).
 
