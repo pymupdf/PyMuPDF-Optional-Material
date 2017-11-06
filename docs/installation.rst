@@ -2,9 +2,11 @@ Installation
 =============
 Installation generally encompasses downloading and generating PyMuPDF and MuPDF from sources.
 
-This process consists of three steps described below under **"Option 1: Install from Sources"**.
+This process consists of three steps described below under :ref:`InstallSource`.
 
-**However**, if your operating system is Windows, you can perform a binary setup, detailed out under **"Option 2: Install from Binaries"**. This process is **much faster** and requires the download of one 3 MB ZIP or WHL file only - no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
+**However**, if your operating system is MS Windows, you can perform a binary setup, detailed out under :ref:`InstallBinary`. This process is **much faster** and requires the download of only one 3 MB file (either ``.zip`` or ``.whl``) - no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
+
+.. _InstallSource:
 
 Option 1: Install from Sources
 -------------------------------
@@ -120,19 +122,25 @@ Adjust the setup.py script as necessary. E.g. make sure that
 
 Now perform a ``python setup.py install``.
 
+.. _InstallBinary:
+
 Option 2: Install from Binaries
 --------------------------------
-This installation option is available for the lucky MS Windows users only. All versions of Windows (XP SP2 and up) and Python (2.7 and up) are supported with either 32bit or 64bit. 
+This installation option is available for the lucky **MS Windows users only**. All versions of Windows (XP SP2 and up) and Python (2.7 and up) are supported with either 32bit or 64bit at your choice. 
 
 Step 1: Download Binary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You do not need the complete repository `PyMuPDF-optional-material <https://github.com/JorjMcKie/PyMuPDF-optional-material/>`_. **Either** download the ZIP or WHL file corresponding to your configuration - **or** just issue ``pip install PyMuPDF --upgrade``.
+You do not need the complete repository `PyMuPDF-optional-material <https://github.com/JorjMcKie/PyMuPDF-optional-material/>`_. **Either**
+
+* download the ZIP or WHL file you need and read on, **or**
+
+* issue ``pip install PyMuPDF [--upgrade]`` and skip the rest of this chapter.
 
 Step 2: Install PyMuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~
-* If you have downloaded a WHL, install it via ``pip install PyMuPDF-<...>.whl --upgrade``.
+* If you have downloaded a WHL, install it via ``pip install PyMuPDF-<...>.whl [--upgrade]``.
 
-* If you have downloaded a ZIP, unzip it to e.g. your ``Desktop`` and open a command prompt at the unzipped folder's directory which contains ``setup.py``. Enter ``python setup.py install`` (or ``py setup.py install`` if you have the Python launcher, see below).
+* If you have downloaded a ZIP, unzip it to e.g. your ``Desktop`` and open a command prompt at the unzipped folder's directory, which contains ``setup.py``. Enter ``python setup.py install`` (or ``py setup.py install`` if you have the Python launcher).
 
 **You are done within 2 seconds.**
 
