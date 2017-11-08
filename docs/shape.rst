@@ -79,11 +79,11 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
 
-      .. image:: breadth.png
+      .. image:: img_breadth.png
 
       Here is an example of three connected lines, forming a closed, filled triangle. Little arrows indicate the stroking direction.
 
-      .. image:: squiggly.png
+      .. image:: img_squiggly.png
 
       .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/rk700/PyMuPDF/blob/master/demo/draw-sines.py>`_.
 
@@ -132,7 +132,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Example:
 
-      .. image:: drawbezier.png
+      .. image:: img_drawbezier.png
 
    .. method:: drawOval(rect)
 
@@ -160,7 +160,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
    .. method:: drawCurve(p1, p2, p3)
 
-      A special case of ``drawBezier()``: Draw a cubic Bézier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degress, then the resulting curve is a quarter ellipse (or circle, if of same length) circumference.
+      A special case of ``drawBezier()``: Draw a cubic Bézier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degress, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.
 
       :arg p1: starting point.
       :type p1: :ref:`Point`
@@ -176,7 +176,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Example: a filled quarter ellipse segment.
 
-      .. image:: drawcurve.png
+      .. image:: img_drawcurve.png
 
    .. method:: drawSector(center, point, angle, fullSector = True)
 
@@ -197,9 +197,9 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Examples:
 
-      .. image:: drawsector1.png
+      .. image:: img_drawsector1.png
 
-      .. image:: drawsector2.png
+      .. image:: img_drawsector2.png
 
 
    .. method:: drawRect(rect)
@@ -263,11 +263,11 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       :arg sequence morph: morph the compound drawing around some arbitrary pivotal :ref:`Point` ``pivot`` by applying :ref:`Matrix` ``matrix`` to it. Default is no morphing (``None``). The matrix can contain any values in its first 4 components, ``matrix.e == matrix.f == 0`` must be true, however. This means that any combination of scaling, shearing, rotating, flipping, etc. is possible, but translations are not.
 
-      :arg bool even_odd: request the **"even-odd rule"** for filling operations. Default is ``False``, so that the **"nonzero winding number rule"** is used. These rules are alternative methods to determine, whether a pixel is considered inside or outside the area to receive the fill color. Only with fairly complex shapes a different behavior is to be expected with these rules. For an in-depth explanation, see :ref:`AdobeManual`, pp. 232 ff. Here is an example to demonstrate the difference.
+      :arg bool even_odd: request the **"even-odd rule"** for filling operations. Default is ``False``, so that the **"nonzero winding number rule"** is used. These rules are alternative methods to apply the fill color where areas overlap. Only with fairly complex shapes a different behavior is to be expected with these rules. For an in-depth explanation, see :ref:`AdobeManual`, pp. 232 ff. Here is an example to demonstrate the difference.
 
       .. image:: even-odd.png
 
-      .. note:: Method **"even-odd"** counts the overlaps of areas. Pixels in areas overlapping an odd number of times, are regarded as being inside, otherwise outside. In contrast, the default method **"nonzero winding"** counts the number of times a pixel lies in areas orientated clockwise or counter-clockwise, respectively. If the difference of these counters is zero,the pixel is regarded outside, otherwise inside. In the top two shapes, circles are drawn in standard, counter-clockwise manner (look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
+      .. note:: Method **"even-odd"** counts the number of overlaps of areas. Pixels in areas overlapping an odd number of times are regarded **inside**, otherwise **outside**. In contrast, the default method **"nonzero winding"** also looks at the area orientation: it counts ``+1`` if an area is drawn counter-clockwise and ``-1`` else. If the result is zero,the pixel is regarded **outside**, otherwise **inside**. In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
 
    .. method:: commit(overlay = True)
 
