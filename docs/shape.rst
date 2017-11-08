@@ -132,7 +132,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Example:
 
-      .. image:: img_drawbezier.png
+      .. image:: img_drawBezier.png
 
    .. method:: drawOval(rect)
 
@@ -176,7 +176,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Example: a filled quarter ellipse segment.
 
-      .. image:: img_drawcurve.png
+      .. image:: img_drawCurve.png
 
    .. method:: drawSector(center, point, angle, fullSector = True)
 
@@ -197,9 +197,9 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Examples:
 
-      .. image:: img_drawsector1.png
+      .. image:: img_drawSector1.png
 
-      .. image:: img_drawsector2.png
+      .. image:: img_drawSector2.png
 
 
    .. method:: drawRect(rect)
@@ -253,7 +253,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
           **If negative**: no execution. The value returned is the space deficit to store the text. Enlarge rectangle, decrease ``fontsize``, decrease text amount, etc.
 
-      .. image:: rotate.png
+      .. image:: img_rotate.png
 
       For a description of the other parameters see :ref:`CommonParms`.
 
@@ -307,7 +307,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
    .. attribute:: totalcont
 
-      Total contents about to be added to e page's ``/Contents`` object (via ``commit``).
+      Total contents about to be added to the page's ``/Contents`` object (via ``commit``).
 
       :type: str
 
