@@ -76,10 +76,10 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       :arg float breadth: the amplitude of each wave. The condition ``2 * breadth < abs(p2 - p1)`` must be true to fit in at least one wave. See the following picture, which shows two points connected by one full period.
 
-      .. image:: breadth.png
-
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
+
+      .. image:: breadth.png
 
       Here is an example of three connected lines, forming a closed, filled triangle. Little arrows indicate the stroking direction.
 
