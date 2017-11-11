@@ -28,9 +28,9 @@ To access a supported document, it must be opened with the following statement:
 ::
  doc = fitz.open(filename)     # or fitz.Document(filename)
 
-This will create ``doc`` as a :ref:`Document` object. ``filename`` must be a Python string or unicode object that specifies the name of an existing file.
+This creates a :ref:`Document` object ``doc``. ``filename`` must be a Python string specifying the name of an existing file.
 
-It is also possible to open a document from memory data, i.e. without using a file, or create a new, empty PDF. See :ref:`Document` for details.
+It is also possible to open a document from memory data, or to create a new, empty PDF. See :ref:`Document` for details.
 
 A document contains many attributes and functions. Among them are meta information (like "author" or "subject"), number of total pages, outline and encryption information.
 
@@ -65,84 +65,81 @@ creator        creating application
 subject        subject
 ============== ==============================
 
-.. note:: Apart from these standard metadata, PDF documents of PDF version 1.4 or later may also contain so-called *"metadata streams"*. Information in metadata streams is coded in XML. As PyMuPDF deliberately contains no XML components, we do not directly support access to this type of data. It is however possible to extract XML metadata, modify them (e.g. with suitable editors or XML software) and restore results back in the PDF using PyMuPDF.
+.. note:: Apart from these standard metadata, PDF documents of PDF version 1.4 or later may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or mofify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then restore the resulting stream back into the PDF.
 
 Working with Outlines
 =========================
-The easiest way to get all outlines of a document, is creating a table of contents:
-::
- toc = doc.getToC()
+The easiest way to get all outlines (also called "bookmarks") of a document, is creating a *table of contents*:
+
+>>> toc = doc.getToC()
 
 This will return a Python list of lists ``[[lvl, title, page, ...], ...]``.
 
 ``lvl`` is the hierarchy level of the entry (starting from 1), ``title`` is the entry's title, and ``page`` the page number (1-based!). Other parameters describe details of the bookmark target.
 
-
 Working with Pages
 ======================
 Tasks that can be performed with a :ref:`Page` are at the core of MuPDF's functionality.
-Among other things, you can render a page, optionally zooming, rotating, shifting or shearing it.
-You can write it's image to files, extract text from it or search for text strings.
 
-At first, a page object must be created:
-::
- page = doc.loadPage(n)        # represents page n of the document (0-based)
- page = doc[n]                 # short form
+* You can render a page into an image, optionally zooming, rotating, shifting or shearing it.
 
-The integer ``n`` above may be any number less than the total number of pages of the document. All negative values are allowed, e.g. ``doc[-1]`` means the last page, as with Python lists. ``doc[-500]`` is **always** valid for any document: to access the respective actual page, the total number of pages is added to -500 until the result is no longer negative.
+* You can extract a page's text or search for text strings.
+
+First, a page object must be created:
+
+>>> page = doc.loadPage(n)        # represents page n of the document (0-based)
+>>> page = doc[n]                 # short form
+
+The integer ``n`` above may be any number less than the total number of pages of the document. For example, ``doc[-1]`` means the last page, like with Python lists.
 
 Some typical uses of :ref:`Page` objects follow:
 
 Inspecting the Links of a Page
 ------------------------------------
 Here is how to get all links and their types:
-::
- # get all links of the current page
- links = page.getLinks()
 
-``links`` is a Python list containing Python dictionaries as entries. For details see :meth:`Page.getLinks`.
+>>> # get all links of the current page
+>>> links = page.getLinks()
+
+``links`` is a Python list of dictionaries. For details see :meth:`Page.getLinks`.
 
 Rendering a Page
 -----------------------
-This example creates an image out of a page's content (default parameters shown):
-::
- pix = page.getPixmap(matrix = fitz.Identity,
-                      colorspace = "rgb",
-                      alpha = True)
- 
-Now ``pix`` contains an RGB image of the page, ready to be used. The above method offers lots of variations for increasing image precision, colorspace selection, transparency exclusion, rotation, mirroring, shifting, shearing, etc.
+This example creates an image out of a page's content:
+
+>>> pix = page.getPixmap()
+
+Now ``pix`` is a :ref:`Pixmap` object that contains an RGB image of the page, ready to be used. This method offers lots of variations for controlling image resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
 
 Saving the Page Image in a File
 -----------------------------------
 We can simply store the image in a PNG file:
-::
- pix.writePNG("test.png")
+
+>>> pix.writePNG("test.png")
 
 Displaying the Image in Dialog Managers
 -------------------------------------------
-We can also use the image in a dialog. :attr:`Pixmap.samples` represents the area of bytes of all the pixels as a Python bytes object. This area is directly usable by presumably most dialog managers. Here are two examples. Please also have a look at the examples directory of this repository.
+We can also it in GUI dialog managers. :attr:`Pixmap.samples` represents the area of bytes of all the pixels as a Python bytes object. Here are two examples, find more `here <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
 
 **wxPython**:
-::
- bitmap = wx.BitmapFromBufferRGBA(pix.width, # image width
-             pix.height,                     # image height
-             pix.samples)                    # bytes with pixel data
+
+>>> bitmap = wx.BitmapFromBufferRGBA(pix.width, pix.height, pix.samples)
 
 **Tkinter**:
-::
- # the following requires: "from PIL import Image, ImageTk"
- img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
- photo = ImageTk.PhotoImage(img)
+
+>>> # the following requires: "from PIL import Image, ImageTk"
+>>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
+>>> photo = ImageTk.PhotoImage(img)
 
 Now, ``photo`` can be used as an image in TK.
 
 Extracting Text
 ----------------
 We can also extract all text of a page in one chunk of string:
-::
- text = page.getText("text")
 
-For the parameter, the following values can be specified:
+>>> text = page.getText(type)
+
+Use one of the following strings for ``type``:
 
 * ``text``: plain text with line breaks (default). No format and no position info.
 
@@ -156,27 +153,27 @@ To give you an idea about the output of these alternatives, we did text example 
 
 Searching Text
 ---------------
-You can find out, exactly where on a page a certain string appears like this:
+You can find out, exactly where on a page a certain string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
 The variable ``areas`` will contain a list of up to 16 :ref:`Rect` rectangles, each of which surrounds one occurrence of string "mupdf" (case insensitive).
 
-Please also do have a look at chapter :ref:`cooperation` and at demo program ``demo.py``. Among other things they contain details on how the :ref:`TextPage`, :ref:`TextSheet`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
+Please also do have a look at chapter :ref:`cooperation` and at demo program `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`TextSheet`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
 PDF Maintenance
 ==================
 Since version 1.9, PyMuPDF provides several options to modify PDF documents (only).
 
-The :meth:`Document.save()` method automatically stores a document in its current (potentially modified) state on disk.
+:meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
-Be aware that a PDF document can be modified unnoticed by the user in two ways:
+Apart from your changes, there are less obvious ways for a PDF becoming "modified":
 
 * During open, integrity checks are used to determine the health of the PDF structure. Any errors will automatically be corrected to present a repaired document in memory for further processing. If this is the case, the document is regarded as being modified.
 
-* After a document has been decrypted, the document in memory obviously has changed and also counts as being modified.
+* After a document has been decrypted, the document in memory has changed and also counts as being modified.
 
-In these two cases, the save method will store a repaired and / or decrypted version, and saving **must occur to a new file**.
+In these two cases, :meth:`Document.save()` will store a repaired and / or decrypted version, and saving **must occur to a new file**.
 
 The following describe some more intentional ways to manipulate PDF documents. Beyond those mentioned here, you can also modify the table of contents and meta information.
 
@@ -190,61 +187,58 @@ Methods :meth:`Document.copyPage()` and :meth:`Document.movePage()` copy or move
 
 :meth:`Document.insertPage()` inserts a new page, optionally containing some plain text.
 
-Method :meth:`Document.select()` shrinks a document down to selected pages. It accepts a list of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **not occurring** in this list will be deleted. Only pages that do occur will remain - **in the sequence specified and as many times as specified**.
+Method :meth:`Document.select()` shrinks a document down to selected pages. It accepts a list of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **not occurring** in this list will be deleted. Only pages that do occur will remain - **in the sequence specified and as many times (!) as specified**.
 
-So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **do not** contain a certain text, ... whatever you may think of.
+So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, ... whatever you may think of.
 
 The saved new document will contain all still valid links, annotations and bookmarks.
 
-Pages can moreover be modified by a range of methods (e.g. annotation and link maintenance, text and image insertion).
+Pages can moreover be modified by a range of methods (e.g. page rotation, annotation and link maintenance, text and image insertion).
 
 Joining and Splitting PDF Documents
 ------------------------------------
 
-Method :meth:`Document.insertPDF()` inserts (pages from) another PDF document at a specified place of the current one. Here is a simple example (``doc1`` and ``doc2`` are openend PDF documents):
+Method :meth:`Document.insertPDF()` inserts some or all pages from another PDF document at a specified place of the current one. Here is a simple example (``doc1`` and ``doc2`` being openend PDF documents):
 
 >>> # append complete doc2 to the end of doc1
 >>> doc1.insertPDF(doc2)
 
 Here is how to split ``doc1``. This creates a new document of its first and last 10 pages:
 
->>> doc2 = fitz.open()
+>>> doc2 = fitz.open()                 # new empty PDF
 >>> doc2.insertPDF(doc1, to_page = 9)
 >>> doc2.insertPDF(doc1, from_page = len(doc1) - 10)
 >>> doc2.save(...)
 
-More can be found in the :ref:`Document` chapter. Also have a look at ``PDFjoiner.py`` in
-the repository's *example* directory.
+More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the repository's *example* directory.
 
 Saving
 -------
 
-As mentioned above, ``save()`` will automatically **always** save the document in its current state, decrypted and / or repaired, and including all of your changes. The method's parameters offer you additional ways to (de-) compress or clean content and much more.
+As mentioned above, , :meth:`Document.save` will **always** save the document in its current state. The method's parameters offer you additional ways to (de-) compress or clean content and much more.
 
-Since MuPDF 1.9, you can also write changes back to the original file by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** - it will not be rewritten as a whole.
+Since MuPDF 1.9, you can write changes back to the original file by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without rewriting it.
 
 :meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table (corresponding ``mutool clean`` option is indicated as "mco").
 
 =================== ========= ==================================================
 **Option**          **mco**   **Effect**
 =================== ========= ==================================================
-garbage = 1         -g        garbage collect unused objects
-garbage = 2         -gg       in addition to 1, compact xref tables
-garbage = 3         -ggg      in addition to 2, merge duplicate objects
-garbage = 4         -gggg     in addition to 3, check for duplicate streams
-clean = 1           -s        clean content streams
-deflate = 1         -z        deflate uncompressed streams
-ascii = 1           -a        convert data to ASCII format
-linear = 1          -l        create a linearized version (do not use yet)
-expand = 1          -i        decompress images
-expand = 2          -f        decompress fonts
-expand = 255        -d        decompress all
+garbage = 1         g         garbage collect unused objects
+garbage = 2         gg        in addition to 1, compact xref tables
+garbage = 3         ggg       in addition to 2, merge duplicate objects
+garbage = 4         gggg      in addition to 3, skip duplicate streams
+clean = 1           s         clean content streams
+deflate = 1         z         deflate uncompressed streams
+ascii = 1           a         convert data to ASCII format
+linear = 1          l         create a linearized version (do not use yet)
+expand = 1          i         decompress images
+expand = 2          f         decompress fonts
+expand = 255        d         decompress all
 incremental = 1     n/a       append changes to the original
 =================== ========= ==================================================
 
-Be ready to experiment a little if you want to fully exploit above options: like with ``mutool clean``, not all combinations may always work: there are just too many ill-constructed PDF files out there ...
-
-We have found, that the combination ``mutool clean -gggg -z`` yields excellent compression results and is very stable. In PyMuPDF this corresponds to ``doc.save(filename, garbage=4, deflate=1)``.
+For example, ``mutool clean -ggggz file.pdf`` yields excellent compression results. It corresponds to ``doc.save(filename, garbage=4, deflate=1)``.
 
 Closing
 =========
@@ -289,6 +283,10 @@ If a clean, non-corrupt or decompressed PDF is needed, one could dynamically inv
 
 
 With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/>`_ for Windows only) a similar result can be achieved, see `here <http://www.overthere.co.uk/2013/07/22/improving-pypdf2-with-pdftk/>`_. However, you must invoke it as a separate process via ``subprocess.Popen``, using stdin and stdout as communication vehicles.
+
+Further Reading
+================
+We recommend to have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipies"** cover over 15 topics written in "How-To" style.
 
 .. rubric:: Footnotes
 

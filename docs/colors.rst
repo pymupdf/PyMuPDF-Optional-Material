@@ -7,7 +7,7 @@ Since the introduction of methods involving colors (like :meth:`Page.drawCircle`
 
 The fabulous GUI package `wxPython <https://wxpython.org/>`_ has a database of over 540 predefined RGB colors, which are given more or less memorizable names. Among them are not only standard names like "green" or "blue", but also "turquoise", "skyblue", and 100 (not only 50 ...) shades of "gray", etc.
 
-We have taken the liberty to take a copy of this database (it actually is a list of tuples) modified into PyMuPDF and make its colors available as PDF compatible float triples: for wxPython's ``("WHITE", 255, 255, 255)`` we return ``(1, 1, 1)``, which can be directly used in ``color`` and ``fill`` parameters. We also accept any mixed case of "wHiTe" to find a color.
+We have taken the liberty to copy this database (a list of tuples) modified into PyMuPDF and make its colors available as PDF compatible float triples: for wxPython's ``("WHITE", 255, 255, 255)`` we return ``(1, 1, 1)``, which can be directly used in ``color`` and ``fill`` parameters. We also accept any mixed case of "wHiTe" to find a color.
 
 Function ``getColor()``
 ------------------------
@@ -37,7 +37,7 @@ As the color database may not be needed very often, one additional import statem
 
 Printing the Color Database
 ----------------------------
-If you want to actually see how the many available colors look like, use scripts ``colordbRGB.py`` or ``colordbHSV.py`` in the examples directory. They create PDFs (already existing in the same directory) with all these colors. Their only difference is sorting order: one takes the RGB values, the other one the Hue-Saturation-Values as sort criteria.
+If you want to actually see how the many available colors look like, use scripts `colordbRGB.py <https://github.com/rk700/PyMuPDF/blob/master/examples/colordbRGB.py>`_ or `colordbHSV.py <https://github.com/rk700/PyMuPDF/blob/master/examples/colordbHSV.py>`_ in the examples directory. They create PDFs (already existing in the same directory) with all these colors. Their only difference is sorting order: one takes the RGB values, the other one the Hue-Saturation-Values as sort criteria.
 This is a screen print of what these files look like.
 
 .. image:: img_colordb.png

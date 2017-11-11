@@ -63,7 +63,7 @@ Please note:
       
       Float value ``degree`` specifies the creation of a rotation matrix.
 
-      Python sequence ``list`` (list, tuple, etc.) must contain exactly 6 values when specified. Other than that **no error checking is done**, and invalid entries will receive a value of ``-1.0``.
+      Python sequence ``list`` (list, tuple, etc.) must contain exactly 6 values when specified. Non-numeric entries will raise an exception.
       
       ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0))`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
 
@@ -158,7 +158,7 @@ Remarks 1
 ---------
 For a matrix ``m``, properties ``a`` to ``f`` can also be accessed by index, e.g. ``m.a == m[0]`` and ``m[0] = 1`` has the same effect as ``m.a = 1``. The ``tuple()`` and ``list()`` functions yield sequence objects of its components.
 
-Language constructs like ``x in m`` will check whether number x is one of the six components.
+Language constructs like ``x in m`` is equal to ``x in tuple(m)``.
 
 Remarks 2
 ---------

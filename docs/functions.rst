@@ -72,13 +72,13 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._delXmlMetadata()
 
-      PDF documents only: Delete an object containing XML-based metadata from the PDF. (Py-) MuPDF does not support XML-based metadata. Use this if you want to make sure that the conventional metadata dictionary will be used exclusively. Many thirdparty PDF programs insert their own metadata in XML format and thus may override what you store in the conventional dictionary. This method deletes any such reference, and the corresponding PDF object will be deleted during next garbage collection of the file.
+      Delete an object containing XML-based metadata from the PDF. (Py-) MuPDF does not support XML-based metadata. Use this if you want to make sure that the conventional metadata dictionary will be used exclusively. Many thirdparty PDF programs insert their own metadata in XML format and thus may override what you store in the conventional dictionary. This method deletes any such reference, and the corresponding PDF object will be deleted during next garbage collection of the file.
 
 -----
 
    .. method:: Document._getXmlMetadataXref()
 
-      PDF documents only: Return he XML-based metadata object id from the PDF if present - also refer to :meth:`Document._delXmlMetadata`. You can use it to retrieve the content via :meth:`Document._getXrefStream` and then work with it using some XML software.
+      Return he XML-based metadata object id from the PDF if present - also refer to :meth:`Document._delXmlMetadata`. You can use it to retrieve the content via :meth:`Document._getXrefStream` and then work with it using some XML software.
 -----
 
    .. method:: Document._getPageObjNumber(pno)
@@ -87,7 +87,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getPageXref(pno)
 
-       PDF documents only: Return the XREF and generation number for a given page.
+       Return the XREF and generation number for a given page.
 
       :arg int pno: Page number (zero-based).
 
@@ -98,7 +98,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Page._getXref()
 
-      PDF documents only: Page version for ``_getPageObjNumber()`` only delivering the XREF (not the generation number).
+      Page version for ``_getPageObjNumber()`` only delivering the XREF (not the generation number).
 
 -----
 
@@ -138,7 +138,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Page._getContents()
 
-      PDF documents only: Return a list of XREF numbers of ``/Contents`` objects belongig to the page. The length of this list will always be at least one.
+      Return a list of XREF numbers of ``/Contents`` objects belongig to the page. The length of this list will always be at least one.
 
       :rtype: list
       :returns: a list of XREF integers.
@@ -149,7 +149,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Page._cleanContents()
 
-      PDF documents only: Clean all ``/Contents`` objects associated with this page (including contents of all annotations). "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. If a page has several contents objects, they will be combined into one. Any discrepancies between ``/Contents`` and ``/Resources`` objects are also resolved / corrected. Note that the resulting contents stream will be stored uncompressed (if you do not specify ``deflate`` on save). See :meth:`Page._getContents` for more details.
+      Clean all ``/Contents`` objects associated with this page (including contents of all annotations). "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. If a page has several contents objects, they will be combined into one. Any discrepancies between ``/Contents`` and ``/Resources`` objects are also resolved / corrected. Note that the resulting contents stream will be stored uncompressed (if you do not specify ``deflate`` on save). See :meth:`Page._getContents` for more details.
 
       :rtype: int
       :returns: 0 on success.
@@ -158,7 +158,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Annot._getXref()
 
-      PDF documents only: Return the xref number of an annotation.
+      Return the xref number of an annotation.
 
       :rtype: int
       :returns: XREF number of the annotation.
@@ -167,7 +167,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Annot._cleanContents()
 
-      PDF documents only: Clean the ``/Contents`` streams associated with the annotation. This is the same type of action :meth:`Page._cleanContents` performs - just restricted to this annotation.
+      Clean the ``/Contents`` streams associated with the annotation. This is the same type of action :meth:`Page._cleanContents` performs - just restricted to this annotation.
 
       :rtype: int
       :returns: 0 if successful (exception raised otherwise).
@@ -176,7 +176,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getCharWidths(fontname = None, fontfile = None, xref = 0, limit = 256)
 
-      PDF documents only: Return a list of character (glyph) widths for a font. A font must be specified by exactly one of the parameters ``fontname``, ``fontfile`` or ``xref``.
+      Return a list of character (glyph) widths for a font. A font must be specified by exactly one of the parameters ``fontname``, ``fontfile`` or ``xref``.
 
       :arg str fontname: name of a :ref:`Base-14-Fonts`. Excludes parameters ``fontfile`` and ``xref``.
 
@@ -189,7 +189,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
       :rtype: list
       :returns: a list of ``limit`` floats, each representing the horizontal width in pixels, that a character needs which has a unicode point equal to an index entry. To get the actual width of some character "c", use ``widthlist[ord(c)] * fontsize``. Currently, only horizontal spacing is supported. A zero entry in this list indicates, that the font does not support this unicode point with a glyph. It is up to you to take appropriate action in such cases. Many fonts will have zero entries for indices ``< 32`` (which represents the space character ``0x20``), others only provide glyphs for the ASCII character set.
 
-      A fairly simple function can be used to calculate the pixel width of a string named ``text``, like so:
+      This function calculates the pixel width of a string ``text``:
       ::
           def pixlen(text, widthlist, fontsize):
             try:
@@ -203,7 +203,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getPageRectText(pno, rect)
 
-      PDF documents only: Return raw text contained in a rectangle.
+      Return raw text contained in a rectangle.
 
       :arg int pno: page number.
 
@@ -217,7 +217,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Page._getRectText(rect)
 
-      PDF documents only: Return raw plain text contained in a rectangle.
+      Return raw plain text contained in a rectangle.
 
       :arg rect: rectangle
       :type rect: :ref:`Rect`
@@ -229,11 +229,9 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getObjectString(xref)
 
-      or
-
    .. method:: Document._getXrefString(xref)
 
-      PDF documents only: Return the string ("source code") representing an arbitrary object. For stream objects, only the non-stream part is returned. To get the stream content, use :meth:`_getXrefStream`.
+      Return the string ("source code") representing an arbitrary object. For stream objects, only the non-stream part is returned. To get the stream content, use :meth:`_getXrefStream`.
 
       :arg int xref: XREF number.
 
@@ -244,7 +242,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getNewXref()
 
-      PDF documents only: Increase the XREF by one entry and return that number. This can then be used to insert a new object.
+      Increase the XREF by one entry and return that number. This can then be used to insert a new object.
 
       :rtype: int
       :returns: the number of the new XREF entry.
@@ -253,7 +251,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._updateObject(xref, obj_str, page = None)
 
-      PDF documents only: Associate the object identified by string ``obj_str`` with the XREF number ``xref``, which must already exist. If ``xref`` pointed to an existing object, this will be replaced with the new object. If a page object is specified, links and other annotations of this page will be reloaded after the object has been updated.
+      Associate the object identified by string ``obj_str`` with the XREF number ``xref``, which must already exist. If ``xref`` pointed to an existing object, this will be replaced with the new object. If a page object is specified, links and other annotations of this page will be reloaded after the object has been updated.
 
       :arg int xref: XREF number.
 
@@ -269,7 +267,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getXrefLength()
 
-      PDF documents only: Return length of XREF table.
+      Return length of XREF table.
 
       :rtype: int
       :returns: the number of entries in the XREF table.
@@ -278,7 +276,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getXrefStream(xref)
 
-      PDF documents only: Return decompressed content stream of the object referenced by ``xref``. If the object has / is no stream, an exception is raised.
+      Return decompressed content stream of the object referenced by ``xref``. If the object has / is no stream, an exception is raised.
 
       :arg int xref: XREF number.
       
@@ -289,7 +287,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._updateStream(xref, stream)
 
-      PDF documents only: Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised. The function automatically performs a compress operation ("deflate").
+      Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised. The function automatically performs a compress operation ("deflate").
 
       :arg int xref: XREF number.
       
@@ -308,13 +306,13 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document._getOLRootNumber()
 
-      PDF documents only:  Return XREF number of the /Outlines root object (this is **not** the first outline entry!). If this object does not exist, a new one will be created.
+       Return XREF number of the /Outlines root object (this is **not** the first outline entry!). If this object does not exist, a new one will be created.
 
       :rtype: int
       :returns: XREF number of the **/Outlines** root object.
 
 .. rubric:: Footnotes
 
-.. [#f1] If a page has multiple contents streams, they are treated as being one logical stream when the document is processed by reader software. A single operator cannot be split between stream boundaries, but a single **instruction** may well be! E.g. for invoking the display of an image, a complete instruction may look like ``q a b c d e f cm /imageid Do Q``. In this example, any single of these items (PDF notation: "lexical tokens") is completely contained in one stream, but ``q a b c d e f cm`` may be in one and ``/imageid Do Q`` may be in the next one.
-.. [#f2] Note that ``/Contents`` objects (similar to /Resources) may be **shared** among pages. If you change a contents stream, this will affect all pages referencing the same object. To avoid this,use :meth:`Page._cleanContents` **before** making your changes.
-.. [#f3] Resources objects are inheritable. This means that many pages can share one. Keeping a page's ``/Resources`` object in sync with changes of its ``/Contents`` therefore may require creating an own ``/Resources`` object for the page. This can achieved by either specifying the ``clean`` option when saving, or by invoking :meth:`Page._cleanContents`.
+.. [#f1] If a page has multiple contents streams, they are treated as being one logical stream when the document is processed by reader software. A single operator cannot be split between stream boundaries, but a single **instruction** may well be. E.g. invoking the display of an image looks like this: ``q a b c d e f cm /imageid Do Q``. Any single of these items (PDF notation: "lexical tokens") is always contained in one stream, but ``q a b c d e f cm`` may be in one and ``/imageid Do Q`` in the next one.
+.. [#f2] Note that ``/Contents`` objects (similar to /Resources) may be **shared** among pages. A change to a contents stream may therefore affect other pages, too. To avoid this: (1) use :meth:`Page._cleanContents`, (2) read the ``/Contents`` object (there will now be only one left), (3) make your changes.
+.. [#f3] Resources objects are inheritable. This means that many pages can share one. Keeping a page's ``/Resources`` object in sync with changes of its ``/Contents`` therefore may require creating an own ``/Resources`` object for the page. This can best be achieved by using ``clean`` when saving, or by invoking :meth:`Page._cleanContents`.

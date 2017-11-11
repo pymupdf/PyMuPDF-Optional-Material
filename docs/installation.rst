@@ -134,31 +134,31 @@ You do not need the complete repository `PyMuPDF-optional-material <https://gith
 
 **Either**
 
-* issue ``pip install PyMuPDF [--upgrade]`` and skip the rest of this chapter,
+* issue ``pip install PyMuPDF [--upgrade]`` and **you are done**,
 
 **or**
 
-* download the ZIP or WHL file you need and read on.
+* download the ZIP or WHL file you need and **read on**.
 
 Step 2: Install PyMuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~
-The next steps are of interest if you have special needs. For example: if you do not want to use ``pip``, you can do a ZIP-file-based installation. Or you may want to install a wheel that does not target your standard Python, etc.
+The next steps are of interest if you have special needs. For example: if you do not want to use ``pip``, you can do a ZIP-file-based installation. Or you may want to install a wheel that does not target your standard Python, or is a pre-release build, etc.
 
-* If you have downloaded a WHL, install it via ``pip install PyMuPDF-<...>.whl [--upgrade]`` and skip the rest of this chapter.
+* If you have downloaded a wheel, install it via ``pip install PyMuPDF-<...>.whl [--upgrade]`` and **you are done**.
 
-* If you have downloaded a ZIP, unzip it to e.g. your ``Desktop`` and open a command prompt at the unzipped folder's directory, which contains ``setup.py``. Enter ``python setup.py install`` (or ``py setup.py install`` if you have the Python launcher).
+* If you have downloaded a zip, unzip it to e.g. your ``Desktop`` and open a command prompt at the unzipped folder's directory, which contains ``setup.py``. Enter ``python setup.py install`` (or ``py setup.py install`` if you have the Python launcher).
 
 MD5 Checksums
 ~~~~~~~~~~~~~~
 Binary download setup scripts in ZIP format contain an integrity check based on MD5 check sums.
 
-The directory structure of each zip file ``pymupdf-1.10.?.?-py??-x??.zip`` is as follows:
+The directory structure of each zip file ``pymupdf-<...>.zip`` is as follows:
 
 .. |setup| image:: binsetupdirs.png
 
 |setup|
 
-During setup, the MD5 check sum of the four installation files ``__init__.py``, ``_fitz.pyd``, ``utils.py`` and ``fitz.py`` is being calculated and compared against the pre-calculated check sum contained in file ``md5.txt``. If a mismatch is detected, the error message
+During setup, the MD5 check sum of the four installation files ``__init__.py``, ``_fitz.pyd``, ``utils.py`` and ``fitz.py`` is being calculated and compared against a pre-calculated value in file ``md5.txt``. In case of a mismatch the error message
 
 ``md5 mismatch: probable download error``
 
@@ -182,6 +182,6 @@ When using wheels, configuration conflict detection is done by ``pip``.
 
 Using UPX
 -------------
-Your PyMuPDF installation will end up with four files: ``__init__.py``, ``fitz.py``, ``utils.py`` and the binary file ``_fitz.xxx`` in the ``site-packages`` directory. The extension of the binary will be ``.pyd`` on Windows and ``.so`` on other platforms.
+No matter which option you chose, your PyMuPDF installation will end up with four files: ``__init__.py``, ``fitz.py``, ``utils.py`` and the binary file ``_fitz.xxx`` in the ``site-packages`` directory. The extension of the binary will be ``.pyd`` on Windows and ``.so`` on other platforms.
 
 Depending on your OS, your compiler and your font support choice (see above), this binary can be quite large and range from 5 MB to 20 MB. You can reduce this by applying the compression utility `UPX <https://upx.github.io/>`_ to it, which probably also exists for your operating system. UPX will reduce the size of ``_fitz.xxx`` by more than 50%. You will end up with 2.5 MB to 9 MB without impacting functionality nor execution speed.

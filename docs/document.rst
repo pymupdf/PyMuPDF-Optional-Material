@@ -177,7 +177,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: getPageText(pno, output = "text")
 
-      Extracts the text of a page given its page number ``pno`` (zero-based).
+      Extracts the text of a page given its page number ``pno`` (zero-based). Invokes :meth:`Page.getText`.
 
       :arg int pno: Page number, zero-based. Any value ``< len(doc)`` is acceptable.
 
@@ -189,7 +189,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty lists or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
 
-      :arg sequence list: A list (or tuple) of page numbers (zero-based) to be included. Pages not in the list will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting sub-document will reflect the list exactly as specified.
+      :arg sequence list: A list (or tuple) of page numbers (zero-based) to be included. Pages not in the list will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the list exactly as specified.
 
       :rtype: int
       :returns: Zero upon successful execution. All document information will be updated to reflect the new state of the document, like outlines, number and sequence of pages, etc. Changes become permanent only after saving the document. Incremental save is supported.
@@ -198,7 +198,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Sets or updates the metadata of the document as specified in ``m``, a Python dictionary. As with method ``select()``, these changes become permanent only when you save the document. Incremental save is supported.
 
-      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed, these keys therefore have no effect and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``m = {}`` all metadata information will be cleared to ``none``. If you want to selectively change only some values, modify ``doc.metadata`` directly and use it as the argument for this method.
+      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed, these keys therefore have no effect and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``m = {}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument for this method.
 
       :rtype: int
       :returns: Zero upon successful execution and ``doc.metadata`` will be updated.
@@ -207,7 +207,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Replaces the **complete current outline** tree (table of contents) with a new one. After successful execution, the new outline tree can be accessed as usual via method ``getToC()`` or via property ``outline``. Like with other output-oriented methods, changes become permanent only via ``save()`` (incremental save supported). Internally, this method consists of the following two steps. For a demonstration see example below.
 
-      Please note, that currently the ``is_open`` flag is set to ``False``. Therefore all entries will initially be shown collapsed in PDF readers.
+      Please note, that currently the ``is_open`` flag is set to ``False``. Therefore all entries other than level 1 will initially be shown collapsed in PDF readers.
 
       - Step 1 deletes all existing bookmarks.
 
@@ -215,7 +215,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg sequence toc:
 
-          A Python sequence with **all bookmark entries** that should form the new table of contents. Each entry of this list is again a list with the following format. Output variants of method ``getToC()`` are acceptable as input, too.
+          A Python nested sequence with **all bookmark entries** that should form the new table of contents. Each entry is a list with the following format. Output variants of method ``getToC()`` are also acceptable as input.
 
           * ``[lvl, title, page, dest]``, where
 
@@ -228,13 +228,13 @@ For addional details on **embedded files** refer to Appendix 3.
             - ``dest`` (optional) is a dictionary or a number. If a number, it will be interpreted as the desired height (in points) this entry should point to on ``page`` in the current document. Use a dictionary (like the one given as output by ``getToC(simple = False)``) if you want to store destinations that are either "named", or reside outside this documennt (other files, internet resources, etc.).
 
       :rtype: int
-      :returns: ``outline`` and ``getToC()`` will be updated upon successful execution. The return code will either equal the number of inserted items (``len(toc)``) or the number of deleted items if ``toc = []``.
+      :returns: ``outline`` and ``getToC()`` will be updated upon successful execution. The return code will either equal the number of inserted items (``len(toc)``) or the number of deleted items if ``toc`` is an empty sequence.
 
       .. note:: We currently always set the :ref:`Outline` attribute ``is_open`` to ``False``. This shows all entries below level 1 as collapsed.
 
     .. method:: save(outfile, garbage=0, clean=0, deflate=0, incremental=0, ascii=0, expand=0, linear=0)
 
-      PDF only: Saves the document in its **current state** under the name ``outfile``. A document may have changed for a number of reasons: e.g. after a successful ``authenticate``, a decrypted copy will be saved, and, in addition (even without optional parameters), some basic cleaning may also have occurred, e.g. broken xref tables may have been repaired and earlier incremental changes may have been resolved. If you executed any modifying methods like ``select()``, ``setMetadata()``, ``setToC()``, etc., their results will also be reflected in the saved version.
+      PDF only: Saves the document in its **current state** under the name ``outfile``. A document may have changed for a number of reasons: e.g. after a successful ``authenticate``, a decrypted copy will be saved, and, in addition (even without optional parameters), some basic cleaning may also have occurred, e.g. broken xref tables may have been repaired and earlier incremental changes may have been resolved. If you executed any modifying methods, their results will also be reflected in the saved version.
 
       :arg str outfile: The file name to save to. Must be different from the original value value if ``incremental=False``. When saving incrementally, ``garbage`` and ``linear`` **must be** ``False / 0`` and ``outfile`` **must equal** the original filename (for convenience use ``doc.name``).
 
@@ -294,7 +294,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. note:: If ``from_page > to_page``, pages will be copied in reverse order. If ``0 <= from_page == to_page``, then one page will be copied.
 
-    .. note:: ``docsrc`` bookmarks **will not be copied**. It is easy however, to recover a table of contents for the resulting document. Look at the examples below and at program ``PDFjoiner.py`` in the *examples* directory: it can join PDF documents and at the same time piece together respective parts of the tables of contents.
+    .. note:: ``docsrc`` bookmarks **will not be copied**. It is easy however, to recover a table of contents for the resulting document. Look at the examples below and at program `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the *examples* directory: it can join PDF documents and at the same time piece together respective parts of the tables of contents.
 
     .. method:: insertPage(to = -1, text = None, fontsize = 11, width = 595, height = 842, fontname = "Helvetica", fontfile = None, color = (0, 0, 0))
     
@@ -326,7 +326,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       1. create a PDF containing only one empty page of a given dimension. The size of such a file is well below 500 bytes and hence close to the theoretical PDF minimum.
       2. create a protocol page of which files have been embedded, or separator pages between joined pieces of PDF Documents.
-      3. convert textfiles to PDF like in the demo script ``text2pdf.py``.
+      3. convert textfiles to PDF like in the demo script `text2pdf.py <https://github.com/rk700/PyMuPDF/blob/master/demo/text2pdf.py>`_.
       4. For now, the inserted text should restrict itself to one byte character codes.
       5. An easy way to create pages with a usual paper format, use a statement like ``width, height = fitz.PaperSize("A4-L")``.
       6. To simplify color specification, we provide a :ref:`ColorDatabase`. This allows you to specify ``color = getColor("turquoise")``, without bothering about any more details.
@@ -605,7 +605,7 @@ Clear metadata information. If you do this out of privacy / data protection conc
 
 ``setToC()`` Example
 ----------------------------------
-This shows how to modify or add a table of contents. Also have a look at ``csv2toc.py`` and ``toc2csv.py`` in the examples directory:
+This shows how to modify or add a table of contents. Also have a look at `csv2toc.py <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2toc.py>`_ and `toc2csv.py <https://github.com/rk700/PyMuPDF/blob/master/examples/toc2csv.py>`_ in the examples directory:
 
 >>> import fitz
 >>> doc = fitz.open("test.pdf")
@@ -638,7 +638,7 @@ This shows how to modify or add a table of contents. Also have a look at ``csv2t
         t[2] += pages1                     # by old len(doc1)
 >>> doc1.setToC(toc1 + toc2)               # now result has total TOC
 
-Obviously, similar ways can be found in more general situations. Just make sure that hierarchy levels in a row do not increase by more than one. Inserting dummy bookmarks before and after ``toc2`` segments would heal such cases.
+Obviously, similar ways can be found in more general situations. Just make sure that hierarchy levels in a row do not increase by more than one. Inserting dummy bookmarks before and after ``toc2`` segments would heal such cases. A ready-to-use GUI (wxPython) solution can be found in script `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ of the examples directory.
 
 **(2) More examples:**
 
@@ -675,4 +675,4 @@ Other Examples
 
 .. rubric:: Footnotes
 
-.. [#f1] Content streams describe what (e.g. text or images) appears where and how on a page. PDF uses a specialized language to do this (pp. 985 in :ref:`AdobeManual`), which gets interpreted when a page is loaded.
+.. [#f1] Content streams describe what (e.g. text or images) appears where and how on a page. PDF uses a specialized mini language similar to PostScript to do this (pp. 985 in :ref:`AdobeManual`), which gets interpreted when a page is loaded.

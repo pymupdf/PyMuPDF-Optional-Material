@@ -22,7 +22,7 @@ TextPage
 
    .. method:: extractText()
 
-      Extract the text from a ``TextPage`` object. Returns a string of the page's complete text. No attempt is being made to adhere to a natural reading sequence: the text is returned UTF-8 encoded and in the same sequence as the PDF creator specified it. If this looks awkward for your PDF file, consider using program that re-arranges the text according to a more familiar layout, e.g. ``PDF2TextJS.py`` in the examples directory.
+      Extract the text from a ``TextPage`` object. Returns a string of the page's complete text. No attempt is being made to adhere to a natural reading sequence: the text is returned UTF-8 encoded and in the same sequence as the PDF creator specified it. If this looks awkward for your PDF file, consider using program that re-arranges the text according to a more familiar layout, e.g. `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_ in the examples directory.
 
       :rtype: str
 
@@ -34,7 +34,7 @@ TextPage
 
    .. method:: extractJSON()
 
-      Extract the text from a ``TextPage`` object in JSON format. This version contains significantly more formatting information about how the text is being dislayed on the page. It is almost as complete as the ``extractXML`` version, except that positioning information is detailed down to the span level, not to a single character. See the tutorial chapter for an example. To process the returned JSON text use one of the json modules like ``json``, ``simplejson``, ``ujson``, ``cjson``, etc. See example program ``PDF2TextJS.py`` for how to do that.
+      Extract the text from a ``TextPage`` object in JSON format. This version contains significantly more formatting information about how the text is being dislayed on the page. It is almost as complete as the ``extractXML`` version, except that positioning information is detailed down to the span level, not to a single character. See the tutorial chapter for an example. To process the returned JSON text use one of the json modules like ``json``, ``simplejson``, ``ujson``, ``cjson``, etc. See example program `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_ for how to do that.
 
       :rtype: str
 

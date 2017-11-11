@@ -63,7 +63,7 @@ HTML output reflects the structure of the page's ``TextPage`` - without adding m
 Output of ``getText(output="json")``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-JSON output reflects the structure of a ``TextPage`` and provides position details (``bbox`` - boundary boxes in pixel units) for every block, line and span. This is enough information to present a page's text in any required reading order (e.g. from top-left to bottom-right). The output can obviously be made usable by ``text_dict = json.loads(text)``. Have a look at our example program ``PDF2textJS.py``. Here is how it looks like:
+JSON output reflects the structure of a ``TextPage`` and provides position details (``bbox`` - boundary boxes in pixel units) for every block, line and span. This is enough information to present a page's text in any required reading order (e.g. from top-left to bottom-right). The output can obviously be made usable by ``text_dict = json.loads(text)``. Have a look at our example program `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Here is how it looks like:
 ::
  {
   "len":35,"width":595.2756,"height":841.8898,
@@ -129,7 +129,7 @@ The XML version takes the level of detail even a lot deeper: every single charac
  <char bbox="81.695755 79.300354 83.91576 93.04035" x="81.695755" y="90.050354" c="i"/>
  ...
 
-The method's output can be processed by one of Python's XML modules. We have successfully tested ``lxml``. See the demo program ``fontlister.py``. It creates a list of all fonts of a document including font size and where used on pages.
+The method's output can be processed by one of Python's XML modules. We have successfully tested ``lxml``.
 
 Performance
 ~~~~~~~~~~~~

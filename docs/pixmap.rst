@@ -233,7 +233,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. attribute:: size
 
-      Contains the total length of the pixmap. This will generally equal ``len(pix.samples) + 60`` (32bit systems, the delta is 88 on 64bit machines). The following will evaluate to ``True`: ``len(pixmap) == pixmap.size``.
+      Contains ``len(pixmap)``. This will generally equal ``len(pix.samples) + 60`` (32bit systems, the delta is 88 on 64bit machines).
 
       :type: int
 
@@ -293,7 +293,7 @@ The following file types are supported as input to construct pixmaps: **BMP, JPE
 
 1. Directly create a pixmap with ``Pixmap(filename)`` or ``Pixmap(byterray)``. The pixmap will then have properties as determined by the image.
 
-2. Open such files with ``doc = fitz.open(...)``. Object ``doc`` will then appear as a document containing a single page. Creating a pixmap of this page offers all options available in this context: apply a matrices, choose a colorspace, confine the pixmap to a clip area, etc.
+2. Open such files with ``fitz.open(...)``. The result will then appear as a document containing one single page. Creating a pixmap of this page offers all options available in this context: apply a matrix, choose colorspace and alpha, confine the pixmap to a clip area, etc.
 
 Details on Saving Images with ``writeImage()``
 -----------------------------------------------
@@ -380,11 +380,11 @@ This shows how to interface with ``PIL / Pillow`` (the Python Imaging Library), 
 >>> pix = fitz.Pixmap(...)
 >>> ...
 >>> # create and save a PIL image
->>> img = Image.frombytes("RGB", [pix.width, pix.height], str(pix.samples))
+>>> img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
 >>> img.save(filename, 'jpeg')
 >>> ...
 >>> # opposite direction:
 >>> # create a pixmap from any PIL-supported image file "some_image.xxx"
 >>> img = Image.open("some_image.xxx").convert("RGB")
->>> samples = bytearray(img.tobytes())
+>>> samples = img.tobytes()
 >>> pix = fitz.Pixmap(fitz.csRGB, img.size[0], img.size[1], samples, alpha=False)

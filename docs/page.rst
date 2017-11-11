@@ -4,7 +4,7 @@
 Page
 ================
 
-Class representing a document page. A page object is created by :meth:`Document.loadPage` or, equivalently, via indexing the document like ``doc[n]``) - it has no independent constructor.
+Class representing a document page. A page object is created by :meth:`Document.loadPage` or, equivalently, via indexing the document like ``doc[n]`` - it has no independent constructor.
 
 There is a parent-child relationship between a document and its pages. If the document is closed or deleted, all page objects (and their respective children, too) in existence will become unusable. If a page property or method is being used, an exception is raised saying that the page object is "orphaned".
 
@@ -12,11 +12,9 @@ Several page methods have a :ref:`Document` counterpart for convenience. At the 
 
 Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages only. They provide "stand-alone" shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter.
 
-In contrast to :ref:`Shape`, the results of page methods are not interconnected: they do not share properties like colors, line width / dashing, morphing, etc.
-
-Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
-
-Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
+* In contrast to :ref:`Shape`, the results of page methods are not interconnected: they do not share properties like colors, line width / dashing, morphing, etc.
+* Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
+* Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
 
 ========================== =========================================
 **Method / Attribute**     **Short Description**
@@ -191,7 +189,7 @@ Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :m
 
       Retrieves the text of a page. Depending on the output parameter, the results of the :ref:`TextPage` extract methods are returned.
 
-      If ``'text'`` is specified, plain text is returned in the order as specified during PDF creation (which is not necessarily the normal reading order). As this may not always look as expected, consider using the example program ``PDF2TextJS.py``. It is based on ``output = 'json'`` (``= TextPage.extractJSON()``) and re-arranges text according to the Western reading layout convention "from top-left to bottom-right".
+      If ``'text'`` is specified, plain text is returned in the order as specified during PDF creation (which is not necessarily the normal reading order). As this may not always look as expected, consider using the example program `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_. It is based on ``output = 'json'`` (``= TextPage.extractJSON()``) and re-arranges text according to the Western reading layout convention "from top-left to bottom-right".
 
       :arg str output: A string indicating the requested text format, one of ``text`` (default), ``html``, ``json``, or ``xml``.
 
@@ -210,16 +208,18 @@ Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :m
 
      Creates a Pixmap from the page. This is probably the most often used method to create pixmaps.
 
-     :arg matrix: A :ref:`Matrix` object. Default is the :ref:`Identity` matrix.
+     :arg matrix: A :ref:`Matrix` object. Default is :ref:`Identity`.
      :type matrix: :ref:`Matrix`
 
      :arg colorspace: Defines the required colorspace, one of ``GRAY``, ``RGB`` (default) or ``CMYK`` (case insensitive). Alternatively specify a :ref:`Colorspace`, conveniently one of the predefined ones (:data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`).
      :type colorspace: string, :ref:`Colorspace`
 
-     :arg clip: An ``Irect`` to restrict rendering of the page to the rectangle's area. If not specified, the complete page will be rendered.
+     :arg clip: restrict rendering to the rectangle's area. Default is ``None`` and will render the full page.
      :type clip: :ref:`IRect`
 
-     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the pixmap will be allocated:
+     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases.
+     
+     Also note an important difference in how the pixmap will be allocated:
 
         * ``True``: the pixmap will be cleared with ``0x00``, including the alpha byte. This will result in **transparent** areas where the page is empty (i.e. no text, no image).
 

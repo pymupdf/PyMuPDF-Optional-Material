@@ -210,7 +210,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
       :type rect: :ref:`Rect`
 
       :rtype: :ref:`Point`
-      :returns: top-left corner of the rectangle.
+      :returns: ``rect.top_left`` (top-left corner of the rectangle).
 
    .. method:: insertText(point, text, fontsize = 11, fontname = "Helvetica", fontfile = None, color = (0, 0, 0), rotate = 0, morph = None)
 
@@ -271,9 +271,9 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
    .. method:: commit(overlay = True)
 
-      Update the page's `/Contents` with the accumulated drawing commands. If a ``Shape`` is not committed, the page will not be changed. The method must be preceeded with at least one ``finish()`` method.
+      Update the page's ``/Contents`` with the accumulated drawing commands. If a ``Shape`` is not committed, the page will not be changed. The method must be preceeded with at least one ``finish()`` or text insertion method.
 
-      :arg bool overlay: determine whether to put the drawing in foreground (default) or background. Relevant only, if the page is not empty.
+      :arg bool overlay: determine whether to put the drawing in foreground (default) or background. Relevant only, if the page has a non-empty ``/Contents`` object.
 
    .. attribute:: doc
 
@@ -301,13 +301,13 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
    .. attribute:: contents
 
-      Drawing commands accumulated since last finish.
+      Accumulated command buffer for draw methods since last finish.
 
       :type: str
 
    .. attribute:: totalcont
 
-      Total contents about to be added to the page's ``/Contents`` object (via ``commit``).
+      Total accumulated command buffer for draws and text insertions. This will be used by :meth:`Shape.commit`.
 
       :type: str
 
@@ -319,7 +319,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
 Usage
 ------
-A drawing object is constructed by ``img = page.newShape()``. After this, as many draw and finish methods as required may follow. Each sequence of draws must be finished before the drawing is committed. The overall coding pattern looks like this:
+A drawing object is constructed by ``img = page.newShape()``. After this, as many draw, finish and text insertions methods as required may follow. Each sequence of draws must be finished before the drawing is committed. The overall coding pattern looks like this:
 
 >>> img = page.newShape()
 >>> img.draw1(...)
@@ -331,18 +331,20 @@ A drawing object is constructed by ``img = page.newShape()``. After this, as man
 >>> ...
 >>> img.finish(width=..., color = ..., fill = ..., morph = ...)
 >>> ...
->>> img.commit(overlay = True)
+>>> img.insertText*
+>>> ...
+>>> img.commit()
 >>> ....
 
 Notes
 ~~~~~~
-1. Each ``finish()`` combines the preceding "elementary" draws into one logical shape, giving it common colors, line width, morphing, etc. Likewise, if ``closePath`` is specified, it will connect the end point of the last draw method with the starting point of the first one.
+1. Each ``finish()`` combines the preceding draws into one logical shape, giving it common colors, line width, morphing, etc. If ``closePath`` is specified, it will also connect the end point of the last draw with the starting point of the first one.
 
-2. For successfully creating compound graphics, it is important that each draw method uses the end point of the previous one as its starting point. In the above pseudo code, ``draw2`` should hence use the returned :ref:`Point` of ``draw1`` as its starting point. Failing to do so, would automatically start a new path and ``finish()`` may not work as expected.
+2. To successfully create compound graphics, let each draw method use the end point of the previous one as its starting point. In the above pseudo code, ``draw2`` should hence use the returned :ref:`Point` of ``draw1`` as its starting point. Failing to do so, would automatically start a new path and ``finish()`` may not work as expected (but it won't complain either).
 
-3. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page - thus providing a way to control graphical layers.
+3. Text insertions may occur anywhere before the commit (they neither touch :attr:`Shape.contents` nor :attr:`Shape.lastPoint`). They are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``.
 
-4. Text insertions may occur anywhere before the commit. Please take into account, that text inserts are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``. 
+4. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page - thus providing a way to control graphical layers.
 
 5. Only ``commit`` will update the page's contents, the other methods are basically string manipulations. With many draw / text operations, this will result in a much better performance, than issuing the corresponding page methods separately (they each do their own commit).
 
@@ -363,7 +365,11 @@ Examples
         img.finish(fill = cols[i], closePath = False)
 >>> img.commit()                 # update the page
 
-2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circle. We will empty the PDF command buffer before actually drawing the polygon.
+Here is an example for 5 colors:
+
+.. image:: img_cake.png
+
+2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon.
 
 >>> img  = page.newShape()       # start a new shape
 >>> beta = -360.0 / n            # our angle, drawn clockwise
@@ -377,3 +383,7 @@ Examples
 >>> img.drawPolyline(points)     # draw the polygon
 >>> img.finish(color = (1,0,0), fill = (1,1,0), closePath = False)
 >>> img.commit()
+
+Here is the polygon for n = 7:
+
+.. image:: img_7edges.png

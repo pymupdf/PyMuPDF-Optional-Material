@@ -36,7 +36,7 @@ Binary Operations
 ------------------
 * ``a + b``, ``a - b`` - are the component-wise counterparts of the resp. numerical operations. In all cases, ``b`` may be a number (added to or subtracted from each component). In all cases, ``b`` can be an object with the same length as ``a``, meaning point-like if ``a`` is a :ref:`Point`, etc.
 * ``a * b``, ``a / b`` - second operand ``b`` must be either matrix-like or numeric. As usual, a number means applying it to all components of `a`. For a matrix-like ``b``, ``transform(b)`` (resp. ``transform(~b)``) is executed (for points and rectangles ``a``), or a matrix multiplication for matrices ``a`` takes place.
-* ``a & b`` - only defined for rectangles ``a`` and rect-likes ``b``. The result is the intersection rectangle of the two.
-* ``a | b`` - only defined for rectangles ``a``. ``b`` can be point-like or rect-like. Result is the rectangle that contains ``a`` and ``b``.
-* ``b in a`` - if ``b`` is a number, ``b in tuple(a)`` is returned. If ``b`` is point-like or rect-like, then ``a`` must be a rectangle, and the result of ``contains(b)`` is returned.
-* ``a == b`` - is true if all components and the object types are equal.
+* ``a & b`` - only defined if ``a`` is a rectangle and rect-likes ``b``. The result is the intersection rectangle of the two.
+* ``a | b`` - only defined if ``a`` is a rectangle. ``b`` can be point-like or rect-like. Result is the rectangle that contains both,``a`` and ``b``.
+* ``b in a`` - if ``b`` is a number, ``b in tuple(a)`` is returned. If ``b`` is point-like or rect-like, then ``a`` must be a rectangle, and the result of ``a.contains(b)`` is returned.
+* ``a == b`` - is true if all components and the object types are equal (the objects themselves may be unequal).

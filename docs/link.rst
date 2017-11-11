@@ -3,7 +3,7 @@
 ================
 Link
 ================
-Represents a pointer to somewhere (this document, other documents, the internet). Links exist per document page, and they are forward-chained to each other, starting from an initial link which is accessible by the :meth:`Page.firstLink` property.
+Represents a pointer to somewhere (this document, other documents, the internet). Links exist per document page, and they are forward-chained to each other, starting from an initial link which is accessible by the :attr:`Page.firstLink` property.
 
 There is a parent-child relationship between a link and its page. If the page object becomes unusable (closed document, any document structure change, etc.), then so does every of its existing link objects - an exception is raised saying that the object is "orphaned", whenever a link property or method is accessed.
 
@@ -12,7 +12,7 @@ There is a parent-child relationship between a link and its page. If the page ob
 ========================= ============================================
 :attr:`Link.rect`         clickable area in untransformed coordinates.
 :attr:`Link.uri`          link destination
-:attr:`Link.isExternal`   link destination
+:attr:`Link.isExternal`   external link destination?
 :attr:`Link.next`         points to next link
 :attr:`Link.dest`         points to link destination details
 ========================= ============================================
@@ -29,7 +29,7 @@ There is a parent-child relationship between a link and its page. If the page ob
 
    .. attribute:: isExternal
 
-      A bool specifying whether the link target is outside (``True``) of the current document.
+      A bool specifying whether the link target is outside of the current document.
 
       :type: bool
 

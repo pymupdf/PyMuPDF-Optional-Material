@@ -1,4 +1,4 @@
-**The PyMuPDF Documentation**
+**PyMuPDF Documentation**
 =================================
 
 .. toctree::

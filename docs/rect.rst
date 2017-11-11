@@ -4,7 +4,7 @@
 Rect
 ==========
 
-``Rect`` represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are viewed as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their ostensive meanings - read on.
+``Rect`` represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are viewed as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their intuitive meanings - read on.
 
 The following remarks are also valid for :ref:`IRect` objects:
 
@@ -18,7 +18,7 @@ Hence some useful classification:
 
 * A rectangle is called **empty** if ``x0 = x1`` or ``y0 = y1``, i.e. if its area is zero.
 
-.. note:: As paradox as it may sound: a rectangle can be both, infinite **and** empty ...
+.. note:: It sounds like a paradox: a rectangle can be both, infinite **and** empty ...
 
 ============================= =======================================================
 **Methods / Attributes**      **Short Description**
@@ -327,9 +327,15 @@ Create a copy that is **guarantied to be finite** in two ways:
 >>> s = (+r).normalize()
 >>> # r.normalize() changes r itself!
 
-**Example 6 - adding a Pytohn sequence:**
+**Example 6 - adding a Python sequence:**
 
 Enlarge rectangle by 5 pixels in every direction:
 
 >>> r  = fitz.Rect(...)
 >>> r1 = r + (-5, -5, 5, 5)
+
+**Example 7 - inline operations:**
+
+Replace a rectangle with its transformation by the inverse of a matrix-like object:
+
+>>> r /= (1, 2, 3, 4, 5, 6)
