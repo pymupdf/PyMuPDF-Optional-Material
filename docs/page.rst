@@ -99,12 +99,12 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       :rtype: list
       :returns: A list of dictionaries. The entries are in the order as specified during PDF generation. For a description of the dictionary entries see below. Always use this method if you intend to make changes to the links of a page.
 
-   .. method:: insertText(point, text = text, fontsize = 11, fontname = "Helvetica", fontfile = None, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
+   .. method:: insertText(point, text = text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
 
       PDF only: Insert text.
 
 
-   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
+   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
 
       PDF only: Insert text into the specified rectangle.
 
@@ -217,9 +217,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
      :arg clip: restrict rendering to the rectangle's area. Default is ``None`` and will render the full page.
      :type clip: :ref:`IRect`
 
-     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases.
-     
-     Also note an important difference in how the pixmap will be allocated:
+     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the pixmap will be allocated:
 
         * ``True``: the pixmap will be cleared with ``0x00``, including the alpha byte. This will result in **transparent** areas where the page is empty (i.e. no text, no image).
 
@@ -312,78 +310,6 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       :type: :ref:`Rect`
 
 -----
-
-.. _CommonParms:
-
-Common Parameters
--------------------
-
-
-**fontname** (*str*)
-
-  In general, there are three options:
-
-  1. Use one of the standard :ref:`Base-14-Fonts`. In this case, ``fontfile`` must not be specified and ``"Helvetica"`` is used if this parameter is omitted, too.
-  2. Choose a font already in use by the page. Then specify its name **reference** prefixed with a slash ``/``, see below.
-  3. Specify a ``fontfile`` present on your system. In this case choose an arbitrary unique new name for this parameter (without prefix).
-
-  If inserted text should re-use one of the page's fonts, use its reference name in ``getFontList()`` like so:
-  
-  Suppose the font list has the entry ``[1024, 0, 'Type1', 'CJXQIC+NimbusMonL-Bold', 'R366']``, then specify ``fontname = "/R366", fontfile = None`` to use font ``CJXQIC+NimbusMonL-Bold``.
-
-  .. note:: We currently only support single byte characters and horizontal, left-to-right text orientation with our text methods (the ``rotate`` parameter is not influenced by this). Keep this in mind if you re-use an existing font, or use an external fontfile (next parameter).
-
-----
-
-**fontfile** (*str*)
-
-  File path of a font existing on your computer. If you specify ``fontfile``, make sure you use a ``fontname`` **not occurring** in the above list. This new font will be embedded in the PDF upon ``doc.save()``. Similar to new images, a font will be embedded only once. A table of ``md5`` codes for the binary font contents is maintained and checked against by MuPDF.
-
-----
-
-**fontsize** (*float*)
-
-  Font size of text. This also determines the line height as ``fontsize * 1.2``.
-
-----
-
-**dashes** (*str*)
-
-  Causes lines to be dashed. A continuous line with no dashes is drawn with ``"[]0"`` or ``None``. For (the rather complex) details on how to achieve dashing effects, see :ref:`AdobeManual`, page 217. Simple versions look like ``"[3 4]"``, which means dashes of 3 and gaps of 4 pixels length follow each other. ``"[3 3]"`` and ``"[3]"`` do the same thing.
-
-----
-
-**color / fill** (*list, tuple*)
-
-  Line and fill colors are always specified as RGB triples of floats from 0 to 1. To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names - see section :ref:`ColorDatabase`.
-
-----
-
-**overlay** (*bool*)
-
-  Causes the item to appear in foreground (default) or background.
-
-----
-
-**morph** (*sequence*)
-
-  Causes "morphing" of either a shape, created by the ``draw*()`` methods, or the text inserted by page methods ``insertTextbox()`` / ``insertText()``. If not ``None``, it must be a pair ``(pivot, matrix)``, where ``pivot`` is a :ref:`Point` and ``matrix`` is a :ref:`Matrix`. The matrix can be anything except translations, i.e. ``matrix.e == matrix.f == 0`` must be true. The point is used as a pivotal point for the matrix operation. For example, if ``matrix`` is a rotation or scaling operation, then ``pivot`` is its center. Similarly, if ``matrix`` is a left-right or up-down flip, then the mirroring axis will be the vertical, respectively horizontal line going through ``pivot``, etc.
-
-  .. note:: Several methods contain checks whether the to be inserted items will actually fit into the page (like :meth:`Shape.insertText`, or :meth:`Shape.drawRect`). For the result of a morphing operation there is however no such guaranty: this is entirely the rpogrammer's responsibility.
-
-----
-
-**roundCap** (*bool*)
-
-  Cause lines, dashes and edges to be rounded (default). If false, sharp edges and square line and dashes ends will be generated. Rounded lines / dashes will end in a semi-circle with a diameter equal to line width and make longer by the radius of this semi-circle.
-
-----
-
-**closePath** (*bool*)
-
-  Causes the end point of a drawing to be automatically connected with the starting point (by a straight line).
-
-----
 
 Description of ``getLinks()`` Entries
 ----------------------------------------

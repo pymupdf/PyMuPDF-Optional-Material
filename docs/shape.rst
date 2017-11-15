@@ -212,7 +212,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
       :rtype: :ref:`Point`
       :returns: ``rect.top_left`` (top-left corner of the rectangle).
 
-   .. method:: insertText(point, text, fontsize = 11, fontname = "Helvetica", fontfile = None, color = (0, 0, 0), rotate = 0, morph = None)
+   .. method:: insertText(point, text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), rotate = 0, morph = None)
 
       Insert text lines beginning at a :ref:`Point` ``point``.
 
@@ -229,7 +229,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       For a description of the other parameters see :ref:`CommonParms`.
 
-   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None)
+   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None)
 
       PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, depending on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
 
@@ -387,3 +387,83 @@ Here is an example for 5 colors:
 Here is the polygon for n = 7:
 
 .. image:: img_7edges.png
+
+.. _CommonParms:
+
+Common Parameters
+-------------------
+
+**fontname** (*str*)
+
+  In general, there are three options:
+
+  1. Use one of the standard :ref:`Base-14-Fonts`. In this case, ``fontfile`` **must not** be specified and ``"Helvetica"`` is used if this parameter is omitted, too.
+  2. Choose a font already in use by the page. Then specify its **reference** name prefixed with a slash "/", see example below.
+  3. Specify a font file present on your system. In this case choose an arbitrary, but new name for this parameter (without "/" prefix).
+
+  If inserted text should re-use one of the page's fonts, use its reference name appearing in :meth:`getFontList` like so:
+  
+  Suppose the font list has the entry ``[1024, 0, 'Type1', 'CJXQIC+NimbusMonL-Bold', 'R366']``, then specify ``fontname = "/R366", fontfile = None`` to use font ``CJXQIC+NimbusMonL-Bold``.
+
+----
+
+**fontfile** (*str*)
+
+  File path of a font existing on your computer. If you specify ``fontfile``, make sure you use a ``fontname`` **not occurring** in the above list. This new font will be embedded in the PDF upon ``doc.save()``. Similar to new images, a font file will be embedded only once. A table of MD5 codes for the binary font contents is used to ensure this.
+
+----
+
+**idx** (*int*)
+
+  Font files may contain more than one font. Use this parameter to select the right one. This setting cannot be reverted. Subsequent changes are ignored.
+
+----
+
+**set_simple** (*bool*)
+
+  Fonts installed from files are installed as **Type0** fonts by default. If you want to use 1-byte characters only, set this to true. This setting cannot be reverted. Subsequent changes are ignored.
+
+----
+
+**fontsize** (*float*)
+
+  Font size of text. This also determines the line height as ``fontsize * 1.2``.
+
+----
+
+**dashes** (*str*)
+
+  Causes lines to be dashed. A continuous line with no dashes is drawn with ``"[]0"`` or ``None``. For (the rather complex) details on how to achieve dashing effects, see :ref:`AdobeManual`, page 217. Simple versions look like ``"[3 4]"``, which means dashes of 3 and gaps of 4 pixels length follow each other. ``"[3 3]"`` and ``"[3]"`` do the same thing.
+
+----
+
+**color / fill** (*list, tuple*)
+
+  Line and fill colors are always specified as RGB triples of floats from 0 to 1. To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names - see section :ref:`ColorDatabase`.
+
+----
+
+**overlay** (*bool*)
+
+  Causes the item to appear in foreground (default) or background.
+
+----
+
+**morph** (*sequence*)
+
+  Causes "morphing" of either a shape, created by the ``draw*()`` methods, or the text inserted by page methods ``insertTextbox()`` / ``insertText()``. If not ``None``, it must be a pair ``(pivot, matrix)``, where ``pivot`` is a :ref:`Point` and ``matrix`` is a :ref:`Matrix`. The matrix can be anything except translations, i.e. ``matrix.e == matrix.f == 0`` must be true. The point is used as a pivotal point for the matrix operation. For example, if ``matrix`` is a rotation or scaling operation, then ``pivot`` is its center. Similarly, if ``matrix`` is a left-right or up-down flip, then the mirroring axis will be the vertical, respectively horizontal line going through ``pivot``, etc.
+
+  .. note:: Several methods contain checks whether the to be inserted items will actually fit into the page (like :meth:`Shape.insertText`, or :meth:`Shape.drawRect`). For the result of a morphing operation there is however no such guaranty: this is entirely the rpogrammer's responsibility.
+
+----
+
+**roundCap** (*bool*)
+
+  Cause lines, dashes and edges to be rounded (default). If false, sharp edges and square line and dashes ends will be generated. Rounded lines / dashes will end in a semi-circle with a diameter equal to line width and make longer by the radius of this semi-circle.
+
+----
+
+**closePath** (*bool*)
+
+  Causes the end point of a drawing to be automatically connected with the starting point (by a straight line).
+
