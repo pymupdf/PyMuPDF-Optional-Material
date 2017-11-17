@@ -21,7 +21,6 @@ You are probably interested in only one or two specific versions: **left-click**
 
 Link|Description
 ----|-------------
-                              https://github.com/JorjMcKie/PyMuPDF-Optional-Material/tree/1.11.2/binary_setups
 [pymupdf-1.11.2-py27-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/tree/1.11.2/binary_setups/pymupdf-1.11.2-py27-x64.zip)|Python 2.7 64bit
 [pymupdf-1.11.2-py27-x86.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/tree/1.11.2/binary_setups/pymupdf-1.11.2-py27-x86.zip)|Python 2.7 32bit
 [pymupdf-1.11.2-py34-x64.zip](https://github.com/JorjMcKie/PyMuPDF-optional-material/tree/1.11.2/binary_setups/pymupdf-1.11.2-py34-x64.zip)|Python 3.4 64bit
