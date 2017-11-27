@@ -229,7 +229,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       For a description of the other parameters see :ref:`CommonParms`.
 
-   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None)
+   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, rotate = 0, morph = None)
 
       PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, depending on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
 
@@ -243,15 +243,13 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       :arg int expandtabs: controls handling of tab characters ``\t`` using the ``string.expandtabs()`` method **per each line**.
 
-      :arg sequence charwidths: specify a sequence of character widths (floats) for the specified font. If omitted, it will be created by the function on **each invocation**. For performance, provide this parameter if you insert several text boxes with the same font. Use low-level function :meth:`Document._getCharWidths` to create one. Only single byte character codes are currently supported. Results are unpredictable, if larger codes occur (and the ``charwidths`` sequence is longer than 256).
-
-      :arg int rotate: requests text to be rotated in the rectangle. This value must be a multiple of 90 degrees. Default is 0 (no rotation). Effectively, four different values are processed: 0, 90, 180 and 270 (= -90), each causing the text to start in a different rectangle corner. Bottom-left is 90, bottom-right is 180, and -90 / 270 is top-right. See the example how text is filled in a rectangle.
+      :arg int rotate: requests text to be rotated in the rectangle. This value must be a multiple of 90 degrees. Default is 0 (no rotation). Effectively, four different values are processed: 0, 90, 180 and 270 (= -90), each causing the text to start in a different rectangle corner. Bottom-left is 90, bottom-right is 180, and -90 / 270 is top-right. See the example how text is filled in a rectangle. This argument takes precedence over morphing, which can be specified in addition.
 
       :rtype: float
       :returns:
-          **If positive or zero**: successful execution. The value returned is the unused rectangle space in pixels. This may safely be ignored - or be used to optimize the rectangle, position subsequent items, etc.
+          **If positive or zero**: successful execution. The value returned is the unused rectangle line space in pixels. This may safely be ignored - or be used to optimize the rectangle, position subsequent items, etc.
 
-          **If negative**: no execution. The value returned is the space deficit to store the text. Enlarge rectangle, decrease ``fontsize``, decrease text amount, etc.
+          **If negative**: no execution. The value returned is the space deficit to store text lines. Enlarge rectangle, decrease ``fontsize``, decrease text amount, etc.
 
       .. image:: img_rotate.png
 

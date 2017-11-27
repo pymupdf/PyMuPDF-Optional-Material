@@ -12,21 +12,20 @@ Because MuPDF supports not only PDF, but also XPS, OpenXPS, CBZ, CBR, FB2 and EP
 Importing the Bindings
 ==========================
 The Python bindings to MuPDF are made available by this import statement:
-::
- import fitz
+
+>>> import fitz
 
 You can check your version by printing the docstring:
-::
- >>> print (fitz.__doc__)
- PyMuPDF 1.9.1: Python bindings for the MuPDF 1.9a library,
- built on 2016-07-01 13:06:02
- >>>
+
+>>> print (fitz.__doc__)
+PyMuPDF 1.9.1: Python bindings for the MuPDF 1.9a library,
+built on 2016-07-01 13:06:02
 
 Opening a Document
 ======================
 To access a supported document, it must be opened with the following statement:
-::
- doc = fitz.open(filename)     # or fitz.Document(filename)
+
+>>> doc = fitz.open(filename)     # or fitz.Document(filename)
 
 This creates a :ref:`Document` object ``doc``. ``filename`` must be a Python string specifying the name of an existing file.
 
@@ -40,10 +39,10 @@ Some :ref:`Document` Methods and Attributes
 =========================== ==========================================
 **Method / Attribute**      **Description**
 =========================== ==========================================
-:attr:`Document.pageCount`  number of pages (int).
-:attr:`Document.metadata`   metadata (dictionary).
-:meth:`Document.getToC`     table of contents (list).
-:meth:`Document.loadPage`   create a ``Page`` object.
+:attr:`Document.pageCount`  number of pages (*int*)
+:attr:`Document.metadata`   metadata (*dict*)
+:meth:`Document.getToC`     table of contents (*list*)
+:meth:`Document.loadPage`   read a page (:ref:`Page`)
 =========================== ==========================================
 
 Accessing Meta Data
@@ -90,15 +89,15 @@ First, a page object must be created:
 >>> page = doc.loadPage(n)        # represents page n of the document (0-based)
 >>> page = doc[n]                 # short form
 
-The integer ``n`` above may be any number less than the total number of pages of the document. For example, ``doc[-1]`` means the last page, like with Python lists.
+``n`` may be any integer less than the total number of pages of the document. ``doc[-1]`` is the last page, like with Python lists.
 
-Some typical uses of :ref:`Page` objects follow:
+Some typical uses of :ref:`Page`\s follow:
 
 Inspecting the Links of a Page
 ------------------------------------
 Here is how to get all links and their types:
 
->>> # get all links of the current page
+>>> # get all links on a page
 >>> links = page.getLinks()
 
 ``links`` is a Python list of dictionaries. For details see :meth:`Page.getLinks`.
@@ -109,7 +108,7 @@ This example creates an image out of a page's content:
 
 >>> pix = page.getPixmap()
 
-Now ``pix`` is a :ref:`Pixmap` object that contains an RGB image of the page, ready to be used. This method offers lots of variations for controlling image resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
+Now ``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used. This method offers lots of variations for controlling the image: resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
 
 Saving the Page Image in a File
 -----------------------------------
@@ -119,7 +118,7 @@ We can simply store the image in a PNG file:
 
 Displaying the Image in Dialog Managers
 -------------------------------------------
-We can also it in GUI dialog managers. :attr:`Pixmap.samples` represents the area of bytes of all the pixels as a Python bytes object. Here are two examples, find more `here <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
+We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents the area of bytes of all the pixels as a Python bytes object. Here are two examples, find more `here <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
 
 **wxPython**:
 
@@ -141,15 +140,15 @@ We can also extract all text of a page in one chunk of string:
 
 Use one of the following strings for ``type``:
 
-* ``text``: plain text with line breaks (default). No format and no position info.
+* ``"text"``: plain text with line breaks (default). No formatting, no position info.
 
-* ``html``: line breaks, alignment, grouping in HTML syntax. No format and no position info.
+* ``"html"``: line breaks, alignment, grouping in HTML syntax. No formatting, no position info. Use an HTML module to interpret.
 
-* ``json``: full formatting info in JSON format (except colors and fonts) down to spans (see Appendix 2). Use a ``json`` module to interpret.
+* ``"json"``: full formatting info in JSON format (except colors and fonts) down to spans. Use a JSON module to interpret.
 
-* ``xml``: full (except colors) formatting info in XML format down to each single character (!). Use an XML module to interpret.
+* ``"xml"``: full (except colors) formatting info in XML format down to **each single character (!)**. Use an XML module to interpret.
 
-To give you an idea about the output of these alternatives, we did text example extracts. See the Appendix 2.
+To give you an idea about the output of these alternatives, we did text example extracts. See :ref:`Appendix2`.
 
 Searching Text
 ---------------
@@ -157,7 +156,7 @@ You can find out, exactly where on a page a certain string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
-The variable ``areas`` will contain a list of up to 16 :ref:`Rect` rectangles, each of which surrounds one occurrence of string "mupdf" (case insensitive).
+The variable ``areas`` will contain a list of up to 16 :ref:`Rect`\angles, each of which surrounds one occurrence of string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
 
 Please also do have a look at chapter :ref:`cooperation` and at demo program `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`TextSheet`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
@@ -181,29 +180,29 @@ Modifying, Creating, Re-arranging and Deleting Pages
 -------------------------------------------------------
 There are several ways to manipulate the page tree of a PDF:
 
-Methods :meth:`Document.deletePage()` and :meth:`Document.deletePageRange()` delete a page (range) specified by zero-based number(s).
+Methods :meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete a page (range) specified by zero-based number(s).
 
-Methods :meth:`Document.copyPage()` and :meth:`Document.movePage()` copy or move a page to another location of the document.
+Methods :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location of the document.
 
-:meth:`Document.insertPage()` inserts a new page, optionally containing some plain text.
+:meth:`Document.insertPage` inserts a new page, optionally containing some plain text.
 
-Method :meth:`Document.select()` shrinks a document down to selected pages. It accepts a list of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **not occurring** in this list will be deleted. Only pages that do occur will remain - **in the sequence specified and as many times (!) as specified**.
+Method :meth:`Document.select` shrinks a document down to selected pages. It accepts a sequence of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **not occurring** in this list will be deleted. Only pages that do occur will remain - **in the sequence specified and as many times (!) as specified**.
 
 So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, ... whatever you may think of.
 
 The saved new document will contain all still valid links, annotations and bookmarks.
 
-Pages can moreover be modified by a range of methods (e.g. page rotation, annotation and link maintenance, text and image insertion).
+Pages themselves can moreover be modified by a range of methods (e.g. page rotation, annotation and link maintenance, text and image insertion).
 
 Joining and Splitting PDF Documents
 ------------------------------------
 
-Method :meth:`Document.insertPDF()` inserts some or all pages from another PDF document at a specified place of the current one. Here is a simple example (``doc1`` and ``doc2`` being openend PDF documents):
+Method :meth:`Document.insertPDF` inserts pages from another PDF at a specified place of the current one. Here is a simple example (``doc1`` and ``doc2`` being openend PDFs):
 
 >>> # append complete doc2 to the end of doc1
 >>> doc1.insertPDF(doc2)
 
-Here is how to split ``doc1``. This creates a new document of its first and last 10 pages:
+Here is how to split ``doc1``. This creates a new document of its first and last 10 pages (could also be done using :meth:`Document.select`):
 
 >>> doc2 = fitz.open()                 # new empty PDF
 >>> doc2.insertPDF(doc1, to_page = 9)
@@ -215,7 +214,7 @@ More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner
 Saving
 -------
 
-As mentioned above, , :meth:`Document.save` will **always** save the document in its current state. The method's parameters offer you additional ways to (de-) compress or clean content and much more.
+As mentioned above, :meth:`Document.save` will **always** save the document in its current state.
 
 Since MuPDF 1.9, you can write changes back to the original file by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without rewriting it.
 
@@ -230,8 +229,8 @@ garbage = 3         ggg       in addition to 2, merge duplicate objects
 garbage = 4         gggg      in addition to 3, skip duplicate streams
 clean = 1           s         clean content streams
 deflate = 1         z         deflate uncompressed streams
-ascii = 1           a         convert data to ASCII format
-linear = 1          l         create a linearized version (do not use yet)
+ascii = 1           a         convert binary data to ASCII format
+linear = 1          l         create a linearized version
 expand = 1          i         decompress images
 expand = 2          f         decompress fonts
 expand = 255        d         decompress all
@@ -244,7 +243,7 @@ Closing
 =========
 It is often desirable to "close" a document to relinquish control of the underlying file to the OS, while your program is still running.
 
-This can be achieved by the :meth:`Document.close` method. Apart from closing the underlying file, buffer areas associated with the document will be freed (if the document has been created from memory data, only the buffer release will take place).
+This can be achieved by the :meth:`Document.close` method. Apart from closing the underlying file, buffer areas associated with the document will be freed.
 
 Example: Dynamically Cleaning up Corrupt PDF Documents
 ========================================================
@@ -286,8 +285,8 @@ With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/too
 
 Further Reading
 ================
-We recommend to have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipies"** cover over 15 topics written in "How-To" style.
+Also have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipies"** cover over 15 topics written in "How-To" style.
 
 .. rubric:: Footnotes
 
-.. [#f1] (Py-) MuPDF in addition lets you open and handle several image file types like normal documents. See section :ref:`ImageFiles` in chapter :ref:`Pixmap` for more comments.
+.. [#f1] PyMuPDF lets you also open several image file types just like normal documents. See section :ref:`ImageFiles` in chapter :ref:`Pixmap` for more comments.

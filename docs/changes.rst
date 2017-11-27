@@ -1,6 +1,19 @@
 Change Logs
 ===============
 
+Changes in Version 1.11.2
+--------------------------
+This is an extension of v1.11.1.
+
+* New **Page** method ``insertFont()`` creates a PDF ``/Font`` object and returns its object number.
+
+* New **Document** method ``extractFont()`` extracts the content of an embedded font given its object number.
+
+* Methods ``*FontList(...)`` items no longer contain the PDF generation number. This value never had any significance. Instead, the font file extension is included (e.g. "pfa" for a "PostScript Font for ASCII"), which is more valuable information.
+
+* Fonts other than "simple fonts" are now also supported. When embedding a font file.
+
+
 Changes in Version 1.11.1
 --------------------------------
 This is an extension of v1.11.0.
@@ -9,7 +22,7 @@ This is an extension of v1.11.0.
 
 * All ``Page`` draw methods now use the new ``Shape`` class.
 
-* Text insertion methods ``insertText()`` and ``insertTextBox()`` now support morphing in addition to text rotation. They have become part of the ``Shape`` class and thus allow to be freely combined with graphical operations.
+* Text insertion methods ``insertText()`` and ``insertTextBox()`` now support morphing in addition to text rotation. They have become part of the ``Shape`` class and thus allow text to be freely combined with graphics.
 
 * A new ``Pixmap`` constructor allows creating pixmap copies with an added alpha channel. A new method also allows directly manipulating alpha values.
 

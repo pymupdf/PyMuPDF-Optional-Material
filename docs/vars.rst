@@ -75,6 +75,24 @@ Constants
 
     :rtype: tuple
 
+
+.. _FontExtensions:
+
+Font File Extensions
+-----------------------
+The table show file extensions you should use when extracting fonts from a PDF file. This feature will shortly be added to PyMuPDF. You can also use MuPDF's cli application ``mutool extract -F file.pdf <page(s)>`` for extracting fonts into files.
+
+==== =======================================================
+Ext  Description
+==== =======================================================
+ttf  TrueType font
+pfa  Postscript for ASCII font (various subtypes)
+cff  Type1C font (compressed font equivalent to Type1)
+cid  character identifier font (postscript format)
+otf  OpenType font
+n/a  one of the :ref:`Base-14-Fonts` (cannot be extracted)
+==== =======================================================
+
 .. _TextAlign:
 
 Text Alignment

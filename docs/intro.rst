@@ -46,7 +46,7 @@ The original rendering library for MuPDF was called ``Libart``.
 
 License
 --------
-PyMuPDF is distributed under GNU GPL V3 or later.
+PyMuPDF is distributed under GNU GPL V3 (or later, at your choice).
 
 MuPDF is distributed under a separate license, the **GNU AFFERO GPL V3**.
 
