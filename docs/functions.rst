@@ -22,6 +22,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 :meth:`Document._getXrefString`      PDF only: return object source code
 :meth:`Document._updateObject`       PDF only: insert or update a PDF object
 :meth:`Document._updateStream`       PDF only: replace the stream of an object
+:attr:`Document.FontInfos`           PDF only: information on inserted fonts
 :meth:`getPDFnow`                    return the current timestamp in PDF format
 :meth:`getPDFstr`                    return PDF-compatible string
 :meth:`Page.insertFont`              PDF only: store a new font in the document
@@ -114,16 +115,29 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
 -----
 
-   .. method:: Page.insertFont(fontname = "Helvetica", fontfile = None)
+   .. method:: Page.insertFont(fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False)
 
-      Store a new font for the page. This is a no-operation, if the font already exists.
+      Store a new font for the page and return its XREF. If the page already references this font, it is a no-operation and just the XREF is returned.
 
-      :arg str fontname: The reference name of the font. If the name does not occur in ``Page.getFontList()``, then this must be the name of one of the :ref:`Base-14-Fonts`, or ``fontfile`` must also be given. After using this method, this name prefixed with a slash "/" can be used to refer to the font.
+      :arg str fontname: The reference name of the font. If the name does not occur in :meth:`Page.getFontList`, then this must be either the name of one of the :ref:`Base-14-Fonts`, or ``fontfile`` must also be given. Following this method, font name prefixed with a slash "/" can be used to refer to the font in text insertions. If it appears in the list, the method ignores all other parameters and exits with the xref number.
 
-      :arg str fontfile: font file name. The font will be included in the PDF.
+      :arg str fontfile: font file name. This file will be embedded in the PDF.
+
+      :arg int idx: index of the font in the given file. Has no meaning and is ingored if ``fontfile`` is not specified. Default is zero. An invalid index will cause an exception.
+      
+            .. note::  Certain font files can contain more than one font. This parameter can be used to select the right one. PyMuPDF has no way to tell whether the font file indeed contains a font for any non-zero index.
+
+            .. caution:: Only the first choice of ``idx`` will be honored - subsequent specifications are ignored.
+
+      :arg bool set_simple: When inserting from a font file, a "Type0" font will be installed by default. This option causes the font to be installed as a simple font instead. Only 1-byte characters will then be presented correctly, others will appear as "?" (question mark).
+
+            .. caution:: Only the first choice of ``set_simple`` will be honored. Subsequent specifications are ignored.
 
       :rtype: int
-      :returns: the XREF of the font.
+      :returns: the XREF of the font. PyMuPDF records inserted fonts in two places:
+      
+            1. An inserted font will appear in :meth:`Page.getFontList()`.
+            2. :attr:`Document.FontInfos` records more detailed information about all fonts that have been inserted by this method.
 
 -----
 
@@ -174,22 +188,18 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
 -----
 
-   .. method:: Document._getCharWidths(fontname = None, fontfile = None, xref = 0, limit = 256)
+   .. method:: Document._getCharWidths(xref = 0, limit = 256)
 
-      Return a list of character (glyph) widths for a font. A font must be specified by exactly one of the parameters ``fontname``, ``fontfile`` or ``xref``.
+      Return a list of character glyphs and their widths for a font that is present in the document. A font must be specified by its PDF cross reference number ``xref``.
 
-      :arg str fontname: name of a :ref:`Base-14-Fonts`. Excludes parameters ``fontfile`` and ``xref``.
+      :arg int xref: cross reference number of a font embedded in the PDF. To find a font xref, use e.g. ``doc.getPageFontList(pno)`` of page number ``pno`` and take the first entry of one of the returned list entries.
 
-      :arg str fontfile: path / name of a font file available on your system. Excludes parameters ``fontname`` and ``xref``.
-
-      :arg int xref: cross reference number of a font embedded in the PDF. Excludes parameters ``fontname`` and ``fontfile``. To find a font xref, use e.g. ``doc.getPageFontList(pno)`` of page number ``pno`` and take the first entry of one of the returned list entries.
-
-      :arg int limit: limits the number of returned entries. The default of 256 is sufficient for all fonts that only support characters up to unicode point 255. Specify a number as required.
+      :arg int limit: limits the number of returned entries. The default of 256 is sufficient for all fonts that only support characters up to unicode point 255. This is the case for all PDF ``/Type1`` fonts (also called "simple fonts"), for example the :ref:`Base-14-Fonts`. Specify a number as required.
 
       :rtype: list
-      :returns: a list of ``limit`` floats, each representing the horizontal width in pixels, that a character needs which has a unicode point equal to an index entry. To get the actual width of some character "c", use ``widthlist[ord(c)] * fontsize``. Currently, only horizontal spacing is supported. A zero entry in this list indicates, that the font does not support this unicode point with a glyph. It is up to you to take appropriate action in such cases. Many fonts will have zero entries for indices ``< 32`` (which represents the space character ``0x20``), others only provide glyphs for the ASCII character set.
+      :returns: a list of ``limit`` tuples. Each character ``c`` has an entry  ``(g, w)`` in this list with an index of ``ord(c)``. Entry ``g`` (integer) of the tuple is the glyph id of the character, and float ``w`` is its normalized width. The actual width for some ``fontsize`` can be calculated as ``w * fontsize``. For simple fonts, the ``g`` entry can always be safely ignored. In all other cases ``g`` is the basis for graphically representing ``c`` on some device with this font.
 
-      This function calculates the pixel width of a string ``text``:
+      This function calculates the pixel width of a string called ``text``:
       ::
           def pixlen(text, widthlist, fontsize):
             try:
@@ -310,6 +320,24 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
       :rtype: int
       :returns: XREF number of the **/Outlines** root object.
+
+   .. attribute:: Document.FontInfos
+
+       Contains following detail information for any font inserted via :meth:`Page.insertFont`:
+
+       * xref *(int)* - XREF number of the ``/Type/Font`` object.
+       * info *(dict)* - detail font information with the following keys:
+
+            * name *(str)* - human readable font name
+            * bold *(bool)* - a bold font?
+            * italic *(bool)* - an italic font?
+            * mono *(bool)* - a monospaced font?
+            * serif *(bool)* - font with serifs?
+            * idx *(int)* - index number for multi-font files
+            * type *(str)* - font type (like "TrueType", "Type0", etc.)
+            * ext *(str)* - extension to be used, when font is extracted into a file
+
+      :rtype: list
 
 .. rubric:: Footnotes
 

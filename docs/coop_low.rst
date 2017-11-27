@@ -6,40 +6,49 @@ Working together: DisplayList, TextPage and TextSheet
 ===============================================================
 Here are some instructions on how to use these classes together.
 
-In some situations, performance improvements may be achievable when you fall back to this detail. This is possible when several different things need to be done with the same page - as is demonstrated in the following overview.
+In some situations, performance improvements may be achievable when you fall back to the detail level explained here.
+
+This may be possible when several different things need to be done with the same page.
+
+Create a DisplayList
+---------------------
+A :ref:`DisplayList` represents an interpreted page. Methods for pixmap creation, text extraction and text search are  - behind the curtain - all using the page's display list to perform their tasks. Therefore, some overhead can be saved, if a display list is only created once per page.
+
+An example may be, that a page image must re-displayed multiple times in a GUI because the user is zooming (i.e. change of image resolution and clip area).
+
+>>> dl = page.getDisplayList()              # create the display list
+
+You can also create display lists for many pages "on stack" (in a list), may be during document open, or you store it when a page is visited for the first time.
+
+Note, that for everything what follows, only the display list is needed - the corresponding :ref:`Page` object could have been deleted.
 
 Generate Pixmap
 ------------------
-The following creates a Pixmap from a document's ``page`` (this happens behind the curtain when you use method ``page.getPixmap()``):
-::
- dl = page.getDisplayList()                 # (1) create display list for the page
- pix = dl.getPixmap(matrix = fitz.Identity, # (2) create a pixmap showing defaults
-                    colorspace = fitz.csRGB,
-                    alpha = 0, clip = None)
+The following creates a Pixmap from a :ref:`DisplayList`. Parameters are the same as for :meth:`Page.getPixMap`.
 
-To create another pixmap, just re-execute line (2). This may be desireable when you want to change resolution or colorspace, or restrict the pixmap to certain page areas, etc. Adjust the matrix, colorspace or clip parameters.
+>>> pix = dl.getPixmap()                    # create the page's pixmap
 
-The execution times of statements (1) and (2) are of a similar order of magnitude. The proportion typically ranges from about 1:1 for text-oriented pages, to 1:5 or more for complex ones.
-
-You can exploit this fact by e.g. creating display lists for pages "on stack" (perhaps during document open). When a page needs to be (re-) rendered, just create the pixmap of the corresponding display list.
+The execution time of this statement may be up to 50% smaller than that of :meth:`Page.getPixMap`.
 
 Perform Text Search
 ---------------------
-With the existing objects from above, create a new text page object to search for a text string on the page. The ``page`` object itself is no longer needed (it could have been set to ``None``).
+With the display list from above, we can also search for text.
 
-For this we need to create TextPage and TextSheet objects:
-::
- ts = fitz.TextSheet()                       # new or reuse from other pages
- tp = dl.getTextPage(ts)
- rlist = tp.search("needle")                 # look up "needle" locations
- for r in rlist:                             # work with found locations:
-     pix.invertIRect(r.irect)                # e.g. invert colors in rectangles
+For this we need to create :ref:`TextSheet` and :ref:`TextPage` objects.
+
+>>> ts = fitz.TextSheet()                    # see remark (*)
+>>> tp = dl.getTextPage(ts)                  # display list from above
+>>> rlist = tp.search("needle")              # look up "needle" locations
+>>> for r in rlist:                          # work with found locations:
+        pix.invertIRect(r.irect)             # e.g. invert colors in rectangle
+
+(*) The text sheet could actually have been re-used, it does not need to be new as indicated here. You may create one when you open the document and use it for all text operations.
 
 Extract Text
 ----------------
-Again with the existing objects, we can immediately use one or all of the 4 text extraction methods:
-::
- txt  = tp.extractText()                     # plain text format
- json = tp.extractJSON()                     # json format
- html = tp.extractHTML()                     # HTML format
- xml  = tp.extractXML()                      # XML format
+With the :ref:`TextPage` object from above, we can immediately use one or all of the 4 text extraction methods:
+
+>>> txt  = tp.extractText()                  # plain text format
+>>> json = tp.extractJSON()                  # json format
+>>> html = tp.extractHTML()                  # HTML format
+>>> xml  = tp.extractXML()                   # XML format
