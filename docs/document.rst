@@ -155,23 +155,23 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Return a nested list of all fonts referenced by the page.
 
-      :arg int pno: page number, zero-based. Any value ``< len(doc)`` is acceptable.
+      :arg int pno: page number, zero-based, any value ``< len(doc)``.
 
       :rtype: list
 
-      :returns: a list of fonts referenced by this page. Each entry looks like ``[xref, gen, type, basefont, name]``. Where ``xref`` is the font object number, ``gen`` its generation number (should usually be zero), ``type`` is the font type (like ``Type1`` or ``TrueType`` etc.), ``basefont`` is the base font name and ``name`` is the reference name by which the page points to it in its contents stream:
+      :returns: a list of fonts referenced by this page. Each entry looks like ``(xref, ext, type, basefont, name)``. Where ``xref`` is the font object number, ``ext`` font file extension, ``type`` is the font type (like ``Type1`` or ``TrueType`` etc.), ``basefont`` is the base font name and ``name`` is the reference name, by which the page references it in its contents stream:
 
-       >>> doc = fitz.open("pymupdf.pdf")
-       >>> fontlist = doc.getPageFontList(85)
-       >>> for font in fontlist: print(font)
-       [1024, 0, 'Type1', 'CJXQIC+NimbusMonL-Bold', 'R366']
-       [141, 0, 'Type1', 'HJQJNS+NimbusMonL-Regu', 'R247']
-       [162, 0, 'Type1', 'CTCORW+NimbusRomNo9L-Regu', 'R245']
-       [1039, 0, 'Type1', 'PWJUZS+NimbusRomNo9L-ReguItal', 'R373']
-       [202, 0, 'Type1', 'VMQYGP+NimbusRomNo9L-Medi', 'R243']
-       [100, 0, 'Type1', 'LSBBMD+NimbusSanL-Bold', 'R201']
+      >>> doc=fitz.open("pymupdf.pdf")
+      >>> for f in doc.getPageFontList(85): print(f)
+      (344, 'pfa', 'Type1', 'HVTNTB+SFSX1000', 'F18')
+      (343, 'pfa', 'Type1', 'KPGUVC+SFTT1000', 'F16')
+      (745, 'pfa', 'Type1', 'OBIJJJ+SFRM1440', 'F38')
+      (470, 'pfa', 'Type1', 'AFLLUK+SFTI1000', 'F49')
+      (342, 'pfa', 'Type1', 'GWNVMD+SFRM1000', 'F15')
+      (341, 'pfa', 'Type1', 'MFMRXE+SFBX1000', 'F41')
+      (523, 'pfa', 'Type1', 'LDRDRB+SFIT1000', 'F74')
       
-      .. note:: Font are stored on the document level (like images). The reference name is specific for the page, i.e. other pages using the same font may use a different name for it. Also note, that a font may appear in this list though is not actually used by any text. But conversely, every piece of text on the page will refer to exactly one of these entries.
+      .. note:: Fonts are stored on the document level (like images). The reference name is specific for the page. Other pages may use a different name for the same font. Also note, that a font may appear in this list allthough no text actually uses it. But conversely, every piece of text on the page will refer to exactly one of these entries. Look here for the meaning of :ref:`FontExtensions`.
 
       .. note:: For more background see :ref:`AdobeManual` chapters 5.4 to 5.8, pp 410.
 

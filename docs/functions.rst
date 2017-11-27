@@ -10,7 +10,8 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 :meth:`Annot._getXref`               PDF only: return XREF number of annotation
 :meth:`Document._delXmlMetadata`     PDF only: remove XML metadata
 :meth:`Document._getXmlMetadataXref` PDF only: return XML metadata XREF number
-:meth:`Document._getCharWidths`      PDF only: return a list of glyph widths of a font
+:meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
+:meth:`Document._getGCTXerrmsg`      retrieve C-level exception message
 :meth:`Document._getNewXref`         PDF only: create and return a new XREF entry
 :meth:`Document._getObjectString`    PDF only: return object source code
 :meth:`Document._getOLRootNumber`    PDF only: return / create XREF of ``/Outline``
@@ -22,6 +23,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 :meth:`Document._getXrefString`      PDF only: return object source code
 :meth:`Document._updateObject`       PDF only: insert or update a PDF object
 :meth:`Document._updateStream`       PDF only: replace the stream of an object
+:meth:`Document.extractFont`         PDF only: extract embedded font
 :attr:`Document.FontInfos`           PDF only: information on inserted fonts
 :meth:`getPDFnow`                    return the current timestamp in PDF format
 :meth:`getPDFstr`                    return PDF-compatible string
@@ -80,6 +82,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
    .. method:: Document._getXmlMetadataXref()
 
       Return he XML-based metadata object id from the PDF if present - also refer to :meth:`Document._delXmlMetadata`. You can use it to retrieve the content via :meth:`Document._getXrefStream` and then work with it using some XML software.
+
 -----
 
    .. method:: Document._getPageObjNumber(pno)
@@ -137,7 +140,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
       :returns: the XREF of the font. PyMuPDF records inserted fonts in two places:
       
             1. An inserted font will appear in :meth:`Page.getFontList()`.
-            2. :attr:`Document.FontInfos` records more detailed information about all fonts that have been inserted by this method.
+            2. :attr:`Document.FontInfos` records information about all fonts that have been inserted by this method on a document-wide basis.
 
 -----
 
@@ -188,26 +191,26 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
 -----
 
-   .. method:: Document._getCharWidths(xref = 0, limit = 256)
+   .. method:: Document.getCharWidths(xref = 0, limit = 256)
 
-      Return a list of character glyphs and their widths for a font that is present in the document. A font must be specified by its PDF cross reference number ``xref``.
+      Return a list of character glyphs and their widths for a font that is present in the document. A font must be specified by its PDF cross reference number ``xref``. This function is called automatically from :meth:`Page.insertText` and :meth:`Page.insertTextbox`. So you should rarely need to do this yourself.
 
       :arg int xref: cross reference number of a font embedded in the PDF. To find a font xref, use e.g. ``doc.getPageFontList(pno)`` of page number ``pno`` and take the first entry of one of the returned list entries.
 
-      :arg int limit: limits the number of returned entries. The default of 256 is sufficient for all fonts that only support characters up to unicode point 255. This is the case for all PDF ``/Type1`` fonts (also called "simple fonts"), for example the :ref:`Base-14-Fonts`. Specify a number as required.
+      :arg int limit: limits the number of returned entries. The default of 256 is enforced for all fonts that only support 1-byte characters, so-called "simple fonts" (checked by this method). All :ref:`Base-14-Fonts` are simple fonts.
 
       :rtype: list
-      :returns: a list of ``limit`` tuples. Each character ``c`` has an entry  ``(g, w)`` in this list with an index of ``ord(c)``. Entry ``g`` (integer) of the tuple is the glyph id of the character, and float ``w`` is its normalized width. The actual width for some ``fontsize`` can be calculated as ``w * fontsize``. For simple fonts, the ``g`` entry can always be safely ignored. In all other cases ``g`` is the basis for graphically representing ``c`` on some device with this font.
+      :returns: a list of ``limit`` tuples. Each character ``c`` has an entry  ``(g, w)`` in this list with an index of ``ord(c)``. Entry ``g`` (integer) of the tuple is the glyph id of the character, and float ``w`` is its normalized width. The actual width for some fontsize can be calculated as ``w * fontsize``. For simple fonts, the ``g`` entry can always be safely ignored. In all other cases ``g`` is the basis for graphically representing ``c``.
 
-      This function calculates the pixel width of a string called ``text``:
-      ::
-          def pixlen(text, widthlist, fontsize):
-            try:
-                return sum([widthlist[ord(c)] for c in text]) * fontsize
-            except IndexError:
-                m = max([ord(c) for c in text])
-                raise ValueError:("max. code point found: %i, increase limit" % m)
-          
+      This function calculates the pixel width of a string called ``text``::
+
+       def pixlen(text, widthlist, fontsize):
+       try:
+           return sum([widthlist[ord(c)] for c in text]) * fontsize
+       except IndexError:
+           m = max([ord(c) for c in text])
+           raise ValueError:("max. code point found: %i, increase limit" % m)
+
 
 -----
 
@@ -247,6 +250,15 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
       :rtype: string
       :returns: the string defining the object identified by ``xref``.
+
+-----
+
+   .. method:: Document._getGCTXerrmsg()
+
+      Retrieve exception message text issued by PyMuPDF's low-level code. This in most cases, but not always, are MuPDF messages. This string will never be cleared - only overwritten as needed. Only rely on it if a ``RuntimeError`` had been raised.
+
+      :rtype: str
+      :returns: last C-level error message on occasion of a ``RuntimeError`` exception.
 
 -----
 
@@ -321,21 +333,44 @@ The following are miscellaneous functions to be used by the experienced PDF prog
       :rtype: int
       :returns: XREF number of the **/Outlines** root object.
 
+   .. method:: Document.extractFont(xref, info_only = False)
+
+      Return an embedded font file's data and appropriate file extension. This can be used to store the font as an external file. The method does not throw exceptions (other than via checking for PDF).
+
+      :arg int xref: PDF object number of the font to extract.
+      :arg bool info_only: only return font information, not the buffer. To be used for information-only purposes, saves allocation of large buffer areas.
+
+      :rtype: tuple
+      :returns: a tuple ``(basename, ext, subtype, buffer)``, where ``ext`` is a 3-byte suggested file extension (*str*), ``basename`` is the font's name (*str*), ``subtype`` is the font's type (e.g. "Type1") and ``buffer`` is a bytes object containing the font file's content (or ``b""``). For possible extension values and their meaning see :ref:`FontExtensions`. Return details on error:
+
+            * ``("", "", "", b"")`` - invalid xref or xref is not a (valid) font object.
+            * ``(basename, "n/a", "Type1", b"")`` - ``basename`` is one of the :ref:`Base-14-Fonts`, which cannot be extracted.
+
+      Example:
+
+      >>> # store font as an external file
+      >>> name, ext, buffer = doc.extractFont(4711)
+      >>> # assuming buffer is not None:
+      >>> ofile = open(name + "." + ext, "wb")
+      >>> ofile.write(buffer)
+      >>> ofile.close()
+
+      .. caution:: The basename is returned unchanged from the PDF. So it may contain characters (such as blanks) which disqualify it as a valid filename for your operating system. Take appropriate action.
+
+      .. note: The returned ``basename`` in general is **not** the original file name, but probably has some similarity.
+
    .. attribute:: Document.FontInfos
 
-       Contains following detail information for any font inserted via :meth:`Page.insertFont`:
+       Contains following information for any font inserted via :meth:`Page.insertFont`:
 
        * xref *(int)* - XREF number of the ``/Type/Font`` object.
        * info *(dict)* - detail font information with the following keys:
 
-            * name *(str)* - human readable font name
-            * bold *(bool)* - a bold font?
-            * italic *(bool)* - an italic font?
-            * mono *(bool)* - a monospaced font?
-            * serif *(bool)* - font with serifs?
+            * name *(str)* - name of the basefont
             * idx *(int)* - index number for multi-font files
             * type *(str)* - font type (like "TrueType", "Type0", etc.)
-            * ext *(str)* - extension to be used, when font is extracted into a file
+            * ext *(str)* - extension to be used, when font is extracted to a file (see :ref:`FontExtensions`).
+            * glyphs (*list*) - list of glyph numbers and widths (filled by textinsertion methods).
 
       :rtype: list
 
