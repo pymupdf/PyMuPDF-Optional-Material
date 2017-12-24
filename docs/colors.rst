@@ -40,4 +40,4 @@ Printing the Color Database
 If you want to actually see how the many available colors look like, use scripts `colordbRGB.py <https://github.com/rk700/PyMuPDF/blob/master/examples/colordbRGB.py>`_ or `colordbHSV.py <https://github.com/rk700/PyMuPDF/blob/master/examples/colordbHSV.py>`_ in the examples directory. They create PDFs (already existing in the same directory) with all these colors. Their only difference is sorting order: one takes the RGB values, the other one the Hue-Saturation-Values as sort criteria.
 This is a screen print of what these files look like.
 
-.. image:: img_colordb.png
+.. image:: img-colordb.png

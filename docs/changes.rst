@@ -1,17 +1,42 @@
 Change Logs
 ===============
 
+Changes in Version 1.12.0
+--------------------------
+This version is based on and requires MuPDF v1.12. The new MuPDF version contains quite a number of changes - most of them around text extraction. Some of the changes impact the programmer's API.
+
+* :meth:`Outline.saveText` and :meth:`Outline.saveXML` have been deleted without replacement. You probably have not used them much anyway. But if you are looking for a replacement: the output of :meth:`Document.getToC` can easily be used to produce something equivalent.
+
+* Class ``TextSheet`` does no longer exist.
+
+* Text "spans", one of the hierarchy levels of text pages, no longer contain positioning information (i.e. no "bbox" key). Instead, spans now provide the font information for its text. This impacts our JSON output variant.
+
+* HTML output has improved very much: it now creates valid documents which can be displayed by browsers to produce a similar view as the original document.
+
+* There is a new output format XHTML, which provides text and images in a browser-readable format. The difference to HTML output is, that no effort is made to reproduce the original layout.
+
+* All output formats of :meth:`Page.getText` now support creating complete, valid documents, by wrapping them with appropriate header and trailer information. If you are interested in using the HTML output, please make sure to read :ref:`HTMLQuality`.
+
+* To support finding text positions, we have added methods without having to use detours like :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`: use :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` to create lists of text blocks or resp. words which are accompanied by their rectangles. This should be much faster than the extraction methods and also avoids using additional packages for interpreting the output.
+
+
 Changes in Version 1.11.2
 --------------------------
 This is an extension of v1.11.1.
 
-* New **Page** method ``insertFont()`` creates a PDF ``/Font`` object and returns its object number.
+* New :meth:`Page.insertFont` creates a PDF ``/Font`` object and returns its object number.
 
-* New **Document** method ``extractFont()`` extracts the content of an embedded font given its object number.
+* New :meth:`Document.extractFont` extracts the content of an embedded font given its object number.
 
 * Methods ``*FontList(...)`` items no longer contain the PDF generation number. This value never had any significance. Instead, the font file extension is included (e.g. "pfa" for a "PostScript Font for ASCII"), which is more valuable information.
 
-* Fonts other than "simple fonts" are now also supported. When embedding a font file.
+* Fonts other than "simple fonts" (Type1) are now also supported.
+
+* New options to change :ref:`Pixmap` size:
+
+    * Method :meth:`Pixmap.shrink` reduces the pixmap proportionally in place.
+
+    * A new :ref:`Pixmap` copy constructor allows scaling via setting target width and height.
 
 
 Changes in Version 1.11.1

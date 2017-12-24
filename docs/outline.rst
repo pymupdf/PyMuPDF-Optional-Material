@@ -9,8 +9,6 @@ Outline
 ============================ ==================================================
 **Method / Attribute**       **Short Description**
 ============================ ==================================================
-:meth:`Outline.saveText`     prints a conventional TOC to a file
-:meth:`Outline.saveXML`      prints an XML-like TOC to a file
 :attr:`Outline.down`         next item downwards
 :attr:`Outline.next`         next item same level
 :attr:`Outline.page`         page number (0-based)
@@ -55,18 +53,6 @@ Outline
       Or ``isOpen`` - an indicator showing whether any sub-outlines should be expanded (``True``) or be collapsed (``False``). This information should be interpreted by PDF display software accordingly.
 
       :type: bool
-
-   .. method:: saveText(filename)
-
-      The chain of outline items is being processed and printed to the file ``filename`` as a conventional table of contents. Each line of this file has the format ``<tab>...<tab><title><tab><page#>``, where the number of leading tabs is (n-1), with n equal to the outline hierarchy level of the entry. Page numbers are 1-based in this case. ``page = -1`` can occur if the destination is outside this document or undefined (``uri == None``).
-
-      :arg str filename: Name of the file to write to.
-
-   .. method:: saveXML(filename)
-
-      The chain of outline items is being processed and printed to a file ``filename`` as an XML-like table of contents. Each line of this file has the format ``<outline title="..." page="n"/>``, if the entry has no children. Otherwise the format is ``<outline title="..." page="n">``, and child entries will follow. The parent entry will be finished by a line containing ``</outline>``.
-
-      :arg str filename: Name of the file to write to.
 
    .. attribute:: isExternal
 

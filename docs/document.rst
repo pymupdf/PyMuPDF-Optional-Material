@@ -90,17 +90,17 @@ For addional details on **embedded files** refer to Appendix 3.
 
       Loads a ``Page`` for further processing like rendering, text searching, etc. See the :ref:`Page` object.
 
-      :arg int pno: page number, zero-based (0 is default and the first page of the document) and ``< doc.pageCount``. If ``number < 0``, then page ``number % pageCount`` will be loaded (IAW ``pageCount`` will be added to ``number`` repeatedly, until the result is no longer negative). For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
+      :arg int pno: page number, zero-based (0 is default and the first page of the document) and ``< doc.pageCount``. If ``pno < 0``, then page ``pno % pageCount`` will be loaded (IAW ``pageCount`` will be added to ``pno`` until the result is no longer negative). For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
 
       :rtype: :ref:`Page`
 
-    .. note:: Conveniently, pages can also be loaded via indexes over the document: ``doc.loadPage(n) == doc[n]``. Consequently, a document can also be used as an iterator over its pages, e.g. ``for page in doc: ...`` and ``for page in reversed(doc): ...`` will yield the :ref:`Page` objects of ``doc`` as ``page``.
+    .. note:: Conveniently, pages can also be loaded via indexes over the document: ``doc.loadPage(n) == doc[n]``. Consequently, a document can also be used as an iterator over its pages, e.g. ``for page in doc: ...`` and ``for page in reversed(doc): ...`` will yield the :ref:`Page`\ s of ``doc`` as ``page``.
 
     .. method:: getToC(simple = True)
 
       Creates a table of contents out of the document's outline chain.
 
-      :arg bool simple: Indicates whether a detailed ToC is required. If ``simple == False``, each entry of the list also contains a dictionary with :ref:`linkDest` details for each outline entry.
+      :arg bool simple: Indicates whether a simple or a detailed ToC is required. If ``simple == False``, each entry of the list also contains a dictionary with :ref:`linkDest` details for each outline entry.
 
       :rtype: list
 
@@ -111,49 +111,33 @@ For addional details on **embedded files** refer to Appendix 3.
       * page - 1-based page number (integer). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
       * dest - included only if ``simple = False`` is specified. A dictionary containing details of the link destination.
 
-    .. method:: getPagePixmap(pno, matrix = fitz.Identity, colorspace = "rgb", clip = None, alpha = True)
+    .. method:: getPagePixmap(pno, *args, **kwargs)
 
       Creates a pixmap from page ``pno`` (zero-based). Invokes :meth:`Page.getPixmap`.
-
-      :arg int pno: Page number, zero-based. Any value ``< len(doc)`` is acceptable.
-
-      :arg matrix: A transformation matrix - default is :ref:`Identity`.
-
-      :type matrix: :ref:`Matrix`
-
-      :arg colorspace: A string specifying the requested colorspace - default is ``rgb``.
-
-      :type colorspace: str or :ref:`Colorspace`
-
-      :arg clip: An :ref:`IRect` to restrict rendering of the page to the rectangle's area. If not specified, the complete page will be rendered.
-
-      :type clip: :ref:`IRect`
-
-      :arg bool alpha: Indicates whether a transparent image should be created. This has an important behavior impact. See :meth:`Page.getPixmap`.
 
       :rtype: :ref:`Pixmap`
 
     .. method:: getPageImageList(pno)
 
-      PDF only: Returns a nested list of all image descriptions referenced by a page.
+      PDF only: Return a list of all image descriptions referenced by a page.
 
       :arg int pno: page number, zero-based. Any value ``< len(doc)`` is acceptable.
 
       :rtype: list
 
-      :returns: a list of images shown on this page. Each entry looks like ``[xref, smask, width, height, bpc, colorspace, alt. colorspace, name]``. Where ``xref`` is the image object number, ``smask`` is the object number of its soft-mask image (if present), ``width`` and ``height`` are the image dimensions, ``bpc`` denotes the number of bits per component (a typical value is 8), ``colorspace`` a string naming the colorspace (like ``DeviceRGB``),  ``alt. colorspace`` is any alternate colorspace depending on the value of ``colorspace``, and ``name`` - which is the symbolic name *(str)* by which the page references this particular image in its content stream. See below how this information can be used to extract pages images as separate files. Another demonstration:
+      :returns: a list of images shown on this page. Each entry looks like ``[xref, smask, width, height, bpc, colorspace, alt. colorspace, name]``. Where ``xref`` is the image object number, ``smask`` is the object number of its soft-mask image (if present), ``width`` and ``height`` are the image dimensions, ``bpc`` denotes the number of bits per component (a typical value is 8), ``colorspace`` a string naming the colorspace (like ``DeviceRGB``),  ``alt. colorspace`` is any alternate colorspace depending on the value of ``colorspace``, and ``name`` - which is the symbolic name *(str)* by which the page references this particular image in its content stream. See below how this information can be used to extract PDF images as separate files. Another demonstration:
 
        >>> doc = fitz.open("pymupdf.pdf")
        >>> imglist = doc.getPageImageList(0)
        >>> for img in imglist: print img
-       [[241, 0, 1043, 457, 8, 'DeviceRGB', '', 'Im1']]
+       ((241, 0, 1043, 457, 8, 'DeviceRGB', '', 'Im1'))
        >>> pix = fitz.Pixmap(doc, 241)
        >>> pix
        fitz.Pixmap(DeviceRGB, fitz.IRect(0, 0, 1043, 457), 0)
 
     .. method:: getPageFontList(pno)
 
-      PDF only: Return a nested list of all fonts referenced by the page.
+      PDF only: Return a list of all fonts referenced by the page.
 
       :arg int pno: page number, zero-based, any value ``< len(doc)``.
 
@@ -170,7 +154,7 @@ For addional details on **embedded files** refer to Appendix 3.
       (342, 'pfa', 'Type1', 'GWNVMD+SFRM1000', 'F15')
       (341, 'pfa', 'Type1', 'MFMRXE+SFBX1000', 'F41')
       (523, 'pfa', 'Type1', 'LDRDRB+SFIT1000', 'F74')
-      
+
       .. note:: Fonts are stored on the document level (like images). The reference name is specific for the page. Other pages may use a different name for the same font. Also note, that a font may appear in this list allthough no text actually uses it. But conversely, every piece of text on the page will refer to exactly one of these entries. Look here for the meaning of :ref:`FontExtensions`.
 
       .. note:: For more background see :ref:`AdobeManual` chapters 5.4 to 5.8, pp 410.
@@ -264,7 +248,7 @@ For addional details on **embedded files** refer to Appendix 3.
     .. method:: searchPageFor(pno, text, hit_max = 16)
 
        Search for ``text`` on page number ``pno``. Works exactly like the corresponding :meth:`Page.searchFor`. Any integer ``pno < len(doc)`` is acceptable.
-    
+
     .. method:: write(garbage=0, clean=0, deflate=0, ascii=0, expand=0, linear=0)
 
       PDF only: Writes the **current content of the document** to a bytes object instead of to a file like ``save()``. Obviously, you should be wary about memory requirements. The meanings of the parameters exactly equal those in :meth:`Document.save`. The tutorial contains an example for using this method as a pre-processor to `pdfrw <https://pypi.python.org/pypi/pdfrw/0.3>`_.
@@ -297,7 +281,7 @@ For addional details on **embedded files** refer to Appendix 3.
     .. note:: ``docsrc`` bookmarks **will not be copied**. It is easy however, to recover a table of contents for the resulting document. Look at the examples below and at program `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the *examples* directory: it can join PDF documents and at the same time piece together respective parts of the tables of contents.
 
     .. method:: insertPage(to = -1, text = None, fontsize = 11, width = 595, height = 842, fontname = "Helvetica", fontfile = None, color = (0, 0, 0))
-    
+
       PDF only: Insert an empty page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted - provided as a string or asequence.
 
       :arg int to: page number (0-based) in front of which to insert. Valid specifications must be in range ``-1 <= pno <= len(doc)``. The default ``-1`` and ``pno = len(doc)`` indicate end of document, i.e. after the last page.
@@ -457,7 +441,7 @@ For addional details on **embedded files** refer to Appendix 3.
     .. attribute:: permissions
 
       Shows the permissions to access the document. Contains a dictionary likes this:
-      ::
+
        >>> doc.permissions
        {'print': True, 'edit': True, 'note': True, 'copy': True}
 

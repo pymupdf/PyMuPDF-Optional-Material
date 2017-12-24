@@ -80,7 +80,7 @@ Constants
 
 Font File Extensions
 -----------------------
-The table show file extensions you should use when extracting fonts from a PDF file. This feature will shortly be added to PyMuPDF. You can also use MuPDF's cli application ``mutool extract -F file.pdf <page(s)>`` for extracting fonts into files.
+The table show file extensions you should use when extracting fonts from a PDF file.
 
 ==== =======================================================
 Ext  Description
@@ -113,10 +113,28 @@ Text Alignment
 
     3 - align justify.
 
+.. _TextPreserve:
+
+Preserve Text Flags
+--------------------
+Options controlling the amount of data a text device parses into a :ref:`TextPage`.
+
+.. py:data:: TEXT_PRESERVE_LIGATURES
+
+    1 - If this option is activated ligatures are passed through to the application in their original form. If this option is deactivated ligatures are expanded into their constituent parts, e.g. the ligature ffi is expanded into three  eparate characters f, f and i.
+
+.. py:data:: TEXT_PRESERVE_WHITESPACE
+
+    2 - If this option is activated whitespace is passed through to the application in its original form. If this option is deactivated any type of horizontal whitespace (including horizontal tabs) will be replaced with space characters of variable width.
+
+.. py:data:: TEXT_PRESERVE_IMAGES
+
+    4 - If this option is set, then images will be stored in the structured text structure. The default is to ignore all images.
+
 
 .. _linkDest Kinds:
 
-Enumerations
+Link Destination Kinds
 -----------------------
 Possible values of :attr:`linkDest.kind` (link destination kind). For details consult :ref:`AdobeManual`, chapter 8.2 on pp. 581.
 

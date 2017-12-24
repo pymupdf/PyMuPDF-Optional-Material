@@ -6,33 +6,36 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 ==================================== ==============================================================
 **Function**                         **Short Description**
 ==================================== ==============================================================
+:attr:`Document.FontInfos`           PDF only: information on inserted fonts
 :meth:`Annot._cleanContents`         PDF only: clean the annot's ``/Contents`` objects
 :meth:`Annot._getXref`               PDF only: return XREF number of annotation
+:meth:`ConversionHeader`             return header string for ``getText`` methods
+:meth:`ConversionTrailer`            return trailer string for ``getText`` methods
 :meth:`Document._delXmlMetadata`     PDF only: remove XML metadata
-:meth:`Document._getXmlMetadataXref` PDF only: return XML metadata XREF number
-:meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
 :meth:`Document._getGCTXerrmsg`      retrieve C-level exception message
 :meth:`Document._getNewXref`         PDF only: create and return a new XREF entry
 :meth:`Document._getObjectString`    PDF only: return object source code
 :meth:`Document._getOLRootNumber`    PDF only: return / create XREF of ``/Outline``
 :meth:`Document._getPageObjNumber`   PDF only: return XREF and generation number of a page
-:meth:`Document._getPageRectText`    PDF only: return raw string within rectangle
 :meth:`Document._getPageXref`        PDF only: same as ``_getPageObjNumber()``
+:meth:`Document._getXmlMetadataXref` PDF only: return XML metadata XREF number
 :meth:`Document._getXrefLength`      PDF only: return length of XREF table
 :meth:`Document._getXrefStream`      PDF only: return content of a stream
 :meth:`Document._getXrefString`      PDF only: return object source code
 :meth:`Document._updateObject`       PDF only: insert or update a PDF object
 :meth:`Document._updateStream`       PDF only: replace the stream of an object
 :meth:`Document.extractFont`         PDF only: extract embedded font
-:attr:`Document.FontInfos`           PDF only: information on inserted fonts
+:meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
+:meth:`Document.getPageRawText`      PDF only: return raw string between two points
 :meth:`getPDFnow`                    return the current timestamp in PDF format
 :meth:`getPDFstr`                    return PDF-compatible string
-:meth:`Page.insertFont`              PDF only: store a new font in the document
 :meth:`Page._cleanContents`          PDF only: clean the page's ``/Contents`` objects
 :meth:`Page._getContents`            PDF only: return a list of content numbers
-:meth:`Page._getRectText`            PDF only: return raw string within rectangle
 :meth:`Page._getXref`                PDF only: return XREF number of page
 :meth:`Page.getDisplayList`          create the page's display list
+:meth:`Page.extractTextLines`        return text between two points
+:meth:`Page.extractTextRect`         return text inside a rectangle
+:meth:`Page.insertFont`              PDF only: store a new font in the document
 :meth:`Page.run`                     run a page through a device
 :meth:`PaperSize`                    return width, height for known paper formats
 ==================================== ==============================================================
@@ -41,14 +44,14 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
       Convenience function to return width and height of a known paper format code. These values are given in pixels for the standard resolution 72 pixels = 1 inch.
       
-      Currently defined formats include A0 through A10, B0 through B10, C0 through C10, Card-4x6, Card-5x7, Commercial, Executive, Invoice, Ledger, Legal, Legal-13, Letter, Monarch and Tabloid-Extra.
+      Currently defined formats include A0 through A10, B0 through B10, C0 through C10, Card-4x6, Card-5x7, Commercial, Executive, Invoice, Ledger, Legal, Legal-13, Letter, Monarch and Tabloid-Extra, each in either portrait or landscape format.
 
       A format name must be supplied as a string (case insensitive), optionally suffixed with "-L" (landscape) or "-P" (portrait). No suffix defaults to portrait.
 
       :arg str s: a format name like ``"A4"`` or ``"letter-l"``.
 
       :rtype: tuple
-      :returns: ``(width, height)`` of the paper format. For an unknown format ``(-1, -1)`` is returned. ``PaperSize("A4")`` returns ``(595, 842)`` and ``PaperSize("letter-l")`` delivers ``(792, 612)``.
+      :returns: ``(width, height)`` of the paper format. For an unknown format ``(-1, -1)`` is returned. Esamples: ``PaperSize("A4")`` returns ``(595, 842)`` and ``PaperSize("letter-l")`` delivers ``(792, 612)``.
 
 -----
 
@@ -70,6 +73,25 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
       :rtype: str
       :returns: PDF-compatible string enclosed in either ``()`` or ``<>``.
+
+   .. method:: ConversionHeader(output = "text", filename = "UNKNOWN")
+
+      Return the header string required to make a valid document out of page text outputs.
+
+      :arg str output: type of document. Use the same as the output parameter of ``getText()``.
+
+      :arg str filename: optional arbitrary name to use in output types "json" and "xml".
+
+      :rtype: str
+
+
+   .. method:: ConversionTrailer(output)
+
+      Return the trailer string required to make a valid document out of page text outputs. See :meth:`Page.getText` for an example.
+
+      :arg str output: type of document. Use the same as the output parameter of ``getText()``.
+
+      :rtype: str
 
 -----
 
@@ -214,29 +236,47 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
 -----
 
-   .. method:: Document._getPageRectText(pno, rect)
+   .. method:: Document.getPageRawText(pno, p1, p2)
 
-      Return raw text contained in a rectangle.
+      Return lines of raw text contained between a pair of points.
 
       :arg int pno: page number.
 
-      :arg rect: rectangle
-      :type rect: :ref:`Rect`
+      :arg p1: Text delimiter point.
+      :type p1: :ref:`Point`
+
+      :arg p2: Text delimiter point.
+      :type p2: :ref:`Point`
 
       :rtype: string
-      :returns: text contained in the rectangle
+      :returns: see the page version of this mehod.
 
 -----
 
-   .. method:: Page._getRectText(rect)
+   .. method:: Page.extractTextLines(p1, p2)
 
-      Return raw plain text contained in a rectangle.
+      Return lines of text contained between a pair of points.
 
-      :arg rect: rectangle
+      :arg p1: text delimiter point.
+      :type p1: :ref:`Point`
+
+      :arg p2: text delimiter point.
+      :type p2: :ref:`Point`
+
+      :rtype: str
+      :returns: text lines between the two points (UTF-8 encoded).
+
+-----
+
+   .. method:: Page.extractTextRect(rect)
+
+      Return lines of text contained in a rectangle.
+
+      :arg rect: rectangle.
       :type rect: :ref:`Rect`
 
-      :rtype: string
-      :returns: text contained in the rectangle
+      :rtype: str
+      :returns: text occurring inside the rectangle.
 
 -----
 
