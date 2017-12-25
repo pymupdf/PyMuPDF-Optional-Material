@@ -208,17 +208,17 @@ Further Remarks
 
 2. The 5 extraction methods each have a default behavior concerning images: "TEXT" and "XML" do not extract images, while the other three do. On occasion it may make sense to switch off images for "HTML", "XHTML" or "JSON", too. See chapter :ref:`cooperation` on how to achieve this. Use an argument of ``3`` when you create the :ref:`TextPage`.
 
-3. Apart from the 5 standard ones, we offer an additional extraction method :meth:`Page.getTextBlocks`. Its return is a list of a page's text blocks. Each list item contains the block text accompanied by its rectangle ("bbox", location on the page). This should help to resolve extraction issues around multi-column or boxed text.
+3. Apart from the 5 standard ones, we offer additional extraction methods :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords`. They return lists of a page's text blocks, resp. words. Each list item contains text accompanied by its rectangle ("bbox", location on the page). This should help to resolve extraction issues around multi-column or boxed text.
 
-4. If you need even more detailed positioning information, you can use XML extraction. We provide a method to access position info for each single word in the repository's Wiki.
+4. If you need even more detailed positioning information, you can use XML extraction.
 
 
 Performance
 ~~~~~~~~~~~~
 The text extraction methods differ significantly: in terms of information they supply (see above), and in terms of resource requirements. More information of course means that more processing is required and a higher data volume is generated.
 
-To begin with, all methods are **very** fast in relation to what is there on the market. In terms of processing speed, we couldn't find a faster (free) tool.
+To begin with, all methods are **very** fast in relation to what is out there on the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, XML, processes all 1'310 pages of the :ref:`AdobeManual` in less than 8 seconds.
 
-Relative to each other, ``xml`` is about 2 times slower than ``text``, the other range between them. E.g. ``json`` needs about 13% - 14% more time than ``text``.
+Relative to each other, **"XML"** is about 2 times slower than **"TEXT"**, the others range between them. E.g. **"JSON", "HTML", "XHTML"**  need about 20% more time than **"TEXT"** (heavily depending on the size of images contained in the document), whereas :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` are only 1% resp. 3% slower.
 
 Look into the previous chapter **Appendix 1** for more performance information.
