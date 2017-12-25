@@ -144,7 +144,7 @@ The values indicate the "relative writing speed" in each direction, such that x\
 
 Span Dictionary
 ~~~~~~~~~~~~~~~~
-Spans contain the actual text. In contrast to MuPDF versions up to 1.11, a span no longer includes positioning information. Therefore, to reconstruct the text a line, span text pieces must be concatenated. A span now contains font information. A line contains more than one span only, when any changes in the font occur.
+Spans contain the actual text. In contrast to MuPDF versions up to 1.11, a span no longer includes positioning information. Therefore, to reconstruct the text a line, span text pieces must be concatenated. A span now contains font information. A line contains more than one span only, when any changes of the font or its attributes occur.
 
 =============== =====================================================
 Key             Value
@@ -164,7 +164,7 @@ text            text *(str)*
 * bit 4: bold
 
 Full Document Output in JSON Format
-------------------------------------------------------
+-------------------------------------
 Converting a document to JSON format requires a little programmer attention. Use the following schema to create a valid (i.e. de-serializable JSON) document:
 
 >>> doc = fitz.open(...)    # maybe any document type!
@@ -172,7 +172,8 @@ Converting a document to JSON format requires a little programmer attention. Use
 >>> pno = 0
 >>> jsonfile.write(fitz.ConversionHeader("json", filename = doc.name))
 >>> for page in doc:
-        if pno > 0: jsonfile.write(",\n")    # comma needed between pages!
+        if pno > 0:
+            jsonfile.write(",\n")    # comma needed between pages!
         jsonfile.write(page.getText("json"))
         pno += 1
 >>> jsonfile.write(fitz.ConversionTrailer("json"))

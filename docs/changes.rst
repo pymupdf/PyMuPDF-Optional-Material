@@ -17,7 +17,7 @@ This version is based on and requires MuPDF v1.12. The new MuPDF version contain
 
 * All output formats of :meth:`Page.getText` now support creating complete, valid documents, by wrapping them with appropriate header and trailer information. If you are interested in using the HTML output, please make sure to read :ref:`HTMLQuality`.
 
-* To support finding text positions, we have added methods without having to use detours like :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`: use :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` to create lists of text blocks or resp. words which are accompanied by their rectangles. This should be much faster than the extraction methods and also avoids using additional packages for interpreting the output.
+* To support finding text positions, we have added special methods that don't need detours like :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`: use :meth:`Page.getTextBlocks` or resp. :meth:`Page.getTextWords` to create lists of text blocks or resp. words which are accompanied by their rectangles. This should be much faster than the standard text extraction methods and also avoids using additional packages for interpreting their output.
 
 
 Changes in Version 1.11.2
