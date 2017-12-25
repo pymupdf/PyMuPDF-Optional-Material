@@ -10,5 +10,4 @@ Contains a number of functions and classes for the experienced user. To be used 
    device.rst
    displaylist.rst
    textpage.rst
-   textsheet.rst
    coop_low.rst

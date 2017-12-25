@@ -79,11 +79,11 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
 
-      .. image:: img_breadth.png
+      .. image:: img-breadth.png
 
       Here is an example of three connected lines, forming a closed, filled triangle. Little arrows indicate the stroking direction.
 
-      .. image:: img_squiggly.png
+      .. image:: img-squiggly.png
 
       .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/rk700/PyMuPDF/blob/master/demo/draw-sines.py>`_.
 
@@ -132,7 +132,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Example:
 
-      .. image:: img_drawBezier.png
+      .. image:: img-drawBezier.png
 
    .. method:: drawOval(rect)
 
@@ -176,7 +176,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Example: a filled quarter ellipse segment.
 
-      .. image:: img_drawCurve.png
+      .. image:: img-drawCurve.png
 
    .. method:: drawSector(center, point, angle, fullSector = True)
 
@@ -197,9 +197,9 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       Examples:
 
-      .. image:: img_drawSector1.png
+      .. image:: img-drawSector1.png
 
-      .. image:: img_drawSector2.png
+      .. image:: img-drawSector2.png
 
 
    .. method:: drawRect(rect)
@@ -243,7 +243,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       :arg int expandtabs: controls handling of tab characters ``\t`` using the ``string.expandtabs()`` method **per each line**.
 
-      :arg int rotate: requests text to be rotated in the rectangle. This value must be a multiple of 90 degrees. Default is 0 (no rotation). Effectively, four different values are processed: 0, 90, 180 and 270 (= -90), each causing the text to start in a different rectangle corner. Bottom-left is 90, bottom-right is 180, and -90 / 270 is top-right. See the example how text is filled in a rectangle. This argument takes precedence over morphing, which can be specified in addition.
+      :arg int rotate: requests text to be rotated in the rectangle. This value must be a multiple of 90 degrees. Default is 0 (no rotation). Effectively, four different values are processed: 0, 90, 180 and 270 (= -90), each causing the text to start in a different rectangle corner. Bottom-left is 90, bottom-right is 180, and -90 / 270 is top-right. See the example how text is filled in a rectangle. This argument takes precedence over morphing. See the second example showing text rotated 90 degrees and then the whole rectangle rotated right around is lower left corner.
 
       :rtype: float
       :returns:
@@ -251,7 +251,9 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
           **If negative**: no execution. The value returned is the space deficit to store text lines. Enlarge rectangle, decrease ``fontsize``, decrease text amount, etc.
 
-      .. image:: img_rotate.png
+      .. image:: img-rotate.png
+
+      .. image:: img-rot+morph.png
 
       For a description of the other parameters see :ref:`CommonParms`.
 
@@ -263,7 +265,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       :arg bool even_odd: request the **"even-odd rule"** for filling operations. Default is ``False``, so that the **"nonzero winding number rule"** is used. These rules are alternative methods to apply the fill color where areas overlap. Only with fairly complex shapes a different behavior is to be expected with these rules. For an in-depth explanation, see :ref:`AdobeManual`, pp. 232 ff. Here is an example to demonstrate the difference.
 
-      .. image:: even-odd.png
+      .. image:: img-even-odd.png
 
       .. note:: Method **"even-odd"** counts the number of overlaps of areas. Pixels in areas overlapping an odd number of times are regarded **inside**, otherwise **outside**. In contrast, the default method **"nonzero winding"** also looks at the area orientation: it counts ``+1`` if an area is drawn counter-clockwise and ``-1`` else. If the result is zero,the pixel is regarded **outside**, otherwise **inside**. In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
 
@@ -365,7 +367,7 @@ Examples
 
 Here is an example for 5 colors:
 
-.. image:: img_cake.png
+.. image:: img-cake.png
 
 2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon.
 
@@ -384,7 +386,7 @@ Here is an example for 5 colors:
 
 Here is the polygon for n = 7:
 
-.. image:: img_7edges.png
+.. image:: img-7edges.png
 
 .. _CommonParms:
 

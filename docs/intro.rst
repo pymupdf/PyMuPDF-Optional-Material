@@ -1,22 +1,22 @@
 Introduction
 ==============
 
-.. image:: pymupdf.jpg
-
+.. image:: img-pymupdf.jpg
+   :align: center
 
 **PyMuPDF** is a Python binding for `MuPDF <http://www.mupdf.com/>`_ - "a lightweight PDF and XPS viewer".
 
 MuPDF can access files in PDF, XPS, OpenXPS, CBZ (comic book archive), FB2 and EPUB (e-book) formats.
 
-These are files with extensions ``*.pdf``, ``*.xps``, ``*.oxps``, ``*.cbz``, ``*.fb2``  or ``*.epub`` (so in essence, with this binding you can develop **e-book viewers in Python** ...)
+These are files with extensions ``*.pdf``, ``*.xps``, ``*.oxps``, ``*.cbz``, ``*.fb2``  or ``*.epub`` (so in essence, with this binding you can develop **e-book viewers in Python** ...).
 
 PyMuPDF provides access to many important functions of MuPDF from within a Python environment, and we are continuously seeking to expand this function set.
 
-MuPDF stands out among all similar products for its top rendering capability and unsurpassed processing speed. At the same time, its "lightweight" makes it an excellent choice for platforms where resources are typically limited, like smartphones.
+MuPDF stands out among all similar products for its top rendering capability and unsurpassed processing speed. At the same time, its "light weight" makes it an excellent choice for platforms where resources are typically limited, like smartphones.
 
 Check this out yourself and compare the various free PDF-viewers. In terms of speed and rendering quality `SumatraPDF <http://www.sumatrapdfreader.org/>`_ ranges at the top (apart from MuPDF's own standalone viewer) - since it has changed its library basis to  MuPDF!
 
-While PyMuPDF has been available since several years for an earlier version of MuPDF (v1.2, called **fitz-python** then), it was until only mid May 2015, that its creator and a few co-workers decided to elevate it to support current releases of MuPDF (first v1.7a, up to 1.11.0 in May 2017).
+While PyMuPDF has been available since several years for an earlier version of MuPDF (v1.2, called **fitz-python** then), it was until only mid May 2015, that its creator and a few co-workers decided to elevate it to support current releases of MuPDF (first v1.7a, up to v1.12.0 as of this writing).
 
 PyMuPDF runs and has been tested on Mac, Linux, Windows XP SP2 and up, Python 2.7 through Python 3.6 (note that Python supports Windows XP only up to v3.4), 32bit and 64bit versions. Other platforms should work too, as long as MuPDF and Python support them.
 
@@ -50,7 +50,7 @@ PyMuPDF is distributed under GNU GPL V3 (or later, at your choice).
 
 MuPDF is distributed under a separate license, the **GNU AFFERO GPL V3**.
 
-Both licenses apply, when you generate and use PyMuPDF and MuPDF.
+Both licenses apply, when you use PyMuPDF.
 
 .. note:: Version 3 of the GNU AFFERO GPL is a lot less restrictive than its earlier versions used to be. It basically is an open source freeware license, that obliges your software to also being open source and freeware. Consult `this website <http://artifex.com/licensing/>`_, if you want to create a commercial product with PyMuPDF.
 

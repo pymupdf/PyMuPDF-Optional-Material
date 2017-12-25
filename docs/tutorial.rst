@@ -64,7 +64,7 @@ creator        creating application
 subject        subject
 ============== ==============================
 
-.. note:: Apart from these standard metadata, PDF documents of PDF version 1.4 or later may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or mofify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then restore the resulting stream back into the PDF.
+.. note:: Apart from these standard metadata, PDF documents of PDF version 1.4 or later may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
 
 Working with Outlines
 =========================
@@ -140,13 +140,15 @@ We can also extract all text of a page in one chunk of string:
 
 Use one of the following strings for ``type``:
 
-* ``"text"``: plain text with line breaks (default). No formatting, no position info.
+* ``"text"``: (default) plain text with line breaks. No formatting, no text position details.
 
-* ``"html"``: line breaks, alignment, grouping in HTML syntax. No formatting, no position info. Use an HTML module to interpret.
+* ``"html"``: creates a full visual version of the page including any images, which can be displayed in browsers.
 
-* ``"json"``: full formatting info in JSON format (except colors and fonts) down to spans. Use a JSON module to interpret.
+* ``"json"``: same information level as HTML. Use a JSON module to interpret.
 
-* ``"xml"``: full (except colors) formatting info in XML format down to **each single character (!)**. Use an XML module to interpret.
+* ``"xhtml"``: text information level as the TEXT version, but includes images and can also be displayed in browsers.
+
+* ``"xml"``: contains no images, but full position and font information about each single text character. Use an XML module to interpret.
 
 To give you an idea about the output of these alternatives, we did text example extracts. See :ref:`Appendix2`.
 
@@ -156,9 +158,9 @@ You can find out, exactly where on a page a certain string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
-The variable ``areas`` will contain a list of up to 16 :ref:`Rect`\angles, each of which surrounds one occurrence of string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
+The variable ``areas`` will contain a list of up to 16 :ref:`Rect`\angles, each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
 
-Please also do have a look at chapter :ref:`cooperation` and at demo program `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`TextSheet`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
+Please also do have a look at chapter :ref:`cooperation` and at demo program `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
 PDF Maintenance
 ==================
@@ -166,29 +168,29 @@ Since version 1.9, PyMuPDF provides several options to modify PDF documents (onl
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
-Apart from your changes, there are less obvious ways for a PDF becoming "modified":
+Apart from your changes, there are less obvious ways for a PDF to becoming "modified":
 
-* During open, integrity checks are used to determine the health of the PDF structure. Any errors will automatically be corrected to present a repaired document in memory for further processing. If this is the case, the document is regarded as being modified.
+* During open, integrity checks are used to determine the health of the PDF structure. Any errors will be corrected as far as possible to present a repaired document in memory for further processing. If this is the case, the document is regarded as being modified.
 
 * After a document has been decrypted, the document in memory has changed and also counts as being modified.
 
 In these two cases, :meth:`Document.save()` will store a repaired and / or decrypted version, and saving **must occur to a new file**.
 
-The following describe some more intentional ways to manipulate PDF documents. Beyond those mentioned here, you can also modify the table of contents and meta information.
+The following describe some more intentional ways to manipulate PDF documents. This description is by no means exhaustive: much more can be found in the following chapters.
 
 Modifying, Creating, Re-arranging and Deleting Pages
 -------------------------------------------------------
 There are several ways to manipulate the page tree of a PDF:
 
-Methods :meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete a page (range) specified by zero-based number(s).
+Methods :meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages.
 
-Methods :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location of the document.
+Methods :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location within the document.
 
-:meth:`Document.insertPage` inserts a new page, optionally containing some plain text.
+:meth:`Document.insertPage` and :meth:`Document.newPage` insert pages.
 
-Method :meth:`Document.select` shrinks a document down to selected pages. It accepts a sequence of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **not occurring** in this list will be deleted. Only pages that do occur will remain - **in the sequence specified and as many times (!) as specified**.
+Method :meth:`Document.select` shrinks a document down to selected pages. It accepts a sequence of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Only pages that do occur will remain - **in the sequence specified and as many times (!) as specified**.
 
-So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, ... whatever you may think of.
+So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, reverse their sequence, ... whatever you may think of.
 
 The saved new document will contain all still valid links, annotations and bookmarks.
 
@@ -197,7 +199,7 @@ Pages themselves can moreover be modified by a range of methods (e.g. page rotat
 Joining and Splitting PDF Documents
 ------------------------------------
 
-Method :meth:`Document.insertPDF` inserts pages from another PDF at a specified place of the current one. Here is a simple example (``doc1`` and ``doc2`` being openend PDFs):
+Method :meth:`Document.insertPDF` inserts pages from another PDF at a specified place of the current one. Here is a simple **joiner** example (``doc1`` and ``doc2`` being openend PDFs):
 
 >>> # append complete doc2 to the end of doc1
 >>> doc1.insertPDF(doc2)
@@ -209,14 +211,14 @@ Here is how to split ``doc1``. This creates a new document of its first and last
 >>> doc2.insertPDF(doc1, from_page = len(doc1) - 10)
 >>> doc2.save(...)
 
-More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the repository's *example* directory.
+More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_.
 
 Saving
 -------
 
 As mentioned above, :meth:`Document.save` will **always** save the document in its current state.
 
-Since MuPDF 1.9, you can write changes back to the original file by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without rewriting it.
+Since MuPDF 1.9, you can write changes back to the original PDF by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without rewriting it.
 
 :meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table (corresponding ``mutool clean`` option is indicated as "mco").
 
@@ -241,7 +243,7 @@ For example, ``mutool clean -ggggz file.pdf`` yields excellent compression resul
 
 Closing
 =========
-It is often desirable to "close" a document to relinquish control of the underlying file to the OS, while your program is still running.
+It is often desirable to "close" a document to relinquish control of the underlying file to the OS, while your program continues.
 
 This can be achieved by the :meth:`Document.close` method. Apart from closing the underlying file, buffer areas associated with the document will be freed.
 

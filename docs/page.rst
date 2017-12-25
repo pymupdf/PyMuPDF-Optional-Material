@@ -16,43 +16,45 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 * Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
 * Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
 
-========================== =========================================
-**Method / Attribute**     **Short Description**
-========================== =========================================
-:meth:`Page.bound`         rectangle (mediabox) of the page
-:meth:`Page.deleteAnnot`   PDF only: delete an annotation
-:meth:`Page.deleteLink`    PDF only: delete a link
-:meth:`Page.drawBezier`    PDF only: draw a cubic Bézier curve
-:meth:`Page.drawCircle`    PDF only: draw a circle
-:meth:`Page.drawCurve`     PDF only: draw a special Bézier curve
-:meth:`Page.drawLine`      PDF only: draw a line
-:meth:`Page.drawOval`      PDF only: draw an oval / ellipse
-:meth:`Page.drawPolyline`  PDF only: connect a point sequence
-:meth:`Page.drawRect`      PDF only: draw a rectangle
-:meth:`Page.drawSector`    PDF only: draw a circular sector
-:meth:`Page.drawSquiggle`  PDF only: draw a squiggly line
-:meth:`Page.drawZigzag`    PDF only: draw a zig-zagged line
-:meth:`Page.getFontList`   PDF only: get list of used fonts
-:meth:`Page.getImageList`  PDF only: get list of used images
-:meth:`Page.getLinks`      get all links
-:meth:`Page.getPixmap`     create a :ref:`Pixmap`
-:meth:`Page.getText`       extract the page's text
-:meth:`Page.insertImage`   PDF only: insert an image
-:meth:`Page.insertLink`    PDF only: insert a new link
-:meth:`Page.insertText`    PDF only: insert text
-:meth:`Page.insertTextbox` PDF only: insert a text box
-:meth:`Page.loadLinks`     return the first link on a page
-:meth:`Page.newShape`      PDF only: start a new :ref:`Shape`
-:meth:`Page.searchFor`     search for a string
-:meth:`Page.setRotation`   PDF only: set page rotation
-:meth:`Page.updateLink`    PDF only: modify a link
-:attr:`Page.firstAnnot`    first :ref:`Annot` on the page
-:attr:`Page.firstLink`     first :ref:`Link` on the page
-:attr:`Page.number`        page number
-:attr:`Page.parent`        owning document object
-:attr:`Page.rect`          rectangle (mediabox) of the page
-:attr:`Page.rotation`      PDF only: page rotation
-========================== =========================================
+================================ =========================================
+**Method / Attribute**           **Short Description**
+================================ =========================================
+:meth:`Page.bound`               rectangle (mediabox) of the page
+:meth:`Page.deleteAnnot`         PDF only: delete an annotation
+:meth:`Page.deleteLink`          PDF only: delete a link
+:meth:`Page.drawBezier`          PDF only: draw a cubic Bézier curve
+:meth:`Page.drawCircle`          PDF only: draw a circle
+:meth:`Page.drawCurve`           PDF only: draw a special Bézier curve
+:meth:`Page.drawLine`            PDF only: draw a line
+:meth:`Page.drawOval`            PDF only: draw an oval / ellipse
+:meth:`Page.drawPolyline`        PDF only: connect a point sequence
+:meth:`Page.drawRect`            PDF only: draw a rectangle
+:meth:`Page.drawSector`          PDF only: draw a circular sector
+:meth:`Page.drawSquiggle`        PDF only: draw a squiggly line
+:meth:`Page.drawZigzag`          PDF only: draw a zig-zagged line
+:meth:`Page.getFontList`         PDF only: get list of used fonts
+:meth:`Page.getImageList`        PDF only: get list of used images
+:meth:`Page.getLinks`            get all links
+:meth:`Page.getPixmap`           create a :ref:`Pixmap`
+:meth:`Page.getText`             extract the page's text
+:meth:`Page.getTextBlocks`       extract text blocks as a Python list
+:meth:`Page.getTextWords`        extract text words as a Python list
+:meth:`Page.insertImage`         PDF only: insert an image
+:meth:`Page.insertLink`          PDF only: insert a new link
+:meth:`Page.insertText`          PDF only: insert text
+:meth:`Page.insertTextbox`       PDF only: insert a text box
+:meth:`Page.loadLinks`           return the first link on a page
+:meth:`Page.newShape`            PDF only: start a new :ref:`Shape`
+:meth:`Page.searchFor`           search for a string
+:meth:`Page.setRotation`         PDF only: set page rotation
+:meth:`Page.updateLink`          PDF only: modify a link
+:attr:`Page.firstAnnot`          first :ref:`Annot` on the page
+:attr:`Page.firstLink`           first :ref:`Link` on the page
+:attr:`Page.number`              page number
+:attr:`Page.parent`              owning document object
+:attr:`Page.rect`                rectangle (mediabox) of the page
+:attr:`Page.rotation`            PDF only: page rotation
+================================ =========================================
 
 **Class API**
 
@@ -185,16 +187,49 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       3. The image may be inserted uncompressed, e.g. if a ``Pixmap`` is used or if the image has an alpha channel. Therefore, consider using ``deflate = True`` when saving the file.
 
+      4. The image content is stored in its original size - which may be much bigger than the size you want to get displayed. Consider decreasing the stored image size by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
+
    .. method:: getText(output = 'text')
 
       Retrieves the text of a page. Depending on the output parameter, the results of the :ref:`TextPage` extract methods are returned.
 
-      If ``'text'`` is specified, plain text is returned in the order as specified during PDF creation (which is not necessarily the normal reading order). As this may not always look as expected, consider using the example program `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_. It is based on ``output = 'json'`` (``= TextPage.extractJSON()``) and re-arranges text according to the Western reading layout convention "from top-left to bottom-right".
+      If ``'text'`` is specified, plain text is returned **in the order as specified during PDF creation** (which is not necessarily the normal reading order). This may not always look as expected, consider using (and probably modifying) the example program `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_. It tries to re-arrange text according to the Western reading layout convention "from top-left to bottom-right".
 
-      :arg str output: A string indicating the requested text format, one of ``text`` (default), ``html``, ``json``, or ``xml``.
+      :arg str output: A string indicating the requested text format, one of ``"text"`` (default), ``"html"``, ``"json"``, ``"xml"`` or ``"xhtml"``.
 
       :rtype: string
       :returns: The page's text as one string.
+
+      .. note:: Use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML, XHTML or JSON documents works in exactly the same way. For XML and JSON you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
+
+      >>> doc = fitz.open(...)
+      >>> ofile = open(doc.name + ".html", "w")
+      >>> ofile.write(fitz.ConversionHeader("html"))
+      >>> for page in doc: ofile.write(page.getText("html"))
+      >>> ofile.write(fitz.ConversionTrailer("html"))
+      >>> ofile.close()
+
+   .. method:: getTextBlocks()
+
+      Extract all text block as a Python list. Provides positioning information for text without having to interpret the output of :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`. The block sequence is as specified in the document. The accompanying rectangle coordinates can be used to re-arrange the final text output to your liking. All lines of a block are concatenated into one string, separated by a space.
+
+      :rtype: list
+      :returns: a list whose items have the following entries.
+
+                * ``x0, y0, x1, y1``: 4 floats defining the rectangle containing one block
+                * ``text``: concatenated text of the lines in the block *(str)*
+                * ``block_n``: 0-based block number
+
+   .. method:: getTextWords()
+
+      Extract all words as a Python list. Provides positioning information for words without having to interpret the output of :meth:`TextPage.extractXML`. The word sequence is as specified in the document. The accompanying rectangle coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
+
+      :rtype: list
+      :returns: a list whose items are lists with the following entries:
+
+                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
+                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not just letters. So, ``Hello world!`` will yield the two words ``Hello`` and ``world!``.
+                * ``block_n, line_n, word_n``: 0-based numbers for block, line and word *(int)*.
 
    .. method:: getFontList()
 
@@ -204,28 +239,28 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       PDF only: Return a list of images referenced by the page. Same as :meth:`Document.getPageImageList`.
 
-   .. method:: getPixmap(matrix = fitz.Identity, colorspace = "RGB", clip = None, alpha = True)
+   .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, clip = None, alpha = True)
 
-     Creates a Pixmap from the page. This is probably the most often used method to create pixmaps.
+     Create a pixmap from the page. This is probably the most often used method to create pixmaps.
 
      :arg matrix: A :ref:`Matrix` object. Default is :ref:`Identity`.
      :type matrix: :ref:`Matrix`
 
-     :arg colorspace: Defines the required colorspace, one of ``GRAY``, ``RGB`` (default) or ``CMYK`` (case insensitive). Alternatively specify a :ref:`Colorspace`, conveniently one of the predefined ones (:data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`).
+     :arg colorspace: Defines the required colorspace, one of ``GRAY``, ``RGB`` or ``CMYK`` (case insensitive). Or specify a :ref:`Colorspace`, e.g. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
      :type colorspace: string, :ref:`Colorspace`
 
-     :arg clip: restrict rendering to the rectangle's area. Default is ``None`` and will render the full page.
+     :arg clip: restrict rendering to the rectangle's area. The default will render the full page.
      :type clip: :ref:`IRect`
 
-     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the pixmap will be allocated:
+     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the image will appear:
 
-        * ``True``: the pixmap will be cleared with ``0x00``, including the alpha byte. This will result in **transparent** areas where the page is empty (i.e. no text, no image).
+        * ``True``: pixmap's samples will be pre-cleared with ``0x00``, including the alpha byte. This will result in **transparent** areas where the page is empty.
 
-        .. image:: alpha-1.png
+        .. image:: img-alpha-1.png
 
-        * ``False``: the pixmap will be cleared with ``0xff``. This will result in **white** where the page has nothing to show.
+        * ``False``: pixmap's samples will be pre-cleared with ``0xff``. This will result in **white** where the page has nothing to show.
 
-        .. image:: alpha-0.png
+        .. image:: img-alpha-0.png
 
      :rtype: :ref:`Pixmap`
      :returns: Pixmap of the page.
@@ -355,15 +390,15 @@ Homologous Methods of :ref:`Document` and :ref:`Page`
 --------------------------------------------------------
 This is an overview of homologous methods on the :ref:`Document` and on the :ref:`Page` level.
 
-============================= =====================================
-**Document Level**            **Page Level**
-============================= =====================================
-doc.getPageFontlist(pno)      doc[pno].getFontlist()
-doc.getPageImageList(pno)     doc[pno].getImageList()
-doc.getPagePixmap(pno, ...)   doc[pno].getPixmap(...)
-doc.getPageText(pno, ...)     doc[pno].getText(...)
-doc.searchPageFor(pno, ...)   doc[pno].searchFor(...)
-doc._getPageXref(pno)         doc[pno]._getXref()
-============================= =====================================
+================================== =====================================
+**Document Level**                 **Page Level**
+================================== =====================================
+Document.getPageFontlist(pno)      Page.getFontlist()
+Document.getPageImageList(pno)     Page.getImageList()
+Document.getPagePixmap(pno, ...)   Page.getPixmap(...)
+Document.getPageText(pno, ...)     Page.getText(...)
+Document.searchPageFor(pno, ...)   Page.searchFor(...)
+Document._getPageXref(pno)         Page._getXref()
+================================== =====================================
 
-The list assumes a document object ``doc``. The page number ``pno`` is 0-based and can be any positive or negative number ``< len(doc)``.
+The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``. The document methods invoke their page counterparts via ``Document[pno].<method>``.

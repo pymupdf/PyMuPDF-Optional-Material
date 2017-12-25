@@ -2,19 +2,15 @@
 .. _cooperation:
 
 ===============================================================
-Working together: DisplayList, TextPage and TextSheet
+Working together: DisplayList and TextPage
 ===============================================================
 Here are some instructions on how to use these classes together.
 
 In some situations, performance improvements may be achievable when you fall back to the detail level explained here.
 
-This may be possible when several different things need to be done with the same page.
-
 Create a DisplayList
 ---------------------
-A :ref:`DisplayList` represents an interpreted page. Methods for pixmap creation, text extraction and text search are  - behind the curtain - all using the page's display list to perform their tasks. Therefore, some overhead can be saved, if a display list is only created once per page.
-
-An example may be, that a page image must re-displayed multiple times in a GUI because the user is zooming (i.e. change of image resolution and clip area).
+A :ref:`DisplayList` represents an interpreted document page. Methods for pixmap creation, text extraction and text search are  - behind the curtain - all using the page's display list to perform their tasks. If a page must be rendered several times (e.g. because of changed zoom levels), or if text search and text extraction should both be performed, overhead can be saved, if the display list is created only once and then used for all other tasks.
 
 >>> dl = page.getDisplayList()              # create the display list
 
@@ -28,27 +24,44 @@ The following creates a Pixmap from a :ref:`DisplayList`. Parameters are the sam
 
 >>> pix = dl.getPixmap()                    # create the page's pixmap
 
-The execution time of this statement may be up to 50% smaller than that of :meth:`Page.getPixMap`.
+The execution time of this statement may be 20% up to 50% shorter than that of :meth:`Page.getPixMap`.
 
 Perform Text Search
 ---------------------
 With the display list from above, we can also search for text.
 
-For this we need to create :ref:`TextSheet` and :ref:`TextPage` objects.
+For this we need to create a :ref:`TextPage`.
 
->>> ts = fitz.TextSheet()                    # see remark (*)
->>> tp = dl.getTextPage(ts)                  # display list from above
+>>> tp = dl.getTextPage()                    # display list from above
 >>> rlist = tp.search("needle")              # look up "needle" locations
 >>> for r in rlist:                          # work with found locations:
         pix.invertIRect(r.irect)             # e.g. invert colors in rectangle
 
-(*) The text sheet could actually have been re-used, it does not need to be new as indicated here. You may create one when you open the document and use it for all text operations.
-
 Extract Text
 ----------------
-With the :ref:`TextPage` object from above, we can immediately use one or all of the 4 text extraction methods:
+With the same :ref:`TextPage` object from above, we can now immediately use any or all of the 5 text extraction methods.
+
+.. note:: Above, we have created our text page without argument. This leads to a default value of ``3 = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE``, IAW images will **not** be extracted - see below.
 
 >>> txt  = tp.extractText()                  # plain text format
 >>> json = tp.extractJSON()                  # json format
 >>> html = tp.extractHTML()                  # HTML format
 >>> xml  = tp.extractXML()                   # XML format
+>>> xml  = tp.extractXHTML()                 # XHTML format
+
+Further Performance improvements
+---------------------------------
+Pixmap
+~~~~~~~
+As explained in the :ref:`Page` chapter:
+
+If you do not need transparency set ``alpha = 0`` when creating pixmaps. This will save 25% memory (if RGB, the most common case) and possibly 5% execution time (depending on the GUI software).
+
+TextPage
+~~~~~~~~~
+If you do not need images extracted alongside the text of a page, you can set the following option:
+
+>>> flags = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE
+>>> tp = dl.getTextPage(flags)
+
+This will save ca. 25% overall execution time for the HTML, XHTML and JSON text extractions and hugely reduce the amount of storage (memory and disk space) if the document is graphics oriented.

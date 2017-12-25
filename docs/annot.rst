@@ -235,4 +235,4 @@ This is how the circle annotation looks like, before and after the change:
 
 |circle|
  
-.. |circle| image:: circle.png
+.. |circle| image:: img-circle.png
