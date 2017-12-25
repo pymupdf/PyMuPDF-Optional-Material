@@ -21,7 +21,7 @@ You are probably interested in only one or two specific versions: **left-click**
 
 
 ## Support for standard Python Wheels
-If you prefer, you can download the wheel of your choice from [this repository](https://github.com/JorjMcKie/PyMuPDF-wheels/blob/master) and use
+If you prefer, you can download the wheel of your choice from [this repository](https://github.com/JorjMcKie/PyMuPDF-wheels) and use
 
 `pip install PyMuPDF-<...>.whl --upgrade`
 
