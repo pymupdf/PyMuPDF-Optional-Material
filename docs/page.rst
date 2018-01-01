@@ -48,6 +48,8 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 :meth:`Page.searchFor`           search for a string
 :meth:`Page.setRotation`         PDF only: set page rotation
 :meth:`Page.updateLink`          PDF only: modify a link
+:attr:`Page.CropBoxPosition`     top-left point of /CropBox
+:attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
 :attr:`Page.firstAnnot`          first :ref:`Annot` on the page
 :attr:`Page.firstLink`           first :ref:`Link` on the page
 :attr:`Page.number`              page number
@@ -209,16 +211,19 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       >>> ofile.write(fitz.ConversionTrailer("html"))
       >>> ofile.close()
 
-   .. method:: getTextBlocks()
+   .. method:: getTextBlocks(images = False)
 
-      Extract all text block as a Python list. Provides positioning information for text without having to interpret the output of :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`. The block sequence is as specified in the document. The accompanying rectangle coordinates can be used to re-arrange the final text output to your liking. All lines of a block are concatenated into one string, separated by a space.
+      Extract all text blocks as a Python list. Provides basic positioning information without the need to interpret the output of :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by a space.
+
+      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only metadata, not the image data itself is extracted. Use :meth:`TextPage.extractJSON` for accessing this information.
 
       :rtype: list
       :returns: a list whose items have the following entries.
 
-                * ``x0, y0, x1, y1``: 4 floats defining the rectangle containing one block
-                * ``text``: concatenated text of the lines in the block *(str)*
-                * ``block_n``: 0-based block number
+                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the block.
+                * ``text``: concatenated text lines in the block *(str)*. If this is an image block, a text like this is contained: ``<image: DeviceRGB, width 511, height 379, bpc 8>`` (original image's width and height).
+                * ``block_n``: 0-based block number *(int)*.
+                * ``type``: block type *(int)*, 0 = text, 1 = image.
 
    .. method:: getTextWords()
 
@@ -312,6 +317,20 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       PDF only: contains the rotation of the page in degrees and ``-1`` for other document types.
 
       :type: int
+
+   .. attribute:: CropBoxPosition
+
+      Contains the top-left coordinates of the page's ``/CropBox`` for a PDF, otherwise the top-left coordinates of the page's rectangle.
+
+      :type: :ref:`Point`
+
+   .. attribute:: MediaBoxSize
+
+      Contains the width and height of the page's ``/MediaBox`` for a PDF, otherwise the bottom-right coordinates of the page's rectangle.
+
+      :type: :ref:`Point`
+
+    .. note:: For non-PDF documents (and in most cases for PDF documents, too) ``page.rect == fitz.Rect(page.CropBoxPosition, page.MediaBoxSize)`` is true. For PDF documents however, ``page.rect`` may be a true subset of the ``/MediaBox``. In this case these attributes may help to correctly position / evaluate elements of the page.
 
    .. attribute:: firstLink
 

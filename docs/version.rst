@@ -1,4 +1,4 @@
 Covered Version
 --------------------
 
-This documentation covers PyMuPDF 1.12.0 features as of **2017-12-25, 11:05:13**.
+This documentation covers PyMuPDF 1.12.1 features as of **2018-01-01, 07:51:16**.

@@ -1,15 +1,15 @@
 Quick Installation of PyMuPDF Binaries Version
 ======================================================
-These installation files support MuPDF version 1.11 published 2017-04-11. They deliver the same functionality as PyMuPDF v1.11.1 - just in a precompiled form.
+These installation files support MuPDF version 1.12.0 published 2017-12-13. They deliver the same functionality as PyMuPDF v1.12.1 - just in a precompiled form.
 
 Pre-requisites
 ---------------
 Windows (x86 or x64) version XP or higher.
 Each zip file contains the intended Python version encoded in its name, so -
 
-``pymupdf-1.11.1-pyXY-platform.zip``
+``pymupdf-<version>-pyXY-<platform>.zip``
 
-means: this is the setup for Python version X.Y on ``platform``, where platform is one of ``x86`` or ``x64``.
+means: this is the setup version "<version>" for Python version X.Y on "<platform>", where platform is one of ``x86`` or ``x64``.
 
 Python versions prepared include 2.7 and 3.4 through 3.7.
 
