@@ -20,7 +20,7 @@ While PyMuPDF has been available since several years for an earlier version of M
 
 PyMuPDF runs and has been tested on Mac, Linux, Windows XP SP2 and up, Python 2.7 through Python 3.6 (note that Python supports Windows XP only up to v3.4), 32bit and 64bit versions. Other platforms should work too, as long as MuPDF and Python support them.
 
-PyMuPDF is hosted on GitHub in this `repository <https://github.com/rk700/PyMuPDF>`_. Because we rely on MuPDF's C library, installation consists of two separate steps for all platforms except for MS Windows:
+PyMuPDF is hosted on `GitHub <https://github.com/rk700/PyMuPDF>`_. Because we rely on MuPDF's C library, installation consists of two separate steps for all platforms except for MS Windows:
 
 1. Installation of MuPDF: this involves downloading the source from their website and then compiling it on your machine.
 

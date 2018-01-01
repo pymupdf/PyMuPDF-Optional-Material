@@ -233,17 +233,17 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
       PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, depending on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
 
-      :arg rect: the area to use. It must be finite, not empty and completely contained in the page.
+      :arg rect: the area to use. It must be finite and not empty.
       :type rect: :ref:`Rect`
 
       :arg buffer: the text to be inserted. Must be specified as a string or a sequence of strings. Line breaks are respected also when occurring in a sequence entry.
       :type text: str or sequence
 
-      :arg int align: align each text line. Default is 0 (left). Centered, right and justified are the other supported options, see :ref:`TextAlign`.
+      :arg int align: align each text line. Default is 0 (left). Centered, right and justified are the other supported options, see :ref:`TextAlign`. Please note that the effect of parameter value ``TEXT_ALIGN_JUSTIFY`` is only achievable with "simple" (single-byte) fonts (including the :ref:`Base-14-Fonts`). Refer to :ref:`AdobeManual`, section 5.2.2, page 399.
 
       :arg int expandtabs: controls handling of tab characters ``\t`` using the ``string.expandtabs()`` method **per each line**.
 
-      :arg int rotate: requests text to be rotated in the rectangle. This value must be a multiple of 90 degrees. Default is 0 (no rotation). Effectively, four different values are processed: 0, 90, 180 and 270 (= -90), each causing the text to start in a different rectangle corner. Bottom-left is 90, bottom-right is 180, and -90 / 270 is top-right. See the example how text is filled in a rectangle. This argument takes precedence over morphing. See the second example showing text rotated 90 degrees and then the whole rectangle rotated right around is lower left corner.
+      :arg int rotate: requests text to be rotated in the rectangle. This value must be a multiple of 90 degrees. Default is 0 (no rotation). Effectively, four different values are processed: 0, 90, 180 and 270 (= -90), each causing the text to start in a different rectangle corner. Bottom-left is 90, bottom-right is 180, and -90 / 270 is top-right. See the example how text is filled in a rectangle. This argument takes precedence over morphing. See the second example, which shows text first rotated left by 90 degrees and then the whole rectangle rotated clockwise around is lower left corner.
 
       :rtype: float
       :returns:
