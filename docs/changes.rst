@@ -1,6 +1,18 @@
 Change Logs
 ===============
 
+Changes in Version 1.12.1
+--------------------------
+This is an extension of version 1.12.0.
+
+* Method :meth:`Page.getTextBlocks` now accepts an additional bool parameter "images". If set to true (default is false), images contained in the :ref:`TextPage` are included in the produced list and thus allow detecting areas with rendered images.
+
+* Minor bug fixes.
+
+* "text" result of :meth:`Page.getText` concatenates all lines within a block using a single space character. MuPDF's original uses "\\n" instead, producing a rather ragged output.
+
+* New properties of :ref:`Page` objects :attr:`Page.MediaBoxSize` and :attr:`Page.CropBoxPosition` provide more information about a page's dimensions. For non-PDF files (and for most PDF files, too) these will be equal to :attr:`Page.rect.bottom_right`, resp. :attr:`Page.rect.top_left`. For example, class :ref:`Shape` makes use of them to correctly position its items.
+
 Changes in Version 1.12.0
 --------------------------
 This version is based on and requires MuPDF v1.12. The new MuPDF version contains quite a number of changes - most of them around text extraction. Some of the changes impact the programmer's API.
