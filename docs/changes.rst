@@ -5,6 +5,10 @@ Changes in Version 1.12.1
 --------------------------
 This is an extension of version 1.12.0.
 
+* New method :meth:`Page.showPDFpage` displays another's PDF page. This is a **vector** image and remains precise across zooming. Both involved documents must be PDF.
+
+* New method :meth:`Page.getSVGimage` creates an SVG image from the page. The return is a unicode text string, which can be saved in a ``.svg`` file.
+
 * Method :meth:`Page.getTextBlocks` now accepts an additional bool parameter "images". If set to true (default is false), images contained in the :ref:`TextPage` are included in the produced list and thus allow detecting areas with rendered images.
 
 * Minor bug fixes.

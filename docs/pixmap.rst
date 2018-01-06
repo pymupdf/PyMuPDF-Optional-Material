@@ -69,7 +69,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
       **Copy and set colorspace:** Copy ``source`` pixmap choosing the colorspace. Any colorspace combination is possible.
 
-      :arg colorspace: desired target colorspace.
+      :arg colorspace: desired target colorspace. This may also be ``None``. In this case, a "masking" pixmap is created: its :attr:`Pixmap.samples` will consist of the source's alpha bytes only.
       :type colorspace: :ref:`Colorspace`
 
       :arg source: the source pixmap.
@@ -314,11 +314,13 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
 Supported Input Image Types
 -----------------------------------------------
-The following file types are supported as input to construct pixmaps: **BMP, JPEG, GIF, SVG, TIFF, JXR,** and **PNG**. This support is two-fold:
+The following file types are supported as input to construct pixmaps: **BMP, JPEG, GIF, TIFF, JXR,** and **PNG**. This support is two-fold:
 
 1. Directly create a pixmap with ``Pixmap(filename)`` or ``Pixmap(byterray)``. The pixmap will then have properties as determined by the image.
 
 2. Open such files with ``fitz.open(...)``. The result will then appear as a document containing one single page. Creating a pixmap of this page offers all options available in this context: apply a matrix, choose colorspace and alpha, confine the pixmap to a clip area, etc.
+
+**SVG images** are only supported via method 2 above, not directly as pixmaps. In any case, this will turn the SVG into a raster image. If you need a **vector image** you must first convert it to a PDF and then display it e.g. via :meth:`Page.showPDFpage`. There exist many tools for SVG-to-PDF conversion, among them the Python package `svglib <https://pypi.org/project/svglib>`_ or Java solutions like `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for example solutions.
 
 Details on Saving Images with ``writeImage()``
 -----------------------------------------------

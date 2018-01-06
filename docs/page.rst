@@ -36,6 +36,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 :meth:`Page.getImageList`        PDF only: get list of used images
 :meth:`Page.getLinks`            get all links
 :meth:`Page.getPixmap`           create a :ref:`Pixmap`
+:meth:`Page.getSVGimage`         convert page image to SVG format
 :meth:`Page.getText`             extract the page's text
 :meth:`Page.getTextBlocks`       extract text blocks as a Python list
 :meth:`Page.getTextWords`        extract text words as a Python list
@@ -47,6 +48,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 :meth:`Page.newShape`            PDF only: start a new :ref:`Shape`
 :meth:`Page.searchFor`           search for a string
 :meth:`Page.setRotation`         PDF only: set page rotation
+:meth:`Page.showPDFpage`         PDF only: display PDF page image
 :meth:`Page.updateLink`          PDF only: modify a link
 :attr:`Page.CropBoxPosition`     top-left point of /CropBox
 :attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
@@ -244,6 +246,15 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       PDF only: Return a list of images referenced by the page. Same as :meth:`Document.getPageImageList`.
 
+   .. method:: getSVGimage(matrix = None)
+
+      Create an SVG image from the page. Only full page images are currently supported.
+
+     :arg matrix: A :ref:`Matrix` object. Default is :ref:`Identity`. Valid operations include scaling and rotation.
+     :type matrix: :ref:`Matrix`
+
+     :returns: an UTF-8 encoded string that contains the image. This can e.g. be saved in a file with extension ``.svg``.
+
    .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, clip = None, alpha = True)
 
      Create a pixmap from the page. This is probably the most often used method to create pixmaps.
@@ -285,20 +296,32 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :returns: zero if successfull, ``-1`` if not a PDF.
 
+   .. method:: showPDFpage(rect, docsrc, pno = 0, keep_proportions = True, overlay = True)
+
+      PDF only: Display the image of another's PDF page.
+
+      :arg rect: where to place the image.
+      :type rect: :ref:`Rect`
+
+      :arg docsrc: source PDF document containing the page. Must be a different document, but may be the same file.
+      :type docsrc: :ref:`Document`
+
+      :arg int pno: page number (0-based).
+
+      :arg bool keep_proportions: control whether to scale width and height synchronously (default).
+
+      :arg bool overlay: put image in foreground (default) or background.
+
+      :returns: zero if successful.
+
+      .. note:: This is a multi-purpose method. For instance, it can be used to create "2-up" / "4-up" versions of existing PDF files (see the examples directory of our home page). Or use it to include PDF-based vector images.
+
    .. method:: newShape()
 
       PDF only: Create a new :ref:`Shape` object for the page.
 
       :rtype: :ref:`Shape`
       :returns: a new :ref:`Shape` to use for compound drawings. See description there.
-
-   .. method:: setRotation(rot)
-
-      PDF only: Sets the rotation of the page.
-
-      :arg int rot: An integer specifying the required rotation in degrees. Should be a (positive or negative) multiple of 90.
-
-      :returns: zero if successfull, ``-1`` if not a PDF.
 
    .. method:: searchFor(text, hit_max = 16)
 
