@@ -246,20 +246,20 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       PDF only: Return a list of images referenced by the page. Same as :meth:`Document.getPageImageList`.
 
-   .. method:: getSVGimage(matrix = None)
+   .. method:: getSVGimage(matrix = fitz.Identity)
 
       Create an SVG image from the page. Only full page images are currently supported.
 
-     :arg matrix: A :ref:`Matrix` object. Default is :ref:`Identity`. Valid operations include scaling and rotation.
+     :arg matrix: a :ref:`Matrix`, default is :ref:`Identity`. Valid operations include scaling and rotation.
      :type matrix: :ref:`Matrix`
 
-     :returns: an UTF-8 encoded string that contains the image. This can e.g. be saved in a file with extension ``.svg``.
+     :returns: a UTF-8 encoded string that contains the image. This is XML syntax and can be saved in a text file with extension ``.svg``.
 
    .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, clip = None, alpha = True)
 
      Create a pixmap from the page. This is probably the most often used method to create pixmaps.
 
-     :arg matrix: A :ref:`Matrix` object. Default is :ref:`Identity`.
+     :arg matrix: a :ref:`Matrix`, default is :ref:`Identity`.
      :type matrix: :ref:`Matrix`
 
      :arg colorspace: Defines the required colorspace, one of ``GRAY``, ``RGB`` or ``CMYK`` (case insensitive). Or specify a :ref:`Colorspace`, e.g. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
@@ -303,27 +303,29 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       :arg rect: where to place the image.
       :type rect: :ref:`Rect`
 
-      :arg docsrc: source PDF document containing the page. Must be a different document, but may be the same file. One of this or a value greater 0 for ``reuse_xref`` must be specified.
+      :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file. Either this parameter or a positive value for ``reuse_xref`` must be specified.
       :type docsrc: :ref:`Document`
 
-      :arg int pno: page number (0-based).
+      :arg int pno: page number (0-based) to be displayed.
 
       :arg bool keep_proportion: control whether to scale width and height synchronously (default).
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int reuse_xref: specify an xref number if an already stored image should be reused. The source page will then not be included again. This argument takes precedence: if a positive value is given, parameters ``docsrc`` and ``pno`` are ignored. A value less than 1 will ensure incorporating a new page.
+      :arg int reuse_xref: specify an xref number if an already stored page image should be reused. This suppresses copying the source page once more. This argument takes precedence: if a positive value is given, parameters ``docsrc`` and ``pno`` are ignored. A value less than 1 will cause copying page number ``pno``.
 
-      :arg clip: choose which part of input page to show. Default is complete page.
-      :type rect: :ref:`Rect`
+      :arg clip: choose which part of the input page to show. Default is the complete page.
+      :type clip: :ref:`Rect`
 
-      :returns: xref number of the stored page image if successful. Can be used with ``reuse_xref`` parameter if this image should be displayed somewhere else.
+      :returns: xref number of the stored page image if successful. Use this result as the value of argument ``reuse_xref`` when the page should be displayed somewhere else.
 
-      .. note:: This is a multi-purpose method. For instance, it can be used to create "2-up" / "4-up" or posterized versions of existing PDF files (see the examples `4-up.py <https://github.com/rk700/PyMuPDF/blob/master/examples/4-up.py>`_ and `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_). Or use it to include PDF-based vector images (company logos, watermarks, etc.).
+      .. note:: This is a multi-purpose method. For instance, it can be used to create "2-up" / "4-up" or posterized versions of existing PDF files (see examples `4-up.py <https://github.com/rk700/PyMuPDF/blob/master/examples/4-up.py>`_ and `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_). Or use it to include PDF-based vector images (company logos, watermarks, etc.).
 
-      .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a displayed source page. Use the ``reuse_xref`` argument to prevent creation of multiple copies as follows.
+      .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a displayed source page. Therefore, use the ``reuse_xref`` argument to prevent their creation as follows.
 
-      >>> xref = 0      # first showPDFpage will read the page
+      >>> # the first showPDFpage will copy the page, subsequent
+      >>> # executions will refer to the "xref"-ed object.
+      >>> xref = 0
       >>> for page in doc:
               xref = page.showPDFpage(rect, docsrc, pno, reuse_xref = xref)
       >>> 
