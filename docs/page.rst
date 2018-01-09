@@ -296,7 +296,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :returns: zero if successfull, ``-1`` if not a PDF.
 
-   .. method:: showPDFpage(rect, docsrc = None, pno = 0, keep_proportions = True, overlay = True, reuse_xref = 0)
+   .. method:: showPDFpage(rect, docsrc = None, pno = 0, keep_proportion = True, overlay = True, reuse_xref = 0, clip = None)
 
       PDF only: Display the page of another PDF as a **vector image**.
 
@@ -308,15 +308,18 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :arg int pno: page number (0-based).
 
-      :arg bool keep_proportions: control whether to scale width and height synchronously (default).
+      :arg bool keep_proportion: control whether to scale width and height synchronously (default).
 
       :arg bool overlay: put image in foreground (default) or background.
 
       :arg int reuse_xref: specify an xref number if an already stored image should be reused. The source page will then not be included again. This argument takes precedence: if a positive value is given, parameters ``docsrc`` and ``pno`` are ignored. A value less than 1 will ensure incorporating a new page.
 
+      :arg clip: choose which part of input page to show. Default is complete page.
+      :type rect: :ref:`Rect`
+
       :returns: xref number of the stored page image if successful. Can be used with ``reuse_xref`` parameter if this image should be displayed somewhere else.
 
-      .. note:: This is a multi-purpose method. For instance, it can be used to create "2-up" / "4-up" versions of existing PDF files (see the examples directory of our home page). Or use it to include PDF-based vector images (company logos, watermarks, etc.).
+      .. note:: This is a multi-purpose method. For instance, it can be used to create "2-up" / "4-up" or posterized versions of existing PDF files (see the examples `4-up.py <https://github.com/rk700/PyMuPDF/blob/master/examples/4-up.py>`_ and `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_). Or use it to include PDF-based vector images (company logos, watermarks, etc.).
 
       .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a displayed source page. Use the ``reuse_xref`` argument to prevent creation of multiple copies as follows.
 
