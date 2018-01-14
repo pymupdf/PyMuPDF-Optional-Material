@@ -5,6 +5,7 @@ This a list of exception messages raised by PyMuPDF together with an explanation
 
 In addition, the underlying C library MuPDF also raises exceptions on the Python level. We have included a few of those as well and may extend this in future.
 
+In general, ``RuntimeError`` is raised by the C-level (MuPdf or PyMuPDF), other exception types are always raised on the Python level.
 
 **annot has no /AP**
     * Bad specification - no changes possible for this annotation.
@@ -49,7 +50,7 @@ In addition, the underlying C library MuPDF also raises exceptions on the Python
     * Root object of PDF not found. Repair PDF.
 
 **encrypted file - save to new**
-    * Trying incremental save for a decrypted file. Use ``doc.save()`` to a new file.
+    * Trying incremental save for a decrypted file. Save to a new file.
 
 **exactly one of filename, pixmap must be given**
     * You either specified both parameters or none.
@@ -141,11 +142,8 @@ In addition, the underlying C library MuPDF also raises exceptions on the Python
 **orphaned object: parent is None**
     * Accessing an object whose parent no longer exists (e.g. an annotation of an unavailable page).
 
-**page number out of range**
-    * Page numbers must always be ``< pageCount``, but also non-negative for some methods.
-
-**page numbers must be integers**
-    * Specify valid page numbers (``select()`` method).
+**invalid page number(s)**
+    * Page numbers must be integers ``< pageCount``, but also non-negative for some methods.
 
 **rect must be contained in page rect**
     * Image insertion requires a target rectangle contained in ``page.rect``.
@@ -178,7 +176,7 @@ In addition, the underlying C library MuPDF also raises exceptions on the Python
     * Specify a valid page number.
 
 **target not a PDF**
-    * Method ``doc.insertPDF()`` only works with PDF documents.
+    * Method :meth:`Document.insertPDF` only works with PDF documents.
 
 **text position outside page height range**
     * If text starts at :ref:`Point` ``point``, ``fontsize <= point.y <= (page height - fontsize * 1.2)`` must be true.
