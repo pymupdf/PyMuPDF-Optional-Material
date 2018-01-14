@@ -1,6 +1,15 @@
 Change Logs
 ===============
 
+Changes in Version 1.12.2
+--------------------------
+This is an extension of 1.12.1.
+
+* Method :meth:`Page.showPDFpage` now accepts the new ``clip`` argument. This specifies an area of the source page to which the display should be restricted.
+
+* New :attr:`Page.CropBox` and :attr:`Page.MediaBox` have been included for convenience.
+
+
 Changes in Version 1.12.1
 --------------------------
 This is an extension of version 1.12.0.

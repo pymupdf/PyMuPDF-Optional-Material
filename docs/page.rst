@@ -19,7 +19,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 ================================ =========================================
 **Method / Attribute**           **Short Description**
 ================================ =========================================
-:meth:`Page.bound`               rectangle (mediabox) of the page
+:meth:`Page.bound`               rectangle of the page
 :meth:`Page.deleteAnnot`         PDF only: delete an annotation
 :meth:`Page.deleteLink`          PDF only: delete a link
 :meth:`Page.drawBezier`          PDF only: draw a cubic Bézier curve
@@ -51,7 +51,9 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 :meth:`Page.showPDFpage`         PDF only: display PDF page image
 :meth:`Page.updateLink`          PDF only: modify a link
 :attr:`Page.CropBoxPosition`     top-left point of /CropBox
+:attr:`Page.CropBox`             the page's /CropBox
 :attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
+:attr:`Page.MediaBox`            the page's /MediaBox
 :attr:`Page.firstAnnot`          first :ref:`Annot` on the page
 :attr:`Page.firstLink`           first :ref:`Link` on the page
 :attr:`Page.number`              page number
@@ -66,7 +68,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. method:: bound()
 
-      Determine the rectangle ("mediabox", before transformation) of the page.
+      Determine the rectangle (before transformation) of the page. For PDF documents this usually coincides with the ``/MediaBox`` and the ``/CropBox`` objects, but not always. The best description hence is probably "relocated ``/CropBox`` such that top-left coordinates are (0, 0)". Also see attributes :attr:`Page.CropBox` and :attr:`Page.MediaBox`.
 
       :rtype: :ref:`Rect`
 
@@ -296,39 +298,40 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :returns: zero if successfull, ``-1`` if not a PDF.
 
-   .. method:: showPDFpage(rect, docsrc = None, pno = 0, keep_proportion = True, overlay = True, reuse_xref = 0, clip = None)
+   .. method:: showPDFpage(rect, docsrc, pno = 0, keep_proportion = True, overlay = True, reuse_xref = 0, clip = None)
 
       PDF only: Display the page of another PDF as a **vector image**.
 
       :arg rect: where to place the image.
       :type rect: :ref:`Rect`
 
-      :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file. Either this parameter or a positive value for ``reuse_xref`` must be specified.
+      :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file.
       :type docsrc: :ref:`Document`
 
-      :arg int pno: page number (0-based) to be displayed.
+      :arg int pno: page number (0-based) to be shown.
 
       :arg bool keep_proportion: control whether to scale width and height synchronously (default).
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int reuse_xref: specify an xref number if an already stored page image should be reused. This suppresses copying the source page once more. This argument takes precedence: if a positive value is given, parameters ``docsrc`` and ``pno`` are ignored. A value less than 1 will cause copying page number ``pno``.
+      :arg int reuse_xref: specify an xref number if an already stored page shall be shown. This suppresses copying the source page once more.
 
-      :arg clip: choose which part of the input page to show. Default is the complete page.
+      :arg clip: choose which part of the source page to show. Default is its ``/CropBox``.
       :type clip: :ref:`Rect`
 
-      :returns: xref number of the stored page image if successful. Use this result as the value of argument ``reuse_xref`` when the page should be displayed somewhere else.
+      :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same page again.
 
       .. note:: This is a multi-purpose method. For instance, it can be used to create "2-up" / "4-up" or posterized versions of existing PDF files (see examples `4-up.py <https://github.com/rk700/PyMuPDF/blob/master/examples/4-up.py>`_ and `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_). Or use it to include PDF-based vector images (company logos, watermarks, etc.).
 
-      .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a displayed source page. Therefore, use the ``reuse_xref`` argument to prevent their creation as follows.
+      .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a to-be-displayed source page. Therefore, use the ``reuse_xref`` argument to prevent multiple creations as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`.
 
-      >>> # the first showPDFpage will copy the page, subsequent
-      >>> # executions will refer to the "xref"-ed object.
+      >>> # the first showPDFpage will copy the page, the following
+      >>> # will reuse the result via its xref.
       >>> xref = 0
       >>> for page in doc:
-              xref = page.showPDFpage(rect, docsrc, pno, reuse_xref = xref)
-      >>> 
+              xref = page.showPDFpage(rect, docsrc, pno,
+                                      reuse_xref = xref)
+
 
    .. method:: newShape()
 
@@ -361,13 +364,25 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :type: :ref:`Point`
 
+   .. attribute:: CropBox
+
+      The page's ``/CropBox`` for a PDF, the page's rectangle.
+
+      :type: :ref:`Rect`
+
    .. attribute:: MediaBoxSize
 
       Contains the width and height of the page's ``/MediaBox`` for a PDF, otherwise the bottom-right coordinates of the page's rectangle.
 
       :type: :ref:`Point`
 
-    .. note:: For non-PDF documents (and in most cases for PDF documents, too) ``page.rect == fitz.Rect(page.CropBoxPosition, page.MediaBoxSize)`` is true. For PDF documents however, ``page.rect`` may be a true subset of the ``/MediaBox``. In this case these attributes may help to correctly position / evaluate elements of the page.
+   .. attribute:: MediaBox
+
+      The page's ``/MediaBox`` for a PDF, otherwise the page's rectangle.
+
+      :type: :ref:`Rect`
+
+    .. note:: For non-PDF documents (and for most PDF documents, too) ``page.rect == page.CropBox == page.MediaBox`` is true. For some PDF documents however, ``page.rect`` may be a true subset of the ``/MediaBox``. In these cases the above attributes help to correctly position / evaluate elements of the page.
 
    .. attribute:: firstLink
 

@@ -350,39 +350,39 @@ Notes
 
 Examples
 ---------
-1. Create a full circle of pieces of pie in different colors.
+1. Create a full circle of pieces of pie in different colors::
 
->>> img  = page.newShape()       # start a new shape
->>> cols = (...)                 # a sequence of RGB color triples
->>> pieces = len(cols)           # number of pieces to draw
->>> beta = 360. / pieces         # angle of each piece of pie
->>> center = fitz.Point(...)     # center of the pie
->>> p0     = fitz.Point(...)     # starting point
->>> for i in range(pieces):
-        p0 = img.drawSector(center, p0, beta,
-                            fullSector = True) # draw piece
-        # now fill it but do not connect ends of the arc
-        img.finish(fill = cols[i], closePath = False)
->>> img.commit()                 # update the page
+ >>> img  = page.newShape()       # start a new shape
+ >>> cols = (...)                 # a sequence of RGB color triples
+ >>> pieces = len(cols)           # number of pieces to draw
+ >>> beta = 360. / pieces         # angle of each piece of pie
+ >>> center = fitz.Point(...)     # center of the pie
+ >>> p0     = fitz.Point(...)     # starting point
+ >>> for i in range(pieces):
+         p0 = img.drawSector(center, p0, beta,
+                             fullSector = True) # draw piece
+         # now fill it but do not connect ends of the arc
+         img.finish(fill = cols[i], closePath = False)
+ >>> img.commit()                 # update the page
 
 Here is an example for 5 colors:
 
 .. image:: img-cake.png
 
-2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon.
+2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon::
 
->>> img  = page.newShape()       # start a new shape
->>> beta = -360.0 / n            # our angle, drawn clockwise
->>> center = fitz.Point(...)     # center of circle
->>> p0     = fitz.Point(...)     # start here (1st edge)
->>> points = [p0]                # store polygon edges
->>> for i in range(n):           # calculate the edges
-        p0 = img.drawSector(center, p0, beta)
-        points.append(p0)
->>> img.contents = ""            # do not draw the circle sectors
->>> img.drawPolyline(points)     # draw the polygon
->>> img.finish(color = (1,0,0), fill = (1,1,0), closePath = False)
->>> img.commit()
+ >>> img  = page.newShape()       # start a new shape
+ >>> beta = -360.0 / n            # our angle, drawn clockwise
+ >>> center = fitz.Point(...)     # center of circle
+ >>> p0     = fitz.Point(...)     # start here (1st edge)
+ >>> points = [p0]                # store polygon edges
+ >>> for i in range(n):           # calculate the edges
+         p0 = img.drawSector(center, p0, beta)
+         points.append(p0)
+ >>> img.contents = ""            # do not draw the circle sectors
+ >>> img.drawPolyline(points)     # draw the polygon
+ >>> img.finish(color = (1,0,0), fill = (1,1,0), closePath = False)
+ >>> img.commit()
 
 Here is the polygon for n = 7:
 

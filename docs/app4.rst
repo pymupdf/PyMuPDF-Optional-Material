@@ -96,3 +96,61 @@ RuntimeError: orphaned object: parent is None
 RuntimeError: orphaned object: parent is None
 
 .. note:: Objects outside the above relationship are not included in this mechanism. If you e.g. created a table of contents by ``toc = doc.getToC()``, and later close or change the document, then this cannot and does not change variable ``toc`` in any way. It is your responsibility to refresh such variables as required.
+
+.. _FormXObject:
+
+Design of Method :meth:`Page.showPDFpage`
+--------------------------------------------
+
+Purpose and Capabilities
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The method displays an image of a ("source") page of another PDF document within a specified rectangle of the current ("containing") page. **In contrast** to :meth:`Page.insertImage`, this display is vector-based and hence remains accurate across zooming levels. **Just like** :meth:`Page.insertImage`, the size of the display is adjusted to the given rectangle.
+
+The following variations of the display are currently supported:
+
+* Bool parameter ``keep_proportion`` controls whether to maintain the width-height-ratio (default) or not.
+* Rectangle parameter ``clip`` controls which part of the source page to show, and hence can be used for cropping.  Default is the full page.
+* Bool parameter ``overlay`` controls whether to put the image on top (foreground, default) of current page content or not (background).
+
+The following use cases can be covered:
+
+1. "Stamp" a series of pages of the current document with the same image, like a company logo or a watermark.
+2. Combine arbitrary input pages into one output page to form e.g. a “booklet” or to support double-sided printing (known as "4-up", "n-up").
+3. Split up (large) input pages into several arbitrary pieces (also called “posterization”).
+
+Technical Implementation
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This is done using PDF **form XObjects**, see section 4.9 on page 355 of :ref:`AdobeManual`. On execution of a ``Page.showPDFpage(rect, src, pno, ...)``, the following things happen:
+
+    1. The ``/Resources`` and ``/Contents`` objects of page ``pno`` in document ``src`` are copied over to the current document, jointly creating a **new form XObject** with the following properties. The PDF ``xref`` number of this object is returned by the method.
+
+        a. ``/BBox`` equals ``/Mediabox`` of the source page
+        b. ``/Matrix`` equals the identity matrix ``[1 0 0 1 0 0]``
+        c. ``/Resources`` equals that of the source page. This involves a “deep-copy” of hierarchically nested other objects (including fonts, images, etc.). The complexity involved here is covered by MuPDF’s grafting [#f1]_ technique functions.
+        d. This is a stream object type, and its stream is exactly equal to the ``/Contents`` object of the source (if the source has multiple such objects, these are first concatenated and stored as one new stream into the new form XObject).
+
+    2. A **second form XObject** is then created which the containing page uses to invoke the previous one. This object has the following properties:
+
+        a. ``/BBox`` equals the ``/CropBox`` of the source page (or ``clip``, if specified).
+        b. ``/Matrix`` represents the mapping of ``/BBox`` to the display rectangle of the containing page (parameter 1 of ``showPDFpage``).
+        c. ``/XObject`` references the previous XObject via the fixed name ``fullpage``.
+        d. The stream of this object contains exactly on fixed statement: ``/fullpage Do``.
+
+    3. The ``/Resources`` and ``/Contents`` objects of the invoking page are now modified as follows.
+    
+        a. Add an entry to the ``/XObject`` dictionary of ``/Resources`` with the following unique name: ``fz-xref-rect``. Uniqueness is required because the same source might be displayed more than once on the containing page. ``xref`` is the PDF cross reference number of XObject 1, and ``rect`` is the memory address of the containing rectangle.
+        b. Depending on ``overlay``, prepend or append the following statement to the contents object: ``/fz-xref-rect Do``.
+
+    4. Return ``xref`` to the caller.
+
+Observe the following guideline for optimum results:
+
+Unfortunately, as per this writing, garbage collection (a feature of the underlying C-library MuPDF) does not detect identical form XObjects. Process steps 1 through 3 above therefore irrevocably lead to **two new XObjects** for every source page. The first one represents the source page itself and may be very large. The second one is very small and specific to the containing page (and therefore rightfully created). To avoid excess source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. When the method detects ``reuse_xref > 0``, it will not create XObject 1 again.
+
+Only bare source page content is shown - no annotations, no link "hot areas".
+
+.. rubric:: Footnotes
+
+.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses "graftmaps". a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, its number is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like fonts and also images. Whether the target before the copy already had identical data (fonts!) is however not checked. Therefore, using save-option ``garbage = 4`` may still be a reasonable consideration, if copying to a non-empty target.
