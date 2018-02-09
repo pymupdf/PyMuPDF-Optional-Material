@@ -48,9 +48,10 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 :meth:`Page.newShape`            PDF only: start a new :ref:`Shape`
 :meth:`Page.searchFor`           search for a string
 :meth:`Page.setRotation`         PDF only: set page rotation
+:meth:`Page.setCropBox`          PDF only: modify the visible page
 :meth:`Page.showPDFpage`         PDF only: display PDF page image
 :meth:`Page.updateLink`          PDF only: modify a link
-:attr:`Page.CropBoxPosition`     top-left point of /CropBox
+:attr:`Page.CropBoxPosition`     displacement of the /CropBox
 :attr:`Page.CropBox`             the page's /CropBox
 :attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
 :attr:`Page.MediaBox`            the page's /MediaBox
@@ -68,7 +69,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. method:: bound()
 
-      Determine the rectangle (before transformation) of the page. For PDF documents this usually coincides with the ``/MediaBox`` and the ``/CropBox`` objects, but not always. The best description hence is probably "relocated ``/CropBox`` such that top-left coordinates are (0, 0)". Also see attributes :attr:`Page.CropBox` and :attr:`Page.MediaBox`.
+      Determine the rectangle (before transformation) of the page. This is same as property :attr:`Page.rect`` below. For PDF documents this **usually** also coincides with the ``/MediaBox`` and the ``/CropBox`` objects, but not always. The best description hence is probably "``/CropBox``, relocated such that top-left coordinates are (0, 0)". Also see attributes :attr:`Page.CropBox` and :attr:`Page.MediaBox`.
 
       :rtype: :ref:`Rect`
 
@@ -217,9 +218,9 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. method:: getTextBlocks(images = False)
 
-      Extract all text blocks as a Python list. Provides basic positioning information without the need to interpret the output of :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by a space.
+      Extract all text blocks as a Python list. Provides basic positioning information without the need to interpret the output of :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
 
-      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only metadata, not the image data itself is extracted. Use :meth:`TextPage.extractJSON` for accessing this information.
+      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only metadata, **not the image data** itself is extracted (use :meth:`TextPage.extractJSON` for accessing this information detail).
 
       :rtype: list
       :returns: a list whose items have the following entries.
@@ -352,6 +353,33 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :returns: A list of :ref:`Rect` rectangles each of which surrounds one occurrence of ``text``.
 
+   .. method:: setCropBox(r)
+
+      PDF only: change the visible part of the page.
+
+      :arg r: the new visible area of the page.
+      :type r: :ref:`Rect`
+
+      After execution, :attr:`Page.rect` will equal this rectangle, shifted to top-left position (0, 0). Example session:
+
+      >>> page = doc.newPage()
+      >>> page.rect
+      fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>> page.CropBox
+      fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>> page.setCropBox(fitz.Rect(100, 100, 400, 400))
+      0
+      >>> page.rect
+      fitz.Rect(0.0, 0.0, 300.0, 300.0)
+      >>> page.CropBox
+      fitz.Rect(100.0, 100.0, 400.0, 400.0)
+      >>> page.MediaBox
+      fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>> page.setCropBox(page.MediaBox)
+      0
+      >>> page.rect
+      fitz.Rect(0.0, 0.0, 595.0, 842.0)
+
    .. attribute:: rotation
 
       PDF only: contains the rotation of the page in degrees and ``-1`` for other document types.
@@ -360,29 +388,28 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. attribute:: CropBoxPosition
 
-      Contains the top-left coordinates of the page's ``/CropBox`` for a PDF, otherwise the top-left coordinates of the page's rectangle.
+      Contains the displacement of the page's ``/CropBox`` for a PDF, otherwise the top-left coordinates of :attr:`Page.rect`.
 
       :type: :ref:`Point`
 
    .. attribute:: CropBox
 
-      The page's ``/CropBox`` for a PDF, the page's rectangle.
+      The page's ``/CropBox`` for a PDF, else :attr:`Page.rect`.
 
       :type: :ref:`Rect`
 
    .. attribute:: MediaBoxSize
 
-      Contains the width and height of the page's ``/MediaBox`` for a PDF, otherwise the bottom-right coordinates of the page's rectangle.
+      Contains the width and height of the page's ``/MediaBox`` for a PDF, otherwise the bottom-right coordinates of :attr:`Page.rect`.
 
       :type: :ref:`Point`
 
    .. attribute:: MediaBox
 
-      The page's ``/MediaBox`` for a PDF, otherwise the page's rectangle.
-
+      The page's ``/MediaBox`` for a PDF, otherwise :attr:`Page.rect`.
       :type: :ref:`Rect`
 
-    .. note:: For non-PDF documents (and for most PDF documents, too) ``page.rect == page.CropBox == page.MediaBox`` is true. For some PDF documents however, ``page.rect`` may be a true subset of the ``/MediaBox``. In these cases the above attributes help to correctly position / evaluate elements of the page.
+    .. note:: For non-PDF documents (and for most PDF documents, too) you have ``page.rect == page.CropBox == page.MediaBox``. For some PDF documents however, the visible page may be a true subset of the ``/MediaBox``. In these cases the above attributes help to correctly position / evaluate page elements.
 
    .. attribute:: firstLink
 
