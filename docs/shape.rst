@@ -5,14 +5,16 @@ Shape
 
 This class allows creating interconnected graphical elements on a PDF page. Its methods have the same meaning and name as the corresponding :ref:`Page` methods. Their :ref:`CommonParms` are however exported to a separate method, ``finish()``. In addition, all draw methods return a :ref:`Point` object to support connected drawing paths. This point always equals the **"current point"**, that PDF maintains during path construction.
 
-The class now also supports the text insertion methods ``insertText()`` and ``insertTextbox()``. They need a slightly different handling compared to the draw methods (see below for details):
+Methods of this class record the area they are covering in a rectangle (:attr:`Shape.rect`). This property can for instance be used to set :attr:`Page.CropBox`.
+
+Also supported are text insertion methods ``insertText()`` and ``insertTextbox()``. They need a slightly different handling compared to the draw methods:
 
 1. They do not use :attr:`Shape.contents`. Instead they directly modify :attr:`Shape.totalcont`.
 2. They do not use nor need :meth:`Shape.finish`.
 3. They provide their own ``color`` and ``morph`` arguments.
 4. They do not use nor change :attr:`Shape.lastPoint`.
 
-As with the draw methods, text insertion requires using :meth:`Shape.commit` to update the page.
+As with the draw methods, text insertions require using :meth:`Shape.commit` to update the page.
 
 ================================ =================================================
 **Method / Attribute**             **Description**
@@ -36,6 +38,7 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 :attr:`Shape.height`             stores the page's height
 :attr:`Shape.lastPoint`          stores the current point
 :attr:`Shape.page`               stores the owning page
+:attr:`Shape.rect`               rectangle surrounding drawings
 :attr:`Shape.width`              stores the page's width
 :attr:`Shape.totalcont`          accumulated string to be stored in ``/Contents``
 ================================ =================================================
@@ -271,9 +274,11 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
 
    .. method:: commit(overlay = True)
 
-      Update the page's ``/Contents`` with the accumulated drawing commands. If a ``Shape`` is not committed, the page will not be changed. The method must be preceeded with at least one ``finish()`` or text insertion method.
+      Update the page's ``/Contents`` with the accumulated drawing commands. If a ``Shape`` is not committed, the page will not be changed. The method must be preceeded with at least one ``finish()`` or one text insertion method.
 
-      :arg bool overlay: determine whether to put the drawing in foreground (default) or background. Relevant only, if the page has a non-empty ``/Contents`` object.
+      The method will reset attributes :attr:`Shape.rect`, :attr:`Shape.lastPoint`, :attr:`Shape.contents` and :attr:`Shape.totalcont`. Afterwards, the shape object can be reused for the **same page**.
+
+      :arg bool overlay: determine whether to put content in foreground (default) or background. Relevant only, if the page has a non-empty ``/Contents`` object.
 
    .. attribute:: doc
 
@@ -304,6 +309,12 @@ As with the draw methods, text insertion requires using :meth:`Shape.commit` to 
       Accumulated command buffer for draw methods since last finish.
 
       :type: str
+
+   .. attribute:: rect
+
+      Rectangle surrounding drawings. This attribute is at your disposal and may be changed at any time. Its value is set to ``None`` when a shape is created or committed. Every ``draw*`` method, and :meth:`Shape.insertTextbox` update this property (i.e. **enlarge** the rectangle as needed). **Morphing** operations, however (:meth:`Shape.finish`, :meth:`Shape.insertTextbox`) are ignored.
+
+      :type: :ref:`Rect`
 
    .. attribute:: totalcont
 
@@ -352,18 +363,18 @@ Examples
 ---------
 1. Create a full circle of pieces of pie in different colors::
 
- >>> img  = page.newShape()       # start a new shape
- >>> cols = (...)                 # a sequence of RGB color triples
- >>> pieces = len(cols)           # number of pieces to draw
- >>> beta = 360. / pieces         # angle of each piece of pie
- >>> center = fitz.Point(...)     # center of the pie
- >>> p0     = fitz.Point(...)     # starting point
- >>> for i in range(pieces):
-         p0 = img.drawSector(center, p0, beta,
-                             fullSector = True) # draw piece
-         # now fill it but do not connect ends of the arc
-         img.finish(fill = cols[i], closePath = False)
- >>> img.commit()                 # update the page
+>>> img  = page.newShape()       # start a new shape
+>>> cols = (...)                 # a sequence of RGB color triples
+>>> pieces = len(cols)           # number of pieces to draw
+>>> beta = 360. / pieces         # angle of each piece of pie
+>>> center = fitz.Point(...)     # center of the pie
+>>> p0     = fitz.Point(...)     # starting point
+>>> for i in range(pieces):
+        p0 = img.drawSector(center, p0, beta,
+                            fullSector = True) # draw piece
+        # now fill it but do not connect ends of the arc
+        img.finish(fill = cols[i], closePath = False)
+>>> img.commit()                 # update the page
 
 Here is an example for 5 colors:
 
@@ -371,18 +382,18 @@ Here is an example for 5 colors:
 
 2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon::
 
- >>> img  = page.newShape()       # start a new shape
- >>> beta = -360.0 / n            # our angle, drawn clockwise
- >>> center = fitz.Point(...)     # center of circle
- >>> p0     = fitz.Point(...)     # start here (1st edge)
- >>> points = [p0]                # store polygon edges
- >>> for i in range(n):           # calculate the edges
-         p0 = img.drawSector(center, p0, beta)
-         points.append(p0)
- >>> img.contents = ""            # do not draw the circle sectors
- >>> img.drawPolyline(points)     # draw the polygon
- >>> img.finish(color = (1,0,0), fill = (1,1,0), closePath = False)
- >>> img.commit()
+>>> img  = page.newShape()       # start a new shape
+>>> beta = -360.0 / n            # our angle, drawn clockwise
+>>> center = fitz.Point(...)     # center of circle
+>>> p0     = fitz.Point(...)     # start here (1st edge)
+>>> points = [p0]                # store polygon edges
+>>> for i in range(n):           # calculate the edges
+        p0 = img.drawSector(center, p0, beta)
+        points.append(p0)
+>>> img.contents = ""            # do not draw the circle sectors
+>>> img.drawPolyline(points)     # draw the polygon
+>>> img.finish(color = (1,0,0), fill = (1,1,0), closePath = False)
+>>> img.commit()
 
 Here is the polygon for n = 7:
 
