@@ -175,17 +175,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg sequence list: A list (or tuple) of page numbers (zero-based) to be included. Pages not in the list will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the list exactly as specified.
 
-      :rtype: int
-      :returns: Zero upon successful execution. All document information will be updated to reflect the new state of the document, like outlines, number and sequence of pages, etc. Changes become permanent only after saving the document. Incremental save is supported.
-
     .. method:: setMetadata(m)
 
-      PDF only: Sets or updates the metadata of the document as specified in ``m``, a Python dictionary. As with method ``select()``, these changes become permanent only when you save the document. Incremental save is supported.
+      PDF only: Sets or updates the metadata of the document as specified in ``m``, a Python dictionary. As with :meth:`Document.select`, these changes become permanent only when you save the document. Incremental save is supported.
 
-      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed, these keys therefore have no effect and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``m = {}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument for this method.
-
-      :rtype: int
-      :returns: Zero upon successful execution and ``doc.metadata`` will be updated.
+      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``m = {}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument.
 
     .. method:: setToC(toc)
 
@@ -236,9 +230,6 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int linear: Save a linearised version of the document: 0 = False, 1 = True. This option creates a file format for improved performance when read via internet connections. Excludes ``incremental``.
 
-      :rtype: int
-      :returns: Zero upon successful execution.
-
     .. method:: saveIncr()
 
       PDF only: saves the document incrementally. This is a convenience abbreviation for ``doc.save(doc.name, incremental = True)``.
@@ -269,14 +260,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int start_at: First copied page will become page number ``start_at`` in the destination. If omitted, the page range will be appended to current document. If zero, the page range will be inserted before current first page.
 
-      :arg int rotate: All copied pages will be rotated by the provided value (degrees). If you do not specify a value (or ``-1``), the original will not be changed. Otherwise it must be an integer multiple of 90 (not checked). Rotation is counter-clockwise if ``rotate`` is positive, else clockwise.
+      :arg int rotate: All copied pages will be rotated by the provided value (degrees, integer multiple of 90).
 
-      :arg bool links: Choose whether (internal and external) links should be included with the copy. Default is ``True``. An **internal** link is always excluded if its destination is not one of the copied pages.
+      :arg bool links: Choose whether (internal and external) links should be included with the copy. Default is ``True``. An **internal** link is always excluded if its destination is outside the copied page range.
 
-      :rtype: int
-      :returns: Zero upon successful execution.
-
-    .. note:: If ``from_page > to_page``, pages will be copied in reverse order. If ``0 <= from_page == to_page``, then one page will be copied.
+    .. note:: If ``from_page > to_page``, pages will be **copied in reverse order**. If ``0 <= from_page == to_page``, then one page will be copied.
 
     .. note:: ``docsrc`` bookmarks **will not be copied**. It is easy however, to recover a table of contents for the resulting document. Look at the examples below and at program `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the *examples* directory: it can join PDF documents and at the same time piece together respective parts of the tables of contents.
 
@@ -388,7 +376,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Remove an entry from the portfolio. As always, physical deletion of the embedded file content (and file space regain) will occur when the document is saved to a new file with ``garbage`` option. With an incremental save, the associated object will only be marked deleted.
 
-      .. note:: We do not support entry **numbers** for this function yet. If you need to e.g. delete **all** embedded files, scan through all embedded files by number, and use the returned dictionary's ``name`` entry to delete each one. This function will delete the first entry with this name it finds. Be wary that for arbitrary PDF files, this may not have been the only one, because PDF itself has no mechanism to prevent duplicate entries ...
+      .. note:: We do not support entry **numbers** for this function yet. If you need to e.g. delete **all** embedded files, scan through embedded files by number, and use the returned dictionary's ``name`` entry to delete each one. This function will delete the first entry it finds with this name. Be wary that for arbitrary PDF files duplicate names may exist ...
 
       :arg str name: name of entry.
 
@@ -416,7 +404,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: isClosed
 
-      ``False / 0`` if document is still open, ``True / 1`` otherwise. If closed, most other attributes and methods will have been deleted / disabled. In addition, :ref:`Page` objects referring to this document (i.e. created with :meth:`Document.loadPage`) and their dependent objects will no longer be usable. For reference purposes, :attr:`Document.name` still exists and will contain the filename of the original document (if applicable).
+      ``False (0)`` if document is still open. If closed, most other attributes and methods will have been deleted / disabled. In addition, :ref:`Page` objects referring to this document (i.e. created with :meth:`Document.loadPage`) and their dependent objects will no longer be usable. For reference purposes, :attr:`Document.name` still exists and will contain the filename of the original document (if applicable).
 
       :type: bool
 
@@ -428,13 +416,13 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: needsPass
 
-      Contains an indicator showing whether the document is encrypted (``True (1)``) or not (``False (0)``). This indicator remains unchanged - even after the document has been authenticated. Precludes incremental saves if set.
+      Contains an indicator showing whether the document is encrypted (``True (1)``) or not (``False (0)``). This indicator remains unchanged - even after the document has been authenticated. Precludes incremental saves if ``True``.
 
       :type: bool
 
     .. attribute:: isEncrypted
 
-      This indicator initially equals ``needsPass``. After successful authentication, it is set to ``False`` to reflect the situation.
+      This indicator initially equals ``needsPass``. After an authentication, it is set to ``False`` to reflect the situation.
 
       :type: bool
 
@@ -483,7 +471,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. Attribute:: openErrCode
 
-      If ``openErrCode > 0``, errors have occurred while opening / parsing the document, which usually means document structure issues. In this case incremental save cannot be used.
+      If ``openErrCode > 0``, errors have occurred while opening / parsing the document, which usually means damages like document structure issues. In this case **incremental** save cannot be used. The document is available for processing however, potentially with restrictions (depending on damage details).
 
       :type: int
 
@@ -576,15 +564,13 @@ Clear metadata information. If you do this out of privacy / data protection conc
 'title': 'The PyMuPDF Documentation', 'creationDate': "D:20160611145816-04'00'",
 'creator': 'sphinx', 'subject': 'PyMuPDF 1.9.1'}
 >>> doc.setMetadata({})      # clear all fields
-0
 >>> doc.metadata             # look again to show what happened
 {'producer': 'none', 'format': 'PDF 1.4', 'encryption': None, 'author': 'none',
 'modDate': 'none', 'keywords': 'none', 'title': 'none', 'creationDate': 'none',
 'creator': 'none', 'subject': 'none'}
 >>> doc._delXmlMetadata()    # clear any XML metadata
-0
 >>> doc.save("anonymous.pdf", garbage = 4)       # save anonymized doc
-0
+
 
 
 ``setToC()`` Example

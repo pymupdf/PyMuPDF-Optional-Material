@@ -1,6 +1,12 @@
 Change Logs
 ===============
 
+Changes in Version 1.12.3
+--------------------------
+This is an extension of 1.12.2.
+
+* Many functions now return ``None`` instead of ``0``, if the result has no other meaning than just indicating successful execution (:meth:`Document.close`, :meth:`Document.save`, :meth:`Document.select`, :meth:`Pixmap.writePNG` and many others).
+
 Changes in Version 1.12.2
 --------------------------
 This is an extension of 1.12.1.
@@ -14,11 +20,11 @@ Changes in Version 1.12.1
 --------------------------
 This is an extension of version 1.12.0.
 
-* New method :meth:`Page.showPDFpage` displays another's PDF page. This is a **vector** image and remains precise across zooming. Both involved documents must be PDF.
+* New method :meth:`Page.showPDFpage` displays another's PDF page. This is a **vector** image and therefore remains precise across zooming. Both involved documents must be PDF.
 
-* New method :meth:`Page.getSVGimage` creates an SVG image from the page. The return is a unicode text string, which can be saved in a ``.svg`` file.
+* New method :meth:`Page.getSVGimage` creates an SVG image from the page. In contrast to the raster image of a pixmap, this is a vector image format. The return is a unicode text string, which can be saved in a ``.svg`` file.
 
-* Method :meth:`Page.getTextBlocks` now accepts an additional bool parameter "images". If set to true (default is false), images contained in the :ref:`TextPage` are included in the produced list and thus allow detecting areas with rendered images.
+* Method :meth:`Page.getTextBlocks` now accepts an additional bool parameter "images". If set to true (default is false), image blocks (metadata only) are included in the produced list and thus allow detecting areas with rendered images.
 
 * Minor bug fixes.
 
@@ -28,13 +34,13 @@ This is an extension of version 1.12.0.
 
 Changes in Version 1.12.0
 --------------------------
-This version is based on and requires MuPDF v1.12. The new MuPDF version contains quite a number of changes - most of them around text extraction. Some of the changes impact the programmer's API.
+This version is based on and requires MuPDF v1.12.0. The new MuPDF version contains quite a number of changes - most of them around text extraction. Some of the changes impact the programmer's API.
 
-* :meth:`Outline.saveText` and :meth:`Outline.saveXML` have been deleted without replacement. You probably have not used them much anyway. But if you are looking for a replacement: the output of :meth:`Document.getToC` can easily be used to produce something equivalent.
+* :meth:`Outline.saveText` and :meth:`Outline.saveXML` have been deleted without replacement. You probably haven't used them much anyway. But if you are looking for a replacement: the output of :meth:`Document.getToC` can easily be used to produce something equivalent.
 
 * Class ``TextSheet`` does no longer exist.
 
-* Text "spans", one of the hierarchy levels of text pages, no longer contain positioning information (i.e. no "bbox" key). Instead, spans now provide the font information for its text. This impacts our JSON output variant.
+* Text "spans" (one of the hierarchy levels of :ref:`TextPage`) no longer contain positioning information (i.e. no "bbox" key). Instead, spans now provide the font information for its text. This impacts our JSON output variant.
 
 * HTML output has improved very much: it now creates valid documents which can be displayed by browsers to produce a similar view as the original document.
 
@@ -42,7 +48,7 @@ This version is based on and requires MuPDF v1.12. The new MuPDF version contain
 
 * All output formats of :meth:`Page.getText` now support creating complete, valid documents, by wrapping them with appropriate header and trailer information. If you are interested in using the HTML output, please make sure to read :ref:`HTMLQuality`.
 
-* To support finding text positions, we have added special methods that don't need detours like :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`: use :meth:`Page.getTextBlocks` or resp. :meth:`Page.getTextWords` to create lists of text blocks or resp. words which are accompanied by their rectangles. This should be much faster than the standard text extraction methods and also avoids using additional packages for interpreting their output.
+* To support finding text positions, we have added special methods that don't need detours like :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`: use :meth:`Page.getTextBlocks` or resp. :meth:`Page.getTextWords` to create lists of text blocks or resp. words, which are accompanied by their rectangles. This should be much faster than the standard text extraction methods and also avoids using additional packages for interpreting their output.
 
 
 Changes in Version 1.11.2

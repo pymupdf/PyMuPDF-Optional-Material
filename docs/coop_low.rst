@@ -6,7 +6,7 @@ Working together: DisplayList and TextPage
 ===============================================================
 Here are some instructions on how to use these classes together.
 
-In some situations, performance improvements may be achievable when you fall back to the detail level explained here.
+In some situations, performance improvements may be achievable, when you fall back to the detail level explained here.
 
 Create a DisplayList
 ---------------------
@@ -20,11 +20,11 @@ Note, that for everything what follows, only the display list is needed - the co
 
 Generate Pixmap
 ------------------
-The following creates a Pixmap from a :ref:`DisplayList`. Parameters are the same as for :meth:`Page.getPixMap`.
+The following creates a Pixmap from a :ref:`DisplayList`. Parameters are the same as for :meth:`Page.getPixmap`.
 
 >>> pix = dl.getPixmap()                    # create the page's pixmap
 
-The execution time of this statement may be 20% up to 50% shorter than that of :meth:`Page.getPixMap`.
+The execution time of this statement may be up to 50% shorter than that of :meth:`Page.getPixMap`.
 
 Perform Text Search
 ---------------------
@@ -34,14 +34,14 @@ For this we need to create a :ref:`TextPage`.
 
 >>> tp = dl.getTextPage()                    # display list from above
 >>> rlist = tp.search("needle")              # look up "needle" locations
->>> for r in rlist:                          # work with found locations:
-        pix.invertIRect(r.irect)             # e.g. invert colors in rectangle
+>>> for r in rlist:                          # work with the found locations, e.g.
+        pix.invertIRect(r.irect)             # invert colors in the rectangles
 
 Extract Text
 ----------------
 With the same :ref:`TextPage` object from above, we can now immediately use any or all of the 5 text extraction methods.
 
-.. note:: Above, we have created our text page without argument. This leads to a default value of ``3 = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE``, IAW images will **not** be extracted - see below.
+.. note:: Above, we have created our text page without argument. This leads to a default argument of ``3 = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE``, IAW images will **not** be extracted - see below.
 
 >>> txt  = tp.extractText()                  # plain text format
 >>> json = tp.extractJSON()                  # json format
@@ -64,4 +64,8 @@ If you do not need images extracted alongside the text of a page, you can set th
 >>> flags = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE
 >>> tp = dl.getTextPage(flags)
 
-This will save ca. 25% overall execution time for the HTML, XHTML and JSON text extractions and hugely reduce the amount of storage (memory and disk space) if the document is graphics oriented.
+This will save ca. 25% overall execution time for the HTML, XHTML and JSON text extractions and **hugely** reduce the amount of storage (both, memory and disk space) if the document is graphics oriented.
+
+If you however do need images, use a value of 7 for flags:
+
+>>> flags = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE | fitz.TEXT_PRESERVE_IMAGES

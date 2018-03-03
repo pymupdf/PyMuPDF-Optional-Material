@@ -69,7 +69,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. method:: bound()
 
-      Determine the rectangle (before transformation) of the page. This is same as property :attr:`Page.rect`` below. For PDF documents this **usually** also coincides with the ``/MediaBox`` and the ``/CropBox`` objects, but not always. The best description hence is probably "``/CropBox``, relocated such that top-left coordinates are (0, 0)". Also see attributes :attr:`Page.CropBox` and :attr:`Page.MediaBox`.
+      Determine the rectangle (before transformation) of the page. Same as property :attr:`Page.rect` below. For PDF documents this **usually** also coincides with objects ``/MediaBox`` and ``/CropBox``, but not always. The best description hence is probably "``/CropBox``, relocated such that top-left coordinates are (0, 0)". Also see attributes :attr:`Page.CropBox` and :attr:`Page.MediaBox`.
 
       :rtype: :ref:`Rect`
 
@@ -111,7 +111,6 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
    .. method:: insertText(point, text = text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
 
       PDF only: Insert text.
-
 
    .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
 
@@ -175,8 +174,6 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       For a description of the other parameters see :ref:`CommonParms`.
 
-      :returns: zero
-
       This example puts the same image on every page of a document:
 
       >>> doc = fitz.open(...)
@@ -204,7 +201,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :arg str output: A string indicating the requested text format, one of ``"text"`` (default), ``"html"``, ``"json"``, ``"xml"`` or ``"xhtml"``.
 
-      :rtype: string
+      :rtype: (unicode) string
       :returns: The page's text as one string.
 
       .. note:: Use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML, XHTML or JSON documents works in exactly the same way. For XML and JSON you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
@@ -220,25 +217,25 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       Extract all text blocks as a Python list. Provides basic positioning information without the need to interpret the output of :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
 
-      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only metadata, **not the image data** itself is extracted (use :meth:`TextPage.extractJSON` for accessing this information detail).
+      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only metadata, **not the image data** itself is extracted, see below (use the resp. :meth:`Page.getText` versions for accessing this information detail).
 
       :rtype: list
       :returns: a list whose items have the following entries.
 
                 * ``x0, y0, x1, y1``: 4 floats defining the bbox of the block.
-                * ``text``: concatenated text lines in the block *(str)*. If this is an image block, a text like this is contained: ``<image: DeviceRGB, width 511, height 379, bpc 8>`` (original image's width and height).
+                * ``text``: concatenated text lines in the block *(str)*. If this is an image block, a text like this is contained: ``<image: DeviceRGB, width 511, height 379, bpc 8>`` (original image properties).
                 * ``block_n``: 0-based block number *(int)*.
                 * ``type``: block type *(int)*, 0 = text, 1 = image.
 
    .. method:: getTextWords()
 
-      Extract all words as a Python list. Provides positioning information for words without having to interpret the output of :meth:`TextPage.extractXML`. The word sequence is as specified in the document. The accompanying rectangle coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
+      Extract all words as a Python list. Provides positioning information for each word without having to interpret the output of JSON or XML versions of :meth:`Page.getText`. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
 
       :rtype: list
       :returns: a list whose items are lists with the following entries:
 
                 * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
-                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not just letters. So, ``Hello world!`` will yield the two words ``Hello`` and ``world!``.
+                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not only letters. So, ``Hello world!`` will yield the two words ``Hello`` and ``world!``.
                 * ``block_n, line_n, word_n``: 0-based numbers for block, line and word *(int)*.
 
    .. method:: getFontList()
@@ -253,10 +250,10 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       Create an SVG image from the page. Only full page images are currently supported.
 
-     :arg matrix: a :ref:`Matrix`, default is :ref:`Identity`. Valid operations include scaling and rotation.
+     :arg matrix: a :ref:`Matrix`, default is :ref:`Identity`.
      :type matrix: :ref:`Matrix`
 
-     :returns: a UTF-8 encoded string that contains the image. This is XML syntax and can be saved in a text file with extension ``.svg``.
+     :returns: a UTF-8 encoded string that contains the image. Because SVG has XML syntax it can be saved in a text file with extension ``.svg``.
 
    .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, clip = None, alpha = True)
 
@@ -268,7 +265,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
      :arg colorspace: Defines the required colorspace, one of ``GRAY``, ``RGB`` or ``CMYK`` (case insensitive). Or specify a :ref:`Colorspace`, e.g. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
      :type colorspace: string, :ref:`Colorspace`
 
-     :arg clip: restrict rendering to the rectangle's area. The default will render the full page.
+     :arg clip: restrict rendering to this area.
      :type clip: :ref:`IRect`
 
      :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the image will appear:
@@ -295,13 +292,15 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       PDF only: Sets the rotation of the page.
 
-      :arg int rot: An integer specifying the required rotation in degrees. Should be a (positive or negative) multiple of 90.
-
-      :returns: zero if successfull, ``-1`` if not a PDF.
+      :arg int rot: An integer specifying the required rotation in degrees. Should be an integer multiple of 90.
 
    .. method:: showPDFpage(rect, docsrc, pno = 0, keep_proportion = True, overlay = True, reuse_xref = 0, clip = None)
 
-      PDF only: Display the page of another PDF as a **vector image**.
+      PDF only: Display a page of another PDF as a **vector image** (otherwise similar to :meth:`Page.insertImage`). This is a multi-purpose method, use it to
+      
+      * create "n-up" versions of existing PDF files, combining several input pages into **one output page** (see example `4-up.py <https://github.com/rk700/PyMuPDF/blob/master/examples/4-up.py>`_),
+      * create "posterized" PDF files, i.e. every input page is split up in parts which each create a separate output page (see `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_),
+      * include PDF-based vector images like company logos, watermarks, etc., see `svg-logo.py <https://github.com/rk700/PyMuPDF/blob/master/examples/svg-logo.py>`_, which puts an SVG-based logo on each page (requires additional packages to deal with SVG-to-PDF conversions).
 
       :arg rect: where to place the image.
       :type rect: :ref:`Rect`
@@ -311,28 +310,25 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :arg int pno: page number (0-based) to be shown.
 
-      :arg bool keep_proportion: control whether to scale width and height synchronously (default).
+      :arg bool keep_proportion: whether to maintain the width-height-ratio (default).
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int reuse_xref: specify an xref number if an already stored page shall be shown. This suppresses copying the source page once more.
+      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of the first display. This prevents duplicate source page copies. If this argument is positive, the source document / page parameters are ignored.
 
       :arg clip: choose which part of the source page to show. Default is its ``/CropBox``.
       :type clip: :ref:`Rect`
 
-      :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same page again.
+      :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
 
-      .. note:: This is a multi-purpose method. For instance, it can be used to create "2-up" / "4-up" or posterized versions of existing PDF files (see examples `4-up.py <https://github.com/rk700/PyMuPDF/blob/master/examples/4-up.py>`_ and `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_). Or use it to include PDF-based vector images (company logos, watermarks, etc.).
+      .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a to-be-displayed source page. Therefore, use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or watermark) on every page of PDF ``doc``. The first execution actually inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
 
-      .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a to-be-displayed source page. Therefore, use the ``reuse_xref`` argument to prevent multiple creations as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`.
-
-      >>> # the first showPDFpage will copy the page, the following
-      >>> # will reuse the result via its xref.
+      >>> # the first showPDFpage will include source page docsrc[pno],
+      >>> # subsequents will reuse it via its object number (xref).
       >>> xref = 0
       >>> for page in doc:
               xref = page.showPDFpage(rect, docsrc, pno,
                                       reuse_xref = xref)
-
 
    .. method:: newShape()
 
@@ -360,7 +356,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       :arg r: the new visible area of the page.
       :type r: :ref:`Rect`
 
-      After execution, :attr:`Page.rect` will equal this rectangle, shifted to top-left position (0, 0). Example session:
+      After execution, :attr:`Page.rect` will equal this rectangle shifted to the top-left position (0, 0). Example session:
 
       >>> page = doc.newPage()
       >>> page.rect
@@ -368,7 +364,6 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       >>> page.CropBox
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
       >>> page.setCropBox(fitz.Rect(100, 100, 400, 400))
-      0
       >>> page.rect
       fitz.Rect(0.0, 0.0, 300.0, 300.0)
       >>> page.CropBox
@@ -376,7 +371,6 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       >>> page.MediaBox
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
       >>> page.setCropBox(page.MediaBox)
-      0
       >>> page.rect
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
 
@@ -407,6 +401,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
    .. attribute:: MediaBox
 
       The page's ``/MediaBox`` for a PDF, otherwise :attr:`Page.rect`.
+
       :type: :ref:`Rect`
 
     .. note:: For non-PDF documents (and for most PDF documents, too) you have ``page.rect == page.CropBox == page.MediaBox``. For some PDF documents however, the visible page may be a true subset of the ``/MediaBox``. In these cases the above attributes help to correctly position / evaluate page elements.
@@ -438,7 +433,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. attribute:: rect
 
-      Contains the rectangle ("mediabox", before transformation) of the page. Same as result of method ``bound()``.
+      Contains the rectangle of the page. Same as result of :meth:`Page.bound()`.
 
       :type: :ref:`Rect`
 
@@ -499,4 +494,4 @@ Document.searchPageFor(pno, ...)   Page.searchFor(...)
 Document._getPageXref(pno)         Page._getXref()
 ================================== =====================================
 
-The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``. The document methods invoke their page counterparts via ``Document[pno].<method>``.
+The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``. The document methods (left column) usually invoke their page counterparts via ``Document[pno].<method>``.
