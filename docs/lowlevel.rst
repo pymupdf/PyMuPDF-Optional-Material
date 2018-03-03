@@ -7,6 +7,7 @@ Contains a number of functions and classes for the experienced user. To be used 
    :maxdepth: 1
 
    functions.rst
+   tools.rst
    device.rst
    displaylist.rst
    textpage.rst

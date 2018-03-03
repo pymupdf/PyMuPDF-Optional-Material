@@ -88,7 +88,7 @@ Hence some useful classification:
       >>> r.round().isEmpty
       True
 
-      To reproduce the effect on your platform, you may need to adjust the numbers a little.
+      To reproduce this funny effect on your platform, you may need to adjust the numbers a little after the decimal point.
 
       :rtype: :ref:`IRect`
 

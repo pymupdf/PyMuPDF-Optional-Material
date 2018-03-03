@@ -158,7 +158,7 @@ You can find out, exactly where on a page a certain string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
-The variable ``areas`` will contain a list of up to 16 :ref:`Rect`\angles, each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
+Th delivers a list of up to 16 :ref:`Rect` \angles, each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
 
 Please also do have a look at chapter :ref:`cooperation` and at demo program `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
@@ -207,8 +207,8 @@ Method :meth:`Document.insertPDF` inserts pages from another PDF at a specified 
 Here is how to split ``doc1``. This creates a new document of its first and last 10 pages (could also be done using :meth:`Document.select`):
 
 >>> doc2 = fitz.open()                 # new empty PDF
->>> doc2.insertPDF(doc1, to_page = 9)
->>> doc2.insertPDF(doc1, from_page = len(doc1) - 10)
+>>> doc2.insertPDF(doc1, to_page = 9)  # first 10 pages
+>>> doc2.insertPDF(doc1, from_page = len(doc1) - 10) # last 10 pages
 >>> doc2.save(...)
 
 More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_.
@@ -218,7 +218,7 @@ Saving
 
 As mentioned above, :meth:`Document.save` will **always** save the document in its current state.
 
-Since MuPDF 1.9, you can write changes back to the original PDF by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without rewriting it.
+Since MuPDF 1.9, you can write changes back to the original PDF by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
 
 :meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table (corresponding ``mutool clean`` option is indicated as "mco").
 

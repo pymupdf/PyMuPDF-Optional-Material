@@ -4,14 +4,14 @@
 Pixmap
 ================
 
-Pixmaps ("pixel maps") are objects at the heart of MuPDF's rendering capabilities. They represent plane rectangular sets of pixels. Each pixel is described by a number of bytes ("components") plus an (optional since v1.10.0) alpha byte.
+Pixmaps ("pixel maps") are objects at the heart of MuPDF's rendering capabilities. They represent plane rectangular sets of pixels. Each pixel is described by a number of bytes ("components") defining its color, plus an optional alpha byte defining its transparency.
 
-In PyMuPDF, there exist several ways to create a pixmap. Except one, all of them are available as overloaded constructors. A pixmap can be created ...
+In PyMuPDF, there exist several ways to create a pixmap. Except the first one, all of them are available as overloaded constructors. A pixmap can be created ...
 
-1. from a document page (via methods :meth:`Page.getPixmap` or :meth:`Document.getPagePixmap`)
-2. empty based on :ref:`Colorspace` and :ref:`IRect` information
-3. from an image file
-4. from an in-memory image (bytearray)
+1. from a document page (method :meth:`Page.getPixmap`)
+2. empty, based on :ref:`Colorspace` and :ref:`IRect` information
+3. from a filed-based image
+4. from an in-memory image
 5. from a memory area of plain pixels
 6. from an image inside a PDF document
 7. as a copy of another pixmap
@@ -25,7 +25,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 ============================= ===================================================
 :meth:`Pixmap.clearWith`      clear parts of a pixmap
 :meth:`Pixmap.copyPixmap`     copy parts of another pixmap
-:meth:`Pixmap.gammaWith`      applie a gamma factor to the pixmap
+:meth:`Pixmap.gammaWith`      apply a gamma factor to the pixmap
 :meth:`Pixmap.getPNGData`     return a PNG as a memory area
 :meth:`Pixmap.invertIRect`    invert the pixels of a given area
 :meth:`Pixmap.setAlpha`       sets alpha values
@@ -320,7 +320,7 @@ The following file types are supported as input to construct pixmaps: **BMP, JPE
 
 2. Open such files with ``fitz.open(...)``. The result will then appear as a document containing one single page. Creating a pixmap of this page offers all options available in this context: apply a matrix, choose colorspace and alpha, confine the pixmap to a clip area, etc.
 
-**SVG images** are only supported via method 2 above, not directly as pixmaps. In any case, this will turn the SVG into a raster image. If you need a **vector image** you must first convert it to a PDF and then display it e.g. via :meth:`Page.showPDFpage`. There exist many tools for SVG-to-PDF conversion, among them the Python package `svglib <https://pypi.org/project/svglib>`_ or Java solutions like `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for example solutions.
+**SVG images** are only supported via method 2 above, not directly as pixmaps. This will turn the SVG into a raster image. If you need a **vector image** you must first convert it to a PDF and then display it e.g. via :meth:`Page.showPDFpage`. There exist many tools for SVG-to-PDF conversion, among them the Python package `svglib <https://pypi.org/project/svglib>`_ or Java solutions like `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for examples.
 
 Details on Saving Images with ``writeImage()``
 -----------------------------------------------
