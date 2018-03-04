@@ -70,11 +70,11 @@ A ``DisplayList`` is populated with objects from a page usually by executing :me
       :rtype: :ref:`Pixmap`
       :returns: pixmap of the display list.
 
-   .. method:: getTextPage(flags = TEXT_PRESERVE_LIGATURES | TEXT_PRESERVE_WHITESPACE)
+   .. method:: getTextPage(flags)
 
       Run the display list through a text device and return a text page.
 
-      :arg int flags: control which information is parsed into a text page. Default value in PyMuPDF is ``TEXT_PRESERVE_LIGATURES | TEXT_PRESERVE_WHITESPACE = 3``, i.e. ligatures are **passed through** (not decomposed into components), white spaces are **passed through** (not translated to spaces), and images are **not included**. See :ref:`TextPreserve`.
+      :arg int flags: control which information is parsed into a text page. Default value in PyMuPDF is ``3 = TEXT_PRESERVE_LIGATURES | TEXT_PRESERVE_WHITESPACE``, i.e. ligatures are **passed through** ("æ" not decomposed into its components "a" and "e"), white spaces are **passed through** (not translated to spaces), and images are **not included**. See :ref:`TextPreserve`.
 
       :rtype: :ref:`TextPage`
       :returns: text page of the display list.

@@ -26,7 +26,7 @@ TextPage
 
    .. method:: extractTEXT
 
-      Extract the text from a ``TextPage`` object. Returns a string of the page's complete text. The text is UTF-8 unicode and in the same sequence as the PDF creator specified it. If this looks awkward for your document, consider using a program that re-arranges the text according to a more familiar layout, e.g. `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_ in the examples directory. Or use another extraction method which also provides text position information like :meth:`TextPage.extractHTML`, :meth:`TextPage.extractXML`, or :meth:`Page.extractTextList`.
+      Extract the text from a ``TextPage`` object. Returns a string of the page's complete text. The text is UTF-8 unicode and in the same sequence as the PDF creator specified it. If this looks awkward for your document, consider using a program that re-arranges the text according to a more familiar layout, e.g. `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_ in the examples directory. Or use other extraction methods which provide text position information like :meth:`TextPage.extractHTML`, :meth:`TextPage.extractXML`, :meth:`Page.extractTextWords`, or :meth:`Page.extractTextBlocks`.
 
       :rtype: str
 
