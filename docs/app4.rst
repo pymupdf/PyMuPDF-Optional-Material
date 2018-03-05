@@ -24,12 +24,16 @@ The following 14 builtin font names must be supported by every PDF aplication. T
 * Symbol
 * ZapfDingbats
 
+------------
+
 .. _AdobeManual:
 
 Adobe PDF Reference 1.7
 ---------------------------
 
 This PDF Reference manual published by Adobe is frequently quoted throughout this documentation. It can be viewed and downloaded from here: http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf.
+
+------------
 
 .. _ReferenialIntegrity:
 
@@ -97,6 +101,8 @@ RuntimeError: orphaned object: parent is None
 
 .. note:: Objects outside the above relationship are not included in this mechanism. If you e.g. created a table of contents by ``toc = doc.getToC()``, and later close or change the document, then this cannot and does not change variable ``toc`` in any way. It is your responsibility to refresh such variables as required.
 
+------------
+
 .. _FormXObject:
 
 Design of Method :meth:`Page.showPDFpage`
@@ -105,7 +111,10 @@ Design of Method :meth:`Page.showPDFpage`
 Purpose and Capabilities
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The method displays an image of a ("source") page of another PDF document within a specified rectangle of the current ("containing") page. **In contrast** to :meth:`Page.insertImage`, this display is vector-based and hence remains accurate across zooming levels. **Just like** :meth:`Page.insertImage`, the size of the display is adjusted to the given rectangle.
+The method displays an image of a ("source") page of another PDF document within a specified rectangle of the current ("containing") page.
+
+* **In contrast** to :meth:`Page.insertImage`, this display is vector-based and hence remains accurate across zooming levels.
+* **Just like** :meth:`Page.insertImage`, the size of the display is adjusted to the given rectangle.
 
 The following variations of the display are currently supported:
 
@@ -113,11 +122,11 @@ The following variations of the display are currently supported:
 * Rectangle parameter ``clip`` controls which part of the source page to show, and hence can be used for cropping.  Default is the full page.
 * Bool parameter ``overlay`` controls whether to put the image on top (foreground, default) of current page content or not (background).
 
-The following use cases can be covered:
+Use cases include (but are not limited to) the following:
 
 1. "Stamp" a series of pages of the current document with the same image, like a company logo or a watermark.
-2. Combine arbitrary input pages into one output page to form e.g. a “booklet” or to support double-sided printing (known as "4-up", "n-up").
-3. Split up (large) input pages into several arbitrary pieces (also called “posterization”).
+2. Combine arbitrary input pages into one output page to support “booklet” or double-sided printing (known as "4-up", "n-up").
+3. Split up (large) input pages into several arbitrary pieces. This is also called “posterization”, because you e.g. can split an A4 page horizontally and vertically, print the 4 pieces as A4 pages on a printer which cannot output larger paper, and end up with an A2 version of your original page.
 
 Technical Implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -140,19 +149,19 @@ This is done using PDF **form XObjects**, see section 4.9 on page 355 of :ref:`A
 
     3. The ``/Resources`` and ``/Contents`` objects of the invoking page are now modified as follows.
     
-        a. Add an entry to the ``/XObject`` dictionary of ``/Resources`` with the following unique name: ``fitz-xref-uid``. Uniqueness is required because the same source might be displayed more than once on the containing page. ``xref`` is the PDF cross reference number of XObject 1, and ``uid`` is a unique [#f2]_ integer provided by the MuPDF library.
+        a. Add an entry to the ``/XObject`` dictionary of ``/Resources`` with the name ``fitz-xref-uid``, which is unique for this page. Uniqueness is required because the same source might be displayed more than once on the containing page. ``xref`` is the PDF cross reference number of XObject 1, and ``uid`` is a globally unique [#f2]_ integer provided by the MuPDF library.
         b. Depending on ``overlay``, prepend or append the following statement to the contents object: ``/fitz-xref-uid Do``.
 
     4. Return ``xref`` to the caller.
 
 Observe the following guideline for optimum results:
 
-Unfortunately, as per this writing, PDF garbage collection (a feature of the underlying C-library MuPDF, and an optional argument of :meth:`Document.save`) does not detect identical form XObjects. Process steps 1 through 3 above therefore **irrevocably** lead to **two new XObjects** for every source page, if no precautions are taken. The first one represents the source page itself and may thus be very large. The second one is very small, specific to the containing page, and therefore different each time. To avoid excess source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. When the method detects ``reuse_xref > 0``, it will not create XObject 1 again, but instead point to the ``xref`` \erenced object.
+Unfortunately, as per this writing, PDF garbage collection (a feature of the underlying C-library MuPDF, and an optional argument of :meth:`Document.save`) does not detect identical form XObjects. Process steps 1 therefore **irrevocably** leads to a **new XObject** for every source page, if no precautions are taken. And this may be very large. The second XObject is very small, specific to the containing page, and therefore different each time. To avoid excess source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. When the method detects ``reuse_xref > 0``, it will not create XObject 1 again, but instead point to the ``xref`` \erenced object.
 
-Only bare source page content is shown - no annotations, no link "hot areas".
+If, in a second PyMuPDF session, a target PDF is updated again with the same source PDF page, the above mechanism cannot work and duplicates of XObject 1 will be created.
 
 .. rubric:: Footnotes
 
-.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses "graftmaps". a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, its number is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like fonts and also images. Whether the target before the copy already had identical data (fonts!) is however not checked. Therefore, using save-option ``garbage = 4`` may still be a reasonable consideration, if copying to a non-empty target.
+.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses "graftmaps", a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, the xref is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like images and also fonts. Whether the target document originally had identical data is however not checked by the grafting technique. Therefore, using save-option ``garbage = 4`` may still be a reasonable consideration, when copying to a non-empty target.
 
-.. [#f2] Arguably, ``uid`` alone would suffice to ensure uniqueness: this integer is maintained threadsafe as part of the global context. However, if a PDF is updated again later, ``uid`` would start over from 1. A reference name like ``/fitz-uid`` would therefore no longer be guarantied unique. Theoretically, the uniqueness of ``/fitz-xref-uid`` may also break however, if PDF garbage collection leads to renumbering the PDF objects ... but chances for this seem tolerably low. What would be the effect of a non-uniqueness? This can lead to adverse efects only, if a page contains several identical XObject references of the form ``/fitz-xref-uid`` pointing to different XObjects. Which in turn can only happen if garbage collection changes the original ``xref`` and a new :meth:`Page.showPDFpage` happens to generate an XObject with the now free xref number ...
+.. [#f2] Arguably, ``uid`` alone would suffice to ensure uniqueness: this integer is maintained threadsafe as part of the global context. However, if a PDF is updated again later, ``uid`` would start over from 1. A reference name like ``/fitz-uid`` would therefore no longer be guarantied unique if more objects are shown on the containing page. Theoretically, the uniqueness of ``/fitz-xref-uid`` could also break, when PDF garbage collection leads to renumbering the PDF objects ... but chances for this seem tolerably low. What would be the effect of a non-uniqueness? If a page contains several identical XObject references, intentionally pointing to different XObjects, unexpected behaviour will result. Which in turn can only happen if garbage collection (1) changes the original ``xref`` and (2) a new :meth:`Page.showPDFpage` happens to generate an XObject with the now-free xref number ...

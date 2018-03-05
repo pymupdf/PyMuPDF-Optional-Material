@@ -314,7 +314,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of the first display. This prevents duplicate source page copies. If this argument is positive, the source document / page parameters are ignored.
+      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of the first display. This prevents duplicate source page copies. Note that source document and page must still be provided!
 
       :arg clip: choose which part of the source page to show. Default is its ``/CropBox``.
       :type clip: :ref:`Rect`
@@ -329,6 +329,8 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       >>> for page in doc:
               xref = page.showPDFpage(rect, docsrc, pno,
                                       reuse_xref = xref)
+
+      .. note:: The displayed source page is shown without any annotations or links.
 
    .. method:: newShape()
 
