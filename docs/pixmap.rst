@@ -108,7 +108,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
       **From memory:** Create a pixmap from bytearray ``img``. Image type and all properties are determined automatically.
 
-      :arg bytearray img: Data containing a complete, valid image in one of the supported formats. Could have been created by something like ``img = bytearray(open('somepic.png', 'rb').read())``. The origin of the resulting pixmap is (0,0). Type ``bytes`` is **not supported** here, because that cannot be distinguished from ``string`` in Python 2.
+      :arg bytearray img: Data containing a complete, valid image in one of the supported formats. Could have been created by something like ``img = bytearray(open('somepic.png', 'rb').read())``. The origin of the resulting pixmap is (0,0). Type ``bytes`` is **supported in Python 3** only, because ``string == bytes`` in Python 2 and hence will be treated as a filename.
 
    .. method:: __init__(self, colorspace, width, height, samples, alpha)
 
@@ -140,7 +140,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
       Initialize the samples area.
 
-      :arg int value: if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will always be set to 255 (non-transparent). If omitted, then all bytes including alpha are cleared to 0x00.
+      :arg int value: if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will be set to 255 (non-transparent). If omitted, then all bytes including alpha are cleared to 0x00.
 
       :arg irect: the area to be cleared. Omit to clear the whole pixmap. Can only be specified, if ``value`` is also specified.
       :type irect: :ref:`IRect`

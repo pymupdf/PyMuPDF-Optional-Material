@@ -36,7 +36,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 :meth:`Page.getImageList`        PDF only: get list of used images
 :meth:`Page.getLinks`            get all links
 :meth:`Page.getPixmap`           create a :ref:`Pixmap`
-:meth:`Page.getSVGimage`         convert page image to SVG format
+:meth:`Page.getSVGimage`         create a page image in SVG format
 :meth:`Page.getText`             extract the page's text
 :meth:`Page.getTextBlocks`       extract text blocks as a Python list
 :meth:`Page.getTextWords`        extract text words as a Python list
@@ -314,23 +314,23 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of the first display. This prevents duplicate source page copies. Note that source document and page must still be provided!
+      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of the first display. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
 
       :arg clip: choose which part of the source page to show. Default is its ``/CropBox``.
       :type clip: :ref:`Rect`
 
       :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
 
-      .. note:: Unfortunately, garbage collection currently does not detect multiple copies of a to-be-displayed source page. Therefore, use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or watermark) on every page of PDF ``doc``. The first execution actually inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
+      .. note:: The displayed source page is shown without any annotations or links.
+
+      .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or watermark) on every page of PDF ``doc``. The first execution actually inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
 
       >>> # the first showPDFpage will include source page docsrc[pno],
-      >>> # subsequents will reuse it via its object number (xref).
+      >>> # subsequents will reuse it via its xref.
       >>> xref = 0
       >>> for page in doc:
               xref = page.showPDFpage(rect, docsrc, pno,
                                       reuse_xref = xref)
-
-      .. note:: The displayed source page is shown without any annotations or links.
 
    .. method:: newShape()
 

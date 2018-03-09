@@ -126,21 +126,21 @@ Use cases include (but are not limited to) the following:
 
 1. "Stamp" a series of pages of the current document with the same image, like a company logo or a watermark.
 2. Combine arbitrary input pages into one output page to support “booklet” or double-sided printing (known as "4-up", "n-up").
-3. Split up (large) input pages into several arbitrary pieces. This is also called “posterization”, because you e.g. can split an A4 page horizontally and vertically, print the 4 pieces as A4 pages on a printer which cannot output larger paper, and end up with an A2 version of your original page.
+3. Split up (large) input pages into several arbitrary pieces. This is also called “posterization”, because you e.g. can split an A4 page horizontally and vertically, print the 4 pieces as separate A4 pages, and end up with an A2 version of your original page.
 
 Technical Implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This is done using PDF **form XObjects**, see section 4.9 on page 355 of :ref:`AdobeManual`. On execution of a ``Page.showPDFpage(rect, src, pno, ...)``, the following things happen:
+This is done using PDF **"Form XObjects"**, see section 4.9 on page 355 of :ref:`AdobeManual`. On execution of a ``Page.showPDFpage(rect, src, pno, ...)``, the following things happen:
 
-    1. The ``/Resources`` and ``/Contents`` objects of page ``pno`` in document ``src`` are copied over to the current document, jointly creating a **new form XObject** with the following properties. The PDF ``xref`` number of this object is returned by the method.
+    1. The ``/Resources`` and ``/Contents`` objects of page ``pno`` in document ``src`` are copied over to the current document, jointly creating a new **Form XObject** with the following properties. The PDF ``xref`` number of this object is returned by the method.
 
         a. ``/BBox`` equals ``/Mediabox`` of the source page
         b. ``/Matrix`` equals the identity matrix ``[1 0 0 1 0 0]``
         c. ``/Resources`` equals that of the source page. This involves a “deep-copy” of hierarchically nested other objects (including fonts, images, etc.). The complexity involved here is covered by MuPDF’s grafting [#f1]_ technique functions.
         d. This is a stream object type, and its stream is exactly equal to the ``/Contents`` object of the source (if the source has multiple such objects, these are first concatenated and stored as one new stream into the new form XObject).
 
-    2. A **second form XObject** is then created which the containing page uses to invoke the previous one. This object has the following properties:
+    2. A second **Form XObject** is then created which the containing page uses to invoke the previous one. This object has the following properties:
 
         a. ``/BBox`` equals the ``/CropBox`` of the source page (or ``clip``, if specified).
         b. ``/Matrix`` represents the mapping of ``/BBox`` to the display rectangle of the containing page (parameter 1 of ``showPDFpage``).
@@ -156,12 +156,14 @@ This is done using PDF **form XObjects**, see section 4.9 on page 355 of :ref:`A
 
 Observe the following guideline for optimum results:
 
-Unfortunately, as per this writing, PDF garbage collection (a feature of the underlying C-library MuPDF, and an optional argument of :meth:`Document.save`) does not detect identical form XObjects. Process steps 1 therefore **irrevocably** leads to a **new XObject** for every source page, if no precautions are taken. And this may be very large. The second XObject is very small, specific to the containing page, and therefore different each time. To avoid excess source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. When the method detects ``reuse_xref > 0``, it will not create XObject 1 again, but instead point to the ``xref`` \erenced object.
+The second XObject is small (just about 270 bytes), specific to the containing rectangle, and therefore different each time.
 
-If, in a second PyMuPDF session, a target PDF is updated again with the same source PDF page, the above mechanism cannot work and duplicates of XObject 1 will be created.
+If no precautions are taken, process **step 1** leads to another XObject on every invocation - even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time and memory usage.
+
+If you forget to use ``reuse_xref``, garbage collection (``mutool clean -gggg`` or save option ``garbage = 4``) can still take care of the duplicates.
 
 .. rubric:: Footnotes
 
-.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses "graftmaps", a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, the xref is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like images and also fonts. Whether the target document originally had identical data is however not checked by the grafting technique. Therefore, using save-option ``garbage = 4`` may still be a reasonable consideration, when copying to a non-empty target.
+.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses "graftmaps", a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, the xref is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. Whether the target document **originally** had identical data is, however, not checked by this technique. Therefore, using save-option ``garbage = 4`` is reasonable when copying to a non-empty target.
 
 .. [#f2] Arguably, ``uid`` alone would suffice to ensure uniqueness: this integer is maintained threadsafe as part of the global context. However, if a PDF is updated again later, ``uid`` would start over from 1. A reference name like ``/fitz-uid`` would therefore no longer be guarantied unique if more objects are shown on the containing page. Theoretically, the uniqueness of ``/fitz-xref-uid`` could also break, when PDF garbage collection leads to renumbering the PDF objects ... but chances for this seem tolerably low. What would be the effect of a non-uniqueness? If a page contains several identical XObject references, intentionally pointing to different XObjects, unexpected behaviour will result. Which in turn can only happen if garbage collection (1) changes the original ``xref`` and (2) a new :meth:`Page.showPDFpage` happens to generate an XObject with the now-free xref number ...

@@ -66,6 +66,8 @@ subject        subject
 
 .. note:: Apart from these standard metadata, PDF documents of PDF version 1.4 or later may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
 
+.. note:: There are two utility scripts in the repository that `import <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2meta.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/meta2csv.py>`_ metadata from resp. to CSV files.
+
 Working with Outlines
 =========================
 The easiest way to get all outlines (also called "bookmarks") of a document, is creating a *table of contents*:
@@ -76,20 +78,22 @@ This will return a Python list of lists ``[[lvl, title, page, ...], ...]``.
 
 ``lvl`` is the hierarchy level of the entry (starting from 1), ``title`` is the entry's title, and ``page`` the page number (1-based!). Other parameters describe details of the bookmark target.
 
+.. note:: There are two utility scripts in the repository that `import <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2toc.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/toc2csv.py>`_ table of contents from resp. to CSV files.
+
 Working with Pages
 ======================
-Tasks that can be performed with a :ref:`Page` are at the core of MuPDF's functionality.
+:ref:`Page` handling is at the core of MuPDF's functionality.
 
-* You can render a page into an image, optionally zooming, rotating, shifting or shearing it.
+* You can render a page into a raster or vector image, optionally zooming, rotating, shifting or shearing it.
 
-* You can extract a page's text or search for text strings.
+* You can extract a page's text in several formats and search for strings.
 
-First, a page object must be created:
+First, a page object must be created. This a method of :ref:`Document`:
 
 >>> page = doc.loadPage(n)        # represents page n of the document (0-based)
 >>> page = doc[n]                 # short form
 
-``n`` may be any integer less than the total number of pages of the document. ``doc[-1]`` is the last page, like with Python lists.
+``n`` may be any integer ``< doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python lists.
 
 Some typical uses of :ref:`Page`\s follow:
 
@@ -104,11 +108,13 @@ Here is how to get all links and their types:
 
 Rendering a Page
 -----------------------
-This example creates an image out of a page's content:
+This example creates a **raster** image of a page's content:
 
 >>> pix = page.getPixmap()
 
-Now ``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used. This method offers lots of variations for controlling the image: resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
+``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used. This method offers lots of variations for controlling the image: resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
+
+.. note:: You can also create **vector** images of a page using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/rk700/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
 Saving the Page Image in a File
 -----------------------------------
@@ -138,7 +144,7 @@ We can also extract all text of a page in one chunk of string:
 
 >>> text = page.getText(type)
 
-Use one of the following strings for ``type``:
+Use one of the following strings for ``type`` to obtain different formats:
 
 * ``"text"``: (default) plain text with line breaks. No formatting, no text position details.
 
@@ -158,7 +164,7 @@ You can find out, exactly where on a page a certain string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
-Th delivers a list of up to 16 :ref:`Rect` \angles, each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
+This delivers a list of up to 16 rectangles (see :ref:`Rect`), each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
 
 Please also do have a look at chapter :ref:`cooperation` and at demo program `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
@@ -188,9 +194,9 @@ Methods :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a p
 
 :meth:`Document.insertPage` and :meth:`Document.newPage` insert pages.
 
-Method :meth:`Document.select` shrinks a document down to selected pages. It accepts a sequence of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Only pages that do occur will remain - **in the sequence specified and as many times (!) as specified**.
+Method :meth:`Document.select` shrinks a PDF down to selected pages. It accepts a sequence of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence specified and as many times (!) as specified**.
 
-So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, reverse their sequence, ... whatever you may think of.
+So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, reverse the page sequence, ... whatever you may think of.
 
 The saved new document will contain all still valid links, annotations and bookmarks.
 
@@ -218,7 +224,7 @@ Saving
 
 As mentioned above, :meth:`Document.save` will **always** save the document in its current state.
 
-Since MuPDF 1.9, you can write changes back to the original PDF by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
+You can write changes back to the **original PDF** by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
 
 :meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table (corresponding ``mutool clean`` option is indicated as "mco").
 
