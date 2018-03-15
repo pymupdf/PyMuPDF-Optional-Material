@@ -170,7 +170,7 @@ Please also do have a look at chapter :ref:`cooperation` and at demo program `de
 
 PDF Maintenance
 ==================
-Since version 1.9, PyMuPDF provides several options to modify PDF documents (only).
+PyMuPDF provides several features to modify PDF documents.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
@@ -218,6 +218,14 @@ Here is how to split ``doc1``. This creates a new document of its first and last
 >>> doc2.save(...)
 
 More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_.
+
+Embedding Data
+---------------
+
+PDFs can be used as containers for abitrary data (exeutables, other PDFs, text files, etc.) much like ZIP archives.
+
+PyMuPDF fully supports this feature via :ref:`Document` ``embeddedFile*`` methods and attributes. For some detail read :ref:`Appendix 3`, consult the Wiki on `embedding files <https://github.com/rk700/PyMuPDF/wiki/Dealing-with-Embedded-Files>`_, or the example scripts `embedded-copy.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-copy.py>`_, `embedded-export.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-export.py>`_, `embedded-import.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-import.py>`_, and `embedded-list.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-list.py>`_.
+
 
 Saving
 -------

@@ -321,7 +321,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
 
-      .. note:: The displayed source page is shown without any annotations or links.
+      .. note:: The displayed source page is shown without any annotations or links. The source page's text will become an integral part of the containing page, i.e. it will be included in the output of all text extraction methods. Any images of the source page will also be included in the relevant methods. However, as per this writing, fonts and images of the source page will **not be included** in :meth:`Page.getFontList` and :meth:`getImageList` of the containing page.
 
       .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or watermark) on every page of PDF ``doc``. The first execution actually inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
 

@@ -336,7 +336,8 @@ The following table shows possible combinations of file extensions, output forma
 Pixmap Example Code Snippets
 -----------------------------
 
-**Example 1**
+Example 1: Gluing Images
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This shows how pixmaps can be used for purely graphical, non-PDF purposes. The script reads a PNG picture and creates a new PNG file which consist of 3 * 4 tiles of the original one:
 ::
@@ -376,7 +377,8 @@ Here is the output, showing some intermediate picture and the final result:
 
 |target|
 
-**Example 2**
+Example 2: Interfacing with NumPy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This shows how to create a PNG file from a numpy array (several times faster than most other methods):
 ::
@@ -398,7 +400,8 @@ This shows how to create a PNG file from a numpy array (several times faster tha
  pix = fitz.Pixmap(fitz.csRGB, width, height, samples, alpha=False)
  pix.writePNG("test.png")
 
-**Example 3**
+Example 3: Interfacing with PIL / Pillow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This shows how to interface with ``PIL / Pillow`` (the Python Imaging Library), thereby extending the reach of image files that can be processed:
 
@@ -415,3 +418,19 @@ This shows how to interface with ``PIL / Pillow`` (the Python Imaging Library), 
 >>> img = Image.open("some_image.xxx").convert("RGB")
 >>> samples = img.tobytes()
 >>> pix = fitz.Pixmap(fitz.csRGB, img.size[0], img.size[1], samples, alpha=False)
+
+Example 4: Extracting Alpha Values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If ``pix`` is a pixmap with transparency attributes, a copy using ``None`` as the target colorspace, will extract the alpha values and thus create a "mask" pixmap. Which means ``mask.n = mask.alpha = 1`` and ``mask.colorspace = None``. 
+
+>>> pix
+fitz.Pixmap(DeviceRGB, fitz.IRect(0, 0, 1168, 823), 1)
+>>> pix.n
+4
+>>> mask = fitz.Pixmap(None, pix)
+>>> # now mask.samples will contain the alpha values of pix:
+>>> mask
+fitz.Pixmap(None, fitz.IRect(0, 0, 1168, 823), 1)
+>>> mask.n
+1
