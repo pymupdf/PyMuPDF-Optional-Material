@@ -1,4 +1,4 @@
-# PyMuPDF Optional Material Version 1.12.3
+# PyMuPDF Optional Material Version 1.12.4
 
 ![logo](https://github.com/rk700/PyMuPDF/blob/master/demo/pymupdf.jpg)
 
