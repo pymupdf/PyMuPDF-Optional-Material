@@ -7,6 +7,7 @@ This is an extension of 1.12.3.
 
 * Fix of `issue #147 <https://github.com/rk700/PyMuPDF/issues/147>`_: methods :meth:`Document.getPageFontlist` and :meth:`Document.getPageImagelist` now also show fonts and images contained in ``/Resources`` nested via "Form XObjects".
 * Temporary fix of `issue #148 <https://github.com/rk700/PyMuPDF/issues/148>`_: Saving to new PDF files will now automatically use ``garbage = 2`` if a lower value is given. Final fix is to be expected with MuPDF's next version. At that point we will remove this circumvention.
+* Preventive fix of illegally using stencil / image mask pixmaps in some methods.
 * Method :meth:`Document.getPageFontlist` now includes the encoding name for each font in the list.
 * Method :meth:`Document.getPageImagelist` now includes the decode method name for each image in the list.
 

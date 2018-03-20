@@ -67,7 +67,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: __init__(self, colorspace, source, [alpha])
 
-      **Copy and set colorspace:** Copy ``source`` pixmap choosing the colorspace. Any colorspace combination is possible.
+      **Copy and set colorspace:** Copy ``source`` pixmap choosing the colorspace. Any colorspace combination is possible, but the source colorspace cannot be ``None``.
 
       :arg colorspace: desired target colorspace. This may also be ``None``. In this case, a "masking" pixmap is created: its :attr:`Pixmap.samples` will consist of the source's alpha bytes only.
       :type colorspace: :ref:`Colorspace`
@@ -79,7 +79,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: __init__(self, source, width, height, [clip])
 
-      **Copy and scale:** Copy ``source`` pixmap choosing new width and height values. Supports partial copying.
+      **Copy and scale:** Copy ``source`` pixmap choosing new width and height values. Supports partial copying and ``source.colorspace == None``.
 
       :arg source: the source pixmap.
       :type source: ``Pixmap``
@@ -93,7 +93,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: __init__(self, source)
 
-      **Copy and add alpha:** Identical copy from ``source`` with an added alpha channel. The alpha values are set to 255.
+      **Copy and add alpha:** Identical copy from ``source`` with an added alpha channel. The alpha values are set to 255. The source colorspaqce cannot be ``None``.
 
       :arg source: the source pixmap, must not have alpha.
       :type source: ``Pixmap``
@@ -147,7 +147,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: tintWith(red, green, blue)
 
-      Colorize (tint) a pixmap with a color provided as a value triple (red, green, blue). Only colorspaces :data:`CS_GRAY` and :data:`CS_RGB` are supported.
+      Colorize (tint) a pixmap with a color provided as a value triple (red, green, blue). Only colorspaces :data:`CS_GRAY` and :data:`CS_RGB` are supported, others are ignored with a warning on ``stdout``.
 
       If the colorspace is :data:`CS_GRAY`, ``(red + green + blue)/3`` will be taken as the tinting value.
 
@@ -161,13 +161,13 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
       Apply a gamma factor to a pixmap, i.e. lighten or darken it.
 
-      :arg float gamma: ``gamma = 1.0`` does nothing, ``gamma < 1.0`` lightens, ``gamma > 1.0`` darkens the image.
+      :arg float gamma: ``gamma = 1.0`` does nothing, ``gamma < 1.0`` lightens, ``gamma > 1.0`` darkens the image. Pixmaps with colorspace ``None`` are ignored with a warning.
 
    .. method:: shrink(n)
 
       Shrink the pixmap by dividing both, its width and height by 2\ :sup:`n`.
 
-      :arg int n: determines the new pixmap (samples) size. For example, a value of 2 divides width and height by 4 and thus results in a size of one 16\ :sup:`th` of the original. Values less than 1 are ignored.
+      :arg int n: determines the new pixmap (samples) size. For example, a value of 2 divides width and height by 4 and thus results in a size of one 16\ :sup:`th` of the original. Values less than 1 are ignored with a warning.
 
       .. note:: Use this methods to reduce a pixmap's size retaining its proportion. The pixmap is changed "in place". If you want to keep original and also have more granular choices, use the resp. copy constructor above.
 
@@ -179,7 +179,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: invertIRect(irect)
 
-      Invert the color of all pixels in :ref:`IRect` ``irect``.
+      Invert the color of all pixels in :ref:`IRect` ``irect``. Will have no effect if colorspace is ``None``.
 
       :arg irect: The area to be inverted. Omit to invert everything.
       :type irect: :ref:`IRect`
@@ -419,8 +419,8 @@ This shows how to interface with ``PIL / Pillow`` (the Python Imaging Library), 
 >>> samples = img.tobytes()
 >>> pix = fitz.Pixmap(fitz.csRGB, img.size[0], img.size[1], samples, alpha=False)
 
-Example 4: Extracting Alpha Values
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 4: Extracting Alpha Values, Making Stencil Masks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If ``pix`` is a pixmap with transparency attributes, a copy using ``None`` as the target colorspace, will extract the alpha values and thus create a "mask" pixmap. Which means ``mask.n = mask.alpha = 1`` and ``mask.colorspace = None``. 
 
@@ -434,3 +434,14 @@ fitz.Pixmap(DeviceRGB, fitz.IRect(0, 0, 1168, 823), 1)
 fitz.Pixmap(None, fitz.IRect(0, 0, 1168, 823), 1)
 >>> mask.n
 1
+
+Example 4: Converting Stencil Masks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pixmaps created from stencil / image masks cannot be copied to a "normal" pixmap directly. But they can be written out to PNG image files. Use this fact to create a conventional pixmap like so:
+
+>>> mask                       # stencil mask from previous example
+fitz.Pixmap(None, fitz.IRect(0, 0, 1168, 823), 1)
+>>> pix = fitz.Pixmap(mask.getPNGData())
+>>> pix
+fitz.Pixmap(DeviceGRAY, fitz.IRect(0, 0, 1168, 823), 0)
