@@ -10,13 +10,13 @@ In PyMuPDF, there exist several ways to create a pixmap. Except the first one, a
 
 1. from a document page (method :meth:`Page.getPixmap`)
 2. empty, based on :ref:`Colorspace` and :ref:`IRect` information
-3. from a filed-based image
+3. from a file
 4. from an in-memory image
 5. from a memory area of plain pixels
 6. from an image inside a PDF document
 7. as a copy of another pixmap
 
-.. NOTE:: A number of image formats is supported as input for points 3. and 4. above. See section :ref:`ImageFiles`.
+.. note:: A number of image formats is supported as input for points 3. and 4. above. See section :ref:`ImageFiles`.
 
 Have a look at the **example** section to see some pixmap usage "at work".
 
@@ -67,7 +67,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: __init__(self, colorspace, source, [alpha])
 
-      **Copy and set colorspace:** Copy ``source`` pixmap choosing the colorspace. Any colorspace combination is possible, but the source colorspace cannot be ``None``.
+      **Copy and set colorspace:** Copy ``source`` pixmap choosing the colorspace. Any colorspace combination is possible, but source colorspace must not be ``None``.
 
       :arg colorspace: desired target colorspace. This may also be ``None``. In this case, a "masking" pixmap is created: its :attr:`Pixmap.samples` will consist of the source's alpha bytes only.
       :type colorspace: :ref:`Colorspace`
@@ -93,7 +93,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: __init__(self, source)
 
-      **Copy and add alpha:** Identical copy from ``source`` with an added alpha channel. The alpha values are set to 255. The source colorspaqce cannot be ``None``.
+      **Copy and add alpha:** Identical copy from ``source`` with an added alpha channel. The alpha values are set to 255. The source colorspace must not be ``None``.
 
       :arg source: the source pixmap, must not have alpha.
       :type source: ``Pixmap``
@@ -147,9 +147,9 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: tintWith(red, green, blue)
 
-      Colorize (tint) a pixmap with a color provided as a value triple (red, green, blue). Only colorspaces :data:`CS_GRAY` and :data:`CS_RGB` are supported, others are ignored with a warning on ``stdout``.
+      Colorize (tint) a pixmap with a color provided as an integer triple (red, green, blue). Only colorspaces :data:`CS_GRAY` and :data:`CS_RGB` are supported, others are ignored with a warning.
 
-      If the colorspace is :data:`CS_GRAY`, ``(red + green + blue)/3`` will be taken as the tinting value.
+      If the colorspace is :data:`CS_GRAY`, ``(red + green + blue)/3`` will be taken as the tint value.
 
       :arg int red: ``red`` component.
 
@@ -159,9 +159,9 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: gammaWith(gamma)
 
-      Apply a gamma factor to a pixmap, i.e. lighten or darken it.
+      Apply a gamma factor to a pixmap, i.e. lighten or darken it. Pixmaps with colorspace ``None`` are ignored with a warning.
 
-      :arg float gamma: ``gamma = 1.0`` does nothing, ``gamma < 1.0`` lightens, ``gamma > 1.0`` darkens the image. Pixmaps with colorspace ``None`` are ignored with a warning.
+      :arg float gamma: ``gamma = 1.0`` does nothing, ``gamma < 1.0`` lightens, ``gamma > 1.0`` darkens the image.
 
    .. method:: shrink(n)
 
@@ -175,7 +175,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
       Change the alpha values. The pixmap must have an alpha channel.
 
-      :arg bytes alphavalues: the new alpha values. Type ``bytearray`` is also permitted. If provided, its length must be at least ``width * height``. If omitted, alpha values are all set to 255 (no transparency).
+      :arg bytes alphavalues: the new alpha values. Type ``bytearray`` is also permitted. If provided, its length must be at least ``width * height``. If omitted, all alpha values are to 255 (no transparency).
 
    .. method:: invertIRect(irect)
 
@@ -190,11 +190,11 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
       If copying from :data:`CS_GRAY` to :data:`CS_RGB`, the source gray-shade value will be put into each of the three rgb component bytes. If the other way round, ``(r + g + b) / 3`` will be taken as the gray-shade value of the target.
 
-      Between ``irect`` and the target pixmap's rectangle, an "intersection" is calculated at first. Then the corresponding data of this intersection are being copied. If the intersection is empty, nothing will happen.
+      Between ``irect`` and the target pixmap's rectangle, an "intersection" is calculated at first. Then the corresponding data of this intersection are being copied. If this intersection is empty, nothing will happen.
 
       If you want your ``source`` pixmap image to land at a specific target position, set its ``x`` and ``y`` attributes to the top left point of the desired rectangle before copying. See the example below for how this works.
 
-      :arg source: The pixmap from where to copy.
+      :arg source: source pixmap.
       :type source: :ref:`Pixmap`
 
       :arg irect: The area to be copied.
@@ -288,7 +288,7 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. attribute:: n
 
-      Number of components per pixel. This number depends on colorspace and alpha. If colorspace is not ``None`` (stencil masks), then ``Pixmap.n - Pixmap.aslpha == pixmap.colorspace.n`` is true.
+      Number of components per pixel. This number depends on colorspace and alpha. If colorspace is not ``None`` (stencil masks), then ``Pixmap.n - Pixmap.aslpha == pixmap.colorspace.n`` is true. If colorspace is ``None``, then ``n == alpha == 1``.
 
       :type: int
 

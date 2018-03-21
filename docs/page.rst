@@ -314,14 +314,14 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of the first display. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
+      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of its first inclusion. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
 
       :arg clip: choose which part of the source page to show. Default is its ``/CropBox``.
       :type clip: :ref:`Rect`
 
       :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
 
-      .. note:: The displayed source page is shown without any annotations or links. The source page's text will become an integral part of the containing page, i.e. it will be included in the output of all text extraction methods, including any images where relevant. Methods :meth:`getFontlist` and :meth:`getImageList` will also include information from the source page.
+      .. note:: The displayed source page is shown without any annotations or links. The source page's complete text and images will become an integral part of the containing page, i.e. they will be included in the output of all text extraction methods and appear in methods :meth:`getFontList` and :meth:`getImageList` (whether they are actually visible - see the ``clip`` parameter - or not).
 
       .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or watermark) on every page of PDF ``doc``. The first execution actually inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
 
@@ -358,20 +358,22 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       :arg r: the new visible area of the page.
       :type r: :ref:`Rect`
 
-      After execution, :attr:`Page.rect` will equal this rectangle shifted to the top-left position (0, 0). Example session:
+      After execution, :attr:`Page.rect` will equal this rectangle, shifted to the top-left position (0, 0). Example session:
 
       >>> page = doc.newPage()
       >>> page.rect
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
-      >>> page.CropBox
+      >>> page.CropBox                   # CropBox and MediaBox still equal
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>> # now set CropBox to a part of the page
       >>> page.setCropBox(fitz.Rect(100, 100, 400, 400))
+      >>> # this will also change the "rect" property:
       >>> page.rect
       fitz.Rect(0.0, 0.0, 300.0, 300.0)
-      >>> page.CropBox
-      fitz.Rect(100.0, 100.0, 400.0, 400.0)
+      >>> # but MediaBox remains unaffected
       >>> page.MediaBox
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>> # revert everything we did
       >>> page.setCropBox(page.MediaBox)
       >>> page.rect
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
@@ -496,4 +498,10 @@ Document.searchPageFor(pno, ...)   Page.searchFor(...)
 Document._getPageXref(pno)         Page._getXref()
 ================================== =====================================
 
-The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``. The document methods (left column) usually invoke their page counterparts via ``Document[pno].<method>``.
+The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``.
+
+**Technical Side Note:**
+
+Most document methods (left column) exist for convenience reasons, and usually invoke their page counterparts via ``Document[pno].<method>``. So, implicitely, every time the page is loaded and discarded again after method execution.
+
+The first two methods, however, work differently. They do not require a loaded page, but instead directly work on a page's object definition statement in the document. So e.g. :meth:`Page.getFontList` is implemented as ``Page.parent.getPageFontList(Page.number)``.
