@@ -18,19 +18,21 @@ Check this out yourself and compare the various free PDF-viewers. In terms of sp
 
 While PyMuPDF has been available since several years for an earlier version of MuPDF (v1.2, called **fitz-python** then), it was until only mid May 2015, that its creator and a few co-workers decided to elevate it to support current releases of MuPDF (first v1.7a, up to v1.12.0 as of this writing).
 
-PyMuPDF runs and has been tested on Mac, Linux, Windows XP SP2 and up, Python 2.7 through Python 3.6 (note that Python supports Windows XP only up to v3.4), 32bit and 64bit versions. Other platforms should work too, as long as MuPDF and Python support them.
+PyMuPDF runs and has been tested on Mac, Linux, Windows XP SP2 and up, Python 2.7 through Python 3.7 (note that Python supports Windows XP only up to v3.4), 32bit and 64bit versions. Other platforms should work too, as long as MuPDF and Python support them.
 
-PyMuPDF is hosted on `GitHub <https://github.com/rk700/PyMuPDF>`_. Because we rely on MuPDF's C library, installation consists of two separate steps for all platforms except for MS Windows:
+PyMuPDF is hosted on `GitHub <https://github.com/rk700/PyMuPDF>`_. We also are registered on `PyPI <https://pypi.org/project/PyMuPDF/>`_.
 
-1. Installation of MuPDF: this involves downloading the source from their website and then compiling it on your machine.
+For MS Windows and popular Python versions on Mac OSX and Linux we have created wheels. So installation should be convenient enough for hopefully most of our users: just issue
+
+``pip install --upgrade pymupdf``
+
+If your platform is not among those supported with a wheel, your installation consists of two separate steps:
+
+1. Installation of MuPDF: this involves downloading the source from their website and then compiling it on your machine. Adjust ``setup.py`` to point to the right directories (next step), before you try generating PyMuPDF.
 
 2. Installation of PyMuPDF: this step is normal Python procedure. Usually you will have to adapt the ``setup.py`` to point to correct ``include`` and ``lib`` directories of your generated MuPDF.
 
-For the Windows platform we have however combined these steps and offer binaries, available in ZIP and wheel formats. This installation material is contained in a separate GitHub `repository <https://github.com/JorjMcKie/PyMuPDF-optional-material>`_ and obsoletes all other download and generation work. You only need to choose which Python version and bitness you want and then download the respective zip or wheel file (less than 3 MB).
-
 For installation details check out the respective chapter.
-
-We also are registered on `PyPI <https://pypi.org/project/PyMuPDF/>`_.
 
 There exist several `demo <https://github.com/rk700/PyMuPDF/tree/master/demo>`_ and `example <https://github.com/rk700/PyMuPDF/tree/master/examples>`_ programs in the main repository, ranging from simple code snippets to full-featured utilities, like text extraction, PDF joiners and bookmark maintenance.
 
