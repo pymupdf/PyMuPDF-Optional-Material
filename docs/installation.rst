@@ -1,10 +1,8 @@
 Installation
 =============
-Installation generally encompasses downloading and generating PyMuPDF and MuPDF from sources.
+Installation generally encompasses downloading and generating PyMuPDF and MuPDF from sources. This process consists of three steps described below under :ref:`InstallSource`.
 
-This process consists of three steps described below under :ref:`InstallSource`.
-
-**However**, if your operating system is MS Windows, you can perform a binary setup, detailed out under :ref:`InstallBinary`. This process is **much faster** and requires the download of only one 3 MB file (either ``.zip`` or ``.whl``) - no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
+**However**, for popular configurations, binary setups via wheels are available, detailed out under :ref:`InstallBinary`. This process is **much faster**, less error-prone and requires the download of only one 3 MB file (either ``.zip`` or ``.whl``) - no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
 
 .. _InstallSource:
 
@@ -145,27 +143,25 @@ Now perform a ``python setup.py install``.
 
 Option 2: Install from Binaries
 --------------------------------
-This installation option is available for the lucky **MS Windows users only**. All versions of Windows (XP SP2 and up) and Python (2.7 and up) are supported with either 32bit or 64bit at your choice. 
+This installation option is available for all MS Windows and popular Mac OS and Linux platforms.
 
-Step 1: Download Binary
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You do not need the complete repository `PyMuPDF-optional-material <https://github.com/JorjMcKie/PyMuPDF-optional-material/>`_.
+Step 1: Install from PyPI
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you find the wheel for your platform on PyPI, issue
 
-**Either**
+``pip install [--upgrade] PyMuPDF``
 
-* issue ``pip install PyMuPDF [--upgrade]`` and **you are done**,
+and **you are done. Continue with next chapter of this manual.**
 
-**or**
+Step 2: Install from GitHub
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This section applies, if you prefer a ZIP file or if you need a special (bug-fix or pre-release) wheel.
 
-* download the ZIP or WHL file you need and **read on**.
+Download your `Windows <https://github.com/JorjMcKie/PyMuPDF-wheels/tree/windows>`_, `Mac OS <https://github.com/JorjMcKie/PyMuPDF-wheels/tree/osx>`_ or `Linux <https://github.com/JorjMcKie/PyMuPDF-wheels/tree/linux>`_ wheel and issue
 
-Step 2: Install PyMuPDF
-~~~~~~~~~~~~~~~~~~~~~~~~
-The next steps are of interest if you have special needs. For example: if you do not want to use ``pip``, you can do a ZIP-file-based installation. Or you may want to install a wheel that does not target your standard Python, or is a pre-release build, etc.
+``pip install [--upgrade] PyMuPDF-<...>.whl``
 
-* If you have downloaded a wheel, install it via ``pip install PyMuPDF-<...>.whl [--upgrade]`` and **you are done**.
-
-* If you have downloaded a zip, unzip it to e.g. your ``Desktop`` and open a command prompt at the unzipped folder's directory, which contains ``setup.py``. Enter ``python setup.py install`` (or ``py setup.py install`` if you have the Python launcher).
+If your platform is Windows you can also download a `zip file <https://github.com/JorjMcKie/PyMuPDF-Optional-Material/tree/master/binary_setups>`_, unzip it to e.g. your ``Desktop`` and open a command prompt at the unzipped folder's directory, which contains ``setup.py``. Enter ``python setup.py install`` (or ``py setup.py install`` if you have the Python launcher).
 
 MD5 Checksums
 ~~~~~~~~~~~~~~
@@ -201,6 +197,6 @@ When using wheels, configuration conflict detection is done by ``pip``.
 
 Using UPX
 -------------
-No matter which option you chose, your PyMuPDF installation will end up with four files: ``__init__.py``, ``fitz.py``, ``utils.py`` and the binary file ``_fitz.xxx`` in the ``site-packages`` directory. The extension of the binary will be ``.pyd`` on Windows and ``.so`` on other platforms.
+No matter which option you chose, your PyMuPDF installation will end up with four files: ``__init__.py``, ``fitz.py``, ``utils.py`` and the binary file ``_fitz<...>.xxx`` in the ``site-packages`` directory. The extension of the binary will be ``.pyd`` on Windows and ``.so`` on other platforms.
 
-Depending on your OS, your compiler and your font support choice (see above), this binary can be quite large and range from 5 MB to 20 MB. You can reduce this by applying the compression utility `UPX <https://upx.github.io/>`_ to it, which probably also exists for your operating system. UPX will reduce the size of ``_fitz.xxx`` by more than 50%. You will end up with 2.5 MB to 9 MB without impacting functionality nor execution speed.
+Depending on your OS, your compiler and your font support choice (see above), this binary can be quite large and range from 5 MB to 20 MB. You can reduce this by applying the compression utility `UPX <https://upx.github.io/>`_ to it, which probably also exists for your operating system. UPX will reduce the size of ``_fitz<...>.xxx`` by more than 50%. You will end up with 2.5 MB to 9 MB without impacting functionality nor execution speed.
