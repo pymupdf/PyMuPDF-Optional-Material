@@ -14,7 +14,7 @@ A :ref:`DisplayList` represents an interpreted document page. Methods for pixmap
 
 >>> dl = page.getDisplayList()              # create the display list
 
-You can also create display lists for many pages "on stack" (in a list), may be during document open, or you store it when a page is visited for the first time.
+You can also create display lists for many pages "on stack" (in a list), may be during document open, during idling times, or you store it when a page is visited for the first time (e.g. in GUI scripts).
 
 Note, that for everything what follows, only the display list is needed - the corresponding :ref:`Page` object could have been deleted.
 

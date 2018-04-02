@@ -180,15 +180,13 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: setMetadata(m)
 
-      PDF only: Sets or updates the metadata of the document as specified in ``m``, a Python dictionary. As with :meth:`Document.select`, these changes become permanent only when you save the document. Incremental save is supported.
+      PDF only: Sets or updates the metadata of the document as specified in ``m``, a Python dictionary. As with :meth:`select`, these changes become permanent only when you save the document. Incremental save is supported.
 
-      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``m = {}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument.
+      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``m = {}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument. Arbitrary unicode values are possible if specified as UTF-8-encoded.
 
     .. method:: setToC(toc)
 
-      PDF only: Replaces the **complete current outline** tree (table of contents) with a new one. After successful execution, the new outline tree can be accessed as usual via method ``getToC()`` or via property ``outline``. Like with other output-oriented methods, changes become permanent only via ``save()`` (incremental save supported). Internally, this method consists of the following two steps. For a demonstration see example below.
-
-      Please note, that currently the ``is_open`` flag is set to ``False``. Therefore all entries other than level 1 will initially be shown collapsed in PDF readers.
+      PDF only: Replaces the **complete current outline** tree (table of contents) with the new one provided as the argument. After successful execution, the new outline tree can be accessed as usual via method ``getToC()`` or via property ``outline``. Like with other output-oriented methods, changes become permanent only via ``save()`` (incremental save supported). Internally, this method consists of the following two steps. For a demonstration see example below.
 
       - Step 1 deletes all existing bookmarks.
 
@@ -202,7 +200,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
             - ``lvl`` is the hierarchy level (int > 0) of the item, starting with ``1`` and being at most 1 higher than that of the predecessor,
 
-            - ``title`` (str) is the title to be displayed.
+            - ``title`` (str) is the title to be displayed. It is assumed to be UTF-8-encoded (relevant for multibyte code points only).
 
             - ``page`` (int) is the target page number **(attention: 1-based to support getToC()-output)**, must be in valid page range if positive. Set this to ``-1`` if there is no target, or the target is external.
 

@@ -1,4 +1,4 @@
-# PyMuPDF Optional Material Version 1.12.4
+# PyMuPDF Optional Material
 
 ![logo](https://github.com/rk700/PyMuPDF/blob/master/demo/pymupdf.jpg)
 
@@ -21,11 +21,15 @@ You are probably interested in only one or two specific versions: **left-click**
 
 
 ## Support for standard Python Wheels
-If you prefer, you can download the wheel of your choice from [this repository](https://github.com/JorjMcKie/PyMuPDF-wheels) and use
+If you prefer, you can download the wheel (not just for Windows) of your choice either from PyPI or from PyMuPDF's [releases](https://github.com/rk700/PyMuPDF/releases) folder and use
 
-`pip install PyMuPDF-<...>.whl --upgrade`
+`pip install [--upgrade] pymupdf`
 
-to install.
+or
+
+`pip install --upgrade PyMuPDF-<...>.whl`
+
+respectively to install.
 
 ## Directory ``doc``
 Contains a **CHM based documentation file**. PyMuPDF itself comes with PDF and HTML based help. If you wish to use a compiled HTML Windows help, left-click [here](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/doc/PyMuPDF.chm).
