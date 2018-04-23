@@ -25,6 +25,7 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 :meth:`Document._updateObject`       PDF only: insert or update a PDF object
 :meth:`Document._updateStream`       PDF only: replace the stream of an object
 :meth:`Document.extractFont`         PDF only: extract embedded font
+:meth:`Document.extractImage`        PDF only: extract raw embedded image
 :meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
 :meth:`Document.getPageRawText`      PDF only: return raw string between two points
 :meth:`getPDFnow`                    return the current timestamp in PDF format
@@ -372,9 +373,20 @@ The following are miscellaneous functions to be used by the experienced PDF prog
       :rtype: int
       :returns: XREF number of the **/Outlines** root object.
 
+   .. method:: Document.extractImage(xref = 0)
+
+      PDF Only: Extract raw image data.
+
+      :arg int xref: cross reference number of an image object. If outside valid xref range, an exception is raised. If the xref is not an image or other errors occur, an empty bytes object ``b''`` is returned.
+
+      :rtype: bytes
+      :returns: The embedded image data. This is returned as is - no attempt is undertaken to interpret or convert the data. Can be used as input for a number of PyMuPDF functions (like pixmap creation or the ``stream`` \-parameter of :meth:`Page.insertImage`) or for other image processors like PIL.
+
+      .. note:: You can also use this method for diagnostic purposes: creating a pixmap or a PIL image directly from this output will reflect the original image properties (width, height, format, bpc, etc.). These can be compared with the PDF object definition as shown in the PDF source, or the output of :meth:`Document.getPageImageList`. Another possible use would be outputting PDF images in their original format (e.g. JPEG, TIFF, GIF, etc.) by using PIL, and not necessarily converting them all to PNG.
+
    .. method:: Document.extractFont(xref, info_only = False)
 
-      Return an embedded font file's data and appropriate file extension. This can be used to store the font as an external file. The method does not throw exceptions (other than via checking for PDF).
+      PDF Only: Return an embedded font file's data and appropriate file extension. This can be used to store the font as an external file. The method does not throw exceptions (other than via checking for PDF).
 
       :arg int xref: PDF object number of the font to extract.
       :arg bool info_only: only return font information, not the buffer. To be used for information-only purposes, saves allocation of large buffer areas.
