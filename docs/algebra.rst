@@ -12,17 +12,17 @@ General Remarks
 -----------------
 1. Operators can be either **binary** (i.e. involving two objects) or **unary**.
 
-2. The result of binary operatorions is either a **new object** of the same class as the **left operand** or a bool.
+2. The result of **binary** operatorions is either a **new object** of the same class as the **left operand** or a bool.
 
-3. The result of unary operations is either a bool, a float or the same object type.
+3. The result of **unary** operations is either a **new object** of the same class, a bool or a float.
 
-4. All binary operators fully support in-place operations, i.e. if the operator is called "°", then something like ``a °= b`` is equivalent to ``a = a ° b``.
+4. Binary operators fully support in-place operations, i.e. for any operator ``°``, ``a °= b`` does the same as ``a = a ° b``.
 
-5. The following binary operators are defined for all classes: ``+, -, *, /``. They have a similar meaning as the corresponding numerical ones.
+5. ``+, -, *, /`` are defined for all classes. They do what you would expect from them.
 
-6. Rectangles have two additional binary operators ``&, |``, details below.
+6. Rectangles have two additional binary operators: ``&`` (intersection) and ``|`` (union).
 
-7. For binary operations, the **second** operand may have a different type as the left one. Often, Python sequences (lists, tuples, arrays) are also allowed here. We allude to this fact by saying "point-like object" when we mean, that a :ref:`Point` is possible as well as a sequence of two numbers. Similar applies to "rect-like" (sequence length 4) or "matrix-like" (sequence length 6).
+7. For binary operations, the **second** operand may have a different type as the left one. Python number sequences (lists, tuples, arrays) are also allowed here. We allude to this fact by saying "point-like object" when we mean, that a :ref:`Point` is possible as well as a sequence of two numbers. Similar applies to "rect-like" (sequence length 4) or "matrix-like" (sequence length 6).
 
 Unary Operations
 ------------------
@@ -34,14 +34,14 @@ Unary Operations
 
 Binary Operations
 ------------------
-For the operators ``+, -, *, /``, the **second operand** may be a number, which will be applied component-wise.
+For the operators ``+, -, *, /``, the **second operand** may be a number, which will be applied to each component. Otherwise:
 
 * ``a + b``, ``a - b`` - component-wise execution, ``b`` must be ``a``\ -like.
 * ``a * b``, ``a / b`` - does the following for matrix-likes ``b``:
     - If ``a`` is a **point** or a **rectangle**, then ``a.transform(b)``, resp. ``a.transform(~b)`` is executed.
     - If ``a`` is a **matrix**, then ``a * b``, resp. ``a * ~b`` is executed.
 
-* ``a & b`` - **intersection rectangle:** ``a`` must be a rectangle and ``b`` rect-like.
-* ``a | b`` - **union rectangle:** ``a`` must be a rectangle, and ``b`` can be point-like or rect-like.
+* ``a & b`` - **intersection rectangle:** ``a`` must be a rectangle and ``b`` rect-like. Delivers the **largest rectangle** contained in both operands.
+* ``a | b`` - **union rectangle:** ``a`` must be a rectangle, and ``b`` can be point-like or rect-like. Delivers the **smallest rectangle** containing both operands.
 * ``b in a`` - if ``b`` is a number, then ``b in tuple(a)`` is returned. If ``b`` is point-like or rect-like, then ``a`` must be a rectangle, and the result of ``a.contains(b)`` is returned.
-* ``a == b`` - is true if ``abs(a - b) == 0`` and ``type(a) == type(b)`` (but maybe we have ``id(a) != id(b)``).
+* ``a == b`` - is true if ``abs(a - b) == 0`` and ``type(a) == type(b)`` (but maybe there is ``id(a) != id(b)``).

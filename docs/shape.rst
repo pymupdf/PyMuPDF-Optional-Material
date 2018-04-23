@@ -314,6 +314,15 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       Rectangle surrounding drawings. This attribute is at your disposal and may be changed at any time. Its value is set to ``None`` when a shape is created or committed. Every ``draw*`` method, and :meth:`Shape.insertTextbox` update this property (i.e. **enlarge** the rectangle as needed). **Morphing** operations, however (:meth:`Shape.finish`, :meth:`Shape.insertTextbox`) are ignored.
 
+      A typical use of this attribute would be setting :attr:`Page.CropBox` to this value, when you are creating shapes for later or external use. If you have not manipulated the attribute yourself, it should reflect a rectangle that contains all drawings so far.
+
+      If you have used morphing and want to adjust this attribute accordingly, use the following code:
+
+      >>> # assuming ...
+      >>> morph = (point, matrix)
+      >>> # ... recalculate the shape rectangle like so:
+      >>> img.rect = (img.rect - fitz.Rect(point, point)) * ~mat + fitz.Rect(point, point)
+
       :type: :ref:`Rect`
 
    .. attribute:: totalcont

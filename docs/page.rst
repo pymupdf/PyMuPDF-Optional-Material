@@ -160,16 +160,18 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       .. note:: An efficient way to background-color a PDF page with the old Python paper color is ``page.drawRect(page.rect, color = py_color, fill = py_color, overlay = False)``, where ``py_color = getColor("py_color")``.
 
-   .. method:: insertImage(rect, filename = None, pixmap = None, overlay = True)
+   .. method:: insertImage(rect, filename = None, pixmap = None, stream = None, overlay = True)
 
-      PDF only: Fill the given rectangle with an image. Width and height need not have the same proportions as the image: it will be adjusted to fit. The image is either taken from a pixmap or from a file - **exactly one** of these parameters **must** be specified.
+      PDF only: Fill the given rectangle with an image. Width and height need not have the same proportions as the image: it will be adjusted to fit. You need to specify the rectangle appropriately if you want to avoid this. The image is taken from a pixmap, a file or a memory area - **exactly one** of these parameters **must** be specified.
 
-      :arg rect: where to put the image on the page. ``rect`` must be finite, not empty and be completely contained in the page's rectangle.
+      :arg rect: where to put the image on the page. ``rect`` must be finite and not empty.
       :type rect: :ref:`Rect`
 
-      :arg str filename: name of an image file (all MuPDF supported formats - see :ref:`Pixmap` chapter).
+      :arg str filename: name of an image file (all MuPDF supported formats - see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
 
-      :arg pixmap: pixmap containing the image. When inserting the same image multiple times, this should be the preferred option, because the overhead of opening the image and decompressing its content will occur every time with the filename option.
+      :arg bytes stream: memory resident image (all MuPDF supported formats - see :ref:`ImageFiles`). Type ``bytearray`` is also supported.
+
+      :arg pixmap: pixmap containing the image.
       :type pixmap: :ref:`Pixmap`
 
       For a description of the other parameters see :ref:`CommonParms`.
@@ -177,15 +179,15 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       This example puts the same image on every page of a document:
 
       >>> doc = fitz.open(...)
-      >>> rect = fitz.Rect(0, 0, 50, 50)   # put thumbnail in upper left corner
-      >>> pix = fitz.Pixmap("some.jpg")    # an image file
+      >>> rect = fitz.Rect(0, 0, 50, 50)       # put thumbnail in upper left corner
+      >>> img = open("some.jpg", "rb").read()  # an image file
       >>> for page in doc:
-              page.insertImage(rect, pixmap = pix)
+              page.insertImage(rect, stream = img)
       >>> doc.save(...)
 
       Notes:
       
-      1. If that same image had already been present in the PDF, then only a reference will be inserted. This of course considerably saves disk space and processing time. But to detect this fact, existing PDF images need to be compared with the new one. This is achieved by storing an MD5 code for each image in a table and only compare the new image's code against its entries. Generating this MD5 table, however, is done only when triggered by the first image insertion - which therefore may have an extended response time.
+      1. If that same image had already been present in the PDF, then only a reference will be inserted. This of course considerably saves disk space and processing time. But to detect this fact, existing PDF images need to be compared with the new one. This is achieved by storing an MD5 code for each image in a table and only compare the new image's code against the table entries. Generating this MD5 table, however, is done only when doing the first image insertion - which therefore may have an extended response time.
 
       2. You can use this method to provide a background image for the page, like a copyright, a watermark or a background color. Or you can combine it with ``searchFor()`` to achieve a textmarker effect.
 
@@ -490,18 +492,18 @@ This is an overview of homologous methods on the :ref:`Document` and on the :ref
 ================================== =====================================
 **Document Level**                 **Page Level**
 ================================== =====================================
-Document.getPageFontlist(pno)      Page.getFontlist()
-Document.getPageImageList(pno)     Page.getImageList()
-Document.getPagePixmap(pno, ...)   Page.getPixmap(...)
-Document.getPageText(pno, ...)     Page.getText(...)
-Document.searchPageFor(pno, ...)   Page.searchFor(...)
-Document._getPageXref(pno)         Page._getXref()
+Document.getPageFontlist(pno)      :meth:`Page.getFontList`
+Document.getPageImageList(pno)     :meth:`Page.getImageList`
+Document.getPagePixmap(pno, ...)   :meth:`Page.getPixmap`
+Document.getPageText(pno, ...)     :meth:`Page.getText`
+Document.searchPageFor(pno, ...)   :meth:`Page.searchFor`
+Document._getPageXref(pno)         :meth:`Page._getXref`
 ================================== =====================================
 
 The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``.
 
 **Technical Side Note:**
 
-Most document methods (left column) exist for convenience reasons, and usually invoke their page counterparts via ``Document[pno].<method>``. So, implicitely, every time the page is loaded and discarded again after method execution.
+Most document methods (left column) exist for convenience reasons, and are just wrappers: ``Document[pno].<method>``. So they load and discard the page on each execution.
 
-The first two methods, however, work differently. They do not require a loaded page, but instead directly work on a page's object definition statement in the document. So e.g. :meth:`Page.getFontList` is implemented as ``Page.parent.getPageFontList(Page.number)``.
+However, the first two methods work differently. They only need a page's object definition statement - the page need not be loaded. So e.g. :meth:`Page.getFontList` is a wrapper the other way round: ``Page.parent.getPageFontList(Page.number)``.
