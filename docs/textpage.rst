@@ -26,7 +26,7 @@ TextPage
 
    .. method:: extractTEXT
 
-      Extract the text from a ``TextPage`` object. Returns a string of the page's complete text. The text is UTF-8 unicode and in the same sequence as the PDF creator specified it. If this looks awkward for your document, consider using a program that re-arranges the text according to a more familiar layout, e.g. `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_ in the examples directory. Or use other extraction methods which provide text position information like :meth:`TextPage.extractHTML`, :meth:`TextPage.extractXML`, :meth:`Page.extractTextWords`, or :meth:`Page.extractTextBlocks`.
+      Extract the text from a ``TextPage`` object. Returns a string of the page's complete text. The text is UTF-8 unicode and in the same sequence as the PDF creator specified it. If this looks awkward for your document, consider using a program that re-arranges the text according to a more familiar layout, e.g. `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_ in the examples directory. Or use other extraction methods which provide text position information like :meth:`TextPage.extractHTML`, :meth:`TextPage.extractXML`, :meth:`Page.getTextWords`, or :meth:`Page.getTextBlocks`.
 
       :rtype: str
 
@@ -102,13 +102,13 @@ Image type values:
 * 1 (raw): uncompressed samples
 * 2 (FAX)
 * 3 (flate)
-* 4 (LZW)
+* 4 (LZW): (Lempel-Ziv-Welch compression)
 * 5 (RLD)
 * 6 (BMP)
 * 7 (GIF)
 * 8 (JPEG)
-* 9 (JPX)
-* 10 (JXR)
+* 9 (JPX): JPEG 2000
+* 10 (JXR): JPEG XR
 * 11 (PNG)
 * 12 (PNM)
 * 13 (TIFF)

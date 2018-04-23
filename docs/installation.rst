@@ -110,7 +110,7 @@ To cut off unneeded stuff from your MuPDF version, modify file ``/include/mupdf/
  #define TOFU_SIL // PyMuPDF
  
  /* To skip the ICC profiles, enable: */
- #define NO_ICC // PyMuPDF
+ // #define NO_ICC
  
  /* To skip the Base14 fonts, enable: */
  /* #define TOFU_BASE14 */
@@ -151,13 +151,13 @@ If you find the wheel for your platform on PyPI, issue
 
 ``pip install [--upgrade] PyMuPDF``
 
-and **you are done. Continue with next chapter of this manual.**
+and you are done. **Continue with next chapter of this manual.**
 
 Step 2: Install from GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This section applies, if you prefer a ZIP file or if you need a special (bug-fix or pre-release) wheel.
 
-Download your `Windows <https://github.com/JorjMcKie/PyMuPDF-wheels/tree/windows>`_, `Mac OS <https://github.com/JorjMcKie/PyMuPDF-wheels/tree/osx>`_ or `Linux <https://github.com/JorjMcKie/PyMuPDF-wheels/tree/linux>`_ wheel and issue
+`Download <https://github.com/rk700/pymupdf/releases>`_ your Windows, Mac OS or Linux wheel and issue
 
 ``pip install [--upgrade] PyMuPDF-<...>.whl``
 

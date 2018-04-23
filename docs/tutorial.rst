@@ -47,7 +47,7 @@ Some :ref:`Document` Methods and Attributes
 
 Accessing Meta Data
 ========================
-PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for all document types, though not all entries may contain data in every single case. For details of their meanings and formats consult the PDF manuals, e.g. :ref:`AdobeManual`. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings (or ``None``) if not otherwise indicated. Be aware that not all of them necessarily contain meaningful data.
+PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may contain data in every single case. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings (or ``None``) if not otherwise indicated. Also be aware that not all of them always contain meaningful data.
 
 ============== ==============================
 **Key**        **Value**
@@ -64,7 +64,7 @@ creator        creating application
 subject        subject
 ============== ==============================
 
-.. note:: Apart from these standard metadata, PDF documents of PDF version 1.4 or later may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
+.. note:: Apart from these standard metadata, **PDF documents** starting from version 1.4 may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
 
 .. note:: There are two utility scripts in the repository that `import <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2meta.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/meta2csv.py>`_ metadata from resp. to CSV files.
 
@@ -88,18 +88,18 @@ Working with Pages
 
 * You can extract a page's text in several formats and search for strings.
 
-First, a page object must be created. This a method of :ref:`Document`:
+First, a page object must be created. This is a method of :ref:`Document`:
 
 >>> page = doc.loadPage(n)        # represents page n of the document (0-based)
 >>> page = doc[n]                 # short form
 
-``n`` may be any integer ``< doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python lists.
+``n`` may be any positive or negative integer ``< doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python lists.
 
 Some typical uses of :ref:`Page`\s follow:
 
 Inspecting the Links of a Page
 ------------------------------------
-Here is how to get all links and their types:
+Links are shown as "hot areas" when a document is displayed with some software. If you click while your cursor shows a hand symbol, you will usually be taken to the taget that is encoded in that link. Here is how to get all links and their types. 
 
 >>> # get all links on a page
 >>> links = page.getLinks()
@@ -124,19 +124,29 @@ We can simply store the image in a PNG file:
 
 Displaying the Image in Dialog Managers
 -------------------------------------------
-We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents the area of bytes of all the pixels as a Python bytes object. Here are two examples, find more `here <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
+We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more `here <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
 
-**wxPython**:
+wxPython
+~~~~~~~~~~~~~
 
 >>> bitmap = wx.BitmapFromBufferRGBA(pix.width, pix.height, pix.samples)
 
-**Tkinter**:
+Tkinter
+~~~~~~~~~~
+Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
 
->>> # the following requires: "from PIL import Image, ImageTk"
+>>> from PIL import Image, ImageTk
 >>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
->>> photo = ImageTk.PhotoImage(img)
+>>> tkimg = ImageTk.PhotoImage(img)
 
-Now, ``photo`` can be used as an image in TK.
+
+PyQt4, PyQt5, PySide
+~~~~~~~~~~~~~~~~~~~~~
+Please also see section 3.16 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
+
+>>> from PIL import Image, ImageQt
+>>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
+>>> qtimg = ImageQt.ImageQt(img)
 
 Extracting Text
 ----------------
@@ -158,19 +168,19 @@ Use one of the following strings for ``type`` to obtain different formats:
 
 To give you an idea about the output of these alternatives, we did text example extracts. See :ref:`Appendix2`.
 
-Searching Text
----------------
+Searching for Text
+-------------------
 You can find out, exactly where on a page a certain string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
 This delivers a list of up to 16 rectangles (see :ref:`Rect`), each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
 
-Please also do have a look at chapter :ref:`cooperation` and at demo program `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
+Please also do have a look at chapter :ref:`cooperation` and at demo programs `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_ and `demoy-lowlevel.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo-lowlevel.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
 PDF Maintenance
 ==================
-PyMuPDF provides several features to modify PDF documents.
+PyMuPDF provides several features to **modify PDF** documents.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
@@ -180,7 +190,7 @@ Apart from your changes, there are less obvious ways for a PDF to becoming "modi
 
 * After a document has been decrypted, the document in memory has changed and also counts as being modified.
 
-In these two cases, :meth:`Document.save()` will store a repaired and / or decrypted version, and saving **must occur to a new file**.
+In these two cases, :meth:`Document.save()` will store a repaired, resp. decrypted version, and saving **must occur to a new file**.
 
 The following describe some more intentional ways to manipulate PDF documents. This description is by no means exhaustive: much more can be found in the following chapters.
 

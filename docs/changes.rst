@@ -1,6 +1,26 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.0
+--------------------------
+This version is based on MuPDF v1.13.0. This release is "primarily a bug fix release".
+
+In PyMuPDF, we are also doing some bug fixes while introducing minor enhancements. There only very minimal changes to the user's API.
+
+* :ref:`Document` construction is more flexible: the new ``filetype`` parameter allows setting the document type. If specified, any extension in the filename will be ignored. More completely addresses `issue #156 <https://github.com/rk700/PyMuPDF/issues/156>`_. As part of this, the documentation has been reworked.
+
+* Changes to :ref:`Pixmap` constructors:
+    - Colorspace conversion no longer allows dropping the alpha channel: source and target **alpha will now always be the same**. We have seen exceptions and even interpreter crashes when using ``alpha = 0``.
+    - As a replacement, the simple pixmap copy lets you choose the target alpha.
+
+* :meth:`Document.save` again offers the full garbage collection range 0 thru 4. Because of a bug in XREF maintenance, we had to temporarily enforce ``garbage > 1``. Finally resolves `issue #148 <https://github.com/rk700/PyMuPDF/issues/148>`_.
+
+* :meth:`Document.save` now offers to "prettify" PDF source via an additional argument.
+* :meth:`Page.insertImage` has the additional ``stream`` \-parameter, specifying a memory area holding an image.
+
+* Issue with garbled PNGs on Linux systems has been resolved (`"Problem writing PNG" #133) <https://github.com/rk700/PyMuPDF/issues/133>`_.
+
+
 Changes in Version 1.12.4
 --------------------------
 This is an extension of 1.12.3.
@@ -185,14 +205,14 @@ This version is also based on MuPDF v1.9a. Changes compared to version 1.9.1:
   - ``open(filename)`` (equivalent to ``open(filename, None)``),
   - ``open(filetype, area)`` (equivalent to ``open(filetype, stream = area)``).
 
-  Type of memory area ``stream`` may be ``str`` (Python 2), ``bytes`` (Python 3) or ``bytearray`` (Python 2 and 3). Thus, e.g. ``area = open("file.pdf", "rb").read()`` may be used directly (without first converting it to bytearray).
+  Type of memory area ``stream`` may be ``bytes`` or ``bytearray``. Thus, e.g. ``area = open("file.pdf", "rb").read()`` may be used directly (without first converting it to bytearray).
 * New method ``Document.insertPDF()`` (PDFs only) inserts a range of pages from another PDF.
 * ``Document`` objects doc now support the ``len()`` function: ``len(doc) == doc.pageCount``.
 * New method ``Document.getPageImageList()`` creates a list of images used on a page.
 * New method ``Document.getPageFontList()`` creates a list of fonts referenced by a page.
 * New pixmap constructor ``fitz.Pixmap(doc, xref)`` creates a pixmap based on an opened PDF document and an XREF number of the image.
 * New pixmap constructor ``fitz.Pixmap(cspace, spix)`` creates a pixmap as a copy of another one ``spix`` with the colorspace converted to ``cspace``. This works for all colorspace combinations.
-* Pixmap constructor ``fitz.Pixmap(colorspace, width, height, samples)`` now allows ``samples`` to also be ``str`` (Python 2) or ``bytes`` (Python 3), not only ``bytearray``.
+* Pixmap constructor ``fitz.Pixmap(colorspace, width, height, samples)`` now allows ``samples`` to also be ``bytes``, not only ``bytearray``.
 
 
 Changes in Version 1.9.1

@@ -342,21 +342,20 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
       :arg int xref: XREF number.
       
-      :rtype: str or bytes
-      :returns: the (decompressed) stream of the object. This is a string in Python 2 and a ``bytes`` object in Python 3.
+      :rtype: bytes
+      :returns: the (decompressed) stream of the object.
 
 -----
 
-   .. method:: Document._updateStream(xref, stream)
+   .. method:: Document._updateStream(xref, stream, new = False)
 
-      Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised. The function automatically performs a compress operation ("deflate").
+      Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised unless ``new = True`` is used. The function automatically performs a compress operation ("deflate").
 
       :arg int xref: XREF number.
       
-      :arg stream: the new content of the stream.
-      :type stream: bytes or bytearray
+      :arg bytes stream: the new content of the stream. May also be type ``bytearray``.
       
-      :rtype: int
+      :arg bool new: whether to force accepting the stream, and thus turning ``xref`` into a stream object.
 
       This method is intended to manipulate streams containing PDF operator syntax (see pp. 985 of the :ref:`AdobeManual`) as it is the case for e.g. page content streams.
       

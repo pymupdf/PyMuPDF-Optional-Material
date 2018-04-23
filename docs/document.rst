@@ -57,25 +57,35 @@ For addional details on **embedded files** refer to Appendix 3.
 
 .. class:: Document
 
-    .. method:: __init__(self, [filename])
+    .. method:: __init__(self, filename = None, stream = None, filetype = None)
 
-      Constructs a ``Document`` object from ``filename``.
+      Creates a ``Document`` object.
 
-      :arg str filename: A string containing the path / name of the document file to be used. The file will be opened and remain open until either explicitely closed (see below) or until end of program. If omitted or ``None``, a new empty **PDF** document will be created.
+      * With default parameters, a **new empty PDF** document will be created.
+      * If ``stream`` is given, then the document is created from memory and either ``filename`` or ``filetype`` must indicate its type.
+      * If ``stream`` is ``None``, then a document is created from a file given by ``filename``. Its type is inferred from the extension, which can be overruled by specifying ``filetype``.
 
-      :rtype: ``Document``
-      :returns: A ``Document`` object.
+      :arg str filename: A UTF-8 string containing a file path or a file type, see below.
 
-    .. method:: __init__(self, filetype, stream)
+      :arg stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
+      :type stream: bytes, bytearray
 
-      Constructs a ``Document`` object from memory area ``stream``.
+      :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      :arg str filetype: A string specifying the type of document contained in ``stream``. This may be either something that looks like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Recommended is using the filename scheme, or even the name of the original file for documentation purposes. But just using strings like ``"pdf"`` will also work.
+      Overview of possible forms using the ``open`` synonym:
 
-      :arg bytes stream: A memory area representing the content of a supported document type. A type of ``bytearray`` is supported, too.
+      >>> # from a file
+      >>> doc = fitz.open("some.pdf")
+      >>> doc = fitz.open("some.file", None, "pdf")
+      >>> doc = fitz.open("some.file", filetype = "pdf")
 
-      :rtype: ``Document``
-      :returns: A ``Document`` object.
+      >>> # from memory
+      >>> doc = fitz.open("pdf", mem_area)
+      >>> doc = fitz.open(None, mem_area, "pdf")
+      >>> doc = fitz.open(stream = mem_area, filetype = "pdf")
+
+      >>> # new empty PDF
+      >>> doc = fitz.open()
 
     .. method:: authenticate(password)
 
@@ -83,12 +93,12 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg str password: The password to be used.
 
-      :rtype: int
-      :returns: ``True (1)`` if decryption with ``password`` was successful, ``False (0)`` otherwise. If successfull, indicator ``isEncrypted`` is set to ``False``.
+      :rtype: bool
+      :returns: ``True`` if decryption with ``password`` was successful, ``False`` otherwise. If successful, indicator ``isEncrypted`` is set to ``False``.
 
     .. method:: loadPage(pno = 0)
 
-      Loads a ``Page`` for further processing like rendering, text searching, etc. See the :ref:`Page` object.
+      Load a :ref:`Page` for further processing like rendering, text searching, etc.
 
       :arg int pno: page number, zero-based (0 is default and the first page of the document) and ``< doc.pageCount``. If ``pno < 0``, then page ``pno % pageCount`` will be loaded (IAW ``pageCount`` will be added to ``pno`` until the result is no longer negative). For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
 
@@ -106,10 +116,10 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :returns: a list of lists. Each entry has the form ``[lvl, title, page, dest]``. Its entries have the following meanings:
 
-      * lvl - hierarchy level (integer). The first entry has hierarchy level 1, and entries in a row increase by at most one level.
-      * title - title (string)
-      * page - 1-based page number (integer). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
-      * dest - included only if ``simple = False`` is specified. A dictionary containing details of the link destination.
+        * ``lvl`` - hierarchy level (positive *int*). The first entry is always 1. Entries in a row are either **equal**, **increase** by 1, or **decrease** by any number.
+        * ``title`` - title (*str*)
+        * ``page`` - 1-based page number (*int*). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
+        * ``dest`` - (*dict*) included only if ``simple = False``. Contains details of the link destination.
 
     .. method:: getPagePixmap(pno, *args, **kwargs)
 
@@ -121,11 +131,22 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Return a list of all image descriptions referenced by a page.
 
-      :arg int pno: page number, 0-based may be negative. Any value ``< len(doc)`` is acceptable.
+      :arg int pno: page number, 0-based, any value ``< len(doc)``.
 
       :rtype: list
 
-      :returns: a list of images shown on this page. Each entry looks like ``[xref, smask, width, height, bpc, colorspace, alt. colorspace, name, filter]``. Where ``xref`` is the image object number, ``smask`` is the object number of its soft-mask image (if present), ``width`` and ``height`` are the image dimensions, ``bpc`` denotes the number of bits per component (a typical value is 8), ``colorspace`` a string naming the colorspace (like ``DeviceRGB``),  ``alt. colorspace`` is any alternate colorspace depending on the value of ``colorspace``, ``name`` is the symbolic name by which the page references the image in its content stream, and ``filter`` is the decode filter of the image (:ref:`AdobeManual`, pp. 65). See below how this information can be used to extract PDF images as separate files. Another demonstration:
+      :returns: a list of images shown on this page. Each entry looks like ``[xref, smask, width, height, bpc, colorspace, alt. colorspace, name, filter]``. Where
+      
+        * ``xref`` (*int*) is the image object number,
+        * ``smask`` (*int* optional) is the object number of its soft-mask image (if present),
+        * ``width`` and ``height`` (*ints*) are the image dimensions,
+        * ``bpc`` (*int*) denotes the number of bits per component (a typical value is 8),
+        * ``colorspace`` (*str*)a string naming the colorspace (like ``DeviceRGB``),
+        * ``alt. colorspace`` (*str* optional) is any alternate colorspace depending on the value of ``colorspace``,
+        * ``name`` (*str*) is the symbolic name by which the **page references the image** in its content stream, and
+        * ``filter`` (*str* optional) is the decode filter of the image (:ref:`AdobeManual`, pp. 65).
+      
+      See below how this information can be used to extract PDF images as separate files. Another demonstration:
 
       >>> doc = fitz.open("pymupdf.pdf")
       >>> doc.getPageImageList(0)
@@ -134,39 +155,40 @@ For addional details on **embedded files** refer to Appendix 3.
       >>> pix
       fitz.Pixmap(DeviceRGB, fitz.IRect(0, 0, 261, 115), 0)
 
-      .. note:: This list has no duplicate entries: the combination of ``xref`` and ``name`` is unique. But by themselves, each one may occur multiple times. Duplicate ``name`` entries indicate the presence of "Form XObjects" on the page, e.g. generated by :meth:`Page.showPDFpage`.
+      .. note:: This list has no duplicate entries: the combination of ``xref`` and ``name`` is unique. But by themselves, each of the two may occur multiple times. Duplicate ``name`` entries indicate the presence of "Form XObjects" on the page, e.g. generated by :meth:`Page.showPDFpage`.
 
     .. method:: getPageFontList(pno)
 
       PDF only: Return a list of all fonts referenced by the page.
 
-      :arg int pno: page number, zero-based, any value ``< len(doc)``.
+      :arg int pno: page number, 0-based, any value ``< len(doc)``.
 
       :rtype: list
 
-      :returns: a list of fonts referenced by this page. Each entry looks like ``[xref, ext, type, basefont, name, encoding]``. Where ``xref`` is the font object number, ``ext`` font file extension, ``type`` is the font type (like ``Type1`` or ``TrueType`` etc.), ``basefont`` is the base font name, ``name`` is the reference name (or label), by which the page references the font in its contents stream(s), and ``encoding`` the font's character encoding if different from its built-in encoding (:ref:`AdobeManual`, p. 414):
+      :returns: a list of fonts referenced by this page. Each entry looks like ``[xref, ext, type, basefont, name, encoding]``. Where
+      
+        * ``xref`` (*int*) is the font object number,
+        * ``ext`` (*str*) font file extension (e.g. ``ttf``, see :ref:`FontExtensions`),
+        * ``type`` (*str*) is the font type (like ``Type1`` or ``TrueType`` etc.),
+        * ``basefont`` (*str*) is the base font name,
+        * ``name`` (*str*) is the reference name (or label), by which **the page references the font** in its contents stream(s), and
+        * ``encoding`` (*str* optional) the font's character encoding if different from its built-in encoding (:ref:`AdobeManual`, p. 414):
 
       >>> doc = fitz.open("some.pdf")
       >>> for f in doc.getPageFontList(0): print(f)
-      [26, 'cff', 'Type1', 'NQFMPG+UniversNextPro-LightCond', 'T1_0', 'WinAnsiEncoding']
-      [30, 'cff', 'Type1', 'NQFMPG+UniversNextPro-Regular', 'T1_1', 'WinAnsiEncoding']
-      [34, 'cff', 'Type1', 'NQFMPG+UniversNextPro-Light', 'T1_2', 'WinAnsiEncoding']
-      [38, 'cff', 'Type1', 'NQFMPG+UniversNextPro-Bold', 'T1_3', 'WinAnsiEncoding']
-      [42, 'ttf', 'TrueType', 'NQFMPG+Helvetica', 'TT0', 'WinAnsiEncoding']
-      [109, 'ttf', 'Type0', 'TOHWVU+Webdings', 'C2_0', 'Identity-H']
-      [117, 'cff', 'Type1', 'TOHWVU+UniversNextPro-BoldCond', 'T1_0', 'WinAnsiEncoding']
-      [122, 'cff', 'Type1', 'TOHWVU+UniversNextPro-Cond', 'T1_1', 'WinAnsiEncoding']
-      [126, 'cff', 'Type1', 'TOHWVU+UniversNextPro-Regular', 'T1_2', 'WinAnsiEncoding']
-      [131, 'cff', 'Type1', 'TOHWVU+UniversNextPro-LightCond', 'T1_3', 'WinAnsiEncoding']
-      [135, 'cff', 'Type1', 'TOHWVU+UniversNextPro-Bold', 'T1_4', 'WinAnsiEncoding']
+      [24, 'ttf', 'TrueType', 'DOKBTG+Calibri', 'R10', '']
+      [17, 'ttf', 'TrueType', 'NZNDCL+CourierNewPSMT', 'R14', '']
+      [32, 'ttf', 'TrueType', 'FNUUTH+Calibri-Bold', 'R8', '']
+      [28, 'ttf', 'TrueType', 'NOHSJV+Calibri-Light', 'R12', '']
+      [8, 'ttf', 'Type0', 'ECPLRU+Calibri', 'R23', 'Identity-H']
 
-      .. note:: This list has no duplicate entries: the combination of ``xref`` and ``name`` is unique. But by themselves, each one may occur multiple times. Duplicate ``name`` entries indicate the presence of "Form XObjects" on the page, e.g. generated by :meth:`Page.showPDFpage`.
+      .. note:: This list has no duplicate entries: the combination of ``xref`` and ``name`` is unique. But by themselves, each of the two may occur multiple times. Duplicate ``name`` entries indicate the presence of "Form XObjects" on the page, e.g. generated by :meth:`Page.showPDFpage`.
 
     .. method:: getPageText(pno, output = "text")
 
       Extracts the text of a page given its page number ``pno`` (zero-based). Invokes :meth:`Page.getText`.
 
-      :arg int pno: Page number, zero-based. Any value ``< len(doc)`` is acceptable.
+      :arg int pno: page number, 0-based, any value ``< len(doc)``.
 
       :arg str output: A string specifying the requested output format: text, html, json or xml. Default is ``text``.
 
@@ -211,25 +233,38 @@ For addional details on **embedded files** refer to Appendix 3.
 
       .. note:: We currently always set the :ref:`Outline` attribute ``is_open`` to ``False``. This shows all entries below level 1 as collapsed.
 
-    .. method:: save(outfile, garbage=0, clean=0, deflate=0, incremental=0, ascii=0, expand=0, linear=0)
+    .. method:: save(outfile, garbage=0, clean=False, deflate=False, incremental=False, ascii=False, expand=0, linear=False, pretty=False)
 
       PDF only: Saves the document in its **current state** under the name ``outfile``. A document may have changed for a number of reasons: e.g. after a successful ``authenticate``, a decrypted copy will be saved, and, in addition (even without optional parameters), some basic cleaning may also have occurred, e.g. broken xref tables may have been repaired and earlier incremental changes may have been resolved. If you executed any modifying methods, their results will also be reflected in the saved version.
 
-      :arg str outfile: The file name to save to. Must be different from the original value value if ``incremental=False``. When saving incrementally, ``garbage`` and ``linear`` **must be** ``False / 0`` and ``outfile`` **must equal** the original filename (for convenience use ``doc.name``).
+      :arg str outfile: The file name to save to. Must be different from the original value if ``incremental = False``. When saving incrementally, ``garbage`` and ``linear`` **must be** ``False`` and ``outfile`` **must equal** the original filename (for convenience use ``doc.name``).
 
-      :arg int garbage: Do garbage collection: 0 = none, 1 = remove unused objects, 2 = in addition to 1, compact xref table, 3 = in addition to 2, merge duplicate objects, 4 = in addition to 3, check streams for duplication. Excludes ``incremental``.
+      :arg int garbage: Do garbage collection. Positive values exclude ``incremental``.
 
-      :arg int clean: Clean content streams [#f1]_: 0 / False, 1 / True.
+       * 0 = none
+       * 1 = remove unused objects
+       * 2 = in addition to 1, compact xref table
+       * 3 = in addition to 2, merge duplicate objects
+       * 4 = in addition to 3, check streams for duplication
 
-      :arg int deflate: Deflate uncompressed streams: 0 / False, 1 / True.
+      :arg bool clean: Clean content streams [#f1]_.
 
-      :arg int incremental: Only save changed objects: 0 / False, 1 / True. Excludes ``garbage`` and ``linear``. Cannot be used for decrypted files and for files opened in repair mode (``openErrCode > 0``). In these cases saving to a new file is required.
+      :arg bool deflate: Deflate (compress) uncompressed streams.
 
-      :arg int ascii: Where possible make the output ASCII: 0 / False, 1 / True.
+      :arg bool incremental: Only save changed objects. Excludes ``garbage`` and ``linear``. Cannot be used for decrypted files and for files opened in repair mode (``openErrCode > 0``). In these cases saving to a new file is required.
 
-      :arg int expand: Decompress contents: 0 = none, 1 = images, 2 = fonts, 255 = all. This convenience option generates a decompressed file version that can be better read by some other programs.
+      :arg bool ascii: Where possible convert binary data to ASCII.
 
-      :arg int linear: Save a linearised version of the document: 0 = False, 1 = True. This option creates a file format for improved performance when read via internet connections. Excludes ``incremental``.
+      :arg int expand: Decompress objects. Generates versions that can be better read by some other programs.
+
+       * 0 = none
+       * 1 = images
+       * 2 = fonts
+       * 255 = all
+
+      :arg bool linear: Save a linearised version of the document. This option creates a file format for improved performance when read via internet connections. Excludes ``incremental``.
+
+      :arg bool pretty: Prettify the document source for better readability.
 
     .. method:: saveIncr()
 
@@ -241,7 +276,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
        Search for ``text`` on page number ``pno``. Works exactly like the corresponding :meth:`Page.searchFor`. Any integer ``pno < len(doc)`` is acceptable.
 
-    .. method:: write(garbage=0, clean=0, deflate=0, ascii=0, expand=0, linear=0)
+    .. method:: write(garbage=0, clean=False, deflate=False, ascii=False, expand=0, linear=False, pretty=False)
 
       PDF only: Writes the **current content of the document** to a bytes object instead of to a file like ``save()``. Obviously, you should be wary about memory requirements. The meanings of the parameters exactly equal those in :meth:`Document.save`. The tutorial contains an example for using this method as a pre-processor to `pdfrw <https://pypi.python.org/pypi/pdfrw/0.3>`_.
 
@@ -271,7 +306,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: insertPage(to = -1, text = None, fontsize = 11, width = 595, height = 842, fontname = "Helvetica", fontfile = None, color = (0, 0, 0))
 
-      PDF only: Insert an empty page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted - provided as a string or asequence.
+      PDF only: Insert an new page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted - provided as a string or as a asequence.
 
       :arg int to: page number (0-based) in front of which to insert. Valid specifications must be in range ``-1 <= pno <= len(doc)``. The default ``-1`` and ``pno = len(doc)`` indicate end of document, i.e. after the last page.
 
@@ -308,8 +343,20 @@ For addional details on **embedded files** refer to Appendix 3.
     
       PDF only: Convenience method: insert an empty page like ``insertPage()`` does. Valid parameters have the same meaning. However, no text can be inserted, instead the inserted page object is returned.
 
+      If you do not need to insert text with your new page right away, then this method is the more convenient one: it saves you one statement if you need it for subsequent work - see the below example.
+
       :rtype: :ref:`Page`
       :returns: the page object just inserted.
+
+      >>> # let the following be a list of image files, from which we
+      >>> # create a PDF with one image per page:
+      >>> imglist = [...]   # list of image filenames
+      >>> doc = fitz.open() # new empty PDF
+      >>> for img in imglist:
+              pix = fitz.Pixmap(img)
+              page = doc.newPage(-1, width = pix.width, height = pix.height)
+              page.insertImage(page.rect, pixmap = pix)
+      >>> doc.save("image-file.pdf", deflate = True)
 
     .. method:: deletePage(pno)
 
@@ -371,7 +418,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg n: index or name of entry. Obviously ``0 <= n < embeddedFileCount`` must be true if ``n`` is an integer.
       :type n: int or str
-      :rtype: ``bytes`` (Python 3), ``str`` (Python 2)
+      :rtype: bytes
 
     .. method:: embeddedFileDel(name)
 
@@ -385,8 +432,8 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Add new content to the document's portfolio.
 
-      :arg stream: contents
-      :type stream: bytes or bytearray or str (Python 2 only)
+      :arg bytes stream: contents, bytearray is supported, too.
+      
       :param str name: new entry identifier, must not already exist in embedded files.
       :param str filename: optional filename or ``None``, documentation only, will be set to ``name`` if ``None`` or omitted.
       :param str desc: optional description or ``None``, arbitrary documentation text, will be set to ``name`` if ``None`` or omitted.

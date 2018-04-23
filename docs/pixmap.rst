@@ -18,7 +18,7 @@ In PyMuPDF, there exist several ways to create a pixmap. Except the first one, a
 
 .. note:: A number of image formats is supported as input for points 3. and 4. above. See section :ref:`ImageFiles`.
 
-Have a look at the **example** section to see some pixmap usage "at work".
+Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
 ============================= ===================================================
 **Method / Attribute**        **Short Description**
@@ -55,31 +55,29 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
    .. method:: __init__(self, colorspace, irect, alpha)
 
-      **Empty pixmap:** Create an empty pixmap of size and origin given by a rectangle. So, for a ``fitz.IRect(x0, y0, x1, y1)``, ``fitz.Point(x0, y0)`` designates the top left corner of the pixmap. Note that the image area is **not initialized** and will contain crap data.
+      **New empty pixmap:** Create an empty pixmap of size and origin given by the rectangle. So, ``irect.top_left`` designates the top left corner of the pixmap, and its width and height are ``irect.width`` resp. ``irect.height``. Note that the image area is **not initialized** and will contain crap data - use :meth:`clearWith` to be sure.
 
-      :arg colorspace: colorspace of the pixmap.
+      :arg colorspace: colorspace.
       :type colorspace: :ref:`Colorspace`
 
-      :arg irect: Tte pixmap's area and location.
+      :arg irect: Tte pixmap's position and dimension.
       :type irect: :ref:`IRect`
 
       :arg bool alpha: Specifies whether transparency bytes should be included. Default is ``False``.
 
-   .. method:: __init__(self, colorspace, source, [alpha])
+   .. method:: __init__(self, colorspace, source)
 
-      **Copy and set colorspace:** Copy ``source`` pixmap choosing the colorspace. Any colorspace combination is possible, but source colorspace must not be ``None``.
+      **Copy and set colorspace:** Copy ``source`` pixmap converting colorspace. Any colorspace combination is possible, but source colorspace must not be ``None``.
 
-      :arg colorspace: desired target colorspace. This may also be ``None``. In this case, a "masking" pixmap is created: its :attr:`Pixmap.samples` will consist of the source's alpha bytes only.
+      :arg colorspace: desired target colorspace. This **may also be** ``None``. In this case, a "masking" pixmap is created: its :attr:`Pixmap.samples` will consist of the source's alpha bytes only.
       :type colorspace: :ref:`Colorspace`
 
       :arg source: the source pixmap.
       :type source: ``Pixmap``
 
-      :arg bool alpha: whether to also copy the source's alpha channel. If the source has no alpha, this parameter has no effect. If ``False`` the result will have no alpha.
-
    .. method:: __init__(self, source, width, height, [clip])
 
-      **Copy and scale:** Copy ``source`` pixmap choosing new width and height values. Supports partial copying and ``source.colorspace == None``.
+      **Copy and scale:** Copy ``source`` pixmap choosing new width and height values. Supports partial copying and the source colorspace may be ``None``.
 
       :arg source: the source pixmap.
       :type source: ``Pixmap``
@@ -91,30 +89,34 @@ Have a look at the **example** section to see some pixmap usage "at work".
       :arg clip: a region of the source pixmap to take the copy from.
       :type clip: :ref:`IRect`
 
-   .. method:: __init__(self, source)
+      .. note:: If width or height are in fact no integers, the pixmap will be created with ``alpha = 1``.
 
-      **Copy and add alpha:** Identical copy from ``source`` with an added alpha channel. The alpha values are set to 255. The source colorspace must not be ``None``.
+   .. method:: __init__(self, source, alpha = 1)
 
-      :arg source: the source pixmap, must not have alpha.
+      **Copy and add or drop alpha:** Identical copy from ``source`` with an added or dropped alpha channel. The source colorspace must not be ``None``. If ``alpha`` equals ``source.alpha``, the resulting pixmap will equal the original. If an alpha channel is added, its values will be set to 255.
+
+      :arg source: source pixmap.
       :type source: ``Pixmap``
+
+      :arg bool alpha: whether the target will have an alpha channel (default).
 
    .. method:: __init__(self, filename)
 
-      **From a file:** Create a pixmap from ``filename``. Image type and all properties are determined automatically.
+      **From a file:** Create a pixmap from ``filename``. All properties are inferred from the input. The origin of the resulting pixmap is ``(0, 0)``.
 
-      :arg str filename: Path / name of the file. The origin of the resulting pixmap is ``(0, 0)``.
+      :arg str filename: Path of the image file.
 
    .. method:: __init__(self, img)
 
-      **From memory:** Create a pixmap from bytearray ``img``. Image type and all properties are determined automatically.
+      **From memory:** Create a pixmap from a memory area. All properties are inferred from the input. The origin of the resulting pixmap is ``(0, 0)``.
 
-      :arg bytearray img: Data containing a complete, valid image in one of the supported formats. Could have been created by something like ``img = bytearray(open('somepic.png', 'rb').read())``. The origin of the resulting pixmap is (0,0). Type ``bytes`` is **supported in Python 3** only, because ``string == bytes`` in Python 2 and hence will be treated as a filename.
+      :arg bytearray img: Data containing a complete, valid image. Could have been created by e.g. ``img = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only** (``str is bytes`` in Python 2 and hence would be treated as a filename).
 
    .. method:: __init__(self, colorspace, width, height, samples, alpha)
 
-      **From plain pixels:** Create a pixmap from ``samples``. Each pixel must be represented by a number of bytes as controlled by the ``colorspace`` and ``alpha`` parameters. The origin of the resulting pixmap is (0,0). This method is useful when raw image data are provided by some other program - see examples below.
+      **From plain pixels:** Create a pixmap from ``samples``. Each pixel must be represented by a number of bytes as controlled by the ``colorspace`` and ``alpha`` parameters. The origin of the resulting pixmap is ``(0, 0)``. This method is useful when raw image data are provided by some other program - see :ref:`examples` below.
 
-      :arg colorspace: Colorspace of the image. Together with ``alpha`` this parameter controls the interpretation of the ``samples`` area. The following must be true: ``(colorspace.n + alpha) * width * height == len(samples)``.
+      :arg colorspace: Colorspace of image.
       :type colorspace: :ref:`Colorspace`
 
       :arg int width: image width
@@ -125,22 +127,24 @@ Have a look at the **example** section to see some pixmap usage "at work".
 
       :arg bool alpha: whether a transparency channel is included.
 
+      .. note:: The following equation **must be true**: ``(colorspace.n + alpha) * width * height == len(samples)``.
+      
       .. caution:: The method will not make a copy of ``samples``, but rather record a pointer. Therefore make sure that it remains available throughout the lifetime of the pixmap. Otherwise the pixmap's image will likely be destroyed or even worse things will happen.
 
    .. method:: __init__(self, doc, xref)
 
-      **From a PDF image:** Create a pixmap from an image **contained in PDF** ``doc`` identified by its XREF number. All pimap properties are set by the image.
+      **From a PDF image:** Create a pixmap from an image **contained in PDF** ``doc`` identified by its XREF number. All pimap properties are set by the image. Have a look at `extract-img1.py <https://github.com/rk700/PyMuPDF/tree/master/demo/extract-img1.py>`_ and `extract-img2.py <https://github.com/rk700/PyMuPDF/tree/master/demo/extract-img2.py>`_ to see how this can be used to recover all of a PDF's images.
 
       :arg doc: an opened **PDF** document.
       :type doc: :ref:`Document`
 
-      :arg int xref: the XREF number of the image.
+      :arg int xref: the XREF number of an image object. For example, you can make a list of images used on a particular page with :meth:`Document.getPageImageList`, which also shows the xref numbers of each image.
 
    .. method:: clearWith([value [, irect]])
 
       Initialize the samples area.
 
-      :arg int value: if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will be set to 255 (non-transparent). If omitted, then all bytes including alpha are cleared to 0x00.
+      :arg int value: if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will be set to 255 (non-transparent) if present. If omitted, then all bytes (including any alpha) are cleared to 0x00.
 
       :arg irect: the area to be cleared. Omit to clear the whole pixmap. Can only be specified, if ``value`` is also specified.
       :type irect: :ref:`IRect`
@@ -332,6 +336,8 @@ The following table shows possible combinations of file extensions, output forma
 |wimgopt|
 
 .. note:: Not all image file types are available, or at least common on all platforms, e.g. PAM is mostly unknown on Windows. Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that as a PNG.
+
+.. _examples:
 
 Pixmap Example Code Snippets
 -----------------------------

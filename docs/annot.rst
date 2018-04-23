@@ -145,7 +145,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: info
 
-      Meaningful for PDF only: A dictionary containing various information. All fields are unicode or strings (Python 2 or Python 3 respectively).
+      Meaningful for PDF only: A dictionary containing various information. All fields are (unicode) strings.
 
       * ``name`` - e.g. for ``[12, 'Stamp']`` type annotations it will contain the stamp text like ``Sold`` or ``Experimental``.
 
