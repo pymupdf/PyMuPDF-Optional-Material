@@ -38,8 +38,6 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 :meth:`Page.getPixmap`           create a :ref:`Pixmap`
 :meth:`Page.getSVGimage`         create a page image in SVG format
 :meth:`Page.getText`             extract the page's text
-:meth:`Page.getTextBlocks`       extract text blocks as a Python list
-:meth:`Page.getTextWords`        extract text words as a Python list
 :meth:`Page.insertImage`         PDF only: insert an image
 :meth:`Page.insertLink`          PDF only: insert a new link
 :meth:`Page.insertText`          PDF only: insert text
@@ -197,16 +195,16 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. method:: getText(output = 'text')
 
-      Retrieves the text of a page. Depending on the output parameter, the results of the :ref:`TextPage` extract methods are returned.
+      Retrieves the content of a page in a large variety of formats.
 
-      If ``'text'`` is specified, plain text is returned **in the order as specified during PDF creation** (which is not necessarily the normal reading order). This may not always look as expected, consider using (and probably modifying) the example program `PDF2TextJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2TextJS.py>`_. It tries to re-arrange text according to the Western reading layout convention "from top-left to bottom-right".
+      If ``'text'`` is specified, plain text is returned **in the order as specified during document creation** (i.e. not necessarily the normal reading order).
 
-      :arg str output: A string indicating the requested text format, one of ``"text"`` (default), ``"html"``, ``"json"``, ``"xml"`` or ``"xhtml"``.
+      :arg str output: A string indicating the requested format, one of ``"text"`` (default), ``"html"``, ``"json"``, ``"xml"``, ``"xhtml"`` or ``"dict"``.
 
-      :rtype: (unicode) string
-      :returns: The page's text as one string.
+      :rtype: (*str* or *dict*)
+      :returns: The page's content as one string or as a dictionary. The information level of JSON and DICT are exactly equal, in fact, JSON output is created via ``json.dumps(...)`` from the DICT dictionary. If you need JSON output (as in a text file), use the ``"json"`` parameter, else ``"dict"`` is more practical and faster.
 
-      .. note:: Use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML, XHTML or JSON documents works in exactly the same way. For XML and JSON you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
+      .. note:: You can use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML or XHTML documents works in exactly the same way. For XML you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
 
       >>> doc = fitz.open(...)
       >>> ofile = open(doc.name + ".html", "w")
@@ -214,31 +212,6 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       >>> for page in doc: ofile.write(page.getText("html"))
       >>> ofile.write(fitz.ConversionTrailer("html"))
       >>> ofile.close()
-
-   .. method:: getTextBlocks(images = False)
-
-      Extract all text blocks as a Python list. Provides basic positioning information without the need to interpret the output of :meth:`TextPage.extractJSON` or :meth:`TextPage.extractXML`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
-
-      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only metadata, **not the image data** itself is extracted, see below (use the resp. :meth:`Page.getText` versions for accessing this information detail).
-
-      :rtype: list
-      :returns: a list whose items have the following entries.
-
-                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the block.
-                * ``text``: concatenated text lines in the block *(str)*. If this is an image block, a text like this is contained: ``<image: DeviceRGB, width 511, height 379, bpc 8>`` (original image properties).
-                * ``block_n``: 0-based block number *(int)*.
-                * ``type``: block type *(int)*, 0 = text, 1 = image.
-
-   .. method:: getTextWords()
-
-      Extract all words as a Python list. Provides positioning information for each word without having to interpret the output of JSON or XML versions of :meth:`Page.getText`. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
-
-      :rtype: list
-      :returns: a list whose items are lists with the following entries:
-
-                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
-                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not only letters. So, ``Hello world!`` will yield the two words ``Hello`` and ``world!``.
-                * ``block_n, line_n, word_n``: 0-based numbers for block, line and word *(int)*.
 
    .. method:: getFontList()
 

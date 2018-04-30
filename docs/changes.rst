@@ -1,6 +1,14 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.1
+--------------------------
+This version is an extension of v1.13.1.
+
+* :meth:`TextPage.extractDICT` is a new method to extract the contents of a document page (text and images). All document types are supported as with the other :ref:`TextPage` ``extract*()`` methods. The returned object is a dictionary of nested lists and other dictionaries, and **exactly equal** to the JSON-deserialization of the old :meth:`TextPage.extractJSON`. The difference is that the result is created directly - no JSON module is used. Because the user needs no JSON module to interpet the information, it should be easier to use, and also have a better performance, because it contains images in their original **binary format** - they need not be base64-decoded.
+* :meth:`Page.getText` correspondingly supports the new parameter value ``"dict"`` to invoke the above method.
+* :meth:`TextPage.extractJSON` (resp. ``Page.getText("json")``) is still supported for convenience, but its use is expected to decline.
+
 Changes in Version 1.13.0
 --------------------------
 This version is based on MuPDF v1.13.0. This release is "primarily a bug fix release".

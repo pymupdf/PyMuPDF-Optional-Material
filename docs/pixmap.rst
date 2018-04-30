@@ -93,12 +93,12 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: __init__(self, source, alpha = 1)
 
-      **Copy and add or drop alpha:** Identical copy from ``source`` with an added or dropped alpha channel. The source colorspace must not be ``None``. If ``alpha`` equals ``source.alpha``, the resulting pixmap will equal the original. If an alpha channel is added, its values will be set to 255.
+      **Copy and add or drop alpha:** Copy ``source`` and add or drop its alpha channel. Identical copy if ``alpha`` equals ``source.alpha``. If an alpha channel is added, its values will be set to 255.
 
       :arg source: source pixmap.
       :type source: ``Pixmap``
 
-      :arg bool alpha: whether the target will have an alpha channel (default).
+      :arg bool alpha: whether the target will have an alpha channel, default and mandatory if source colorspace is ``None``.
 
    .. method:: __init__(self, filename)
 
@@ -110,7 +110,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       **From memory:** Create a pixmap from a memory area. All properties are inferred from the input. The origin of the resulting pixmap is ``(0, 0)``.
 
-      :arg bytearray img: Data containing a complete, valid image. Could have been created by e.g. ``img = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only** (``str is bytes`` in Python 2 and hence would be treated as a filename).
+      :arg bytearray img: Data containing a complete, valid image. Could have been created by e.g. ``img = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only**.
 
    .. method:: __init__(self, colorspace, width, height, samples, alpha)
 
@@ -181,7 +181,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       :arg bytes alphavalues: the new alpha values. Type ``bytearray`` is also permitted. If provided, its length must be at least ``width * height``. If omitted, all alpha values are to 255 (no transparency).
 
-   .. method:: invertIRect(irect)
+   .. method:: invertIRect([irect])
 
       Invert the color of all pixels in :ref:`IRect` ``irect``. Will have no effect if colorspace is ``None``.
 
@@ -220,9 +220,9 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: getPNGData()
 
-      Like ``writePNG`` but returnes a bytearray instead.
+      Like ``writePNG`` but returnes ``bytearray`` / ``bytes`` instead (Python2, resp. Python 3).
 
-      :rtype: bytearray
+      :rtype: bytearray / bytes
 
    .. attribute:: alpha
 
@@ -428,7 +428,7 @@ This shows how to interface with ``PIL / Pillow`` (the Python Imaging Library), 
 Example 4: Extracting Alpha Values, Making Stencil Masks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If ``pix`` is a pixmap with transparency attributes, a copy using ``None`` as the target colorspace, will extract the alpha values and thus create a "mask" pixmap. Which means ``mask.n = mask.alpha = 1`` and ``mask.colorspace = None``. 
+The alpha channel of a pixmap can be extracted by making a copy and choosing target colorspace ``None``. The resulting pixmap is sometimes also called "stencil mask". Its samples contain the source's alpha values.
 
 >>> pix
 fitz.Pixmap(DeviceRGB, fitz.IRect(0, 0, 1168, 823), 1)
@@ -441,13 +441,15 @@ fitz.Pixmap(None, fitz.IRect(0, 0, 1168, 823), 1)
 >>> mask.n
 1
 
-Example 4: Converting Stencil Masks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 4: Back-Converting Stencil Masks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Pixmaps created from stencil / image masks cannot be copied to a "normal" pixmap directly. But they can be written out to PNG image files. Use this fact to create a conventional pixmap like so:
+Stencil masks can be converted to PNG images. Use this to create a ``DeviceGRAY`` pixmap version:
 
 >>> mask                       # stencil mask from previous example
 fitz.Pixmap(None, fitz.IRect(0, 0, 1168, 823), 1)
 >>> pix = fitz.Pixmap(mask.getPNGData())
 >>> pix
 fitz.Pixmap(DeviceGRAY, fitz.IRect(0, 0, 1168, 823), 0)
+>>> # if required, invert the gray values
+>>> pix.invertIRect()
