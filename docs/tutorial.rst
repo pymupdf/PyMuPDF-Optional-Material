@@ -49,11 +49,11 @@ Accessing Meta Data
 ========================
 PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may contain data in every single case. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings (or ``None``) if not otherwise indicated. Also be aware that not all of them always contain meaningful data.
 
-============== ==============================
+============== =================================
 **Key**        **Value**
-============== ==============================
+============== =================================
 producer       producer (producing software)
-format         PDF format, e.g. 'PDF-1.4'
+format         format, e.g. 'PDF-1.4' for a PDF
 encryption     encryption method used
 author         author
 modDate        date of last modification
@@ -62,7 +62,7 @@ title          title
 creationDate   date of creation
 creator        creating application
 subject        subject
-============== ==============================
+============== =================================
 
 .. note:: Apart from these standard metadata, **PDF documents** starting from version 1.4 may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
 
@@ -84,9 +84,9 @@ Working with Pages
 ======================
 :ref:`Page` handling is at the core of MuPDF's functionality.
 
-* You can render a page into a raster or vector image, optionally zooming, rotating, shifting or shearing it.
+* You can render a page into a raster or vector (SVG) image, optionally zooming, rotating, shifting or shearing it.
 
-* You can extract a page's text in several formats and search for strings.
+* You can extract a page's text and images in many formats and search for text strings.
 
 First, a page object must be created. This is a method of :ref:`Document`:
 
@@ -148,29 +148,29 @@ Please also see section 3.16 of the `Pillow documentation <https://Pillow.readth
 >>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
 >>> qtimg = ImageQt.ImageQt(img)
 
-Extracting Text
-----------------
-We can also extract all text of a page in one chunk of string:
+Extracting Text and Images
+---------------------------
+We can also extract all text, images and other information of a page in many different forms and levels of detail:
 
 >>> text = page.getText(type)
 
 Use one of the following strings for ``type`` to obtain different formats:
 
-* ``"text"``: (default) plain text with line breaks. No formatting, no text position details.
+* ``"text"``: (default) plain text with line breaks. No formatting, no text position details, no images.
 
-* ``"html"``: creates a full visual version of the page including any images, which can be displayed in browsers.
+* ``"html"``: creates a full visual version of the page including any images. This can be displayed with your internet browser.
 
-* ``"json"``: same information level as HTML. Use a JSON module to interpret.
+* ``"dict"``: same information level as HTML, but provided as a Python dictionary. See :meth:`TextPage.extractDICT` for details of its structure.
 
-* ``"xhtml"``: text information level as the TEXT version, but includes images and can also be displayed in browsers.
+* ``"xhtml"``: text information level as the TEXT version but includes images. Can also be displayed by internet browsers.
 
-* ``"xml"``: contains no images, but full position and font information about each single text character. Use an XML module to interpret.
+* ``"xml"``: contains no images, but full position and font information down to each single text character. Use an XML module to interpret.
 
 To give you an idea about the output of these alternatives, we did text example extracts. See :ref:`Appendix2`.
 
 Searching for Text
 -------------------
-You can find out, exactly where on a page a certain string appears:
+You can find out, exactly where on a page a certain text string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
@@ -184,13 +184,13 @@ PyMuPDF provides several features to **modify PDF** documents.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
-Apart from your changes, there are less obvious ways for a PDF to becoming "modified":
+Apart from your changes, there are less obvious ways for a PDF to become "modified":
 
 * During open, integrity checks are used to determine the health of the PDF structure. Any errors will be corrected as far as possible to present a repaired document in memory for further processing. If this is the case, the document is regarded as being modified.
 
 * After a document has been decrypted, the document in memory has changed and also counts as being modified.
 
-In these two cases, :meth:`Document.save()` will store a repaired, resp. decrypted version, and saving **must occur to a new file**.
+In these two cases, :meth:`Document.save()` will store a **repaired**, resp. **decrypted** version, and saving **must occur to a new file**.
 
 The following describe some more intentional ways to manipulate PDF documents. This description is by no means exhaustive: much more can be found in the following chapters.
 
@@ -220,12 +220,12 @@ Method :meth:`Document.insertPDF` inserts pages from another PDF at a specified 
 >>> # append complete doc2 to the end of doc1
 >>> doc1.insertPDF(doc2)
 
-Here is how to split ``doc1``. This creates a new document of its first and last 10 pages (could also be done using :meth:`Document.select`):
+Here is how to **split** ``doc1``. It creates a new document of its first and last 10 pages (could also be done using :meth:`Document.select`):
 
 >>> doc2 = fitz.open()                 # new empty PDF
 >>> doc2.insertPDF(doc1, to_page = 9)  # first 10 pages
 >>> doc2.insertPDF(doc1, from_page = len(doc1) - 10) # last 10 pages
->>> doc2.save(...)
+>>> doc2.save("first-and-last-10.pdf")
 
 More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_.
 

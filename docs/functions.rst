@@ -1,7 +1,12 @@
 ============
 Functions
 ============
-The following are miscellaneous functions to be used by the experienced PDF programmer.
+The following are miscellaneous functions on a fairly low-level technical detail.
+
+Some functions provide detail access to PDF structures. Others are stripped-down, high performance versions of functions providing more information.
+
+Yet others are handy, general-purpose utilities.
+
 
 ==================================== ==============================================================
 **Function**                         **Short Description**
@@ -27,16 +32,15 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 :meth:`Document.extractFont`         PDF only: extract embedded font
 :meth:`Document.extractImage`        PDF only: extract raw embedded image
 :meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
-:meth:`Document.getPageRawText`      PDF only: return raw string between two points
 :meth:`getPDFnow`                    return the current timestamp in PDF format
 :meth:`getPDFstr`                    return PDF-compatible string
 :meth:`Page._cleanContents`          PDF only: clean the page's ``/Contents`` objects
 :meth:`Page._getContents`            PDF only: return a list of content numbers
 :meth:`Page._getXref`                PDF only: return XREF number of page
 :meth:`Page.getDisplayList`          create the page's display list
-:meth:`Page.extractTextLines`        return text between two points
-:meth:`Page.extractTextRect`         return text inside a rectangle
 :meth:`Page.insertFont`              PDF only: store a new font in the document
+:meth:`Page.getTextBlocks`           extract text blocks as a Python list
+:meth:`Page.getTextWords`            extract text words as a Python list
 :meth:`Page.run`                     run a page through a device
 :meth:`PaperSize`                    return width, height for known paper formats
 ==================================== ==============================================================
@@ -141,6 +145,35 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
 -----
 
+   .. method:: Page.getTextBlocks(images = False)
+
+      Extract all blocks of the page's :ref:`TextPage` as a Python list. Provides basic positioning information but at a much higher speed than :meth:`TextPage.extractDICT`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
+
+      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only image metadata, **not the binary image data** itself is extracted, see below (use the resp. :meth:`Page.getText` versions for accessing full information detail).
+
+      :rtype: *list*
+      :returns: a list whose items have the following entries.
+
+                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the block.
+                * ``text``: concatenated text lines in the block *(str)*. If this is an image block, a text like this is contained: ``<image: DeviceRGB, width 511, height 379, bpc 8>`` (original image properties).
+                * ``block_n``: 0-based block number *(int)*.
+                * ``type``: block type *(int)*, 0 = text, 1 = image.
+
+-----
+
+   .. method:: Page.getTextWords()
+
+      Extract all words of the page's :ref:`TextPage` as a Python list. Provides positioning information for each word, similar to information contained in :meth:`TextPage.extractDICT` or :meth:`TextPage.extractXML`, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
+
+      :rtype: list
+      :returns: a list whose items are lists with the following entries:
+
+                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
+                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not only letters. So, ``Hello world!`` will yield the two words ``Hello`` and ``world!``.
+                * ``block_n, line_n, word_n``: 0-based numbers for block, line and word *(int)*.
+
+-----
+
    .. method:: Page.insertFont(fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False)
 
       Store a new font for the page and return its XREF. If the page already references this font, it is a no-operation and just the XREF is returned.
@@ -233,51 +266,6 @@ The following are miscellaneous functions to be used by the experienced PDF prog
        except IndexError:
            m = max([ord(c) for c in text])
            raise ValueError:("max. code point found: %i, increase limit" % m)
-
-
------
-
-   .. method:: Document.getPageRawText(pno, p1, p2)
-
-      Return lines of raw text contained between a pair of points.
-
-      :arg int pno: page number.
-
-      :arg p1: Text delimiter point.
-      :type p1: :ref:`Point`
-
-      :arg p2: Text delimiter point.
-      :type p2: :ref:`Point`
-
-      :rtype: string
-      :returns: see the page version of this mehod.
-
------
-
-   .. method:: Page.extractTextLines(p1, p2)
-
-      Return lines of text contained between a pair of points.
-
-      :arg p1: text delimiter point.
-      :type p1: :ref:`Point`
-
-      :arg p2: text delimiter point.
-      :type p2: :ref:`Point`
-
-      :rtype: str
-      :returns: text lines between the two points (UTF-8 encoded).
-
------
-
-   .. method:: Page.extractTextRect(rect)
-
-      Return lines of text contained in a rectangle.
-
-      :arg rect: rectangle.
-      :type rect: :ref:`Rect`
-
-      :rtype: str
-      :returns: text occurring inside the rectangle.
 
 -----
 
@@ -375,14 +363,25 @@ The following are miscellaneous functions to be used by the experienced PDF prog
 
    .. method:: Document.extractImage(xref = 0)
 
-      PDF Only: Extract raw image data.
+      PDF Only: Extract raw image data. The output can be directly stored in an image file, be used as input for packages like PIL, for :ref:`Pixmap` creation, etc.
 
-      :arg int xref: cross reference number of an image object. If outside valid xref range, an exception is raised. If the xref is not an image or other errors occur, an empty bytes object ``b''`` is returned.
+      :arg int xref: cross reference number of an image object. If outside valid xref range, an exception is raised. If the object is not an image or other errors occur, an empty dictionary is returned.
 
-      :rtype: bytes
-      :returns: The embedded image data. This is returned as is - no attempt is undertaken to interpret or convert the data. Can be used as input for a number of PyMuPDF functions (like pixmap creation or the ``stream`` \-parameter of :meth:`Page.insertImage`) or for other image processors like PIL.
+      :rtype: *dict*
+      :returns: a dictionary with keys ``'ext'`` (the type of image as a string, e.g. ``'jpeg'``, usable also as file extension) and ``'image'`` (embedded image data as a ``bytes`` object).
 
-      .. note:: You can also use this method for diagnostic purposes: creating a pixmap or a PIL image directly from this output will reflect the original image properties (width, height, format, bpc, etc.). These can be compared with the PDF object definition as shown in the PDF source, or the output of :meth:`Document.getPageImageList`. Another possible use would be outputting PDF images in their original format (e.g. JPEG, TIFF, GIF, etc.) by using PIL, and not necessarily converting them all to PNG.
+      >>> d = doc.extractImage(25)
+      >>> d
+      {}
+      >>> d = doc.extractImage(8593)
+      >>> d["ext"], d["image"]
+      ('jpeg', b'\xff\xd8\xff\xee\x00\x0eAdobe\x00d\x00\x00\x00\x00 ...)
+      >>> imgout = open("image." + d["ext"], "wb")
+      >>> imgout.write(d["image"])
+      1238
+      >>> imgout.close()
+
+      .. note:: You can also use this method for diagnostic purposes: creating a pixmap or a PIL image directly from this output will reflect the original image properties (width, height, alpha, etc.). These can be compared with the PDF object definition as shown in the PDF source, or the output of :meth:`Document.getPageImageList`. Another possible use would be outputting PDF images in their original format (e.g. JPEG, TIFF, GIF, etc.) and not necessarily converting them all to PNG, see `extract-img3.py <https://github.com/rk700/PyMuPDF/blob/master/demo/extract-img3.py>`_.
 
    .. method:: Document.extractFont(xref, info_only = False)
 
