@@ -1,6 +1,6 @@
 Quick Installation of PyMuPDF Binaries Version
 ======================================================
-These installation files support MuPDF version 1.12.0 published 2017-12-13. They deliver the same functionality as PyMuPDF v1.12.x - just in a precompiled form.
+These installation files support MuPDF versions with the same major and minor version number. They deliver the same functionality as PyMuPDF with the same major, minor and pathch level - just in a precompiled form.
 
 Pre-requisites
 ---------------
