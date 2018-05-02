@@ -163,14 +163,14 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page.getTextWords()
 
-      Extract all words of the page's :ref:`TextPage` as a Python list. Provides positioning information for each word, similar to information contained in :meth:`TextPage.extractDICT` or :meth:`TextPage.extractXML`, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
+      Extract all words of the page's :ref:`TextPage` as a Python list. A "word" in this context is any character string surrounded by spaces. Provides positioning information for each word, similar to information contained in :meth:`TextPage.extractDICT` or :meth:`TextPage.extractXML`, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
 
       :rtype: list
       :returns: a list whose items are lists with the following entries:
 
                 * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
-                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not only letters. So, ``Hello world!`` will yield the two words ``Hello`` and ``world!``.
-                * ``block_n, line_n, word_n``: 0-based numbers for block, line and word *(int)*.
+                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not only letters. So, ``    Hello   world!   `` will yield the two words ``Hello`` and ``world!``.
+                * ``block_n, line_n, word_n``: 0-based counters for block, line and word *(int)*.
 
 -----
 

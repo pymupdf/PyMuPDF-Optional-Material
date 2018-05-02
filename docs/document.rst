@@ -23,8 +23,8 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.embeddedFileGet`      PDF only: extract an embedded file buffer
 :meth:`Document.embeddedFileInfo`     PDF only: metadata of an embedded file
 :meth:`Document.embeddedFileSetInfo`  PDF only: change metadata of an embedded file
-:meth:`Document.getPageFontList`      make a list of fonts on a page
-:meth:`Document.getPageImageList`     make a list of images on a page
+:meth:`Document.getPageFontList`      PDF only: make a list of fonts on a page
+:meth:`Document.getPageImageList`     PDF only: make a list of images on a page
 :meth:`Document.getPagePixmap`        create a pixmap of a page by page number
 :meth:`Document.getPageText`          extract the text of a page by page number
 :meth:`Document.getToC`               create a table of contents
@@ -43,6 +43,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :attr:`Document.embeddedFileCount`    number of embedded files
 :attr:`Document.isClosed`             has document been closed?
 :attr:`Document.isPDF`                is document type PDF?
+:attr:`Document.isFormPDF`            is document type a Form PDF?
 :attr:`Document.metadata`             metadata
 :attr:`Document.name`                 filename of document
 :attr:`Document.needsPass`            require password to access data?
@@ -120,6 +121,14 @@ For addional details on **embedded files** refer to Appendix 3.
         * ``title`` - title (*str*)
         * ``page`` - 1-based page number (*int*). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
         * ``dest`` - (*dict*) included only if ``simple = False``. Contains details of the link destination.
+
+    .. method:: getFormXref()
+
+       PDF only: Return the xref number of the `AcroForm` object. This object exists if the document is a PDF with interactive fields.
+
+       :rtype: *int*
+
+       :returns: the xref number of the ``AcroForm`` or zero if not a PDF with interactive fields.
 
     .. method:: getPagePixmap(pno, *args, **kwargs)
 
@@ -459,6 +468,12 @@ For addional details on **embedded files** refer to Appendix 3.
     .. attribute:: isPDF
 
       ``True`` if this is a PDF document, else ``False``.
+
+      :type: bool
+
+    .. attribute:: isFormPDF
+
+      ``True`` if this is a Form PDF document, else ``False``.
 
       :type: bool
 

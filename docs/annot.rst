@@ -34,6 +34,9 @@ There is a parent-child relationship between an annotation and its page. If the 
 :attr:`Annot.rect`          rectangle containing the annotation
 :attr:`Annot.type`          PDF only: type of the annotation
 :attr:`Annot.vertices`      PDF only: point coordinates of Polygons, PolyLines, etc.
+:attr:`Annot.widget_name`   PDF only: "Widget" field name
+:attr:`Annot.widget_text`   PDF only: "Widget" text contents
+:attr:`Annot.widget_type`   PDF only: "Widget" field type
 =========================== ==============================================================
 
 **Class API**
@@ -103,7 +106,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Returns the uncompressed content of the attached file.
 
-      :rtype: bytes or str (Py2)
+      :rtype: bytes
       :returns: the content of the attached file.
 
    .. method:: fileUpd(buffer, filename=None)
@@ -176,7 +179,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: vertices
 
-      Meaningful for PDF only: A list containing point ("vertices") coordinates (each given by 2 floats specifying the x and y coordinate respectively) for various types of annotations:
+      PDF only: A list containing point ("vertices") coordinates (each given by 2 floats specifying the x and y coordinate respectively) for various types of annotations:
       
       * ``Line`` - the starting and ending coordinates (4 floats).
       * ``[2, 'FreeText', 'FreeTextCallout']`` - 4 or 6 floats designating the starting, the (optional) knee point, and the ending coordinates.
@@ -185,6 +188,25 @@ There is a parent-child relationship between an annotation and its page. If the 
       * ``Ink`` - list of one to many sublists of vertex coordinates. Each such sublist represents a separate line in the drawing.
 
       :rtype: list
+
+   .. attribute:: widget_name
+
+      PDF only: The field name for an annotation of type ``(19, "Widget")``.
+
+      :rtype: str
+
+   .. attribute:: widget_text
+
+      PDF only: The text field content for an annotation of type ``(19, "Widget")``.
+
+      :rtype: str
+
+   .. attribute:: widget_type
+
+      PDF only: The field type for an annotation of type (19, "Widget").
+
+      :rtype: tuple
+      :returns: a tuple ``(int, str)``. If not applicable ``(-1, '')`` is returned. E.g. for a text field ``(3, 'Tx')`` is returned.
 
    .. attribute:: colors
 

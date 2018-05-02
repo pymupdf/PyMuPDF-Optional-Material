@@ -1,9 +1,18 @@
 Change Logs
 ===============
 
-Changes in Version 1.13.1
+Changes in Version 1.13.2
 --------------------------
 This version is an extension of v1.13.1.
+
+The major enhancement concerns PDF form field support. Form fields are annotations of a special type ``(19, 'Widget')``. There is a new document method that can be used to check whether a document is a form. The :ref:`Annot` class has new properties describing field details.
+
+* :attr:`Document.isFormPDF` is a attribute which determines whether an `/AcroForm` exists.
+* :attr:`Annot.widget_type`, :attr:`Annot.widget_text` and :attr:`Annot.widget_name` contain the details of a "Widget" annotation.
+
+Changes in Version 1.13.1
+--------------------------
+This version is an extension of v1.13.0.
 
 * :meth:`TextPage.extractDICT` is a new method to extract the contents of a document page (text and images). All document types are supported as with the other :ref:`TextPage` ``extract*()`` methods. The returned object is a dictionary of nested lists and other dictionaries, and **exactly equal** to the JSON-deserialization of the old :meth:`TextPage.extractJSON`. The difference is that the result is created directly - no JSON module is used. Because the user needs no JSON module to interpet the information, it should be easier to use, and also have a better performance, because it contains images in their original **binary format** - they need not be base64-decoded.
 * :meth:`Page.getText` correspondingly supports the new parameter value ``"dict"`` to invoke the above method.
