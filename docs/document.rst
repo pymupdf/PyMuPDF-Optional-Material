@@ -16,6 +16,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.authenticate`         decrypt the document
 :meth:`Document.close`                close the document
 :meth:`Document.copyPage`             PDF only: copy a page to another location
+:meth:`Document.convertToPDF`         write a PDF version to memory
 :meth:`Document.deletePage`           PDF only: delete a page by its number
 :meth:`Document.deletePageRange`      PDF only: delete a range of pages
 :meth:`Document.embeddedFileAdd`      PDF only: add a new embedded file from buffer
@@ -107,6 +108,43 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. note:: Conveniently, pages can also be loaded via indexes over the document: ``doc.loadPage(n) == doc[n]``. Consequently, a document can also be used as an iterator over its pages, e.g. ``for page in doc: ...`` and ``for page in reversed(doc): ...`` will yield the :ref:`Page`\ s of ``doc`` as ``page``.
 
+    .. method:: convertToPDF
+
+      Create a PDF version of the current document and write it to memory. All document types are supported.
+
+      :rtype: bytes
+      :returns: a Python ``bytes`` object containing a PDF file image. It is created by internally using ``write(garbage=4, clean=False, deflate=True, ascii=False, expand=0, linear=False, pretty=False)``. See :meth:`write`. You can output it directly to disk or open it as a PDF via ``fitz.open("pdf", pdfbytes)``. Here are some examples:
+
+      >>> # convert an XPS file to PDF
+      >>> xps = fitz.open("some.xps")
+      >>> pdfbytes = xps.convertToPDF()
+      >>>
+      >>> # either do this --->
+      >>> pdf = fitz.open("pdf", pdfbytes)
+      >>> pdf.save("some.pdf")
+      >>>
+      >>> # or this --->
+      >>> pdfout = open("some.pdf", "wb")
+      >>> pdfout.write(pdfbytes)
+      >>> pdfout.close()
+
+      >>> # copy image files to PDF pages
+      >>> doc = fitz.open()                     # new PDF
+      >>> imglist = [ ... image file names ...] # e.g. created via os.listdir()
+      >>> for img in imglist:
+              imgdoc = fitz.open(img)           # open image as a document
+              pdfbytes = imgdoc.convertToPDF()
+              imgpdf = fitz.open("pdf", pdfbytes)
+              doc.insertPDF(imgpdf)             # insert the image
+      >>> doc.save("allmyimages.pdf")
+
+      .. note:: The method makes direct use of the ``mutool`` command ``convert``. The resulting PDF does not always perfectly reflect the original. Here are some test results.
+
+        * Image files: perfect, no issues detected yet.
+        * XPS: overall good. Any original table of contents and internal links are lost. External links work correctly.
+        * SVG: medium. Comparable to svglib.
+        * EPUB: similar to XPS.
+
     .. method:: getToC(simple = True)
 
       Creates a table of contents out of the document's outline chain.
@@ -121,14 +159,6 @@ For addional details on **embedded files** refer to Appendix 3.
         * ``title`` - title (*str*)
         * ``page`` - 1-based page number (*int*). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
         * ``dest`` - (*dict*) included only if ``simple = False``. Contains details of the link destination.
-
-    .. method:: getFormXref()
-
-       PDF only: Return the xref number of the `AcroForm` object. This object exists if the document is a PDF with interactive fields.
-
-       :rtype: *int*
-
-       :returns: the xref number of the ``AcroForm`` or zero if not a PDF with interactive fields.
 
     .. method:: getPagePixmap(pno, *args, **kwargs)
 
@@ -473,7 +503,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: isFormPDF
 
-      ``True`` if this is a Form PDF document, else ``False``.
+      ``True`` if this is a Form PDF document with field count greater zero, else ``False``.
 
       :type: bool
 
