@@ -108,12 +108,18 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. note:: Conveniently, pages can also be loaded via indexes over the document: ``doc.loadPage(n) == doc[n]``. Consequently, a document can also be used as an iterator over its pages, e.g. ``for page in doc: ...`` and ``for page in reversed(doc): ...`` will yield the :ref:`Page`\ s of ``doc`` as ``page``.
 
-    .. method:: convertToPDF
+    .. method:: convertToPDF(from_page = -1, to_page = -1, rotate = 0)
 
-      Create a PDF version of the current document and write it to memory. All document types are supported.
+      Create a PDF version of the current document and write it to memory. All document types are supported. The parameters have the same meaning as in :meth:`insertPDF`. In essence, you can restrict the conversion to a page subset, specify page rotation, and revert page sequence.
 
+      :arg int from_page: first page to copy (0-based). Default is first page.
+      
+      :arg int to_page: last page to copy (0-based). Default is last page.
+      
+      :arg int rotate: rotation angle. Default is 0 (no rotation). Should be ``n * 90`` with an integer ``n`` (not checked).
+      
       :rtype: bytes
-      :returns: a Python ``bytes`` object containing a PDF file image. It is created by internally using ``write(garbage=4, clean=False, deflate=True, ascii=False, expand=0, linear=False, pretty=False)``. See :meth:`write`. You can output it directly to disk or open it as a PDF via ``fitz.open("pdf", pdfbytes)``. Here are some examples:
+      :returns: a Python ``bytes`` object containing a PDF file image. It is created by internally using ``write(garbage=4, deflate = True)``. See :meth:`write`. You can output it directly to disk or open it as a PDF via ``fitz.open("pdf", pdfbytes)``. Here are some examples:
 
       >>> # convert an XPS file to PDF
       >>> xps = fitz.open("some.xps")
@@ -129,21 +135,22 @@ For addional details on **embedded files** refer to Appendix 3.
       >>> pdfout.close()
 
       >>> # copy image files to PDF pages
+      >>> # each page will have image dimensions
       >>> doc = fitz.open()                     # new PDF
-      >>> imglist = [ ... image file names ...] # e.g. created via os.listdir()
+      >>> imglist = [ ... image file names ...] # e.g. a directory listing
       >>> for img in imglist:
               imgdoc = fitz.open(img)           # open image as a document
-              pdfbytes = imgdoc.convertToPDF()
+              pdfbytes = imgdoc.convertToPDF()  # make a 1-page PDF of it
               imgpdf = fitz.open("pdf", pdfbytes)
-              doc.insertPDF(imgpdf)             # insert the image
+              doc.insertPDF(imgpdf)             # insert the image PDF
       >>> doc.save("allmyimages.pdf")
 
-      .. note:: The method makes direct use of the ``mutool`` command ``convert``. The resulting PDF does not always perfectly reflect the original. Here are some test results.
+      .. note:: The method uses the same logic as the ``mutool convert`` CLI. This works very well in most cases - however, beware of the following limitations.
 
-        * Image files: perfect, no issues detected yet.
-        * XPS: overall good. Any original table of contents and internal links are lost. External links work correctly.
-        * SVG: medium. Comparable to svglib.
-        * EPUB: similar to XPS.
+        * Image files: perfect, no issues detected. Apparently however, image transparency is ignored. If you need that (like for a watermark), use :meth:`Page.insertImage` instead.
+        * XPS: appearance very good. External links work fine, outlines (bookmarks) and internal links are lost [#f2]_.
+        * EPUB, CBZ, FB2 (presumably): similar to XPS.
+        * SVG: medium. Somewhat comparable to svglib.
 
     .. method:: getToC(simple = True)
 
@@ -739,3 +746,5 @@ Other Examples
 .. rubric:: Footnotes
 
 .. [#f1] Content streams describe what (e.g. text or images) appears where and how on a page. PDF uses a specialized mini language similar to PostScript to do this (pp. 985 in :ref:`AdobeManual`), which gets interpreted when a page is loaded.
+
+.. [#f2] However, you **can** use :meth:`Document.getToC` and :meth:`Page.getLinks` (which are available for all document types) and copy this information over to the output PDF. See demo `xps-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/XPS-converter.py>`_.

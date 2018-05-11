@@ -112,7 +112,7 @@ This example creates a **raster** image of a page's content:
 
 >>> pix = page.getPixmap()
 
-``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used. This method offers lots of variations for controlling the image: resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
+``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
 
 .. note:: You can also create **vector** images of a page using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/rk700/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
@@ -180,31 +180,33 @@ Please also do have a look at chapter :ref:`cooperation` and at demo programs `d
 
 PDF Maintenance
 ==================
-PyMuPDF provides several features to **modify PDF** documents.
+PDFs are the only documents that can be **modified** using PyMuPDF. Other files are read-only.
+
+However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the conversion outcome. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `xps-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/xps-converter.py>`_.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
-Apart from your changes, there are less obvious ways for a PDF to become "modified":
+Apart from changes made by you, there are less obvious ways for a PDF to become "modified":
 
-* During open, integrity checks are used to determine the health of the PDF structure. Any errors will be corrected as far as possible to present a repaired document in memory for further processing. If this is the case, the document is regarded as being modified.
+* During open, integrity checks are used to determine the health of the PDF structure. Any errors will be corrected (as far as possible) to present a repaired document in memory for further processing. If this is the case, the document is regarded as being modified.
 
 * After a document has been decrypted, the document in memory has changed and also counts as being modified.
 
-In these two cases, :meth:`Document.save()` will store a **repaired**, resp. **decrypted** version, and saving **must occur to a new file**.
+In these two cases, :meth:`Document.save` will store a **repaired**, resp. **decrypted** version, and you must specify **a new file**. Otherwise, you have the option to save your changes as update appendices to the original file ("incremental save" below), which is very much faster in most cases.
 
-The following describe some more intentional ways to manipulate PDF documents. This description is by no means exhaustive: much more can be found in the following chapters.
+The following describes ways how you can manipulate PDF documents. This description is by no means complete: much more can be found in the following chapters.
 
 Modifying, Creating, Re-arranging and Deleting Pages
 -------------------------------------------------------
-There are several ways to manipulate the page tree of a PDF:
+There are several ways to manipulate the so-called **page tree** of a PDF:
 
-Methods :meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages.
+:meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages.
 
-Methods :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location within the document.
+:meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location within the same document.
 
-:meth:`Document.insertPage` and :meth:`Document.newPage` insert pages.
+:meth:`Document.insertPage` and :meth:`Document.newPage` insert new pages.
 
-Method :meth:`Document.select` shrinks a PDF down to selected pages. It accepts a sequence of integers as argument. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence specified and as many times (!) as specified**.
+:meth:`Document.select` shrinks a PDF down to selected pages. Use a list of integers as parameter. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence specified and as many times (!) as specified**.
 
 So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, reverse the page sequence, ... whatever you may think of.
 
@@ -244,24 +246,24 @@ As mentioned above, :meth:`Document.save` will **always** save the document in i
 
 You can write changes back to the **original PDF** by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
 
-:meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table (corresponding ``mutool clean`` option is indicated as "mco").
+:meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table.
 
-=================== ========= ==================================================
-**Option**          **mco**   **Effect**
-=================== ========= ==================================================
-garbage = 1         g         garbage collect unused objects
-garbage = 2         gg        in addition to 1, compact xref tables
-garbage = 3         ggg       in addition to 2, merge duplicate objects
-garbage = 4         gggg      in addition to 3, skip duplicate streams
-clean = 1           s         clean content streams
-deflate = 1         z         deflate uncompressed streams
-ascii = 1           a         convert binary data to ASCII format
-linear = 1          l         create a linearized version
-expand = 1          i         decompress images
-expand = 2          f         decompress fonts
-expand = 255        d         decompress all
-incremental = 1     n/a       append changes to the original
-=================== ========= ==================================================
+=================== =========== ==================================================
+**Option**          **mutool**  **Effect**
+=================== =========== ==================================================
+garbage = 1         g           garbage collect unused objects
+garbage = 2         gg          in addition to 1, compact xref tables
+garbage = 3         ggg         in addition to 2, merge duplicate objects
+garbage = 4         gggg        in addition to 3, skip duplicate streams
+clean = 1           c           clean content streams
+deflate = 1         z           deflate uncompressed streams
+ascii = 1           a           convert binary data to ASCII format
+linear = 1          l           create a linearized version
+expand = 1          i           decompress images
+expand = 2          f           decompress fonts
+expand = 255        d           decompress all
+incremental = 1     n/a         append changes to the original
+=================== =========== ==================================================
 
 For example, ``mutool clean -ggggz file.pdf`` yields excellent compression results. It corresponds to ``doc.save(filename, garbage=4, deflate=1)``.
 

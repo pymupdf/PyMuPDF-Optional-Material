@@ -160,7 +160,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
    .. method:: insertImage(rect, filename = None, pixmap = None, stream = None, overlay = True)
 
-      PDF only: Fill the given rectangle with an image. Width and height need not have the same proportions as the image: it will be adjusted to fit. You need to specify the rectangle appropriately if you want to avoid this. The image is taken from a pixmap, a file or a memory area - **exactly one** of these parameters **must** be specified.
+      PDF only: Fill the given rectangle with an image. The image's width-height-proportion will be adjusted to fit. Specify the rectangle appropriately if you want to avoid this. The image is taken from a pixmap, a file or a memory area - of these parameters **exactly one** must be specified.
 
       :arg rect: where to put the image on the page. ``rect`` must be finite and not empty.
       :type rect: :ref:`Rect`
@@ -172,7 +172,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       :arg pixmap: pixmap containing the image.
       :type pixmap: :ref:`Pixmap`
 
-      For a description of the other parameters see :ref:`CommonParms`.
+      For a description of ``overlay`` see :ref:`CommonParms`.
 
       This example puts the same image on every page of a document:
 
@@ -187,11 +187,13 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       
       1. If that same image had already been present in the PDF, then only a reference will be inserted. This of course considerably saves disk space and processing time. But to detect this fact, existing PDF images need to be compared with the new one. This is achieved by storing an MD5 code for each image in a table and only compare the new image's code against the table entries. Generating this MD5 table, however, is done only when doing the first image insertion - which therefore may have an extended response time.
 
-      2. You can use this method to provide a background image for the page, like a copyright, a watermark or a background color. Or you can combine it with ``searchFor()`` to achieve a textmarker effect.
+      2. You can use this method to provide a background or foreground image for the page, like a copyright, a watermark or a background color. Or you can combine it with ``searchFor()`` to achieve a textmarker effect. Please remember, that watermarks require a transparent image ...
 
       3. The image may be inserted uncompressed, e.g. if a ``Pixmap`` is used or if the image has an alpha channel. Therefore, consider using ``deflate = True`` when saving the file.
 
-      4. The image content is stored in its original size - which may be much bigger than the size you want to get displayed. Consider decreasing the stored image size by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
+      4. The image content is stored in its original size - which may be much bigger than the size you are ever displaying. Consider decreasing the stored image size by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
+
+      5. The most efficient way to display the same image on multiple pages is :meth:`showPDFpage`. Consult :meth:`Document.convertToPDF` for how to obtain intermediary PDFs usable for that method. Demo script `fitz-logo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/fitz-logo.py>`_ implements a fairly complete approach.
 
    .. method:: getText(output = 'text')
 
@@ -199,10 +201,10 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       If ``'text'`` is specified, plain text is returned **in the order as specified during document creation** (i.e. not necessarily the normal reading order).
 
-      :arg str output: A string indicating the requested format, one of ``"text"`` (default), ``"html"``, ``"json"``, ``"xml"``, ``"xhtml"`` or ``"dict"``.
+      :arg str output: A string indicating the requested format, one of ``"text"`` (default), ``"html"``, ``"dict"``, ``"xml"``, ``"xhtml"`` or ``"json"``.
 
       :rtype: (*str* or *dict*)
-      :returns: The page's content as one string or as a dictionary. The information level of JSON and DICT are exactly equal, in fact, JSON output is created via ``json.dumps(...)`` from the DICT dictionary. If you need JSON output (as in a text file), use the ``"json"`` parameter, else ``"dict"`` is more practical and faster.
+      :returns: The page's content as one string or as a dictionary. The information level of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use ``"dict"``, it is more convenient and faster.
 
       .. note:: You can use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML or XHTML documents works in exactly the same way. For XML you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
 
@@ -338,16 +340,20 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
       >>> page = doc.newPage()
       >>> page.rect
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>>
       >>> page.CropBox                   # CropBox and MediaBox still equal
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>>
       >>> # now set CropBox to a part of the page
       >>> page.setCropBox(fitz.Rect(100, 100, 400, 400))
       >>> # this will also change the "rect" property:
       >>> page.rect
       fitz.Rect(0.0, 0.0, 300.0, 300.0)
+      >>>
       >>> # but MediaBox remains unaffected
       >>> page.MediaBox
       fitz.Rect(0.0, 0.0, 595.0, 842.0)
+      >>>
       >>> # revert everything we did
       >>> page.setCropBox(page.MediaBox)
       >>> page.rect
@@ -383,7 +389,7 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :type: :ref:`Rect`
 
-    .. note:: For non-PDF documents (and for most PDF documents, too) you have ``page.rect == page.CropBox == page.MediaBox``. For some PDF documents however, the visible page may be a true subset of the ``/MediaBox``. In these cases the above attributes help to correctly position / evaluate page elements.
+      .. note:: For most PDF documents and for all other types, ``page.rect == page.CropBox == page.MediaBox`` is true. However, for some PDFs the visible page is a true subset of ``/MediaBox``. In this case the above attributes help to correctly locate page elements.
 
    .. attribute:: firstLink
 
@@ -462,16 +468,16 @@ Homologous Methods of :ref:`Document` and :ref:`Page`
 --------------------------------------------------------
 This is an overview of homologous methods on the :ref:`Document` and on the :ref:`Page` level.
 
-================================== =====================================
-**Document Level**                 **Page Level**
-================================== =====================================
-Document.getPageFontlist(pno)      :meth:`Page.getFontList`
-Document.getPageImageList(pno)     :meth:`Page.getImageList`
-Document.getPagePixmap(pno, ...)   :meth:`Page.getPixmap`
-Document.getPageText(pno, ...)     :meth:`Page.getText`
-Document.searchPageFor(pno, ...)   :meth:`Page.searchFor`
-Document._getPageXref(pno)         :meth:`Page._getXref`
-================================== =====================================
+====================================== =====================================
+**Document Level**                     **Page Level**
+====================================== =====================================
+``Document.getPageFontlist(pno)``      :meth:`Page.getFontList`
+``Document.getPageImageList(pno)``     :meth:`Page.getImageList`
+``Document.getPagePixmap(pno, ...)``   :meth:`Page.getPixmap`
+``Document.getPageText(pno, ...)``     :meth:`Page.getText`
+``Document.searchPageFor(pno, ...)``   :meth:`Page.searchFor`
+``Document._getPageXref(pno)``         :meth:`Page._getXref`
+====================================== =====================================
 
 The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``.
 
