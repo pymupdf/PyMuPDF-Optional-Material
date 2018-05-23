@@ -11,33 +11,34 @@ This class supports accessing such annotations - not only for PDF files, but for
 There is a parent-child relationship between an annotation and its page. If the page object becomes unusable (closed document, any document structure change, etc.), then so does every of its existing annotation objects - an exception is raised saying that the object is "orphaned", whenever an annotation property or method is accessed.
 
 
-=========================== ==============================================================
-**Attribute**               **Short Description**
-=========================== ==============================================================
-:meth:`Annot.getPixmap`     image of the annotation as a pixmap
-:meth:`Annot.setInfo`       PDF only: change metadata of an annotation
-:meth:`Annot.setBorder`     PDF only: changes the border of an annotation
-:meth:`Annot.setFlags`      PDF only: changes the flags of an annotation
-:meth:`Annot.setRect`       PDF only: changes the rectangle of an annotation
-:meth:`Annot.setColors`     PDF only: changes the colors of an annotation
-:meth:`Annot.updateImage`   PDF only: applies border and color values to shown image
-:meth:`Annot.fileInfo`      PDF only: returns attached file information
-:meth:`Annot.fileGet`       PDF only: returns attached file content
-:meth:`Annot.fileUpd`       PDF only: sets attached file new content
-:attr:`Annot.border`        PDF only: border details
-:attr:`Annot.colors`        PDF only: border / background and fill colors
-:attr:`Annot.flags`         PDF only: annotation flags
-:attr:`Annot.info`          PDF only: various information
-:attr:`Annot.lineEnds`      PDF only: start / end appearance of line-type annotations
-:attr:`Annot.next`          link to the next annotation
-:attr:`Annot.parent`        page object of the annotation
-:attr:`Annot.rect`          rectangle containing the annotation
-:attr:`Annot.type`          PDF only: type of the annotation
-:attr:`Annot.vertices`      PDF only: point coordinates of Polygons, PolyLines, etc.
-:attr:`Annot.widget_name`   PDF only: "Widget" field name
-:attr:`Annot.widget_text`   PDF only: "Widget" text contents
-:attr:`Annot.widget_type`   PDF only: "Widget" field type
-=========================== ==============================================================
+============================ ==============================================================
+**Attribute**                **Short Description**
+============================ ==============================================================
+:meth:`Annot.getPixmap`      image of the annotation as a pixmap
+:meth:`Annot.setInfo`        PDF only: change metadata of an annotation
+:meth:`Annot.setBorder`      PDF only: changes the border of an annotation
+:meth:`Annot.setFlags`       PDF only: changes the flags of an annotation
+:meth:`Annot.setRect`        PDF only: changes the rectangle of an annotation
+:meth:`Annot.setColors`      PDF only: changes the colors of an annotation
+:meth:`Annot.updateImage`    PDF only: applies border and color values to shown image
+:meth:`Annot.fileInfo`       PDF only: returns attached file information
+:meth:`Annot.fileGet`        PDF only: returns attached file content
+:meth:`Annot.fileUpd`        PDF only: sets attached file new content
+:attr:`Annot.border`         PDF only: border details
+:attr:`Annot.colors`         PDF only: border / background and fill colors
+:attr:`Annot.flags`          PDF only: annotation flags
+:attr:`Annot.info`           PDF only: various information
+:attr:`Annot.lineEnds`       PDF only: start / end appearance of line-type annotations
+:attr:`Annot.next`           link to the next annotation
+:attr:`Annot.parent`         page object of the annotation
+:attr:`Annot.rect`           rectangle containing the annotation
+:attr:`Annot.type`           PDF only: type of the annotation
+:attr:`Annot.vertices`       PDF only: point coordinates of Polygons, PolyLines, etc.
+:attr:`Annot.widget_name`    PDF only: "Widget" field name
+:attr:`Annot.widget_value`   PDF only: "Widget" field value
+:attr:`Annot.widget_choices` PDF only: possible values for "Widget" list / combo boxes
+:attr:`Annot.widget_type`    PDF only: "Widget" field type
+============================ ==============================================================
 
 **Class API**
 
@@ -191,22 +192,28 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: widget_name
 
-      PDF only: The field name for an annotation of type ``(19, "Widget")``.
+      PDF only: The field name for an annotation of type ``(19, "Widget")``, ``None`` otherwise.
 
       :rtype: str
 
-   .. attribute:: widget_text
+   .. attribute:: widget_value
 
-      PDF only: The text field content for an annotation of type ``(19, "Widget")``.
+      PDF only: The field content for an annotation of type ``(19, "Widget")``. Is ``None`` for non-PDFs, other annotation types, or if no value has been entered. For button types the value will be ``True`` or ``False``. Push button states have no permanent reflection in the file and are therefore always reported as ``False``. For text, list boxes and combo boxes, a string is returned for single values. If multiple selections have been made (may happen for list boxes and combo boxes), a list of strings is returned. For list and combo boxes, the list of possible values can be returned via :meth:`widget_choices` below.
 
-      :rtype: str
+      :rtype: bool, str or list
+
+   .. attribute:: widget_choices
+
+      PDF only: Contains a list of possible values for list boxes / combo boxes (annotation type "Widget"), else ``None``.
+
+      :rtype: list
 
    .. attribute:: widget_type
 
-      PDF only: The field type for an annotation of type (19, "Widget").
+      PDF only: The field type for an annotation of type (19, "Widget"), else ``None``.
 
       :rtype: tuple
-      :returns: a tuple ``(int, str)``. If not applicable ``(-1, '')`` is returned. E.g. for a text field ``(3, 'Tx')`` is returned.
+      :returns: a tuple ``(int, str)``. E.g. for a text field ``(3, 'Text')`` is returned.
 
    .. attribute:: colors
 

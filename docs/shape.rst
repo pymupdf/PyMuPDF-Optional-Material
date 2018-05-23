@@ -321,7 +321,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       >>> # assuming ...
       >>> morph = (point, matrix)
       >>> # ... recalculate the shape rectangle like so:
-      >>> img.rect = (img.rect - fitz.Rect(point, point)) * ~mat + fitz.Rect(point, point)
+      >>> img.rect = (img.rect - fitz.Rect(point, point)) * ~matrix + fitz.Rect(point, point)
 
       :type: :ref:`Rect`
 
@@ -370,7 +370,7 @@ Notes
 
 Examples
 ---------
-1. Create a full circle of pieces of pie in different colors::
+1. Create a full circle of pieces of pie in different colors:
 
 >>> img  = page.newShape()       # start a new shape
 >>> cols = (...)                 # a sequence of RGB color triples
@@ -389,7 +389,7 @@ Here is an example for 5 colors:
 
 .. image:: img-cake.png
 
-2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon::
+2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon:
 
 >>> img  = page.newShape()       # start a new shape
 >>> beta = -360.0 / n            # our angle, drawn clockwise

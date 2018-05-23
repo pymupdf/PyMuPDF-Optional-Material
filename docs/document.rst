@@ -244,7 +244,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty lists or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
 
-      :arg sequence list: A list (or tuple) of page numbers (zero-based) to be included. Pages not in the list will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the list exactly as specified.
+      :arg sequence list: A list (or tuple / set, ``array.array``, etc.) of page numbers (zero-based) to be included. Pages not in the list will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the list exactly as specified.
 
     .. method:: setMetadata(m)
 
@@ -404,15 +404,15 @@ For addional details on **embedded files** refer to Appendix 3.
               page.insertImage(page.rect, pixmap = pix)
       >>> doc.save("image-file.pdf", deflate = True)
 
-    .. method:: deletePage(pno)
+    .. method:: deletePage(pno = -1)
 
       PDF only: Delete a page given by its 0-based number in range ``0 <= pno < len(doc)``.
 
-      :arg int pno: the page to be deleted.
+      :arg int pno: the page to be deleted. For ``-1`` the last page will be deleted.
 
     .. method:: deletePageRange(from_page = -1, to_page = -1)
 
-      PDF only: Delete a range of pages specified as 0-based numbers. Any negative parameter will first be replaced by ``len(doc) - 1``. After that, condition ``0 <= from_page <= to_page < len(doc)`` must be true. If the parameters are equal, one page will be deleted.
+      PDF only: Delete a range of pages specified as 0-based numbers. Any ``-1`` parameter will first be replaced by ``len(doc) - 1``. After that, condition ``0 <= from_page <= to_page < len(doc)`` must be true. If the parameters are equal, one page will be deleted.
 
       :arg int from_page: the first page to be deleted.
 
@@ -422,17 +422,17 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Copy a page within the document.
 
-      :arg int pno: the page to be copied. Number must be in range ``0 <= pno < len(doc)``.
+      :arg int pno: the page to be copied. Must be in range ``0 <= pno < len(doc)``.
 
-      :arg int to: the page number in front of which to insert the copy. To insert at end of document (default), specify a negative value.
+      :arg int to: the page number in front of which to copy. To insert after the last page (default), specify ``-1``.
 
     .. method:: movePage(pno, to = -1)
 
-      PDF only: Move (copy and then delete original) page to another location.
+      PDF only: Move (copy and then delete original) a page within the document.
 
-      :arg int pno: the page to be moved. Number must be in range ``0 <= pno < len(doc)``.
+      :arg int pno: the page to be moved. Must be in range ``0 <= pno < len(doc)``.
 
-      :arg int to: the page number in front of which to insert the moved page. To insert at end of document (default), specify a negative value. Must not be in ``(pno, pno + 1)``.
+      :arg int to: the page number in front of which to insert the moved page. To insert after the last page (default), specify ``-1``.
 
     .. method:: embeddedFileInfo(n)
 

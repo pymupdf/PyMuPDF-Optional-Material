@@ -36,6 +36,7 @@ Yet others are handy, general-purpose utilities.
 :meth:`getPDFstr`                    return PDF-compatible string
 :meth:`Page._cleanContents`          PDF only: clean the page's ``/Contents`` objects
 :meth:`Page._getContents`            PDF only: return a list of content numbers
+:meth:`Page._setContents`            PDF only: set page's /Contents object to specified yref
 :meth:`Page._getXref`                PDF only: return XREF number of page
 :meth:`Page.getDisplayList`          create the page's display list
 :meth:`Page.insertFont`              PDF only: store a new font in the document
@@ -220,9 +221,24 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
+   .. method:: Page._setContents(xref)
+
+      PDF only: Set a given object (identified by its xref) as the page's ``/Contents`` object. Useful for joining mutiple ``/Contents`` objects into one as in the following snippet:
+
+      >>> c = b""
+      >>> xreflist = page._getContents()
+      >>> for xref in xreflist: c += doc._getXrefStream(xref)
+      >>> doc._updateStream(xreflist[0], c)
+      >>> page._setContents(xreflist[0])
+      >>> # doc.save(..., garbage = 4) will remove the unused objects
+
+      :arg int xref: the cross reference number of a ``/Contents`` object. An exception is raised if outside the valid xref range or not a stream object.
+
+-----
+
    .. method:: Page._cleanContents()
 
-      Clean all ``/Contents`` objects associated with this page (including contents of all annotations). "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. If a page has several contents objects, they will be combined into one. Any discrepancies between ``/Contents`` and ``/Resources`` objects are also resolved / corrected. Note that the resulting contents stream will be stored uncompressed (if you do not specify ``deflate`` on save). See :meth:`Page._getContents` for more details.
+      Clean all ``/Contents`` objects associated with this page (including contents of all annotations on the page). "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. If a page has several contents objects, they will be combined into one. Any discrepancies between ``/Contents`` and ``/Resources`` objects will also be resolved / corrected. Note that the resulting contents stream will be stored uncompressed (if you do not specify ``deflate`` on save). See :meth:`Page._getContents` for more details.
 
       :rtype: int
       :returns: 0 on success.

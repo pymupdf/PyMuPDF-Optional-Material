@@ -12,7 +12,7 @@ Information of interest are
 
 General structure of a TextPage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Information contained in a :ref:`TextPage` has the following hierarchy:
+:ref:`TextPage` is one of PyMuPDF's classes. It is normally created behind the curtain, when :ref:`Page` text extraction methods are used, but it is also available directly. In any case, an intermediate class, :ref:`DisplayList` must be created first (display lists contain interpreted pages, they also provide the input for :ref:`Pixmap` creation). Information contained in a :ref:`TextPage` has the following hierarchy. Other than its name suggests, images may optionally also be part of a text page.
 ::
  <page>
      <text block>
@@ -45,7 +45,7 @@ An example output::
 HTML
 ~~~~
 
-HTML output fully reflects the structure of the page's ``TextPage`` - much like JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed be a browser. Our above example::
+HTML output fully reflects the structure of the page's ``TextPage`` - much like DICT or JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed be an internate browser. Our above example::
 
  <div style="width:595pt;height:841pt">
  <img style="top:88pt;left:327pt;width:195pt;height:86pt" src="data:image/jpeg;base64,
@@ -105,16 +105,16 @@ To address the font issue, you can use a simple utility script to scan through t
 
 
 
-JSON
-~~~~
+DICT or JSON
+~~~~~~~~~~~~~~
 
-JSON output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` - boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored base64 encoded. Here is how this looks like::
+DICT (JSON) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` - boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output. Here is how this looks like::
 
  {"width": 595.276, "height": 841.89,
   "blocks": [
    {"type": 1, "bbox": [327.526, 88.936, 523.276, 175.186],
-    "imgtype": 8, "width": 261, "height": 115, "image":
- "/9j/4AAQSkZJRgABAQEAYABgAAD/4QBmRXhpZgA (... omitted image data ...) "
+    "ext": "jpeg", "width": 261, "height": 115, "image":
+ <bytes / bytearray object, base64 encoded if JSON>
    },
    {"type": 0, "bbox": [195.483, 189.041, 523.243, 218.91],
     "lines": [
@@ -204,21 +204,25 @@ A variation of TEXT but in HTML format, containing the bare text and images ("se
 Further Remarks
 ~~~~~~~~~~~~~~~~~
 
-1. We have modified MuPDF's **plain text** extraction: The original prints out every line followed by a newline character. This leads to a rather ragged, space-wasting look. So we have combined all lines of a text block into one, separating lines by space characters (but only if a line does not end with "-"). We also do not add extra newline characters at the end of blocks.
+1. We have modified MuPDF's **plain text** extraction: The original prints out every line followed by a newline character. This leads to a rather ragged, space-wasting look. We have combined all lines of a text block into one, separating lines by space characters. We also do not add extra newline characters at the end of blocks.
 
-2. The 5 extraction methods each have a default behavior concerning images: "TEXT" and "XML" do not extract images, while the other three do. On occasion it may make sense to switch off images for "HTML", "XHTML" or "JSON", too. See chapter :ref:`cooperation` on how to achieve this. Use an argument of ``3`` when you create the :ref:`TextPage`.
+2. The extraction methods each have its own default behavior concerning images: "TEXT" and "XML" do not extract images, while the others do. On occasion it may make sense to switch off images for them, too. See chapter :ref:`cooperation` on how to achieve this. Use an argument of ``3`` when you create the :ref:`TextPage`.
 
-3. Apart from the 5 standard ones, we offer additional extraction methods :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords`. They return lists of a page's text blocks, resp. words. Each list item contains text accompanied by its rectangle ("bbox", location on the page). This should help to resolve extraction issues around multi-column or boxed text.
+3. Apart from the above "standard" ones, we offer additional extraction methods :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` for performance reasons. They return lists of a page's text blocks, resp. words. Each list item contains text accompanied by its rectangle ("bbox", location on the page). This should help to resolve extraction issues around multi-column or boxed text.
 
-4. If you need even more detailed positioning information, you can use XML extraction.
+4. For uttermost detail, down to the level of one character, use XML extraction.
 
 
 Performance
 ~~~~~~~~~~~~
-The text extraction methods differ significantly: in terms of information they supply (see above), and in terms of resource requirements. More information of course means that more processing is required and a higher data volume is generated.
+The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements. More information of course means that more processing is required and a higher data volume is generated.
 
-To begin with, all methods are **very** fast in relation to what is out there on the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, XML, processes all 1'310 pages of the :ref:`AdobeManual` in less than 8 seconds.
+To begin with, all methods are **very fast** in relation to what is out there on the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, XML, processes all 1'310 pages of the :ref:`AdobeManual` in less than 8 seconds.
 
-Relative to each other, **"XML"** is about 2 times slower than **"TEXT"**, the others range between them. E.g. **"JSON", "HTML", "XHTML"**  need about 20% more time than **"TEXT"** (heavily depending on the size of images contained in the document), whereas :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` are only 1% resp. 3% slower.
+Relative to each other, **"XML"** is about 2 times slower than **"TEXT"**, the others range between them. E.g. **"DICT" / "JSON", "HTML", "XHTML"**  need about 20% more time than **"TEXT"** (heavily depending on the size of images contained in the document), whereas :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` are only 1% resp. 3% slower than **"TEXT"**.
+
+In versions prior to v1.13.1, JSON was a standalone extraction method. After we have added the DICT extraction, JSON output is now created from it, using the **json** module contained in Python for serialization. We believe, DICT output is more handy for the programmer's purpose, because all of its information is directly usable - including images. Previously, for JSON, you had to bsae64-decode images before using them. We also have replaced the old "imgtype" dictionary key (an integer bit code) with the key "ext", which contains the appropriate extension string for the image.
+
+Overall, these changes also allow image extraction for non-PDF documents. 
 
 Look into the previous chapter **Appendix 1** for more performance information.

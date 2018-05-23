@@ -1,6 +1,11 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.5
+--------------------------
+* New low-level method :meth:`Page._setContent` defines an object given by its xref to serve as the ``/Contents`` object.
+* Changed and extended PDF form field support: the attribute ``widget_text`` has been renamed to :attr:`Annot.widget_value`. Values of all form field types (except signatures) are now supported. A new attribute :attr:`Annot.widget_choices` contains the possible values of list- or comboboxes. All these attributes now contain ``None`` if no value is present.
+
 Changes in Version 1.13.4
 --------------------------
 * :meth:`Document.convertToPDF` now supports page ranges, reverted page sequences and page rotation. If the document already is a PDF, an exception is raised.

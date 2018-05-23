@@ -37,23 +37,14 @@ In general, ``RuntimeError`` is raised by the C-level (MuPdf or PyMuPDF), other 
 **color components must be in range 0 to 1**
     * Color components must be floats in interval [0, 1].
 
-**could not create UTF16 for '<name>'**
-    * Internal error - report an issue.
-
-**could not get string of '<name>'**
-    * Internal error - report an issue.
-
-**could not get UTF16 string of '<name>'**
-    * Internal error - report an issue.
-
 **could not load root object**
     * Root object of PDF not found. Repair PDF.
 
 **encrypted file - save to new**
     * Trying incremental save for a decrypted file. Save to a new file.
 
-**exactly one of filename, pixmap must be given**
-    * You either specified both parameters or none.
+**exactly one of filename, pixmap or stream must be given**
+    * You specified none or more than one of these parameters.
 
 **expected a sequence**
     * Parameter type must be ``list``, ``tuple``, etc.

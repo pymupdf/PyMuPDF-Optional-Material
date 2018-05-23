@@ -47,13 +47,13 @@ Some :ref:`Document` Methods and Attributes
 
 Accessing Meta Data
 ========================
-PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may contain data in every single case. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings (or ``None``) if not otherwise indicated. Also be aware that not all of them always contain meaningful data.
+PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may always contain data. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings or ``None`` if not otherwise indicated. Also be aware that not all of them always contain meaningful data - even if they are not ``None``.
 
 ============== =================================
 **Key**        **Value**
 ============== =================================
 producer       producer (producing software)
-format         format, e.g. 'PDF-1.4' for a PDF
+format         format: 'PDF-1.4', 'EPUB', etc.
 encryption     encryption method used
 author         author
 modDate        date of last modification
@@ -64,21 +64,21 @@ creator        creating application
 subject        subject
 ============== =================================
 
-.. note:: Apart from these standard metadata, **PDF documents** starting from version 1.4 may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
+.. note:: Apart from these standard metadata, **PDF documents** starting from PDF version 1.4 may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
 
-.. note:: There are two utility scripts in the repository that `import <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2meta.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/meta2csv.py>`_ metadata from resp. to CSV files.
+.. note:: There are two utility scripts in the repository that `import (PDF only) <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2meta.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/meta2csv.py>`_ metadata from resp. to CSV files.
 
 Working with Outlines
 =========================
-The easiest way to get all outlines (also called "bookmarks") of a document, is creating a *table of contents*:
+The easiest way to get all outlines (also called "bookmarks") of a document, is by creating a *table of contents*:
 
 >>> toc = doc.getToC()
 
-This will return a Python list of lists ``[[lvl, title, page, ...], ...]``.
+This will return a Python list of lists ``[[lvl, title, page, ...], ...]`` which looks much like a conventional table of contents found in books.
 
 ``lvl`` is the hierarchy level of the entry (starting from 1), ``title`` is the entry's title, and ``page`` the page number (1-based!). Other parameters describe details of the bookmark target.
 
-.. note:: There are two utility scripts in the repository that `import <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2toc.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/toc2csv.py>`_ table of contents from resp. to CSV files.
+.. note:: There are two utility scripts in the repository that `import (PDF only) <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2toc.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/toc2csv.py>`_ table of contents from resp. to CSV files.
 
 Working with Pages
 ======================
@@ -93,13 +93,13 @@ First, a page object must be created. This is a method of :ref:`Document`:
 >>> page = doc.loadPage(n)        # represents page n of the document (0-based)
 >>> page = doc[n]                 # short form
 
-``n`` may be any positive or negative integer ``< doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python lists.
+``n`` may be any positive or negative integer less than ``doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python lists.
 
 Some typical uses of :ref:`Page`\s follow:
 
 Inspecting the Links of a Page
 ------------------------------------
-Links are shown as "hot areas" when a document is displayed with some software. If you click while your cursor shows a hand symbol, you will usually be taken to the taget that is encoded in that link. Here is how to get all links and their types. 
+Links are shown as "hot areas" when a document is displayed with some software. If you click while your cursor shows a hand symbol, you will usually be taken to the taget that is encoded in that hot area. Here is how to get all links and their types. 
 
 >>> # get all links on a page
 >>> links = page.getLinks()
@@ -112,7 +112,7 @@ This example creates a **raster** image of a page's content:
 
 >>> pix = page.getPixmap()
 
-``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace, transparency, rotation, mirroring, shifting, shearing, etc.
+``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc.
 
 .. note:: You can also create **vector** images of a page using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/rk700/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
@@ -120,11 +120,11 @@ Saving the Page Image in a File
 -----------------------------------
 We can simply store the image in a PNG file:
 
->>> pix.writePNG("test.png")
+>>> pix.writePNG("page-0.png")
 
 Displaying the Image in Dialog Managers
 -------------------------------------------
-We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more `here <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
+We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more `in this directory <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
 
 wxPython
 ~~~~~~~~~~~~~
@@ -152,9 +152,9 @@ Extracting Text and Images
 ---------------------------
 We can also extract all text, images and other information of a page in many different forms and levels of detail:
 
->>> text = page.getText(type)
+>>> text = page.getText("type")
 
-Use one of the following strings for ``type`` to obtain different formats:
+Use one of the following strings for ``"type"`` to obtain different formats [#f2]_:
 
 * ``"text"``: (default) plain text with line breaks. No formatting, no text position details, no images.
 
@@ -176,53 +176,60 @@ You can find out, exactly where on a page a certain text string appears:
 
 This delivers a list of up to 16 rectangles (see :ref:`Rect`), each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
 
-Please also do have a look at chapter :ref:`cooperation` and at demo programs `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_ and `demoy-lowlevel.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo-lowlevel.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
+Please also do have a look at chapter :ref:`cooperation` and at demo programs `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_ and `demo-lowlevel.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo-lowlevel.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
 PDF Maintenance
 ==================
-PDFs are the only documents that can be **modified** using PyMuPDF. Other files are read-only.
+PDFs are the only document type that can be **modified** using PyMuPDF. Other files are read-only.
 
 However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the conversion outcome. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `xps-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/xps-converter.py>`_.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
-Apart from changes made by you, there are less obvious ways for a PDF to become "modified":
+Apart from changes made by you, there are less obvious ways how a PDF may become "modified":
 
-* During open, integrity checks are used to determine the health of the PDF structure. Any errors will be corrected (as far as possible) to present a repaired document in memory for further processing. If this is the case, the document is regarded as being modified.
+* During open, integrity checks are used to determine the health of the PDF structure. If errors are encountered, the base library goes a long way to correct them and present a readable document. If this is the case, the document is regarded as being modified.
 
 * After a document has been decrypted, the document in memory has changed and also counts as being modified.
 
-In these two cases, :meth:`Document.save` will store a **repaired**, resp. **decrypted** version, and you must specify **a new file**. Otherwise, you have the option to save your changes as update appendices to the original file ("incremental save" below), which is very much faster in most cases.
+In these two cases, :meth:`Document.save` will store a **repaired**, resp. **decrypted** version, and you must specify **a new file**. Otherwise, you have the option to save your changes as update appendices to the original file ("incremental saves" below), which is very much faster in most cases.
 
 The following describes ways how you can manipulate PDF documents. This description is by no means complete: much more can be found in the following chapters.
 
 Modifying, Creating, Re-arranging and Deleting Pages
 -------------------------------------------------------
-There are several ways to manipulate the so-called **page tree** of a PDF:
+There are several ways to manipulate the so-called **page tree** (a structure describing all the pages) of a PDF:
 
-:meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages.
+:meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages. :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location within the same document.
 
-:meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location within the same document.
+These methods are just wrappers for the following more sophisticated method:
+
+:meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a list of the page numbers you want to include. These integers must all be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
+
+So you can easily create new PDFs with
+
+* the first or last 10 pages,
+* only the odd or only the even pages (for doing double-sided printing),
+* pages that **do** or **don't** contain a given text,
+* reverse the page sequence, ... 
+
+... whatever you may think of.
+
+The saved new document will contain links, annotations and bookmarks that are still valid (i.a.w. either pointing to a selected page or to some external resource).
 
 :meth:`Document.insertPage` and :meth:`Document.newPage` insert new pages.
-
-:meth:`Document.select` shrinks a PDF down to selected pages. Use a list of integers as parameter. These integers must be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence specified and as many times (!) as specified**.
-
-So you can easily create new PDFs with the first or last 10 pages, only the odd or only the even pages (for doing double-sided printing), pages that **do** or **don't** contain a certain text, reverse the page sequence, ... whatever you may think of.
-
-The saved new document will contain all still valid links, annotations and bookmarks.
 
 Pages themselves can moreover be modified by a range of methods (e.g. page rotation, annotation and link maintenance, text and image insertion).
 
 Joining and Splitting PDF Documents
 ------------------------------------
 
-Method :meth:`Document.insertPDF` inserts pages from another PDF at a specified place of the current one. Here is a simple **joiner** example (``doc1`` and ``doc2`` being openend PDFs):
+Method :meth:`Document.insertPDF` copies pages **between different** PDF documents. Here is a simple **joiner** example (``doc1`` and ``doc2`` being openend PDFs):
 
 >>> # append complete doc2 to the end of doc1
 >>> doc1.insertPDF(doc2)
 
-Here is how to **split** ``doc1``. It creates a new document of its first and last 10 pages (could also be done using :meth:`Document.select`):
+Here is a snippet that **splits** ``doc1``. It creates a new document of its first and its last 10 pages:
 
 >>> doc2 = fitz.open()                 # new empty PDF
 >>> doc2.insertPDF(doc1, to_page = 9)  # first 10 pages
@@ -277,7 +284,7 @@ Example: Dynamically Cleaning up Corrupt PDF Documents
 ========================================================
 This shows a potential use of PyMuPDF with another Python PDF library (`pdfrw <https://pypi.python.org/pypi/pdfrw/0.3>`_).
 
-If a clean, non-corrupt or decompressed PDF is needed, one could dynamically invoke PyMuPDF to recover from problems like so:
+If a clean, non-corrupt / decompressed / decrypted PDF is needed, one could dynamically invoke PyMuPDF to recover from problems like so:
 ::
  import sys
  from pdfrw import PdfReader
@@ -285,22 +292,19 @@ If a clean, non-corrupt or decompressed PDF is needed, one could dynamically inv
  from io import BytesIO
 
  #---------------------------------------
- # 'tolerant' PDF reader
+ # 'Tolerant' PDF reader
+ # Adjust appropriately for decryption
  #---------------------------------------
  def reader(fname):
-     ifile = open(fname, "rb")
-     idata = ifile.read()                    # put in memory
-     ifile.close()
+     idata = open(fname, "rb").read()
      ibuffer = BytesIO(idata)                # convert to stream
      try:
-         return PdfReader(ibuffer)           # let us try
+         return PdfReader(ibuffer)           # try this first
      except:                                 # problem! heal it with PyMuPDF
-         doc = fitz.open("pdf", idata)       # open and save a corrected
-         c = doc.write(garbage = 4)          # version in memory
-         doc.close()
-         doc = idata = None                  # free storage
-         ibuffer = BytesIO(c)                # convert to stream
-         return PdfReader(ibuffer)           # let pdfrw retry
+         # put a repaired version in memory
+         c = fitz.open("pdf", idata).write(garbage=4)
+         idata = None                        # free some storage
+         return PdfReader(BytesIO(c))        # let pdfrw retry
  #---------------------------------------
  # Main program
  #---------------------------------------
@@ -309,7 +313,7 @@ If a clean, non-corrupt or decompressed PDF is needed, one could dynamically inv
  # do further processing
 
 
-With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/>`_ for Windows only) a similar result can be achieved, see `here <http://www.overthere.co.uk/2013/07/22/improving-pypdf2-with-pdftk/>`_. However, you must invoke it as a separate process via ``subprocess.Popen``, using stdin and stdout as communication vehicles.
+With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/>`_ for Windows only but it is reported to also run under `Wine <https://www.winehq.org/>`_) a similar result can be achieved, see `here <http://www.overthere.co.uk/2013/07/22/improving-pypdf2-with-pdftk/>`_. However, you must invoke it as a separate process via ``subprocess.Popen``, using stdin and stdout as communication vehicles.
 
 Further Reading
 ================
@@ -318,3 +322,5 @@ Also have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pa
 .. rubric:: Footnotes
 
 .. [#f1] PyMuPDF lets you also open several image file types just like normal documents. See section :ref:`ImageFiles` in chapter :ref:`Pixmap` for more comments.
+
+.. [#f2] :meth:`Page.getText` is a convenient wrapper for several methods of another PyMuPDF class :ref:`TextPage`. The names of these methods correspond to the argument string passed to :meth:`Page.getText` \:  ``Page.getText("dict")`` is equivalent to ``TextPage.extractDICT()`` \.
