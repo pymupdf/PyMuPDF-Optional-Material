@@ -133,6 +133,8 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       :rtype: :ref:`Point`
       :returns: the end point, ``p4``.
 
+      .. note:: The points do not need to be different - experiment a bit with some of them being equal!
+
       Example:
 
       .. image:: img-drawBezier.png

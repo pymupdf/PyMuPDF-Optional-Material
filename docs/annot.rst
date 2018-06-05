@@ -20,6 +20,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 :meth:`Annot.setFlags`       PDF only: changes the flags of an annotation
 :meth:`Annot.setRect`        PDF only: changes the rectangle of an annotation
 :meth:`Annot.setColors`      PDF only: changes the colors of an annotation
+:meth:`Annot.setOpacity`     PDF only: changes the annot's transparency
 :meth:`Annot.updateImage`    PDF only: applies border and color values to shown image
 :meth:`Annot.fileInfo`       PDF only: returns attached file information
 :meth:`Annot.fileGet`        PDF only: returns attached file content
@@ -30,6 +31,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 :attr:`Annot.info`           PDF only: various information
 :attr:`Annot.lineEnds`       PDF only: start / end appearance of line-type annotations
 :attr:`Annot.next`           link to the next annotation
+:attr:`Annot.opacity`        the annot's transparency
 :attr:`Annot.parent`         page object of the annotation
 :attr:`Annot.rect`           rectangle containing the annotation
 :attr:`Annot.type`           PDF only: type of the annotation
@@ -63,6 +65,12 @@ There is a parent-child relationship between an annotation and its page. If the 
       Changes the info dictionary. This is includes dates, contents, subject and author (title). Changes for ``name`` will be ignored.
 
       :arg dict d: a dictionary compatible with the ``info`` property (see below). All entries must be ``unicode``, ``bytes``, or strings. If ``bytes`` values in Python 3 they will be treated as being UTF8 encoded.
+
+   .. method:: setOpacity(value)
+
+      PDF only: Change an annotation's transparency.
+
+      :arg float value: a float in range ``[0, 1]``. Any value outside is assumed to be 1. E.g. a value of 0.5 sets the transparency to 50%.
 
    .. method:: setRect(rect)
 
@@ -120,8 +128,11 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :arg str filename: new filename to associate with the file.
 
-      :rtype: int
-      :returns: zero
+   .. attribute:: opacity
+
+      The annotation's transparency, a value in range ``[0, 1]``. Always 1 for non-PDFs.
+
+      :rtype: float
 
    .. attribute:: parent
 
@@ -180,40 +191,40 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: vertices
 
-      PDF only: A list containing point ("vertices") coordinates (each given by 2 floats specifying the x and y coordinate respectively) for various types of annotations:
+      PDF only: A list containing point ("vertices") coordinates (each given by a pair of floats) for various types of annotations:
       
-      * ``Line`` - the starting and ending coordinates (4 floats).
-      * ``[2, 'FreeText', 'FreeTextCallout']`` - 4 or 6 floats designating the starting, the (optional) knee point, and the ending coordinates.
-      * ``PolyLine`` / ``Polygon`` - the coordinates of the edges connected by line pieces ( ``2 * n`` floats for ``n`` points).
-      * text markup annotations - ``8 * n`` floats specifying the ``QuadPoints`` of the ``n`` marked text spans (see :ref:`AdobeManual`, page 634).
+      * ``Line`` - the starting and ending coordinates (2 float pairs).
+      * ``[2, 'FreeText', 'FreeTextCallout']`` - 2 or 3 float pairs designating the starting, the (optional) knee point, and the ending coordinates.
+      * ``PolyLine`` / ``Polygon`` - the coordinates of the edges connected by line pieces (n float pairs for n points).
+      * text markup annotations - 4 float pairs specifying the ``QuadPoints`` of the marked text span (see :ref:`AdobeManual`, page 634).
       * ``Ink`` - list of one to many sublists of vertex coordinates. Each such sublist represents a separate line in the drawing.
 
       :rtype: list
 
    .. attribute:: widget_name
 
-      PDF only: The field name for an annotation of type ``(19, "Widget")``, ``None`` otherwise.
+      PDF only: The field name for an annotation of type ``ANNOT_WIDGET``, ``None`` otherwise.
 
       :rtype: str
 
    .. attribute:: widget_value
 
-      PDF only: The field content for an annotation of type ``(19, "Widget")``. Is ``None`` for non-PDFs, other annotation types, or if no value has been entered. For button types the value will be ``True`` or ``False``. Push button states have no permanent reflection in the file and are therefore always reported as ``False``. For text, list boxes and combo boxes, a string is returned for single values. If multiple selections have been made (may happen for list boxes and combo boxes), a list of strings is returned. For list and combo boxes, the list of possible values can be returned via :meth:`widget_choices` below.
+      PDF only: The field content for an annotation of type ``ANNOT_WIDGET``. Is ``None`` for non-PDFs, other annotation types, or if no value has been entered. For button types the value will be ``True`` or ``False``. Push button states have no permanent reflection in the file and are therefore always reported as ``False``. For text, list boxes and combo boxes, a string is returned for single values. If multiple selections have been made (may happen for list boxes and combo boxes), a list of strings is returned. For list boxes and combo boxes, the selectable values are contained in :attr:`widget_choices` below.
 
       :rtype: bool, str or list
 
    .. attribute:: widget_choices
 
-      PDF only: Contains a list of possible values for list boxes / combo boxes (annotation type "Widget"), else ``None``.
+      PDF only: Contains a list of selectable values for list boxes and combo boxes (annotation type ``ANNOT_WIDGET``), else ``None``.
 
       :rtype: list
 
    .. attribute:: widget_type
 
-      PDF only: The field type for an annotation of type (19, "Widget"), else ``None``.
+      PDF only: The field type for an annotation of type ``ANNOT_WIDGET``, else ``None``.
 
       :rtype: tuple
-      :returns: a tuple ``(int, str)``. E.g. for a text field ``(3, 'Text')`` is returned.
+      :returns: a tuple ``(int, str)``. E.g. for a text field ``(3, 'Text')`` is returned. For a complete list see :ref:`Annotation Types`_.
 
    .. attribute:: colors
 
@@ -245,7 +256,7 @@ Change the graphical image of an annotation. Also update the "author" and the te
  annot.setBorder({"dashes": [3]})       # set dashes to "3 on, 3 off ..."
  
  # set border / popup color to blue and fill color to some light blue
- annot.setColors({"common":[0, 0, 1], "fill":[0.75, 0.8, 0.95]})
+ annot.setColors({"stroke":[0, 0, 1], "fill":[0.75, 0.8, 0.95]})
  info = annot.info                      # get info dict
  info["title"] = "Jorj X. McKie"        # author name in popup title
  

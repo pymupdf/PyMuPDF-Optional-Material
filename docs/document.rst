@@ -31,6 +31,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.getToC`               create a table of contents
 :meth:`Document.insertPage`           PDF only: insert a new page
 :meth:`Document.insertPDF`            PDF only: insert pages from another PDF
+:meth:`Document.layout`               re-paginate the document (if supported)
 :meth:`Document.loadPage`             read a page
 :meth:`Document.movePage`             PDF only: move a page to another location
 :meth:`Document.newPage`              PDF only: insert a new empty page
@@ -43,11 +44,13 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.write`                PDF only: writes the document to memory
 :attr:`Document.embeddedFileCount`    number of embedded files
 :attr:`Document.isClosed`             has document been closed?
-:attr:`Document.isPDF`                is document type PDF?
-:attr:`Document.isFormPDF`            is document type a Form PDF?
+:attr:`Document.isPDF`                is this a PDF?
+:attr:`Document.isFormPDF`            is this a Form PDF?
+:attr:`Document.isReflowable`         is this a reflowable document?
 :attr:`Document.metadata`             metadata
 :attr:`Document.name`                 filename of document
 :attr:`Document.needsPass`            require password to access data?
+:attr:`Document.isEncrypted`          document (still) encrypted?
 :attr:`Document.openErrCode`          > 0 if repair occurred during open
 :attr:`Document.openErrMsg`           last error message if openErrCode > 0
 :attr:`Document.outline`              first `Outline` item
@@ -59,7 +62,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
 .. class:: Document
 
-    .. method:: __init__(self, filename = None, stream = None, filetype = None)
+    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, fontsize = 11)
 
       Creates a ``Document`` object.
 
@@ -74,7 +77,12 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      Overview of possible forms using the ``open`` synonym:
+      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
+      :type rect: :ref:`Rect`
+
+      :arg float fontsize: the default fontsize for reflowable document types. This parameter is ignored if parameter ``rect`` is not specified. Together with ``rect`` the page layout is recalculated.
+
+      Overview of possible forms (using the ``open`` synonym of ``Document``):
 
       >>> # from a file
       >>> doc = fitz.open("some.pdf")
@@ -239,6 +247,15 @@ For addional details on **embedded files** refer to Appendix 3.
       :arg str output: A string specifying the requested output format: text, html, json or xml. Default is ``text``.
 
       :rtype: str
+
+    .. method:: layout(rect, fontsize = 11)
+
+      Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
+
+      :arg rect: desired page size. Must be finite, not empty and start at point (0, 0).
+      .type rect: :ref:`Rect`
+
+      :arg float fontsize: the desired default fontsize.
 
     .. method:: select(list)
 
@@ -511,6 +528,12 @@ For addional details on **embedded files** refer to Appendix 3.
     .. attribute:: isFormPDF
 
       ``True`` if this is a Form PDF document with field count greater zero, else ``False``.
+
+      :type: bool
+
+    .. attribute:: isReflowable
+
+      ``True`` if document has a variable page layout (like e-books or HTML). In this case you can set the desired page dimensions during document creation (open) or via method :meth:`layout`.
 
       :type: bool
 

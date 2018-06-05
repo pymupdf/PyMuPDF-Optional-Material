@@ -1,10 +1,23 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.7
+--------------------------
+* **Added** support of variable page sizes for reflowable documents (e-books, HTML, etc.): new parameters ``rect`` and ``fontsize`` in :ref:`Document` creation (open), and as a separate method :meth:`Document.layout`.
+* **Added** :ref:`Annot` creation of many annotations types: sticky notes, free text, circle, rectangle, line, polygon, polyline and text markers.
+* **Added** support of annotation transparency (:attr:`Annot.opacity`, :meth:`Annot.setOpacity`).
+* **Changed** :attr:`Annot.vertices`: point coordinates are now grouped as pairs of floats (no longer as separate floats).
+* **Changed** annotation colors dictionary: the two keys are now named ``"stroke"`` (formerly ``"common"``) and ``"fill"``.
+* **Added** :attr:`Document.isDirty` which is ``True`` if a PDF has been changed in this session. Reset to ``False`` on each :meth:`Document.save` or :meth:`Document.write`.
+
+Changes in Version 1.13.6
+--------------------------
+* Fix #173: for memory-resident documents, ensure the stream object will not be garbage-collected by Python before document is closed.
+
 Changes in Version 1.13.5
 --------------------------
-* New low-level method :meth:`Page._setContent` defines an object given by its xref to serve as the ``/Contents`` object.
-* Changed and extended PDF form field support: the attribute ``widget_text`` has been renamed to :attr:`Annot.widget_value`. Values of all form field types (except signatures) are now supported. A new attribute :attr:`Annot.widget_choices` contains the possible values of list- or comboboxes. All these attributes now contain ``None`` if no value is present.
+* New low-level method :meth:`Page._setContents` defines an object given by its xref to serve as the ``/Contents`` object.
+* Changed and extended PDF form field support: the attribute ``widget_text`` has been renamed to :attr:`Annot.widget_value`. Values of all form field types (except signatures) are now supported. A new attribute :attr:`Annot.widget_choices` contains the selectable values of listboxes and comboboxes. All these attributes now contain ``None`` if no value is present.
 
 Changes in Version 1.13.4
 --------------------------
@@ -21,7 +34,7 @@ Changes in Version 1.13.2
 --------------------------
 The major enhancement is PDF form field support. Form fields are annotations of type ``(19, 'Widget')``. There is a new document method to check whether a PDF is a form. The :ref:`Annot` class has new properties describing field details.
 
-* :attr:`Document.isFormPDF` is ``True`` if object type ``/AcroForm`` and form fields exist.
+* :attr:`Document.isFormPDF` is true if object type ``/AcroForm`` and at least one form field exists.
 * :attr:`Annot.widget_type`, :attr:`Annot.widget_text` and :attr:`Annot.widget_name` contain the details of a form field (i.e. a "Widget" annotation).
 
 Changes in Version 1.13.1

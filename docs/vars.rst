@@ -221,7 +221,7 @@ Link Destination Flags
 
 Annotation Types
 ---------------------
-Possible values (integer) for PDF annotation types. See chapter 8.4.5, pp. 615 of the Adobe manual for more details.
+Possible values (integer) for PDF annotation types. See chapter 8.4.5, pp. 615 of the :ref:`AdobeManual` for more details.
 
 .. py:data:: ANNOT_TEXT
 
@@ -301,7 +301,15 @@ Possible values (integer) for PDF annotation types. See chapter 8.4.5, pp. 615 o
 
 .. py:data:: ANNOT_WIDGET
 
-    19 - Widget annotation
+    19 - Widget annotation. This annotation comes with the following subtypes:
+
+    * (0, "PushButton")
+    * (1, "CheckBox")
+    * (2, "RadioButton")
+    * (3, "Text")
+    * (4, "ListBox")
+    * (5, "ComboBox")
+    * (6, "Signature")
 
 .. py:data:: ANNOT_SCREEN
 

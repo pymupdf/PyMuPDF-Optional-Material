@@ -10,16 +10,32 @@ There is a parent-child relationship between a document and its pages. If the do
 
 Several page methods have a :ref:`Document` counterpart for convenience. At the end of this chapter you will find a synopsis.
 
-Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages only. They provide "stand-alone" shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter.
+Adding Page Content
+-------------------
+This is available for PDF documents only. The are basically two groups of methods:
 
-* In contrast to :ref:`Shape`, the results of page methods are not interconnected: they do not share properties like colors, line width / dashing, morphing, etc.
-* Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
-* Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
+1. Methods making permanent changes. This group contains ``insertText()``, ``insertTextbox()`` and all ``draw*()`` methods. They provide "stand-alone" shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter. Some remarks on the relationship between the :ref:`Page` and :ref:`Shape` methods:
+
+  * In contrast to :ref:`Shape`, the results of page methods are not interconnected: they do not share properties like colors, line width / dashing, morphing, etc.
+  * Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
+  * Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
+
+2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Adding and deleting annotations are page methods. Changing existing annotations is possible via methods of the :ref:`Annot` class.
 
 ================================ =========================================
 **Method / Attribute**           **Short Description**
 ================================ =========================================
 :meth:`Page.bound`               rectangle of the page
+:meth:`Page.addTextAnnot`        PDF only: add comment and a note icon
+:meth:`Page.addFreetextAnnot`    PDF only: add a text annotation
+:meth:`Page.addLineAnnot`        PDF only: add a line annotation
+:meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
+:meth:`Page.addCircleAnnot`      PDF only: add a circle annotation
+:meth:`Page.addPolylineAnnot`    PDF only: add multi-line annotation
+:meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
+:meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
+:meth:`Page.addHighlightAnnot`   PDF only: add a "highlight" annotation
+:meth:`Page.addUnderlineAnnot`   PDF only: add an "underline" annotation
 :meth:`Page.deleteAnnot`         PDF only: delete an annotation
 :meth:`Page.deleteLink`          PDF only: delete a link
 :meth:`Page.drawBezier`          PDF only: draw a cubic Bézier curve
@@ -71,31 +87,115 @@ Methods ``insertText()``, ``insertTextbox()`` and ``draw*()`` are for PDF pages 
 
       :rtype: :ref:`Rect`
 
+   .. method:: addTextAnnot(point, text)
+
+      PDF only: Add a comment icon with accompanying text ("sticky note").
+
+      .. image:: img-sticky-note.png
+
+      :arg point: the top left point of a 25 x 25 rectangle containing the "note" icon.
+      :type point: :ref:`Point`
+
+      :arg str text: the commentary text. This will be shown, when double clicking the icon.
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+
+   .. method:: addFreetextAnnot(point, text, fontsize = 11, color = (0, 0, 0))
+
+      PDF only: Add text of a given fontsize and color. The font is fixed to "Helvetica" (see :ref:`Base-14-Fonts`).
+
+      :arg point: the starting point of the text.
+      :type point: :ref:`Point`
+
+      :arg str text: the text. Only ASCII characters are currently supported (a restriction eventually lifted in a future MuPDF release). Characters outside this range will be replaced by "?". 
+
+      :arg float fontsize: fontsize.
+
+      :arg sequ color: RGB float color triple for text color. Default is black.
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+
+   .. method:: addLineAnnot(p1, p2)
+
+      PDF only: Add a line annotation.
+
+      :arg p1: the starting point of the line.
+      :type p1: :ref:`Point`
+
+      :arg p2: the end point of the line.
+      :type p2: :ref:`Point`
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation. It is drawn with line color black and line width 1. To change, or attach other information (like author, creation date, line properties, colors, line ends, etc.) use methods of :ref:`Annot`.
+
+   .. method:: addRectAnnot(rect)
+
+   .. method:: addCircleAnnot(rect)
+
+      PDF only: Add a rectangle or circle annotation.
+
+      :arg rect: the rectangle in which the circle / rectangle is drawn. If the rectangle is not equal-sided, an ellipse is drawn.
+      :type rect: :ref:`Rect`
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. To change, or attach other information (like author, creation date, line properties, colors, etc.) use methods of :ref:`Annot`.
+
+   .. method:: addPolylineAnnot(points)
+
+   .. method:: addPolygonAnnot(points)
+
+      PDF only: Add an annotation consisting of multiple conected lines. A polygon's first and last points are automatically connected. A polyline has a start and an end point, which may be given line end symbols (:ref:`Annotation Line Ends`).
+
+      .. image:: img-polyline.png
+
+      :arg list points: a list of :ref:`Point` objects.
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. To change, or attach other information (like author, creation date, line properties, line ends, colors, etc.) use methods of :ref:`Annot`.
+
+   .. method:: addUnderlineAnnot(rect)
+
+   .. method:: addStrikeoutAnnot(rect)
+
+   .. method:: addHighlightAnnot(rect)
+
+      PDF only: These annotations are used for marking some text that has previously been located via :meth:`searchFor`. Colors are automatically chosen: yellowish for highlighting, red for strike out and blue for underlining.
+
+      .. image:: img-markers.png
+
+      :arg rect: the rectangle containing the text.
+      :type rect: :ref:`Rect`
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+
    .. method:: deleteAnnot(annot)
 
-      PDF only: Delete the specified annotation from the page and (for all document types) return the next one.
+      PDF only: Delete the specified annotation from the page and return the next one.
 
       :arg annot: the annotation to be deleted.
       :type annot: :ref:`Annot`
 
       :rtype: :ref:`Annot`
-      :returns: the next annotation of the deleted one.
+      :returns: the annotation following the deleted one.
 
    .. method:: deleteLink(linkdict)
 
-      PDF only: Delete the specified link from the page. The parameter must be a dictionary of format as provided by the ``getLinks()`` method (see below).
+      PDF only: Delete the specified link from the page. The parameter must be an **original item** of :meth:`getLinks()` (see below). The reason for this is the dictionary's ``"xref"`` key, which identifies the PDF object to be deleted.
 
       :arg dict linkdict: the link to be deleted.
 
    .. method:: insertLink(linkdict)
 
-      PDF only: Insert a new link on this page. The parameter must be a dictionary of format as provided by the ``getLinks()`` method (see below).
+      PDF only: Insert a new link on this page. The parameter must be a dictionary of format as provided by :meth:`getLinks()` (see below).
 
       :arg dict linkdict: the link to be inserted.
 
    .. method:: updateLink(linkdict)
 
-      PDF only: Modify the specified link. The parameter must be a dictionary of format as provided by the ``getLinks()`` method (see below).
+      PDF only: Modify the specified link. The parameter must be a (modified) **original item** of :meth:`getLinks()` (see below). The reason for this is the dictionary's ``"xref"`` key, which identifies the PDF object to be changed.
 
       :arg dict linkdict: the link to be modified.
 
