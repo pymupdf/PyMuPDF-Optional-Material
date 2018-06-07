@@ -12,15 +12,15 @@ Several page methods have a :ref:`Document` counterpart for convenience. At the 
 
 Adding Page Content
 -------------------
-This is available for PDF documents only. The are basically two groups of methods:
+This is available for PDF documents only. There are basically two groups of methods:
 
-1. Methods making permanent changes. This group contains ``insertText()``, ``insertTextbox()`` and all ``draw*()`` methods. They provide "stand-alone" shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter. Some remarks on the relationship between the :ref:`Page` and :ref:`Shape` methods:
+1. Methods making permanent changes. This group contains ``insertText()``, ``insertTextbox()`` and all ``draw*()`` methods. They provide "stand-alone", shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter. Some remarks on the relationship between the :ref:`Page` and :ref:`Shape` methods:
 
   * In contrast to :ref:`Shape`, the results of page methods are not interconnected: they do not share properties like colors, line width / dashing, morphing, etc.
   * Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
   * Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
 
-2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Adding and deleting annotations are page methods. Changing existing annotations is possible via methods of the :ref:`Annot` class.
+2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is not permanent in the sense, that modifying or deleting them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
 
 ================================ =========================================
 **Method / Attribute**           **Short Description**
@@ -31,7 +31,7 @@ This is available for PDF documents only. The are basically two groups of method
 :meth:`Page.addLineAnnot`        PDF only: add a line annotation
 :meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
 :meth:`Page.addCircleAnnot`      PDF only: add a circle annotation
-:meth:`Page.addPolylineAnnot`    PDF only: add multi-line annotation
+:meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
 :meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
 :meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
 :meth:`Page.addHighlightAnnot`   PDF only: add a "highlight" annotation
@@ -96,7 +96,7 @@ This is available for PDF documents only. The are basically two groups of method
       :arg point: the top left point of a 25 x 25 rectangle containing the "note" icon.
       :type point: :ref:`Point`
 
-      :arg str text: the commentary text. This will be shown, when double clicking the icon.
+      :arg str text: the commentary text. This will be shown on double clicking the icon. This text may contain any unicode (in contrast to :meth:`addFreetextAnnot`).
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
@@ -108,7 +108,7 @@ This is available for PDF documents only. The are basically two groups of method
       :arg point: the starting point of the text.
       :type point: :ref:`Point`
 
-      :arg str text: the text. Only ASCII characters are currently supported (a restriction eventually lifted in a future MuPDF release). Characters outside this range will be replaced by "?". 
+      :arg str text: the text. Only ASCII characters are currently supported (a restriction eventually lifted in a future MuPDF release). Characters outside this range will be replaced by (one or more) "?". 
 
       :arg float fontsize: fontsize.
 
