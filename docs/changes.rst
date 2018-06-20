@@ -4,6 +4,7 @@ Change Logs
 Changes in Version 1.13.11
 ---------------------------
 While the preceeding patch subversions only contained various fixes, this version again introduces major new features:
+
 * **Added** basic support for PDF widget annotations. You can now add PDF form fields of types Text, CheckBox, ListBox and ComboBox. Where necessary, the PDF is tranformed to a Form PDF with the first added widget.
 * **Fixed** issues #176 ("wrong file embedding"), #177 ("segment fault when invoking page.getText()")and #179 ("Segmentation fault using page.getLinks() on encrypted PDF").
 
