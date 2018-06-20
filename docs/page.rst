@@ -20,7 +20,7 @@ This is available for PDF documents only. There are basically two groups of meth
   * Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
   * Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
 
-2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is not permanent in the sense, that modifying or deleting them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
+2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that modifying or deleting them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
 
 ================================ =========================================
 **Method / Attribute**           **Short Description**
@@ -36,6 +36,7 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
 :meth:`Page.addHighlightAnnot`   PDF only: add a "highlight" annotation
 :meth:`Page.addUnderlineAnnot`   PDF only: add an "underline" annotation
+:meth:`Page.addWidget`           PDF only: add a PDF Form field
 :meth:`Page.deleteAnnot`         PDF only: delete an annotation
 :meth:`Page.deleteLink`          PDF only: delete a link
 :meth:`Page.drawBezier`          PDF only: draw a cubic Bézier curve
@@ -170,6 +171,15 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+
+   .. method:: addWidget(widget)
+
+      PDF only: Add a PDF Form field ("widget") to a page. This also turns the PDF into a Form PDF. Because of the large amount of different options, we have developed a new class :ref:`Widget`, which contains the possible attributes.
+
+      :arg widget: a :ref:`Widget` object created upfront.
+      :type widget: :ref:`Widget`
+
+      :returns: a widget annotation.
 
    .. method:: deleteAnnot(annot)
 

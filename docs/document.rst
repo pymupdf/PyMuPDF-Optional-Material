@@ -43,6 +43,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.setToC`               PDF only: set the table of contents (TOC)
 :meth:`Document.write`                PDF only: writes the document to memory
 :attr:`Document.embeddedFileCount`    number of embedded files
+:attr:`Document.FormFonts`            PDF only: list of existing field fonts
 :attr:`Document.isClosed`             has document been closed?
 :attr:`Document.isPDF`                is this a PDF?
 :attr:`Document.isFormPDF`            is this a Form PDF?
@@ -221,7 +222,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :returns: a list of fonts referenced by this page. Each entry looks like ``[xref, ext, type, basefont, name, encoding]``. Where
       
-        * ``xref`` (*int*) is the font object number,
+        * ``xref`` (*int*) is the font object number (may be zero if the PDF uses one of the builtin fonts directly),
         * ``ext`` (*str*) font file extension (e.g. ``ttf``, see :ref:`FontExtensions`),
         * ``type`` (*str*) is the font type (like ``Type1`` or ``TrueType`` etc.),
         * ``basefont`` (*str*) is the base font name,
@@ -607,6 +608,12 @@ For addional details on **embedded files** refer to Appendix 3.
     .. Attribute:: embeddedFileCount
 
       Contains the number of files in the embedded / portfolio files list (also known as collection or attached files). If the document is not a PDF, ``-1`` will be returned.
+
+      :type: int
+
+    .. Attribute:: FormFonts
+
+      A list of font resource names. Contains ``None`` if not a PDF and ``[]`` if not a Form PDF.
 
       :type: int
 
