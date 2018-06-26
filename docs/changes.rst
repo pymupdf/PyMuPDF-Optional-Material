@@ -1,6 +1,13 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.12
+---------------------------
+* **Fixed** issue #180 ("page.getText(output='dict') return invalid bbox").
+* **Changed** for ListBox and ComboBox widgets, the attribute list of selectable values has been renamed to :attr:`Widget.choice_values`.
+* **Changed** when adding widgets, any missing of the :ref:`Base-14-Fonts` is automatically added to the PDF. Widget text fonts can now also be chosen from existing widget fonts.
+* **Added** :meth:`Annot.updateWidget` which allows changing existing form fields - including the field value.
+
 Changes in Version 1.13.11
 ---------------------------
 While the preceeding patch subversions only contained various fixes, this version again introduces major new features:

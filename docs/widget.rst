@@ -17,15 +17,19 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: border_style
 
-       A string defining the line style of the field's border. See :attr:`Annot.border`. Default is "s" ("Solid") - a continuous line.
+       A string defining the line style of the field's border. See :attr:`Annot.border`. Default is "s" ("Solid") - a continuous line. Only the first character (upper or lower case) will be regarded when creating a widget.
 
     .. attribute:: border_width
 
-       A float defining the width of the border line. Default is zero, which rsults in a line width of 1.
+       A float defining the width of the border line. Default is 1.
 
-    .. attribute:: list_values
+    .. attribute:: border_dashes
 
-       A mandatory Python sequence of strings defining the valid choices of listboxes and comboboxes. Ignored for other field types. Equals :attr:`Annot.widget_choices`. The sequence must contain at least two items.
+       A list of integers defining the dash properties of the border line. This is only meaningful if ``border_style == "D"`` and :attr:`border_color` is provided.
+
+    .. attribute:: choice_values
+
+       A mandatory Python sequence of strings defining the valid choices of listboxes and comboboxes. Ignored for other field types. Equals :attr:`Annot.widget_choices`. The sequence must contain at least two items. When updating the widget, always the complete new list of values must be specified.
 
     .. attribute:: field_name
 
@@ -37,15 +41,15 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: field_flags
 
-       An integer defining a large amount of proprties of a field.
+       An integer defining a large amount of proprties of a field. Handle this attribute with care
 
     .. attribute:: field_type
 
-       An integer defining the field type. This is a value in the range of 0 to 6.
+       A mandatory integer defining the field type. This is a value in the range of 0 to 6. It cannot be changed when updating the widget.
 
     .. attribute:: field_type_string
 
-       A string describing the field type.
+       A string describing (and derived from) the field type.
 
     .. attribute:: fill_color
 
@@ -61,17 +65,17 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: text_color
 
-       A list of **3 floats** defining the text color as an RGB value. Default value is black (`[0, 0, 0]`).
+       A list of **1, 3 or 4 floats** defining the text color. Default value is black (`[0, 0, 0]`).
 
     .. attribute:: text_font
 
-       A string defining the font to be used. Default value is ``"Helv"``. For valid font reference names see the table below. If you specify an invalid value, the default ``"Helv"`` will be used.
+       A string defining the font to be used. Default and replacement for invalid values is ``"Helv"``. For valid font reference names see the table below.
 
     .. attribute:: text_fontsize
 
        A float defining the text fontsize. Default value is zero, which causes PDF viewer software to dynamically choose a size suitable for the annotation's rectangle and text amount.
 
-    .. note:: The attributes :attr:`text_color`, :attr:`text_font` and :attr:`text_fontsize` are only used when adding or updating a field and lose its meaning thereafter. To indicate this, they are set to ``None`` in :attr:`Annot.widget` (which returns all available information of a form field). To see which values are in actual use for a field, look at :attr:`text_da` below.
+    .. note:: When adding or updating a field, the attributes :attr:`text_color`, :attr:`text_font` and :attr:`text_fontsize` are used to create the :attr:`text_da` string below. Only this value will actually be used to control the widget's text properties.
 
     .. attribute:: text_maxlen
 
@@ -79,15 +83,15 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: text_type
 
-       An integer defining acceptable text types (e.g. numeric, date, time, etc.).
+       An integer defining acceptable text types (e.g. numeric, date, time, etc.). For reference only for the time being - will be ignored when creating or updating widgets.
 
     .. attribute:: text_da
 
-       A string defining the field's default appearance. This value cannot be changed directly. It will be generated from information contained in :attr:`text_color`, :attr:`text_font`, and :attr:`text_fontsize` above. It has the general format ``0 0 0 rg /Helv 11 Tf``. Its first three tokens form the RGB text color triple, ``/Helv`` and ``11`` are the font name and size.
+       A string defining the field's default appearance. Direct changes to this value will be ignored. It will be generated from information contained in :attr:`text_color`, :attr:`text_font`, and :attr:`text_fontsize` above. It has the general format ``0 0 0 rg /Helv 11 Tf`` (RGB case). Its first one to four tokens form the text color, ``/Helv`` and ``11`` are the font name and size. The format and token sequence may be different for widgets that were not created by PyMuPDF, e.g. the color specification may be missing altogether.
 
 Standard Fonts for Widgets
 ----------------------------------
-Widgets use their own resources object ``/DR``. A widget resources object must at least contain a ``/Font`` object. Widget fonts are independent from page fonts. We currently support the 14 PDF base fonts using the following fixed reference names, or any name of an already existing field font. When specifying a text font for new or changed widgets, **either** choose one in the first table column (upper or lower case supported), **or** one of the already existing form fonts. In the latter case, spelling must exactly match.
+Widgets use their own resources object ``/DR``. A widget resources object must at least contain a ``/Font`` object. Widget fonts are independent from page fonts. We currently support the 14 PDF base fonts using the following fixed reference names, or any name of an already existing field font. When specifying a text font for new or changed widgets, **either** choose one in the first table column (upper and lower case supported), **or** one of the already existing form fonts. In the latter case, spelling must exactly match.
 
 To find out already existing field fonts, inspect the list :attr:`Document.FormFonts`.
 

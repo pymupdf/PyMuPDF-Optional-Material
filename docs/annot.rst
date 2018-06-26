@@ -22,6 +22,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 :meth:`Annot.setColors`      PDF only: changes the colors of an annotation
 :meth:`Annot.setOpacity`     PDF only: changes the annot's transparency
 :meth:`Annot.updateImage`    PDF only: applies border and color values to shown image
+:meth:`Annot.updateWidget`   PDF only: change an exsiting form field
 :meth:`Annot.fileInfo`       PDF only: returns attached file information
 :meth:`Annot.fileGet`        PDF only: returns attached file content
 :meth:`Annot.fileUpd`        PDF only: sets attached file new content
@@ -96,17 +97,28 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. method:: setColors(d)
 
-      Changes the colors associated with the annotation.
+      PDF only: Changes the "stroke" and "fill" colors for supported annotation types.
 
-      :arg dict d: a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the ``colors`` property and then modify this dictionary as required. 
+      :arg dict d: a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the ``colors`` property and then modify this dictionary as required.
+
+      .. note:: This method **does not work** for widget annotations and results in a no-op with a warning message. Use :meth:`updateWidget` instead. Certain other annotation types have no fill color. In these cases this parameter is ignored and a warning is issued.
 
    .. method:: updateImage()
 
-      Attempts to modify the displayed graphical image such that it coincides with the values currently contained in the ``border`` and ``colors`` properties. This is achieved by modifying the contents stream of the associated appearance ``XObject``. Not all possible formats of content streams are currently supported: if the stream contains invocations of yet other ``XObject`` objects, a ``ValueError`` is raised.
+      Attempts to modify the displayed graphical image such that it coincides with the values currently contained in the ``border`` and ``colors`` properties. This is achieved by modifying the contents stream of the associated appearance XObject. Not all possible formats of content streams are currently supported: if the stream contains invocations of yet other XObjects, a warning message is printed.
+
+   .. method:: updateWidget(widget)
+
+      Modifies an existing form field. The existing and the changed widget attributes must all be provided by way of a :ref:`Widget` object. This is because the method will update the field with all properties of the :ref:`Widget` object.
+
+      :arg widget: a widget object containing the **complete** (old and new properties) of the widget. Create the object via :attr:`widget` and apply your changes before passing it to this method.
+      :type widget: :ref:`Widget`
+
+      .. note:: As with :meth:`Page.addWidget`, make sure to use the option ``clean = True`` when saving the file. This will cause an update of the annotation's appearance.
 
    .. method:: fileInfo()
 
-      Returns basic information of an attached file (file attachment annotations only).
+      Returns basic information of the attached file (file attachment annotations only).
 
       :rtype: dict
       :returns: a dictionary with keys ``filename``, ``size`` (uncompressed file size), ``length`` (compressed length).
@@ -201,6 +213,12 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :rtype: list
 
+   .. attribute:: widget
+
+      PDF only: A class containing all properties of a form field - including the following three attributes. ``None`` for other annotation types.
+
+      :rtype: :ref:`Widget`
+
    .. attribute:: widget_name
 
       PDF only: The field name for an annotation of type ``ANNOT_WIDGET``, ``None`` otherwise.
@@ -224,11 +242,14 @@ There is a parent-child relationship between an annotation and its page. If the 
       PDF only: The field type for an annotation of type ``ANNOT_WIDGET``, else ``None``.
 
       :rtype: tuple
-      :returns: a tuple ``(int, str)``. E.g. for a text field ``(3, 'Text')`` is returned. For a complete list see :ref:`Annotation Types`_.
+
+      :returns: a tuple ``(int, str)``. E.g. for a text field ``(3, 'Text')`` is returned. For a complete list see :ref:`Annotation Types`.
 
    .. attribute:: colors
 
       Meaningful for PDF only: A dictionary of two lists of floats in range ``0 <= float <= 1`` specifying the common (``common``) or ``stroke`` and the interior (``fill``) ``non-stroke`` colors. The common color is used for borders and everything that is actively painted or written (*"stroked"*). The fill color is used for the interior of objects like line ends, circles and squares. The lengths of these lists implicitely determine the colorspaces used: 1 = GRAY, 3 = RGB, 4 = CMYK. So ``[1.0, 0.0, 0.0]`` stands for RGB and color ``red``. Both lists can be ``[]`` if not specified. The dictionary will be empty ``{}`` if no PDF. The value of each float is mapped to integer values from ``0 (<=> 0.0)`` to ``255 (<=> 1.0)``.
+
+
 
       :rtype: dict
 

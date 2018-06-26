@@ -174,12 +174,14 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: addWidget(widget)
 
-      PDF only: Add a PDF Form field ("widget") to a page. This also turns the PDF into a Form PDF. Because of the large amount of different options, we have developed a new class :ref:`Widget`, which contains the possible attributes.
+      PDF only: Add a PDF Form field ("widget") to a page. This also turns the PDF into a Form PDF. Because of the large amount of different options, we have developed a new class :ref:`Widget`, which contains the possible PDF field attributes.
 
-      :arg widget: a :ref:`Widget` object created upfront.
+      :arg widget: a :ref:`Widget` object which has been created upfront.
       :type widget: :ref:`Widget`
 
       :returns: a widget annotation.
+
+      .. note:: Make sure to use parameter ``clean = True`` when saving the file. This will cause recalculation of the annotations appearance.
 
    .. method:: deleteAnnot(annot)
 
