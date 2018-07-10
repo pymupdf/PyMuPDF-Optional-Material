@@ -20,7 +20,7 @@ This is available for PDF documents only. There are basically two groups of meth
   * Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
   * Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
 
-2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that modifying or deleting them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
+2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that manipulating them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
 
 ================================ =========================================
 **Method / Attribute**           **Short Description**
@@ -29,6 +29,7 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.addTextAnnot`        PDF only: add comment and a note icon
 :meth:`Page.addFreetextAnnot`    PDF only: add a text annotation
 :meth:`Page.addLineAnnot`        PDF only: add a line annotation
+:meth:`Page.addFileAnnot`        PDF only: add a file attachment annotation
 :meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
 :meth:`Page.addCircleAnnot`      PDF only: add a circle annotation
 :meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
@@ -117,6 +118,23 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+
+   .. method:: addFileAnnot(pos, buffer, filename, ufilename = None, desc = None)
+
+      PDF only: Add a file attachment annotation.
+
+      .. image:: img-pushpin.png
+
+      :arg pos: the top-left point of a 20 x 30 rectangle cpntaining the "PushPin" icon.
+      :type pos: :ref:`Point`
+
+      :arg bytes/bytearray buffer: the file content.
+      :arg str filename: the filename (required).
+      :arg str ufilename: the optional PDF unicode filename. Defaults to filename.
+      :arg str desc: an optional description of the file. Defaults to filename.
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation. To change, or add information (like author, creation date, etc.) use methods of :ref:`Annot`.
 
    .. method:: addLineAnnot(p1, p2)
 
@@ -279,7 +297,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg str filename: name of an image file (all MuPDF supported formats - see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
 
-      :arg bytes stream: memory resident image (all MuPDF supported formats - see :ref:`ImageFiles`). Type ``bytearray`` is also supported.
+      :arg bytes/bytearray stream: memory resident image (all MuPDF supported formats - see :ref:`ImageFiles`).
 
       :arg pixmap: pixmap containing the image.
       :type pixmap: :ref:`Pixmap`

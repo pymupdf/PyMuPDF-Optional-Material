@@ -51,19 +51,19 @@ Please note:
 
    .. method:: __init__(self, degree)
 
-   .. method:: __init__(self, list)
+   .. method:: __init__(self, sequence)
 
       Overloaded constructors.
       
       Without parameters, ``Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)`` will be created.
       
-      ``zoom-*`` and ``shear-*`` specify zoom or shear values (float), respectively.
-      
-      ``matrix`` specifies another ``Matrix`` from which a **new copy** will be made.
-      
-      Float value ``degree`` specifies the creation of a rotation matrix.
+      ``zoom-*`` and ``shear-*`` specify zoom or shear values (float) and create a zoom or shear matrix, respectively.
 
-      Python sequence ``list`` (list, tuple, etc.) must contain exactly 6 values when specified. Non-numeric entries will raise an exception.
+      For "matrix" a **new copy** will be made.
+      
+      Float value "degree" specifies the creation of a rotation matrix.
+
+      A "sequence" must be a Python sequence object with 6 float entries (see :ref:`SequenceTypes`).
       
       ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0))`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
 
@@ -156,9 +156,7 @@ Please note:
 
 Remarks 1
 ---------
-For a matrix ``m``, properties ``a`` to ``f`` can also be accessed by index, e.g. ``m.a == m[0]`` and ``m[0] = 1`` has the same effect as ``m.a = 1``. The ``tuple()`` and ``list()`` functions yield sequence objects of its components.
-
-Language constructs like ``x in m`` is equal to ``x in tuple(m)``.
+This class adheres to the sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
 
 Remarks 2
 ---------

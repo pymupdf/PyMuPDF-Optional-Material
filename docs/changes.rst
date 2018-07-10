@@ -1,11 +1,25 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.13
+---------------------------
+This patch version contains several improvements for embedded files and file attachment annotations.
+
+* **Added** :meth:`Document.embeddedFileUpd` which allows changing **file content and metadata** of an embedded file. It supersedes the old method :meth:`Document.embeddedFileSetInfo` (which will be deleted in a future version). Content is automatically compressed and metadata may be unicode.
+* **Changed** :meth:`Document.embeddedFileAdd` to now automatically compress file content. Accompanying metadata can now be unicode (had to be ASCII in the past).
+* **Changed** :meth:`Document.embeddedFileDel` to now automatically delete **all entries** having the supplied identifying name. The return code is now an integer count of the removed entries (was ``None`` previously).
+* **Changed** embedded file methods to now also accept or show the PDF unicode filename as additional parameter ``ufilename``.
+* **Added** :meth:`Page.addFileAnnot` which adds a new file attachment annotation.
+* **Changed** :meth:`Annot.fileUpd` (file attachment annot) to now also accept the PDF unicode ``ufilename`` parameter. The description parameter ``desc`` correctly works with unicode. Furthermore, **all** parameters are optional, so metadata may be changed without also replacing the file content.
+* **Changed** :meth:`Annot.fileInfo` (file attachment annot) to now also show the PDF unicode filename as parameter ``ufilename``.
+* **Fixed** issue #180 ("page.getText(output='dict') return invalid bbox") to now also work for vertical text.
+* **Fixed** issue #185 ("Can't render the annotations created by PyMuPDF"). The issue's cause was the minimalistic MuPDF approach when creating annotations. Several annotation types have no ``/AP`` ("appearance") object when created by MuPDF functions. MuPDF, SumatraPDF and hence also PyMuPDF cannot render annotations without such an object. This fix now ensures, that an appearance object is always created together with the annotation itself. We still do not support line end styles.
+
 Changes in Version 1.13.12
 ---------------------------
-* **Fixed** issue #180 ("page.getText(output='dict') return invalid bbox").
+* **Fixed** issue #180 ("page.getText(output='dict') return invalid bbox"). Note that this is a circumvention of an MuPDF error, which generates zero-height character rectangles in some cases. When this happens, this fix ensures a bbox height of at least fontsize.
 * **Changed** for ListBox and ComboBox widgets, the attribute list of selectable values has been renamed to :attr:`Widget.choice_values`.
-* **Changed** when adding widgets, any missing of the :ref:`Base-14-Fonts` is automatically added to the PDF. Widget text fonts can now also be chosen from existing widget fonts.
+* **Changed** when adding widgets, any missing of the :ref:`Base-14-Fonts` is automatically added to the PDF. Widget text fonts can now also be chosen from existing widget fonts. Any specified field values are now honored and lead to a field with a preset value.
 * **Added** :meth:`Annot.updateWidget` which allows changing existing form fields - including the field value.
 
 Changes in Version 1.13.11

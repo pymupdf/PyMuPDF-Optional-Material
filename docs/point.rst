@@ -25,13 +25,13 @@ Point
 
    .. method:: __init__(self, point)
 
-   .. method:: __init__(self, list)
+   .. method:: __init__(self, sequence)
 
       Overloaded constructors.
       
       Without parameters, ``Point(0, 0)`` will be created.
 
-      With another ``point`` specified, a **new copy** will be crated. A ``list`` must be Python sequence object of length 2. For a ``list``, it is the user's responsibility to only provide numeric entries - **no error checking is done**, and invalid entries will receive a value of ``-1.0``.
+      With another point specified, a **new copy** will be crated. A sequence must be Python sequence object of 2 values (see :ref:`SequenceTypes`).
 
      :arg float x: X coordinate of the point
 
@@ -67,7 +67,7 @@ Point
 
 Remark
 ------
-A point's ``p`` attributes ``x`` and ``y`` can also be accessed as indices, e.g. ``p.x == p[0]``, and the ``tuple()`` and ``list()`` functions yield sequence objects of its components.
+This class adheres to the sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
 
 Point Algebra
 ------------------

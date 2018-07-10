@@ -23,6 +23,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.embeddedFileDel`      PDF only: delete an embedded file entry
 :meth:`Document.embeddedFileGet`      PDF only: extract an embedded file buffer
 :meth:`Document.embeddedFileInfo`     PDF only: metadata of an embedded file
+:meth:`Document.embeddedFileUpd`      PDF only: change an embedded file
 :meth:`Document.embeddedFileSetInfo`  PDF only: change metadata of an embedded file
 :meth:`Document.getPageFontList`      PDF only: make a list of fonts on a page
 :meth:`Document.getPageImageList`     PDF only: make a list of images on a page
@@ -73,12 +74,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg str filename: A UTF-8 string containing a file path or a file type, see below.
 
-      :arg stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
-      :type stream: bytes, bytearray
+      :arg bytes/bytearray stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
 
       :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
+      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
       :type rect: :ref:`Rect`
 
       :arg float fontsize: the default fontsize for reflowable document types. This parameter is ignored if parameter ``rect`` is not specified. Together with ``rect`` the page layout is recalculated.
@@ -157,9 +157,9 @@ For addional details on **embedded files** refer to Appendix 3.
       .. note:: The method uses the same logic as the ``mutool convert`` CLI. This works very well in most cases - however, beware of the following limitations.
 
         * Image files: perfect, no issues detected. Apparently however, image transparency is ignored. If you need that (like for a watermark), use :meth:`Page.insertImage` instead.
-        * XPS: appearance very good. External links work fine, outlines (bookmarks) and internal links are lost [#f2]_.
-        * EPUB, CBZ, FB2 (presumably): similar to XPS.
-        * SVG: medium. Somewhat comparable to svglib.
+        * XPS: appearance very good. Links work fine, outlines (bookmarks) are lost, but can easily be recovered [#f2]_.
+        * EPUB, CBZ, FB2: similar to XPS.
+        * SVG: medium. Roughly comparable to `svglib <https://github.com/deeplook/svglib>`_.
 
     .. method:: getToC(simple = True)
 
@@ -254,15 +254,15 @@ For addional details on **embedded files** refer to Appendix 3.
       Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
 
       :arg rect: desired page size. Must be finite, not empty and start at point (0, 0).
-      .type rect: :ref:`Rect`
+      :type rect: :ref:`Rect`
 
       :arg float fontsize: the desired default fontsize.
 
-    .. method:: select(list)
+    .. method:: select(s)
 
       PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty lists or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
 
-      :arg sequence list: A list (or tuple / set, ``array.array``, etc.) of page numbers (zero-based) to be included. Pages not in the list will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the list exactly as specified.
+      :arg sequence s: A sequence (see :ref:`SequenceTypes`) of page numbers (zero-based) to be included. Pages not in the sequence will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the sequence exactly as specified.
 
     .. method:: setMetadata(m)
 
@@ -452,57 +452,73 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int to: the page number in front of which to insert the moved page. To insert after the last page (default), specify ``-1``.
 
-    .. method:: embeddedFileInfo(n)
+    .. method:: embeddedFileAdd(buffer, name, filename = None, ufilename = None, desc = None)
 
-      PDF only: Retrieve information of an embedded file identified by either its number or by its name.
+      PDF only: Embed a new file. All string parameters except the name may be unicode (in previous versions, only ASCII worked correctly). File contents will be compressed (where beneficial).
 
-      :arg n: index or name of entry. Obviously ``0 <= n < embeddedFileCount`` must be true if ``n`` is an integer.
-      :type n: int or str
-      :rtype: dict
-      :returns: a dictionary with the following keys:
-
-          * ``name`` - (*str*) name under which this entry is stored
-          * ``file`` - (*str*) filename associated with the entry
-          * ``desc`` - (*str*) description of the entry
-          * ``size`` - (*int*) original content size
-          * ``length`` - (*int*) compressed content length
-
-    .. method:: embeddedFileSetInfo(n, filename = filename, desc = desc)
-
-      PDF only: Change some information of an embedded file given its entry number or name. At least one of ``filename`` and ``desc`` must be specified. Response will be zero if successful, else an exception is raised.
-
-      :arg n: index or name of entry. Obviously ``0 <= n < embeddedFileCount`` must be true if ``n`` is an integer.
-      :type n: int or str
-      :arg str filename: sets the filename of the entry.
-      :arg str desc: sets the description of the entry.
+      :arg bytes/bytearray buffer: file contents.
+      :arg str name: entry identifier, must not already exist.
+      :arg str filename: optional filename. Documentation only, will be set to ``name`` if ``None``.
+      :arg str ufilename: optional unicode filename. Documentation only, will be set to ``filename`` if ``None``.
+      :arg str desc: optional description. Documentation only, will be set to ``name`` if ``None``.
+      
+      .. note:: The position of the new entry in the embedded files list can in general not be predicted. Do not assume a specific place (like the end or the beginning), even if the chosen name seems to suggest it. If you add several files, their sequence in that list will probably not be maintained either. In addition, the various PDF viewers each seem to use their own ordering logic when showing the list of embedded files for the same PDF.
 
     .. method:: embeddedFileGet(n)
 
       PDF only: Retrieve the content of embedded file by its entry number or name. If the document is not a PDF, or entry cannot be found, an exception is raised.
 
-      :arg n: index or name of entry. Obviously ``0 <= n < embeddedFileCount`` must be true if ``n`` is an integer.
-      :type n: int or str
+      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
+
       :rtype: bytes
 
     .. method:: embeddedFileDel(name)
 
-      PDF only: Remove an entry from the portfolio. As always, physical deletion of the embedded file content (and file space regain) will occur when the document is saved to a new file with ``garbage`` option. With an incremental save, the associated object will only be marked deleted.
+      PDF only: Remove an entry from `/EmbeddedFiles`. As always, physical deletion of the embedded file content (and file space regain) will occur when the document is saved to a new file with garbage option.
 
-      .. note:: We do not support entry **numbers** for this function yet. If you need to e.g. delete **all** embedded files, scan through embedded files by number, and use the returned dictionary's ``name`` entry to delete each one. This function will delete the first entry it finds with this name. Be wary that for arbitrary PDF files duplicate names may exist ...
+      :arg str name: name of entry. We do not support entry **numbers** for this function yet. If you need to e.g. delete **all** embedded files, scan through embedded files by number, and use the returned dictionary's ``name`` entry to delete each one.
 
-      :arg str name: name of entry.
-
-    .. method:: embeddedFileAdd(stream, name, filename = filename, desc = desc)
-
-      PDF only: Add new content to the document's portfolio.
-
-      :arg bytes stream: contents, bytearray is supported, too.
-      
-      :param str name: new entry identifier, must not already exist in embedded files.
-      :param str filename: optional filename or ``None``, documentation only, will be set to ``name`` if ``None`` or omitted.
-      :param str desc: optional description or ``None``, arbitrary documentation text, will be set to ``name`` if ``None`` or omitted.
       :rtype: int
-      :returns: the index given to the new entry. In the current (April 11, 2017) MuPDF version, this is not reliably true (for this reason we have decided to restrict ``embeddedFileDel()`` to entries identified by name). Use character string look up to find your entry again. For any error condition, an exception is raised.
+      :returns: the number of deleted file entries.
+
+      .. caution:: This function will delete **every entry with this name**. Be aware that PDFs not created with PyMuPDF may contain duplicate names, in which case more than one entry may be deleted.
+
+    .. method:: embeddedFileInfo(n)
+
+      PDF only: Retrieve information of an embedded file given by its number or by its name.
+
+      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
+
+      :rtype: dict
+      :returns: a dictionary with the following keys:
+
+          * ``name`` - (*str*) name under which this entry is stored
+          * ``filename`` - (*str*) filename
+          * ``ufilename`` - (*unicode*) filename
+          * ``desc`` - (*str*) description
+          * ``size`` - (*int*) original file size
+          * ``length`` - (*int*) compressed file length
+
+    .. method:: embeddedFileUpd(n, buffer = None, filename = None, ufilename = None, desc = None)
+
+      PDF only: Change an embedded file given its entry number or name. All parameters are optional. Letting them default leads to a no-operation.
+
+      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
+      :arg bytes/bytearray buffer: the new file content.
+      :arg str filename: the new filename.
+      :arg str ufilename: the new unicode filename.
+      :arg str desc: the new description.
+
+    .. method:: embeddedFileSetInfo(n, filename = None, ufilename = None, desc = None)
+
+      PDF only: Change embedded file meta information. All parameters are optional. Letting them default will lead to a no-operation.
+
+      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
+      :arg str filename: sets the filename.
+      :arg str ufilename: sets the unicode filename.
+      :arg str desc: sets the description.
+
+      .. note:: Deprecated subset of :meth:`embeddedFileUpd`. Will be deleted in next version.
 
     .. method:: close()
 
@@ -516,7 +532,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: isClosed
 
-      ``False (0)`` if document is still open. If closed, most other attributes and methods will have been deleted / disabled. In addition, :ref:`Page` objects referring to this document (i.e. created with :meth:`Document.loadPage`) and their dependent objects will no longer be usable. For reference purposes, :attr:`Document.name` still exists and will contain the filename of the original document (if applicable).
+      ``False`` if document is still open. If closed, most other attributes and methods will have been deleted / disabled. In addition, :ref:`Page` objects referring to this document (i.e. created with :meth:`Document.loadPage`) and their dependent objects will no longer be usable. For reference purposes, :attr:`Document.name` still exists and will contain the filename of the original document (if applicable).
 
       :type: bool
 
@@ -540,7 +556,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: needsPass
 
-      Contains an indicator showing whether the document is encrypted (``True (1)``) or not (``False (0)``). This indicator remains unchanged - even after the document has been authenticated. Precludes incremental saves if ``True``.
+      Contains an indicator showing whether the document is encrypted (``True``) or not (``False``). This indicator remains unchanged - **even after the document has been authenticated**. Precludes incremental saves if ``True``.
 
       :type: bool
 
@@ -557,7 +573,7 @@ For addional details on **embedded files** refer to Appendix 3.
        >>> doc.permissions
        {'print': True, 'edit': True, 'note': True, 'copy': True}
 
-      The keys have the obvious meaning of permissions to print, change, annotate and copy the document, respectively.
+      The keys have the obvious meanings of permissions to print, change, annotate and copy the document, respectively.
 
       :type: dict
 
@@ -607,7 +623,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. Attribute:: embeddedFileCount
 
-      Contains the number of files in the embedded / portfolio files list (also known as collection or attached files). If the document is not a PDF, ``-1`` will be returned.
+      Contains the number of files in the `/EmbeddedFiles` list, -1 if the document is not a PDF.
 
       :type: int
 
@@ -617,24 +633,23 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :type: int
 
-.. NOTE:: For methods that change the structure of a PDF (``insertPDF()``, ``select()``, ``copyPage()``, ``deletePage()`` and others), be aware that objects or properties in your program may have been invalidated or orphaned. Examples are :ref:`Page` objects and their children (links and annotations), variables holding old page counts, tables of content and the like. Remember to keep such variables up to date or delete orphaned objects.
+.. NOTE:: For methods that change the structure of a PDF (:meth:`insertPDF`, :meth:`select`, :meth:`copyPage`, :meth:`deletePage` and others), be aware that objects or properties in your program may have been invalidated or orphaned. Examples are :ref:`Page` objects and their children (links and annotations), variables holding old page counts, tables of content and the like. Remember to keep such variables up to date or delete orphaned objects.
 
-
-Remarks on ``select()``
-------------------------
+Remarks on :meth:`select`
+--------------------------
 
 Page numbers in the list need not be unique nor be in any particular sequence. This makes the method a versatile utility to e.g. select only the even or the odd pages, re-arrange a document from back to front, duplicate it, and so forth. In combination with text search or extraction you can also omit / include pages with no text or containing a certain text, etc.
 
-You can execute several selections in a row. The document structure will be updated after each method execution.
+You can execute several selections in a row. Each time the document structure will be updated.
 
-Any of those changes will become permanent only with a ``doc.save()``. If you have de-selected many pages, consider specifying the ``garbage`` option to eventually reduce the resulting document's size (when saving to a new file).
+Any of those changes will become permanent only with a :meth:`save`. If you have de-selected many pages, consider specifying the ``garbage`` option to eventually reduce the resulting document's size (when saving to a new file).
 
-Also note, that this method **preserves all links, annotations and bookmarks** that are still valid. In other words: deleting pages only deletes references which point to de-selected pages. Page number of bookmarks (outline items) are automatically updated when a TOC is retrieved again with ``getToC()``. If a bookmark's destination page happened to be deleted, then its page number in ``getToC()`` will be set to ``-1``.
+Also note, that this method **preserves all links, annotations and bookmarks** that are still valid. In other words: deleting pages only deletes references which point to de-selected pages. Page number of bookmarks (outline items) are automatically updated when a TOC is retrieved again with :meth:`getToC`. If a bookmark's destination page happened to be deleted, then its page number will be set to ``-1``.
 
-The results of this method can of course also be achieved using combinations of methods ``copyPage()``, ``deletePage()`` and ``movePage()``. While there are many cases, when these methods are more practical, ``select()`` is easier and safer to use when many pages are involved.
+The results of this method can of course also be achieved using combinations of methods :meth:`copyPage`, :meth:`deletePage` etc. While there are many cases, when these methods are more practical, :meth:`select` is easier and safer to use when many pages are involved.
 
-``select()`` Examples
-----------------------------------------
+:meth:`select` Examples
+--------------------------
 
 In general, any list of integers within the document's page range can be used. Here are some illustrations.
 
@@ -678,12 +693,13 @@ Create document copy in reverse page order (well, don't try with a million pages
 
 >>> import fitz
 >>> doc = fitz.open("any.pdf")
->>> r = list(range(len(doc) - 1, -1, -1))
+>>> r = list(range(len(doc)))
+>>> r.reverse()
 >>> doc.select(r)
 >>> doc.save("back-to-front.pdf")
 
-``setMetadata()`` Example
-----------------------------------------
+:meth:`setMetadata` Example
+-------------------------------
 Clear metadata information. If you do this out of privacy / data protection concerns, make sure you save the document as a new file with ``garbage > 0``. Only then the old ``/Info`` object will also be physically removed from the file. In this case, you may also want to clear any XML metadata inserted by several PDF editors:
 
 >>> import fitz
@@ -701,11 +717,9 @@ Clear metadata information. If you do this out of privacy / data protection conc
 >>> doc._delXmlMetadata()    # clear any XML metadata
 >>> doc.save("anonymous.pdf", garbage = 4)       # save anonymized doc
 
-
-
-``setToC()`` Example
+:meth:`setToC` Demonstration
 ----------------------------------
-This shows how to modify or add a table of contents. Also have a look at `csv2toc.py <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2toc.py>`_ and `toc2csv.py <https://github.com/rk700/PyMuPDF/blob/master/examples/toc2csv.py>`_ in the examples directory:
+This shows how to modify or add a table of contents. Also have a look at `csv2toc.py <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2toc.py>`_ and `toc2csv.py <https://github.com/rk700/PyMuPDF/blob/master/examples/toc2csv.py>`_ in the examples directory.
 
 >>> import fitz
 >>> doc = fitz.open("test.pdf")
@@ -724,8 +738,8 @@ This shows how to modify or add a table of contents. Also have a look at `csv2to
 [3, 'Note on the Name fitz', 1]
 [3, 'License', 1]
 
-``insertPDF()`` Examples
--------------------------
+:meth:`insertPDF` Examples
+----------------------------
 **(1) Concatenate two documents including their TOCs:**
 
 >>> doc1 = fitz.open("file1.pdf")          # must be a PDF
@@ -750,7 +764,6 @@ Obviously, similar ways can be found in more general situations. Just make sure 
 
 >>> # put copied pages in front of doc1
 >>> doc1.insertPDF(doc2, from_page = 21, to_page = 25, start_at = 0)
-
 
 Other Examples
 ----------------

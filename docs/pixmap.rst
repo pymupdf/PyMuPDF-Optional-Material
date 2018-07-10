@@ -110,7 +110,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       **From memory:** Create a pixmap from a memory area. All properties are inferred from the input. The origin of the resulting pixmap is ``(0, 0)``.
 
-      :arg bytearray img: Data containing a complete, valid image. Could have been created by e.g. ``img = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only**.
+      :arg bytes/bytearray img: Data containing a complete, valid image. Could have been created by e.g. ``img = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only**.
 
    .. method:: __init__(self, colorspace, width, height, samples, alpha)
 
@@ -123,7 +123,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       :arg int height: image height
 
-      :arg bytes samples:  an area containing all pixels of the image. Must include alpha values if specified. Type ``bytearray`` is also supported.
+      :arg bytes/bytearray samples:  an area containing all pixels of the image. Must include alpha values if specified.
 
       :arg bool alpha: whether a transparency channel is included.
 
@@ -179,7 +179,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       Change the alpha values. The pixmap must have an alpha channel.
 
-      :arg bytes alphavalues: the new alpha values. Type ``bytearray`` is also permitted. If provided, its length must be at least ``width * height``. If omitted, all alpha values are to 255 (no transparency).
+      :arg bytes/bytearray alphavalues: the new alpha values. If provided, its length must be at least ``width * height``. If omitted, all alpha values are to 255 (no transparency).
 
    .. method:: invertIRect([irect])
 
@@ -324,7 +324,7 @@ The following file types are supported as input to construct pixmaps: **BMP, JPE
 
 2. Open such files with ``fitz.open(...)``. The result will then appear as a document containing one single page. Creating a pixmap of this page offers all options available in this context: apply a matrix, choose colorspace and alpha, confine the pixmap to a clip area, etc.
 
-**SVG images** are only supported via method 2 above, not directly as pixmaps. This will turn the SVG into a raster image. If you need a **vector image** you must first convert it to a PDF and then display it e.g. via :meth:`Page.showPDFpage`. There exist many tools for SVG-to-PDF conversion, among them the Python package `svglib <https://pypi.org/project/svglib>`_ or Java solutions like `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for examples.
+**SVG images** are only supported via method 2 above, not directly as pixmaps. If you need a **vector image** from the SVG, you must first convert it to a PDF.  Try :meth:`Document.convertToPDF`. If this does not work for you, look for other SVG-to-PDF conversion tools like the Python package `svglib <https://pypi.org/project/svglib>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
 
 Details on Saving Images with ``writeImage()``
 -----------------------------------------------
@@ -413,7 +413,7 @@ This shows how to interface with ``PIL / Pillow`` (the Python Imaging Library), 
 
 >>> import fitz
 >>> from PIL import Image
->>> pix = fitz.Pixmap(...)
+>>> pix = fitz.Pixmap(..., alpha = False)
 >>> ...
 >>> # create and save a PIL image
 >>> img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)

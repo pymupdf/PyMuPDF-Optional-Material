@@ -303,13 +303,37 @@ Possible values (integer) for PDF annotation types. See chapter 8.4.5, pp. 615 o
 
     19 - Widget annotation. This annotation comes with the following subtypes:
 
-    * (0, "PushButton")
-    * (1, "CheckBox")
-    * (2, "RadioButton")
-    * (3, "Text")
-    * (4, "ListBox")
-    * (5, "ComboBox")
-    * (6, "Signature")
+.. py:data:: ANNOT_WG_NOT_WIDGET
+
+    -1 not a widget
+
+.. py:data:: ANNOT_WG_PUSHBUTTON
+
+    0 PushButtom
+
+.. py:data:: ANNOT_WG_CHECKBOX
+    
+    1 CheckBox
+
+.. py:data:: ANNOT_WG_RADIOBUTTON
+    
+    2 RadioButton 
+
+.. py:data:: ANNOT_WG_TEXT
+
+    3 Text 
+
+.. py:data:: ANNOT_WG_LISTBOX
+
+    4 ListBox
+
+.. py:data:: ANNOT_WG_COMBOBOX
+
+    5 ComboBox
+
+.. py:data:: ANNOT_WG_SIGNATURE
+
+    6 Signature 
 
 .. py:data:: ANNOT_SCREEN
 
@@ -383,7 +407,7 @@ Possible mask values for PDF annotation flags.
 
 Annotation Line End Styles
 ----------------------------
-The following descriptions are taken from the Adobe manual TABLE 8.27 on page 630.
+The following descriptions are taken from the Adobe manual TABLE 8.27 on page 630. The respective visualizations are either dynamically done by PDF viewers or explicitely hardcoded by the PDF generator software.
 
 .. py:data:: ANNOT_LE_None
 
@@ -425,3 +449,92 @@ The following descriptions are taken from the Adobe manual TABLE 8.27 on page 63
 
     9 - (PDF 1.6) A short line at the endpoint approximately 30 degrees clockwise from perpendicular to the line itself.
 
+.. _WidgetFieldFlags:
+
+PDF Form Field Flags
+----------------------------
+Bit positions in an integer (called ``/Ff`` in the Adobe manual) controlling a wide range of PDF form field ("widget") behaviours.
+
+Common to all field types
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. py:data:: WIDGET_Ff_ReadOnly
+
+    1 content cannot be changed
+
+.. py:data:: WIDGET_Ff_Required
+
+    2 must enter
+
+.. py:data:: WIDGET_Ff_NoExport
+
+    4 not available for export
+
+Text fields
+~~~~~~~~~~~~~
+.. py:data:: WIDGET_Ff_Multiline
+
+    4096 allow for libne breaks
+
+.. py:data:: WIDGET_Ff_Password
+
+    8192 do not show entered text
+
+.. py:data:: WIDGET_Ff_FileSelect
+
+    1048576 file sect field
+
+.. py:data:: WIDGET_Ff_DoNotSpellCheck
+
+    4194304 suppress spell checking
+
+.. py:data:: WIDGET_Ff_DoNotScroll
+
+    8388608 do not scroll screen automatically
+
+.. py:data:: WIDGET_Ff_Comb
+
+    16777216
+
+.. py:data:: WIDGET_Ff_RichText
+
+    33554432 richt text field
+
+Button fields
+~~~~~~~~~~~~~~~~~~
+.. py:data:: WIDGET_Ff_NoToggleToOff
+
+    16384 do not toggle off
+
+.. py:data:: WIDGET_Ff_Radio
+
+    32768 make this a radio button (caution: overrides field type!)
+
+.. py:data:: WIDGET_Ff_Pushbutton
+
+    65536 make this a push button (caution: overrides field type!)
+
+.. py:data:: WIDGET_Ff_RadioInUnison
+
+    33554432 controls multiple radio buttons in a group
+
+Choice fields
+~~~~~~~~~~~~~~~~
+.. py:data:: WIDGET_Ff_Combo
+
+    131072 make this combo box (caution: overrides field type!)
+
+.. py:data:: WIDGET_Ff_Edit
+
+    262144 make choice field editable (do not restrict to value list)
+
+.. py:data:: WIDGET_Ff_Sort
+
+    524288 sort value list for display
+
+.. py:data:: WIDGET_Ff_MultiSelect
+
+    2097152 make multiple choice fields selectable
+
+.. py:data:: WIDGET_Ff_CommitOnSelCHange
+
+    67108864 changing selected choice values counts as data entered

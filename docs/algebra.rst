@@ -4,6 +4,8 @@ Operator Algebra for Geometry Objects
 ======================================
 Instances of classes :ref:`Point`, :ref:`IRect`, :ref:`Rect` and :ref:`Matrix` are collectively also called "geometry" objects.
 
+They all are special cases of Python sequences, see :ref:`SequenceTypes` for more background.
+
 We have defined operators for these classes that allow dealing with them (almost) like ordinary numbers in terms of addition, subtraction, multiplication, division, and some others.
 
 This chapter is a synopsis of what is possible.
@@ -12,7 +14,7 @@ General Remarks
 -----------------
 1. Operators can be either **binary** (i.e. involving two objects) or **unary**.
 
-2. The result of **binary** operatorions is either a **new object** of the same class as the **left operand** or a bool.
+2. The resulting type of **binary** operations is either a **new object** of the **left operand's class** or a bool.
 
 3. The result of **unary** operations is either a **new object** of the same class, a bool or a float.
 
@@ -22,7 +24,7 @@ General Remarks
 
 6. Binary operators fully support in-place operations: if ``"°"`` denotes any binary operator, then ``a °= b`` is the same as ``a = a ° b``.
 
-7. For binary operations, the **second** operand may have a different type as the left one. Python number sequences (lists, tuples, arrays) are also allowed here. We allude to this fact by saying "point-like object" when we mean, that a :ref:`Point` is possible as well as a sequence of two numbers. Similar applies to "rect-like" (sequence length 4) or "matrix-like" (sequence length 6).
+7. For binary operations, the **second** operand may always be a number sequence of the same size as the left one. We allude to this fact by e.g. saying "point-like object" when we mean, that a :ref:`Point` is possible as well as any sequence of two numbers. Similar applies to "rect-like" (sequence length 4) or "matrix-like" (sequence length 6).
 
 Unary Operations
 ------------------
@@ -30,21 +32,17 @@ Unary Operations
 +---------------+---------------------------------------------------------------+
 | **Operation** | **Result**                                                    |
 +===============+===============================================================+
-| bool(o)       | is false if and only if the components of ``o`` are all zero. |
-|               |                                                               |
+| bool(O)       | is false exactly if all components of ``O`` are zero.         |
 +---------------+---------------------------------------------------------------+
-| abs(o)        | is the Euclidean norm (square root of the sum of component    |
-|               | squares), if ``o`` is a :ref:`Point` or a :ref:`Matrix`.      |
+| abs(O)        | is the Euclidean norm (square root of the sum of component    |
+|               | squares), if ``O`` is a :ref:`Point` or a :ref:`Matrix`.      |
 |               | For rectangles, its area is returned.                         |
-|               |                                                               |
 +---------------+---------------------------------------------------------------+
-| +o            | is a copy of ``o``                                            |
+| +O            | is a copy of ``O``                                            |
 +---------------+---------------------------------------------------------------+
-| -o            | is a copy of ``o`` with negated components.                   |
-|               |                                                               |
+| -O            | is a copy of ``O`` with negated components.                   |
 +---------------+---------------------------------------------------------------+
 | ~m            | is the inverse of :ref:`Matrix` ``m``.                        |
-|               |                                                               |
 +---------------+---------------------------------------------------------------+
 
 
@@ -60,8 +58,8 @@ For the operators ``+, -, *, /``, the **second operand** may be a number, which 
 |               | component-wise execution, ``b`` must be ``a``\ -like.         |
 |         a - b |                                                               |
 +---------------+---------------------------------------------------------------+
-|         a * m | ``a`` can be any geometry object and ``m`` must matrix-like.  |
-|               | If ``a`` is a **point** or a **rectangle**, then              |
+|         a * m | ``a`` can be any geometry object and ``m`` must be matrix -   |
+|               | like. If ``a`` is a **point** or a **rectangle**, then        |
 |         a / m | ``a.transform(m)``, resp. ``a.transform(~m)`` is executed.    |
 |               | If ``a`` is a **matrix**, then ``a * m``,                     |
 |               | resp. ``a * ~m`` is executed.                                 |
@@ -82,4 +80,3 @@ For the operators ``+, -, *, /``, the **second operand** may be a number, which 
 |        a == b | is true if ``abs(a - b) == 0`` and ``type(a) == type(b)``     |
 |               | (but maybe there is ``id(a) != id(b)``).                      |
 +---------------+---------------------------------------------------------------+
-

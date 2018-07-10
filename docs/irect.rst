@@ -41,13 +41,13 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
    .. method:: __init__(self, irect)
 
-   .. method:: __init__(self, list)
+   .. method:: __init__(self, sequence)
 
       Overloaded constructors. Also see examples below and those for the :ref:`Rect` class.
 
-      If another ``irect`` is specified, a **new copy** will be made.
+      If another irect is specified, a **new copy** will be made.
 
-      If ``list`` is specified, it must be a Python sequence type of 4 integers. Non-integer numbers will be truncated, non-numeric entries will raise an exception.
+      If sequence is specified, it must be a Python sequence type of 4 integers (see :ref:`SequenceTypes`). Non-integer numbers will be truncated, non-numeric entries will raise an exception.
 
       The other parameters mean integer coordinates.
 
@@ -179,7 +179,7 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
 Remark
 ------
-A rectangle's coordinates can also be accessed via index, e.g. ``r.x0 == r[0]``, and the ``tuple()`` and ``list()`` functions yield sequence objects of its components.
+This class adheres to the sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
 
 IRect Algebra
 ------------------

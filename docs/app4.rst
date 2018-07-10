@@ -35,6 +35,48 @@ This PDF Reference manual published by Adobe is frequently quoted throughout thi
 
 ------------
 
+.. _SequenceTypes:
+
+Using Python Sequences as Arguments in PyMuPDF
+------------------------------------------------
+In most cases, when PyMuPDF objects and methods require a Python list of numerical values, other Python sequence types are also allowed.
+
+This generally means, you can interchangeably use Python ``list`` or ``tuple`` or even ``array.array`` or ``numpy.array`` types in these cases.
+
+For example,
+
+* ``s = [1, 2]``
+* ``s = (1, 2)``
+* ``s = array.array("i", (1, 2))``
+* ``s = numpy.array((1,2))``
+
+will all produce the same result when used in ``fitz.Point(s)`` or ``fitz.Point(x, y) + s`` or ``doc.select(s)``. This applies to all geometry objects :ref:`Rect`, :ref:`IRect`, :ref:`Matrix` and :ref:`Point`.
+
+Throughout this documentation we allude to this fact, whenever we talk about "sequences". We will refer to the concrete Python subtype where this is actually required.
+
+In general, this support includes object types which support the sequence protocol, i.e. Python classes with a ``__getitem__()`` method.
+
+So, e.g. Python types ``set`` and ``frozenset`` are **not supported**.
+
+Because all PyMuPDF geometry classes themselves are special cases of sequences, they can be freely used where sequences can be used, e.g. as arguments for functions like ``list()``, ``tuple()``, ``array.array()`` or ``numpy.array()``. Look at the following snippet to see this work.
+
+>>> import fitz, array, numpy as np
+>>> m = fitz.Matrix(1,2,3,4,5,6)
+>>>
+>>> list(m)
+[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+>>>
+>>> tuple(m)
+(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+>>>
+>>> array.array("f", m)
+array('f', [1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
+>>>
+>>> np.array(m)
+array([1., 2., 3., 4., 5., 6.])
+
+------------
+
 .. _ReferenialIntegrity:
 
 Ensuring Consistency of Important Objects in PyMuPDF

@@ -64,11 +64,11 @@ Hence some useful classification:
 
    .. method:: __init__(self, rect)
 
-   .. method:: __init__(self, list)
+   .. method:: __init__(self, sequence)
 
-      Overloaded constructors: ``top_left``, ``bottom_right`` stand for :ref:`Point` objects, ``list`` is a Python sequence type with length 4, ``rect`` means another ``Rect``, while the other parameters mean float coordinates. If ``list`` is specified, it is the user's responsibility to only provide numeric entries - **no error checking is done**, and invalid entries will receive a value of ``-1.0``.
+      Overloaded constructors: ``top_left``, ``bottom_right`` stand for :ref:`Point` objects, "sequence" is a Python sequence type with 4 float values (see :ref:`SequenceTypes`), "rect" means another rectangle, while the other parameters mean float coordinates.
 
-      If ``rect`` is specified, the constructor creates a **new copy** of ``rect``.
+      If "rect" is specified, the constructor creates a **new copy** of it.
 
       Without parameters, the rectangle ``Rect(0.0, 0.0, 0.0, 0.0)`` is created.
 
@@ -240,7 +240,7 @@ Hence some useful classification:
 
 Remark
 ------
-A rectangle's coordinates can also be accessed via index, e.g. ``r.x0 == r[0]``, and the ``tuple()`` and ``list()`` functions yield sequence objects of its components.
+This class adheres to the sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
 
 Rect Algebra
 -----------------

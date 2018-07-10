@@ -358,7 +358,7 @@ Yet others are handy, general-purpose utilities.
 
       :arg int xref: XREF number.
       
-      :arg bytes stream: the new content of the stream. May also be type ``bytearray``.
+      :arg bytes/bytearray stream: the new content of the stream.
       
       :arg bool new: whether to force accepting the stream, and thus turning ``xref`` into a stream object.
 

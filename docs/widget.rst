@@ -75,8 +75,6 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
        A float defining the text fontsize. Default value is zero, which causes PDF viewer software to dynamically choose a size suitable for the annotation's rectangle and text amount.
 
-    .. note:: When adding or updating a field, the attributes :attr:`text_color`, :attr:`text_font` and :attr:`text_fontsize` are used to create the :attr:`text_da` string below. Only this value will actually be used to control the widget's text properties.
-
     .. attribute:: text_maxlen
 
        An integer defining the maximum number of text characters. PDF viewers will (should) not accept larger text amounts.
@@ -85,9 +83,6 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
        An integer defining acceptable text types (e.g. numeric, date, time, etc.). For reference only for the time being - will be ignored when creating or updating widgets.
 
-    .. attribute:: text_da
-
-       A string defining the field's default appearance. Direct changes to this value will be ignored. It will be generated from information contained in :attr:`text_color`, :attr:`text_font`, and :attr:`text_fontsize` above. It has the general format ``0 0 0 rg /Helv 11 Tf`` (RGB case). Its first one to four tokens form the text color, ``/Helv`` and ``11`` are the font name and size. The format and token sequence may be different for widgets that were not created by PyMuPDF, e.g. the color specification may be missing altogether.
 
 Standard Fonts for Widgets
 ----------------------------------
