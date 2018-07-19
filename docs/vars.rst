@@ -361,7 +361,7 @@ Annotation Flags
 ---------------------
 Possible mask values for PDF annotation flags.
 
-.. Note:: Annotation flags is a bit field, so test the truth of its bits with the ``&`` operator. When changing flags for an annotation, use the ``|`` operator to combine several values. The following descriptions were extracted from the Adobe manual, pages 608 pp.
+.. Note:: Annotation flags is a bit field, so test the truth of its bits with the ``&`` operator. When changing flags for an annotation, use the ``|`` operator to combine several values. The following descriptions were extracted from the :ref:`AdobeManual`, pages 608 pp.
 
 .. py:data:: ANNOT_XF_Invisible
 
@@ -407,7 +407,7 @@ Possible mask values for PDF annotation flags.
 
 Annotation Line End Styles
 ----------------------------
-The following descriptions are taken from the Adobe manual TABLE 8.27 on page 630. The respective visualizations are either dynamically done by PDF viewers or explicitely hardcoded by the PDF generator software.
+The following descriptions are taken from the :ref:`AdobeManual` Table 8.27 on page 630. The visualizations are either dynamically created by PDF viewers, or explicitely hardcoded by the PDF generator software. Only 'FreeText', 'Line', 'PolyLine', and 'Polygon' annotation types can have these properties.
 
 .. py:data:: ANNOT_LE_None
 
@@ -453,7 +453,7 @@ The following descriptions are taken from the Adobe manual TABLE 8.27 on page 63
 
 PDF Form Field Flags
 ----------------------------
-Bit positions in an integer (called ``/Ff`` in the Adobe manual) controlling a wide range of PDF form field ("widget") behaviours.
+Bit positions in an integer (called ``/Ff`` in :ref:`AdobeManual`) controlling a wide range of PDF form field ("widget") behaviours.
 
 Common to all field types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -515,7 +515,7 @@ Button fields
 
 .. py:data:: WIDGET_Ff_RadioInUnison
 
-    33554432 controls multiple radio buttons in a group
+    33554432 controls multiple radio buttons in a group (unsupported by PyMuPDF)
 
 Choice fields
 ~~~~~~~~~~~~~~~~
@@ -525,7 +525,7 @@ Choice fields
 
 .. py:data:: WIDGET_Ff_Edit
 
-    262144 make choice field editable (do not restrict to value list)
+    262144 make choice field editable (do not restrict values to value list)
 
 .. py:data:: WIDGET_Ff_Sort
 

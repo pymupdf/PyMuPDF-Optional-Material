@@ -25,19 +25,19 @@ This is available for PDF documents only. There are basically two groups of meth
 ================================ =========================================
 **Method / Attribute**           **Short Description**
 ================================ =========================================
-:meth:`Page.bound`               rectangle of the page
-:meth:`Page.addTextAnnot`        PDF only: add comment and a note icon
-:meth:`Page.addFreetextAnnot`    PDF only: add a text annotation
-:meth:`Page.addLineAnnot`        PDF only: add a line annotation
-:meth:`Page.addFileAnnot`        PDF only: add a file attachment annotation
-:meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
 :meth:`Page.addCircleAnnot`      PDF only: add a circle annotation
-:meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
-:meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
-:meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
+:meth:`Page.addFileAnnot`        PDF only: add a file attachment annotation
+:meth:`Page.addFreetextAnnot`    PDF only: add a text annotation
 :meth:`Page.addHighlightAnnot`   PDF only: add a "highlight" annotation
+:meth:`Page.addLineAnnot`        PDF only: add a line annotation
+:meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
+:meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
+:meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
+:meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
+:meth:`Page.addTextAnnot`        PDF only: add comment and a note icon
 :meth:`Page.addUnderlineAnnot`   PDF only: add an "underline" annotation
 :meth:`Page.addWidget`           PDF only: add a PDF Form field
+:meth:`Page.bound`               rectangle of the page
 :meth:`Page.deleteAnnot`         PDF only: delete an annotation
 :meth:`Page.deleteLink`          PDF only: delete a link
 :meth:`Page.drawBezier`          PDF only: draw a cubic Bézier curve
@@ -63,16 +63,16 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.loadLinks`           return the first link on a page
 :meth:`Page.newShape`            PDF only: start a new :ref:`Shape`
 :meth:`Page.searchFor`           search for a string
-:meth:`Page.setRotation`         PDF only: set page rotation
 :meth:`Page.setCropBox`          PDF only: modify the visible page
+:meth:`Page.setRotation`         PDF only: set page rotation
 :meth:`Page.showPDFpage`         PDF only: display PDF page image
 :meth:`Page.updateLink`          PDF only: modify a link
-:attr:`Page.CropBoxPosition`     displacement of the /CropBox
 :attr:`Page.CropBox`             the page's /CropBox
-:attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
-:attr:`Page.MediaBox`            the page's /MediaBox
+:attr:`Page.CropBoxPosition`     displacement of the /CropBox
 :attr:`Page.firstAnnot`          first :ref:`Annot` on the page
 :attr:`Page.firstLink`           first :ref:`Link` on the page
+:attr:`Page.MediaBox`            the page's /MediaBox
+:attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
 :attr:`Page.number`              page number
 :attr:`Page.parent`              owning document object
 :attr:`Page.rect`                rectangle (mediabox) of the page
@@ -147,15 +147,15 @@ This is available for PDF documents only. There are basically two groups of meth
       :type p2: :ref:`Point`
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. It is drawn with line color black and line width 1. To change, or attach other information (like author, creation date, line properties, colors, line ends, etc.) use methods of :ref:`Annot`.
+      :returns: the created annotation. It is drawn with line color black and line width 1. To change, or attach other information (like author, creation date, line properties, colors, line ends, etc.) use methods of :ref:`Annot`. The **annotation rectangle** is automatically created.
 
    .. method:: addRectAnnot(rect)
 
    .. method:: addCircleAnnot(rect)
 
-      PDF only: Add a rectangle or circle annotation.
+      PDF only: Add a rectangle, resp. circle annotation.
 
-      :arg rect: the rectangle in which the circle / rectangle is drawn. If the rectangle is not equal-sided, an ellipse is drawn.
+      :arg rect: the rectangle in which the circle or rectangle is drawn, must be finite and not empty. If the rectangle is not equal-sided, an ellipse is drawn.
       :type rect: :ref:`Rect`
 
       :rtype: :ref:`Annot`
@@ -165,7 +165,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: addPolygonAnnot(points)
 
-      PDF only: Add an annotation consisting of multiple conected lines. A polygon's first and last points are automatically connected. A polyline has a start and an end point, which may be given line end symbols (:ref:`Annotation Line Ends`).
+      PDF only: Add an annotation consisting of lines which connect the given points. A **Polygon's** first and last points are automatically connected, which does not happen for a **PolyLine**. The **annotation rectangle** is automatically created.
 
       .. image:: img-polyline.png
 

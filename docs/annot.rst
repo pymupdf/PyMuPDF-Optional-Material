@@ -20,6 +20,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 :meth:`Annot.setFlags`       PDF only: changes the flags of an annotation
 :meth:`Annot.setRect`        PDF only: changes the rectangle of an annotation
 :meth:`Annot.setColors`      PDF only: changes the colors of an annotation
+:meth:`Annot.setLineEnds`    PDF only: sets the line ending styles
 :meth:`Annot.setOpacity`     PDF only: changes the annot's transparency
 :meth:`Annot.updateImage`    PDF only: applies border and color values to shown image
 :meth:`Annot.updateWidget`   PDF only: change an exsiting form field
@@ -63,9 +64,18 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. method:: setInfo(d)
 
-      Changes the info dictionary. This is includes dates, contents, subject and author (title). Changes for ``name`` will be ignored.
+      Changes the info dictionary. This includes dates, contents, subject and author (title). Changes for ``name`` will be ignored.
 
-      :arg dict d: a dictionary compatible with the ``info`` property (see below). All entries must be ``unicode``, ``bytes``, or strings. If ``bytes`` values in Python 3 they will be treated as being UTF8 encoded.
+      :arg dict d: a dictionary compatible with the ``info`` property (see below). All entries must be strings.
+
+   .. method:: setLineEnds(start, end)
+
+      PDF only: Sets an annotation's line ending styles. Only 'FreeText', 'Line', 'PolyLine', and 'Polygon' annotations can have these properties. Each of these annotation types is defined by a list of points which are connected by lines. The symbol identified by ``start`` is attached to the first point, and ``end`` to the last point of this list. For unsupported annotation types, a no-operation with a warning message results. See :ref:`Annotation Line Ends` for details.
+
+      :arg int start: The symbol number for the first point.
+
+      :arg int end: The symbol number for the last point.
+
 
    .. method:: setOpacity(value)
 
@@ -77,7 +87,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Changes the rectangle of an annotation. The annotation can be moved around and both sides of the rectangle can be independently scaled. However, the annotation appearance will never get rotated, flipped or sheared.
 
-      :arg rect: the new rectangle of the annotation. This could e.g. be a rectangle ``rect = Annot.rect * M`` with a suitable :ref:`Matrix` M (only scaling and translating will yield the expected effect).
+      :arg rect: the new rectangle of the annotation (finite and not empty). E.g. using a value of `annot.rect + (5, 5, 5, 5))` will shift the annot position 5 pixels right and down.
 
       :type rect: :ref:`Rect`
 
@@ -85,7 +95,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       PDF only: Change border width and dashing properties.
 
-      :arg dict border: a dictionary with keys ``width`` (*float*), ``style`` (*str*) and ``dashes`` (*list*). Omitted values will leave the resp. property unchanged. To remove dashing and get a contiguous line, specify ``"dashes": []``. Style values may be given in upper or lower case - only the first character is significant, i.e. "s" is treated as "Solid".
+      :arg dict border: a dictionary with keys ``width`` (*float*), ``style`` (*str*) and ``dashes`` (*list*). Omitted values will leave the resp. property unchanged. To remove dashing and get a contiguous line, specify ``"dashes": []``.
 
    .. method:: setFlags(flags)
 
@@ -99,11 +109,11 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :arg dict d: a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the ``colors`` property and then modify this dictionary as required.
 
-      .. note:: This method **does not work** for widget annotations and results in a no-op with a warning message. Use :meth:`updateWidget` instead. Certain annotation types have no fill colors. In these cases this value is ignored and a warning is issued.
+      .. note:: This method **does not work** for widget annotations, and results in a no-op with a warning message. Use :meth:`updateWidget` instead. Certain annotation types have no fill colors. In these cases this value is ignored and a warning is issued.
 
    .. method:: updateImage()
 
-      Attempts to modify the displayed graphical image such that it coincides with the values currently contained in the ``border`` and ``colors`` properties. This is achieved by modifying the contents stream of the associated appearance XObject. Nested XObject invocations are currently not supported and ignored with a warning message.
+      Modify the displayed image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and ``dashes`` properties. This is a no-op for annotation types ANNOT_LINE, ANNOT_POLYLINE, ANNOT_POLYGON, ANNOT_CIRCLE, and ANNOT_SQUARE, because they are always completely rebuilt with any of these changes.
 
    .. method:: updateWidget(widget)
 
@@ -197,7 +207,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: lineEnds
 
-      Meaningful for PDF only: A dictionary specifying the starting and the ending appearance of annotations of types ``Line``, ``PolyLine``, among others. An example would be ``{'start': 'None', 'end': 'OpenArrow'}``. ``{}`` if not specified or not applicable. For possible values and descriptions in this list, see the :ref:`AdobeManual`, table 8.27 on page 630.
+      Meaningful for PDF only: A tuple of two integers specifying the starting and the ending appearance of annotations of types 'FreeText', 'Line', 'PolyLine', and 'Polygon'. ``None`` if not specified or not applicable. For possible values and descriptions in this list, see :ref:`Annotation Line Ends` and the :ref:`AdobeManual`, table 8.27 on page 630.
 
       :rtype: dict
 

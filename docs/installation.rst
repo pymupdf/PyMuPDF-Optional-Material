@@ -151,7 +151,7 @@ If you find the wheel for your platform on PyPI, issue
 
 ``pip install [--upgrade] PyMuPDF``
 
-and you are done. **Continue with next chapter of this manual.**
+and you are done. **Continue with the next chapter of this manual.**
 
 Step 2: Install from GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

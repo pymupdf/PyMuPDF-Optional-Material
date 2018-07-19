@@ -1,6 +1,15 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.14
+---------------------------
+This patch version contains several improvements, mainly for annotations.
+
+* **Changed** :attr:`Annot.lineEnds` is now a list of two integers representing the line end symbols. Previously was a *dict* of strings.
+* **Added** support of line end symbols for applicable annotations. PyMuPDF now can generate these annotations including the line end symbols.
+* **Added** :meth:`Annot.setLineEnds` adds line end symbols to applicable annotation types ('Line', 'PolyLine', 'Polygon').
+* **Changed** technical implementation of :meth:`Page.insertImage`: it now creates its own contents objects, thereby avoiding changes of potentially large streams with consequential compression / decompression effort.
+
 Changes in Version 1.13.13
 ---------------------------
 This patch version contains several improvements for embedded files and file attachment annotations.
