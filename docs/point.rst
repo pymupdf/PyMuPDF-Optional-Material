@@ -31,7 +31,7 @@ Point
       
       Without parameters, ``Point(0, 0)`` will be created.
 
-      With another point specified, a **new copy** will be crated. A sequence must be Python sequence object of 2 values (see :ref:`SequenceTypes`).
+      With another point specified, a **new copy** will be crated. A sequence must be Python sequence object of 2 floats (see :ref:`SequenceTypes`).
 
      :arg float x: X coordinate of the point
 
@@ -59,11 +59,13 @@ Point
 
      :rtype: ``Point``
 
-  .. attribute:: x
-     x Coordinate
+   .. attribute:: x
 
-  .. attribute:: y
-     y Coordinate
+      The x Coordinate
+
+   .. attribute:: y
+
+      The y Coordinate
 
 Remark
 ------
@@ -99,3 +101,6 @@ fitz.Point(-1.0, -2.0)
 >>>
 >>> abs(fitz.Point(25, 30))
 39.05124837953327
+>>>
+>>> fitz.Point(1, 2) / (1, 2, 3, 4, 5, 6)
+fitz.Point(2.0, -2.0)

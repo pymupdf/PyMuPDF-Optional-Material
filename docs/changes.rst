@@ -1,6 +1,17 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.16
+---------------------------
+* **Added** support for correctly setting transparency (opacity) for certain annotation types.
+* **Added** a tool property (:attr:`Tools.fitz_config`) showing the configuration of this PyMuPDF version.
+* **Fixed** issue #193 ('insertText(overlay=False) gives "cannot resize a buffer with shared storage" error') by avoiding read-only buffers.
+
+Changes in Version 1.13.15
+---------------------------
+* **Fixed** issue #189 ("cannot find builtin CJK font"), so we are supporting builtin CJK fonts now (CJK = China, Japan, Korea). This should lead to correctly generated pixmaps for documents using these languages. This change has consequences for our binary file size: it will now range between 8 and 10 MB, depending on the OS.
+* **Fixed** issue #191 ("Jupyter notebook kernel dies after ca. 40 pages"), which occurred when modifying the contents of an annotation.
+
 Changes in Version 1.13.14
 ---------------------------
 This patch version contains several improvements, mainly for annotations.
@@ -8,7 +19,7 @@ This patch version contains several improvements, mainly for annotations.
 * **Changed** :attr:`Annot.lineEnds` is now a list of two integers representing the line end symbols. Previously was a *dict* of strings.
 * **Added** support of line end symbols for applicable annotations. PyMuPDF now can generate these annotations including the line end symbols.
 * **Added** :meth:`Annot.setLineEnds` adds line end symbols to applicable annotation types ('Line', 'PolyLine', 'Polygon').
-* **Changed** technical implementation of :meth:`Page.insertImage`: it now creates its own contents objects, thereby avoiding changes of potentially large streams with consequential compression / decompression effort.
+* **Changed** technical implementation of :meth:`Page.insertImage` and :meth:`Page.showPDFpage`: they now create there own contents objects, thereby avoiding changes of potentially large streams with consequential compression / decompression efforts and high change volumes with incremental updates.
 
 Changes in Version 1.13.13
 ---------------------------

@@ -79,7 +79,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. method:: setOpacity(value)
 
-      PDF only: Change an annotation's transparency.
+      PDF only: Change an annotation's transparency. A visible effect only occurs for annotation types 'Circle', 'Square', 'Line', 'PolyLine' and 'Polygon'. Other cases result in a no-op.
 
       :arg float value: a float in range ``[0, 1]``. Any value outside is assumed to be 1. E.g. a value of 0.5 sets the transparency to 50%.
 
@@ -152,7 +152,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: opacity
 
-      The annotation's transparency, a value in range ``[0, 1]``. Always 1 for non-PDFs.
+      The annotation's transparency. If set, it is a value in range ``[0, 1]``. The PDF default is ``1.0``. However, in an effort to tell the difference, we return ``-1.0`` if not set (as well as for non-PDFs).
 
       :rtype: float
 

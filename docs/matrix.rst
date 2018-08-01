@@ -61,11 +61,11 @@ Please note:
 
       For "matrix" a **new copy** will be made.
       
-      Float value "degree" specifies the creation of a rotation matrix.
+      Float value "degree" specifies the creation of a rotation matrix which rotates anit-clockwise.
 
       A "sequence" must be a Python sequence object with 6 float entries (see :ref:`SequenceTypes`).
       
-      ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0))`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
+      ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0)`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
 
    .. method:: preRotate(deg)
 

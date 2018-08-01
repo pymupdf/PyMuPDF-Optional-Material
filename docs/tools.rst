@@ -10,6 +10,7 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
 ================================ =================================================
 :meth:`Tools.gen_id`             generate a unique identifyer
 :meth:`Tools.store_shrink`       shrink the storables cache [#f1]_
+:attr:`Tools.fitz_config`        configuration of PyMuPDF
 :attr:`Tools.store_maxsize`      maximum storables cache size
 :attr:`Tools.store_size`         current storables cache size
 ================================ =================================================
@@ -35,6 +36,42 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
 
       :rtype: int
       :returns: the new current store size. Depending on the situation, the size reduction may be larger than the requested percentage.
+
+   .. attribute:: fitz_config
+
+      A dictionary containing the actual values used for configuring PyMuPDF and MuPDF. Also refer to the introduction chapter. This is an overview of the keys, each of which describes the status of a support aspect.
+
+      ================= ===================================================
+      **Key**           **Support included for ...**
+      ================= ===================================================
+      plotter-g         Gray colorspace rendering
+      plotter-rgb       RGB colorspace rendering
+      plotter-cmyk      CMYK colorspcae rendering
+      plotter-n         overprint rendering
+      pdf               PDF documents
+      xps               XPS documents
+      svg               SVG documents
+      cbz               CBZ documents
+      img               IMG documents
+      tiff              TIFF documents
+      html              HTML documents
+      epub              EPUB documents
+      gprf              Ghostscript proofing documents
+      jpx               JPEG2000 images
+      js                JavaScript
+      tofu              all TOFU fonts
+      tofu-cjk          CJK font subset (China, Japan, Korea)
+      tofu-cjk-ext      CJK font extensions
+      tofu-cjk-lang     CJK font language extensions
+      tofu-emoji        TOFU emoji fonts
+      tofu-historic     TOFU historic fonts
+      tofu-symbol       TOFU symbol fonts
+      tofu-sil          TOFU SIL fonts
+      icc               ICC profiles
+      base14            Base-14 fonts (should always be true)
+      ================= ===================================================
+
+      For an explanation of the term "TOFU" see `this Wikipedia article <https://en.wikipedia.org/wiki/Noto_fonts>`_.
 
    .. attribute:: store_maxsize
 

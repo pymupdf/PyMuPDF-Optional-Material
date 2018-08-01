@@ -39,29 +39,24 @@ This PDF Reference manual published by Adobe is frequently quoted throughout thi
 
 Using Python Sequences as Arguments in PyMuPDF
 ------------------------------------------------
-In most cases, when PyMuPDF objects and methods require a Python list of numerical values, other Python sequence types are also allowed.
+In most cases, when PyMuPDF objects and methods require a Python list of numerical values, other Python sequence types are also allowed. Classes implement the sequence protocol, if they have a ``__getitem__()`` method.
 
-This generally means, you can interchangeably use Python ``list`` or ``tuple`` or even ``array.array`` or ``numpy.array`` types in these cases.
+This generally means, you can interchangeably use Python ``list`` or ``tuple`` or even ``array.array``, ``numpy.array`` and ``bytearray`` types in these cases.
 
-For example,
+For example, specifying a sequence ``s`` in any of the following ways
 
 * ``s = [1, 2]``
 * ``s = (1, 2)``
 * ``s = array.array("i", (1, 2))``
-* ``s = numpy.array((1,2))``
+* ``s = numpy.array((1, 2))``
+* ``s = bytearray((1, 2))``
 
-will all produce the same result when used in ``fitz.Point(s)`` or ``fitz.Point(x, y) + s`` or ``doc.select(s)``. This applies to all geometry objects :ref:`Rect`, :ref:`IRect`, :ref:`Matrix` and :ref:`Point`.
-
-Throughout this documentation we allude to this fact, whenever we talk about "sequences". We will refer to the concrete Python subtype where this is actually required.
-
-In general, this support includes object types which support the sequence protocol, i.e. Python classes with a ``__getitem__()`` method.
-
-So, e.g. Python types ``set`` and ``frozenset`` are **not supported**.
+will make it usable in the following expressions: ``fitz.Point(s)`` or ``fitz.Point(x, y) + s`` or ``doc.select(s)`` (similarly with all geometry objects :ref:`Rect`, :ref:`IRect`, :ref:`Matrix` and :ref:`Point`).
 
 Because all PyMuPDF geometry classes themselves are special cases of sequences, they can be freely used where sequences can be used, e.g. as arguments for functions like ``list()``, ``tuple()``, ``array.array()`` or ``numpy.array()``. Look at the following snippet to see this work.
 
 >>> import fitz, array, numpy as np
->>> m = fitz.Matrix(1,2,3,4,5,6)
+>>> m = fitz.Matrix(1, 2, 3, 4, 5, 6)
 >>>
 >>> list(m)
 [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
@@ -168,7 +163,7 @@ Use cases include (but are not limited to) the following:
 
 1. "Stamp" a series of pages of the current document with the same image, like a company logo or a watermark.
 2. Combine arbitrary input pages into one output page to support “booklet” or double-sided printing (known as "4-up", "n-up").
-3. Split up (large) input pages into several arbitrary pieces. This is also called “posterization”, because you e.g. can split an A4 page horizontally and vertically, print the 4 pieces as separate A4 pages, and end up with an A2 version of your original page.
+3. Split up (large) input pages into several arbitrary pieces. This is also called “posterization”, because you e.g. can split an A4 page horizontally and vertically, print the 4 pieces enlarged to separate A4 pages, and end up with an A2 version of your original page.
 
 Technical Implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -191,8 +186,8 @@ This is done using PDF **"Form XObjects"**, see section 4.9 on page 355 of :ref:
 
     3. The ``/Resources`` and ``/Contents`` objects of the invoking page are now modified as follows.
     
-        a. Add an entry to the ``/XObject`` dictionary of ``/Resources`` with the name ``fitz-xref-uid``, which is unique for this page. Uniqueness is required because the same source might be displayed more than once on the containing page. ``xref`` is the PDF cross reference number of XObject 1, and ``uid`` is a globally unique [#f2]_ integer provided by the MuPDF library.
-        b. Depending on ``overlay``, prepend or append the following statement to the contents object: ``/fitz-xref-uid Do``.
+        a. Add an entry to the ``/XObject`` dictionary of ``/Resources`` with the name ``fzFrm<n>`` with an appropriately chosen integer n that makes this entry unique on the page.
+        b. Depending on ``overlay``, prepend or append a new object to the page's ``/Contents`` containing the statement ``q /fzFrm<n> Do Q``.
 
     4. Return ``xref`` to the caller.
 
@@ -202,10 +197,8 @@ The second XObject is small (just about 270 bytes), specific to the containing r
 
 If no precautions are taken, process **step 1** leads to another XObject on every invocation - even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time and memory usage.
 
-If you forget to use ``reuse_xref``, garbage collection (``mutool clean -gggg`` or save option ``garbage = 4``) can still take care of the duplicates.
+If you forget to use ``reuse_xref``, garbage collection (``mutool clean -gggg`` or save option ``garbage = 4``) can still take care of any duplicates.
 
 .. rubric:: Footnotes
 
-.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses "graftmaps", a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, the xref is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. Whether the target document **originally** had identical data is, however, not checked by this technique. Therefore, using save-option ``garbage = 4`` is reasonable when copying to a non-empty target.
-
-.. [#f2] Arguably, ``uid`` alone would suffice to ensure uniqueness: this integer is maintained threadsafe as part of the global context. However, if a PDF is updated again later, ``uid`` would start over from 1. A reference name like ``/fitz-uid`` would therefore no longer be guarantied unique if more objects are shown on the containing page. Theoretically, the uniqueness of ``/fitz-xref-uid`` could also break, when PDF garbage collection leads to renumbering the PDF objects ... but chances for this seem tolerably low. What would be the effect of a non-uniqueness? If a page contains several identical XObject references, intentionally pointing to different XObjects, unexpected behaviour will result. Which in turn can only happen if garbage collection (1) changes the original ``xref`` and (2) a new :meth:`Page.showPDFpage` happens to generate an XObject with the now-free xref number ...
+.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses so-called "graftmaps", a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, the new xref is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. Whether the target document **originally** had identical data is, however, not checked by this technique. Therefore, using save-option ``garbage = 4`` is still reasonable when copying to a non-empty target.

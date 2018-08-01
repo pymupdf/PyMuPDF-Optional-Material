@@ -119,7 +119,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: convertToPDF(from_page = -1, to_page = -1, rotate = 0)
 
-      Create a PDF version of the current document and write it to memory. All document types are supported. The parameters have the same meaning as in :meth:`insertPDF`. In essence, you can restrict the conversion to a page subset, specify page rotation, and revert page sequence.
+      Create a PDF version of the current document and write it to memory. **All document types** (except PDF) are supported. The parameters have the same meaning as in :meth:`insertPDF`. In essence, you can restrict the conversion to a page subset, specify page rotation, and revert page sequence.
 
       :arg int from_page: first page to copy (0-based). Default is first page.
       
@@ -156,7 +156,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       .. note:: The method uses the same logic as the ``mutool convert`` CLI. This works very well in most cases - however, beware of the following limitations.
 
-        * Image files: perfect, no issues detected. Apparently however, image transparency is ignored. If you need that (like for a watermark), use :meth:`Page.insertImage` instead.
+        * Image files: perfect, no issues detected. Apparently however, image transparency is ignored. If you need that (like for a watermark), use :meth:`Page.insertImage` instead. Otherwise, this method is recommended for its much better prformance.
         * XPS: appearance very good. Links work fine, outlines (bookmarks) are lost, but can easily be recovered [#f2]_.
         * EPUB, CBZ, FB2: similar to XPS.
         * SVG: medium. Roughly comparable to `svglib <https://github.com/deeplook/svglib>`_.
@@ -260,7 +260,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: select(s)
 
-      PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty lists or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
+      PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty sequences or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
 
       :arg sequence s: A sequence (see :ref:`SequenceTypes`) of page numbers (zero-based) to be included. Pages not in the sequence will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the sequence exactly as specified.
 
@@ -638,20 +638,18 @@ For addional details on **embedded files** refer to Appendix 3.
 Remarks on :meth:`select`
 --------------------------
 
-Page numbers in the list need not be unique nor be in any particular sequence. This makes the method a versatile utility to e.g. select only the even or the odd pages, re-arrange a document from back to front, duplicate it, and so forth. In combination with text search or extraction you can also omit / include pages with no text or containing a certain text, etc.
+Page numbers in the sequence need not be unique nor be in any particular order. This makes the method a versatile utility to e.g. select only the even or the odd pages, re-arrange a document from back to front, duplicate it, and so forth. In combination with text search or extraction you can also omit / include pages with no text or containing a certain text, etc.
 
-You can execute several selections in a row. Each time the document structure will be updated.
+If you have de-selected many pages, consider specifying the ``garbage`` option to eventually reduce the resulting document's size (when saving to a new file).
 
-Any of those changes will become permanent only with a :meth:`save`. If you have de-selected many pages, consider specifying the ``garbage`` option to eventually reduce the resulting document's size (when saving to a new file).
-
-Also note, that this method **preserves all links, annotations and bookmarks** that are still valid. In other words: deleting pages only deletes references which point to de-selected pages. Page number of bookmarks (outline items) are automatically updated when a TOC is retrieved again with :meth:`getToC`. If a bookmark's destination page happened to be deleted, then its page number will be set to ``-1``.
+Also note, that this method **preserves all links, annotations and bookmarks** that are still valid. In other words: deleting pages only deletes references which point to de-selected pages. Page numbers of bookmarks (outline items) are automatically updated when a TOC is retrieved again after execution of this method. If a bookmark's destination page happened to be deleted, then its page number will be set to ``-1``.
 
 The results of this method can of course also be achieved using combinations of methods :meth:`copyPage`, :meth:`deletePage` etc. While there are many cases, when these methods are more practical, :meth:`select` is easier and safer to use when many pages are involved.
 
 :meth:`select` Examples
 --------------------------
 
-In general, any list of integers within the document's page range can be used. Here are some illustrations.
+In general, any sequence of integers that are in the document's page range can be used. Here are some illustrations.
 
 Delete pages with no text:
 ::

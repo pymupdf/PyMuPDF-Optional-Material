@@ -7,7 +7,7 @@ Tutorial
 =========
 This tutorial will show you the use of PyMuPDF, MuPDF in Python, step by step.
 
-Because MuPDF supports not only PDF, but also XPS, OpenXPS, CBZ, CBR, FB2 and EPUB formats, so does PyMuPDF [#f1]_. Nevertheless we will only talk about PDF files for the sake of brevity. At places where indeed only PDF files are supported, this will be mentioned explicitely.
+Because MuPDF supports not only PDF, but also XPS, OpenXPS, CBZ, CBR, FB2 and EPUB formats, so does PyMuPDF [#f1]_. Nevertheless, for the sake of brevity we will only talk about PDF files. At places where indeed only PDF files are supported, this will be mentioned explicitely.
 
 Importing the Bindings
 ==========================
@@ -17,9 +17,15 @@ The Python bindings to MuPDF are made available by this import statement:
 
 You can check your version by printing the docstring:
 
->>> print (fitz.__doc__)
-PyMuPDF 1.9.1: Python bindings for the MuPDF 1.9a library,
-built on 2016-07-01 13:06:02
+>>> print(fitz.__doc__)
+PyMuPDF 1.13.16: Python bindings for the MuPDF 1.13.0 library,
+built on 2018-07-26 09:52:26
+
+Or simply
+
+>>> fitz.version
+('1.13.16', '1.13.0', '20180726095226')
+
 
 Opening a Document
 ======================
@@ -93,7 +99,7 @@ First, a page object must be created. This is a method of :ref:`Document`:
 >>> page = doc.loadPage(n)        # represents page n of the document (0-based)
 >>> page = doc[n]                 # short form
 
-``n`` may be any positive or negative integer less than ``doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python lists.
+``n`` may be any positive or negative integer less than ``doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python sequences.
 
 Some typical uses of :ref:`Page`\s follow:
 
@@ -112,9 +118,9 @@ This example creates a **raster** image of a page's content:
 
 >>> pix = page.getPixmap()
 
-``pix`` is a :ref:`Pixmap` object that contains an RGBA image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc.
+``pix`` is a :ref:`Pixmap` object that contains an **RGBA** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGB** image (i.e. containing no alpha channel), specify ``pix = page.getPixmap(alpha = False)``.
 
-.. note:: You can also create **vector** images of a page using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/rk700/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
+.. note:: You can also create a **vector** image of a page by using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/rk700/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
 Saving the Page Image in a File
 -----------------------------------
@@ -124,16 +130,17 @@ We can simply store the image in a PNG file:
 
 Displaying the Image in Dialog Managers
 -------------------------------------------
-We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more `in this directory <https://github.com/rk700/PyMuPDF/tree/master/examples>`_.
+We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more in the `examples <https://github.com/rk700/PyMuPDF/tree/master/examples>`_ directory.
 
 wxPython
 ~~~~~~~~~~~~~
+Consult their documentation for adjustments to RGB pixmaps an potentially wxPython releases specifics.
 
 >>> bitmap = wx.BitmapFromBufferRGBA(pix.width, pix.height, pix.samples)
 
 Tkinter
 ~~~~~~~~~~
-Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
+Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_, especially for changes when processing RGB pixmaps.
 
 >>> from PIL import Image, ImageTk
 >>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
@@ -142,7 +149,7 @@ Please also see section 3.19 of the `Pillow documentation <https://Pillow.readth
 
 PyQt4, PyQt5, PySide
 ~~~~~~~~~~~~~~~~~~~~~
-Please also see section 3.16 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
+Please also see section 3.16 of the `Pillow documentation <https://Pillow.readthedocs.io>`_, especially for changes when processing RGB pixmaps.
 
 >>> from PIL import Image, ImageQt
 >>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
@@ -150,7 +157,7 @@ Please also see section 3.16 of the `Pillow documentation <https://Pillow.readth
 
 Extracting Text and Images
 ---------------------------
-We can also extract all text, images and other information of a page in many different forms and levels of detail:
+We can also extract all text, images and other information of a page in many different forms, and levels of detail:
 
 >>> text = page.getText("type")
 
@@ -182,7 +189,7 @@ PDF Maintenance
 ==================
 PDFs are the only document type that can be **modified** using PyMuPDF. Other files are read-only.
 
-However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the conversion outcome. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `xps-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/xps-converter.py>`_.
+However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the result of this conversion. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `xps-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/xps-converter.py>`_.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
@@ -200,11 +207,13 @@ Modifying, Creating, Re-arranging and Deleting Pages
 -------------------------------------------------------
 There are several ways to manipulate the so-called **page tree** (a structure describing all the pages) of a PDF:
 
-:meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages. :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to another location within the same document.
+:meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages.
+
+:meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to other locations within the same document.
 
 These methods are just wrappers for the following more sophisticated method:
 
-:meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a list of the page numbers you want to include. These integers must all be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
+:meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a sequence [#f3]_ of the page numbers that you want to include. These integers must all be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
 
 So you can easily create new PDFs with
 
@@ -213,7 +222,7 @@ So you can easily create new PDFs with
 * pages that **do** or **don't** contain a given text,
 * reverse the page sequence, ... 
 
-... whatever you may think of.
+... whatever you can think of.
 
 The saved new document will contain links, annotations and bookmarks that are still valid (i.a.w. either pointing to a selected page or to some external resource).
 
@@ -324,3 +333,5 @@ Also have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pa
 .. [#f1] PyMuPDF lets you also open several image file types just like normal documents. See section :ref:`ImageFiles` in chapter :ref:`Pixmap` for more comments.
 
 .. [#f2] :meth:`Page.getText` is a convenience wrapper for several methods of another PyMuPDF class, :ref:`TextPage`. The names of these methods correspond to the argument string passed to :meth:`Page.getText` \:  ``Page.getText("dict")`` is equivalent to ``TextPage.extractDICT()`` \.
+
+.. [#f3] "Sequences" are Python objects conforming to the sequence protocol. These objects implement a method named ``__getitem__()``. Best known examples are Python tuples and lists. But ``array.array``, ``numpy.array`` and PyMuPDF's "geometry" objects (:ref:`Algebra`) are sequences, too. Refer to :ref:`SequenceTypes` for details.

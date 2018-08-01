@@ -154,8 +154,16 @@ text            text *(str)*
 
 ``flags`` is an integer encoding bools of font properties:
 
-* bit 0: superscripted
-* bit 1: italic
-* bit 2: serifed
-* bit 3: monospaced
-* bit 4: bold
+* bit 0: superscripted (2\ :sup:`0`)
+* bit 1: italic (2\ :sup:`1`)
+* bit 2: serifed (2\ :sup:`2`)
+* bit 3: monospaced (2\ :sup:`3`)
+* bit 4: bold (2\ :sup:`4`)
+
+Test these characteristics like so:
+
+>>> if flags & 2**0: print("super")
+>>> if flags & 2**1: print("italic")
+>>> if flags & 2**2: print("serif")
+>>> # etc.
+>>> 
