@@ -25,8 +25,8 @@ Put it inside ``PyFitz`` as a subdirectory for keeping everything in one place.
 
 Since version 1.9, MuPDF includes support for many dozens of additional, so-called NOTO ("no TOFU") fonts for all sorts of alphabets from all over the world like Chinese, Japanese, Corean, Kyrillic, Indonesian, Chinese etc. If you accept MuPDF's standard here, the resulting binary for PyMuPDF will be very big and easily approach or exceed 20 MB. The features actually needed by PyMuPDF in contrast only represent a fraction of this size: no more than 5 MB currently.
 
-To cut off unneeded stuff from your MuPDF version, modify file ``/include/mupdf/config.h`` as follows:
-::
+To cut off unneeded stuff from your MuPDF version, modify file ``/include/mupdf/config.h`` as follows::
+
  #ifndef FZ_CONFIG_H
  
  #define FZ_CONFIG_H
@@ -123,7 +123,7 @@ To cut off unneeded stuff from your MuPDF version, modify file ``/include/mupdf/
  #endif /* FZ_CONFIG_H */
 
 
-The above choice should bring down your binary file size to around 5 MB or less, depending on your bitness.
+The above choice should bring down your binary file size to around 8 to 10 MB.
 
 **Generate MuPDF now**.
 
@@ -143,7 +143,13 @@ Now perform a ``python setup.py install``.
 
 Option 2: Install from Binaries
 --------------------------------
-This installation option is available for all MS Windows and popular Mac OS and Linux platforms.
+This installation option is available for all MS Windows and popular 64-bit Mac OS and Linux platforms for Python versions 2.7 and 3.4 through 3.7.
+
+Windows binaries provided "on stock" are for Python 32-bit and 64-bit versions.
+
+Mac OSX wheels are provided with the platform tag ``macosx_10_6_intel``.
+
+Linux wheels are provided with the platform tag ``manylinux1_x86_64``. This makes them usable for most Linux variants like Debian, Ubuntu, etc.
 
 Step 1: Install from PyPI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -155,7 +161,7 @@ and you are done. **Continue with the next chapter of this manual.**
 
 Step 2: Install from GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This section applies, if you prefer a ZIP file or if you need a special (bug-fix or pre-release) wheel.
+This section applies, if you prefer a ZIP file (Windows only) or if you need a special (bug-fix or pre-release) wheel.
 
 `Download <https://github.com/rk700/pymupdf/releases>`_ your Windows, Mac OS or Linux wheel and issue
 
@@ -194,9 +200,3 @@ This can be used to target the right Python version if you have several installe
 The shebang line of ``setup.py`` will be interpreted by ``py.exe`` to automatically find the right Python, and the internal checks will make sure that version and bitness are what they sould be.
 
 When using wheels, configuration conflict detection is done by ``pip``.
-
-Using UPX
--------------
-No matter which option you chose, your PyMuPDF installation will end up with four files: ``__init__.py``, ``fitz.py``, ``utils.py`` and the binary file ``_fitz<...>.xxx`` in the ``site-packages`` directory. The extension of the binary will be ``.pyd`` on Windows and ``.so`` on other platforms.
-
-Depending on your OS, your compiler and your font support choice (see above), this binary can be quite large and range from 5 MB to 20 MB. You can reduce this by applying the compression utility `UPX <https://upx.github.io/>`_ to it, which probably also exists for your operating system. UPX will reduce the size of ``_fitz<...>.xxx`` by more than 50%. You will end up with 2.5 MB to 9 MB without impacting functionality nor execution speed.

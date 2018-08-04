@@ -50,14 +50,14 @@ Yet others are handy, general-purpose utilities.
 
       Convenience function to return width and height of a known paper format code. These values are given in pixels for the standard resolution 72 pixels = 1 inch.
       
-      Currently defined formats include A0 through A10, B0 through B10, C0 through C10, Card-4x6, Card-5x7, Commercial, Executive, Invoice, Ledger, Legal, Legal-13, Letter, Monarch and Tabloid-Extra, each in either portrait or landscape format.
+      Currently defined formats include **'A0'** through **'A10'**, **'B0'** through **'B10'**, **'C0'** through **'C10'**, **'Card-4x6'**, **'Card-5x7'**, **'Commercial'**, **'Executive'**, **'Invoice'**, **'Ledger'**, **'Legal'**, **'Legal-13'**, **'Letter'**, **'Monarch'** and **'Tabloid-Extra'**, each in either portrait or landscape format.
 
-      A format name must be supplied as a string (case insensitive), optionally suffixed with "-L" (landscape) or "-P" (portrait). No suffix defaults to portrait.
+      A format name must be supplied as a string (case **in** \sensitive), optionally suffixed with "-L" (landscape) or "-P" (portrait). No suffix defaults to portrait.
 
-      :arg str s: a format name like ``"A4"`` or ``"letter-l"``.
+      :arg str s: any format name from above (upper or lower case), like ``"A4"`` or ``"letter-l"``.
 
       :rtype: tuple
-      :returns: ``(width, height)`` of the paper format. For an unknown format ``(-1, -1)`` is returned. Esamples: ``PaperSize("A4")`` returns ``(595, 842)`` and ``PaperSize("letter-l")`` delivers ``(792, 612)``.
+      :returns: ``(width, height)`` of the paper format. For an unknown format ``(-1, -1)`` is returned. Esamples: ``fitz.PaperSize("A4")`` returns ``(595, 842)`` and ``fitz.PaperSize("letter-l")`` delivers ``(792, 612)``.
 
 -----
 

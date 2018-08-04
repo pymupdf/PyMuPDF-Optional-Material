@@ -84,9 +84,9 @@ When you use one of PyMuPDF's objects or methods, this will result in excution o
 
 Because SWIG goes a long way to keep the Python and the C level in sync, everything works fine, if a certain set of rules is being strictly followed. For example: **never access** a :ref:`Page` object, after you have closed (or deleted or set to ``None``) the owning :ref:`Document`. Or, less obvious: **never access** a page or any of its children (links or annotations) after you have executed one of the document methods ``select()``, ``deletePage()``, ``insertPage()`` ... and more.
 
-But just no longer accessing invalidated objects is actually not enough: They should rather be actively deleted entirely, to also free C-level resources.
+But just no longer accessing invalidated objects is actually not enough: They should rather be actively deleted entirely, to also free C-level resources (meaning allocated memory).
 
-The reason for these rules lies in the fact that there is a hierachical 2-level one-to-many relationship between a document and its pages and between a page and its links and annotations. To maintain a consistent situation, any of the above actions must lead to a complete reset - in **Python and, synchronously, in C**.
+The reason for these rules lies in the fact that there is a hierachical 2-level one-to-many relationship between a document and its pages and also between a page and its links / annotations. To maintain a consistent situation, any of the above actions must lead to a complete reset - in **Python and, synchronously, in C**.
 
 SWIG cannot know about this and consequently does not do it.
 

@@ -85,7 +85,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: bound()
 
-      Determine the rectangle (before transformation) of the page. Same as property :attr:`Page.rect` below. For PDF documents this **usually** also coincides with objects ``/MediaBox`` and ``/CropBox``, but not always. The best description hence is probably "``/CropBox``, relocated such that top-left coordinates are (0, 0)". Also see attributes :attr:`Page.CropBox` and :attr:`Page.MediaBox`.
+      Determine the rectangle (before transformation) of the page. Same as property :attr:`Page.rect` below. For PDF documents this **usually** also coincides with objects ``/MediaBox`` and ``/CropBox``, but not always. The best description hence is probably "``/CropBox``, transformed such that top-left coordinates are (0, 0)". Also see attributes :attr:`Page.CropBox` and :attr:`Page.MediaBox`.
 
       :rtype: :ref:`Rect`
 
@@ -101,7 +101,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg str text: the commentary text. This will be shown on double clicking the icon. This text may contain any unicode (in contrast to :meth:`addFreetextAnnot`).
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+      :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
    .. method:: addFreetextAnnot(point, text, fontsize = 11, color = (0, 0, 0))
 
@@ -117,24 +117,24 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg sequ color: RGB float color triple for text color. Default is black.
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+      :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
    .. method:: addFileAnnot(pos, buffer, filename, ufilename = None, desc = None)
 
-      PDF only: Add a file attachment annotation.
+      PDF only: Add a file attachment annotation with a "PushPin" icon at the specified location.
 
       .. image:: img-pushpin.png
 
-      :arg pos: the top-left point of a 20 x 30 rectangle cpntaining the "PushPin" icon.
+      :arg pos: the top-left point of a 20 x 30 rectangle containing the "PushPin" icon.
       :type pos: :ref:`Point`
 
-      :arg bytes/bytearray buffer: the file content.
-      :arg str filename: the filename (required).
+      :arg bytes/bytearray buffer: the data to be stored (actual file content, calculated data, etc.).
+      :arg str filename: the filename.
       :arg str ufilename: the optional PDF unicode filename. Defaults to filename.
       :arg str desc: an optional description of the file. Defaults to filename.
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. To change, or add information (like author, creation date, etc.) use methods of :ref:`Annot`.
+      :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
    .. method:: addLineAnnot(p1, p2)
 
@@ -147,7 +147,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :type p2: :ref:`Point`
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. It is drawn with line color black and line width 1. To change, or attach other information (like author, creation date, line properties, colors, line ends, etc.) use methods of :ref:`Annot`. The **annotation rectangle** is automatically created.
+      :returns: the created annotation. It is drawn with line color black and line width 1. To change, or attach other information (like author, creation date, line properties, colors, line ends, etc.) use methods of :ref:`Annot`. The **rectangle** is automatically created to contain both points, each one surrounded by a circle of radius 3 (= 3 * line width) to make room for any line end symbols. Use methods of :ref:`Annot` to make any changes.
 
    .. method:: addRectAnnot(rect)
 
@@ -159,20 +159,20 @@ This is available for PDF documents only. There are basically two groups of meth
       :type rect: :ref:`Rect`
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. To change, or attach other information (like author, creation date, line properties, colors, etc.) use methods of :ref:`Annot`.
+      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes.
 
    .. method:: addPolylineAnnot(points)
 
    .. method:: addPolygonAnnot(points)
 
-      PDF only: Add an annotation consisting of lines which connect the given points. A **Polygon's** first and last points are automatically connected, which does not happen for a **PolyLine**. The **annotation rectangle** is automatically created.
+      PDF only: Add an annotation consisting of lines which connect the given points. A **Polygon's** first and last points are automatically connected, which does not happen for a **PolyLine**. The **rectangle** is automatically created as the smallest rectangle containing the points, each one surrounded by a circle of radius 3 (= 3 * line width). The following shows a 'PolyLine' that has been modified with colors and line ends.
 
       .. image:: img-polyline.png
 
       :arg list points: a list of :ref:`Point` objects.
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. To change, or attach other information (like author, creation date, line properties, line ends, colors, etc.) use methods of :ref:`Annot`.
+      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes.
 
    .. method:: addUnderlineAnnot(rect)
 
@@ -188,13 +188,13 @@ This is available for PDF documents only. There are basically two groups of meth
       :type rect: :ref:`Rect`
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. To attach other information (like author, creation date, etc.) use methods of :ref:`Annot`.
+      :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
    .. method:: addWidget(widget)
 
-      PDF only: Add a PDF Form field ("widget") to a page. This also turns the PDF into a Form PDF. Because of the large amount of different options, we have developed a new class :ref:`Widget`, which contains the possible PDF field attributes.
+      PDF only: Add a PDF Form field ("widget") to a page. This also **turns the PDF into a Form PDF**. Because of the large amount of different options available for widgets, we have developed a new class :ref:`Widget`, which contains the possible PDF field attributes. It must be used for both, form field creation and updates.
 
-      :arg widget: a :ref:`Widget` object which has been created upfront.
+      :arg widget: a :ref:`Widget` object which must have been created upfront.
       :type widget: :ref:`Widget`
 
       :returns: a widget annotation.
@@ -613,6 +613,6 @@ The page number ``pno`` is 0-based and can be any negative or positive number ``
 
 **Technical Side Note:**
 
-Most document methods (left column) exist for convenience reasons, and are just wrappers: ``Document[pno].<method>``. So they load and discard the page on each execution.
+Most document methods (left column) exist for convenience reasons, and are just wrappers for: ``Document[pno].<page method>``. So they **load and discard the page** on each execution.
 
-However, the first two methods work differently. They only need a page's object definition statement - the page need not be loaded. So e.g. :meth:`Page.getFontList` is a wrapper the other way round: ``Page.parent.getPageFontList(Page.number)``.
+However, the first two methods work differently. They only need a page's object definition statement - the page itself will not be loaded. So e.g. :meth:`Page.getFontList` is a wrapper the other way round and defined as follows: ``page.getFontList == page.parent.getPageFontList(page.number)``.

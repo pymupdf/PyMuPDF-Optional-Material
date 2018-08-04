@@ -73,9 +73,7 @@ There is a parent-child relationship between an annotation and its page. If the 
       PDF only: Sets an annotation's line ending styles. Only 'FreeText', 'Line', 'PolyLine', and 'Polygon' annotations can have these properties. Each of these annotation types is defined by a list of points which are connected by lines. The symbol identified by ``start`` is attached to the first point, and ``end`` to the last point of this list. For unsupported annotation types, a no-operation with a warning message results. See :ref:`Annotation Line Ends` for details.
 
       :arg int start: The symbol number for the first point.
-
       :arg int end: The symbol number for the last point.
-
 
    .. method:: setOpacity(value)
 
@@ -83,19 +81,31 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :arg float value: a float in range ``[0, 1]``. Any value outside is assumed to be 1. E.g. a value of 0.5 sets the transparency to 50%.
 
+      Three overlapping 'Circle' annotations with each opacity set to 0.5:
+
+      .. image:: img-opacity.jpg
+
    .. method:: setRect(rect)
 
       Changes the rectangle of an annotation. The annotation can be moved around and both sides of the rectangle can be independently scaled. However, the annotation appearance will never get rotated, flipped or sheared.
 
-      :arg rect: the new rectangle of the annotation (finite and not empty). E.g. using a value of `annot.rect + (5, 5, 5, 5))` will shift the annot position 5 pixels right and down.
+      :arg rect: the new rectangle of the annotation (finite and not empty). E.g. using a value of ``annot.rect + (5, 5, 5, 5)`` will shift the annot position 5 pixels to the right and downwards.
 
       :type rect: :ref:`Rect`
+
+      .. note:: Rectangles of *line-type annotations* (i.e. 'Line', 'PolyLine' and 'Polygon') have originally been created automatically. For them, the method re-executes that process:
+
+          1. Calculate a transformation matrix M, that transforms the old rectangle to the target one.
+          2. Apply M to the annotation points.
+          3. Re-calculate the final target rectangle as the smallest one that contains the points, each one surrounded by a little circle of radius 3 * line width. The extra space for the circles ensures that any line end symbols also are inside. So the actual resulting rectangle may not exactly equal the given ``rect`` parameter.
 
    .. method:: setBorder(border)
 
       PDF only: Change border width and dashing properties.
 
       :arg dict border: a dictionary with keys ``width`` (*float*), ``style`` (*str*) and ``dashes`` (*list*). Omitted values will leave the resp. property unchanged. To remove dashing and get a contiguous line, specify ``"dashes": []``.
+
+      .. note:: For *line-type annotations* (see above) this method may lead to a changed rectangle if the line ``width`` is changing. This is because the rectangle in these cases is **calculated** and not provided via annotation construction.
 
    .. method:: setFlags(flags)
 
@@ -113,7 +123,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. method:: updateImage()
 
-      Modify the displayed image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and ``dashes`` properties. This is a no-op for annotation types ANNOT_LINE, ANNOT_POLYLINE, ANNOT_POLYGON, ANNOT_CIRCLE, and ANNOT_SQUARE, because they are always completely rebuilt with any of these changes.
+      Modify the displayed image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and ``dashes`` properties. This is a no-op for annotation types ANNOT_LINE, ANNOT_POLYLINE, ANNOT_POLYGON, ANNOT_CIRCLE, and ANNOT_SQUARE, because their appearance is always completely rebuilt with any change.
 
    .. method:: updateWidget(widget)
 
@@ -263,11 +273,9 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: border
 
-      Meaningful for PDF only: A dictionary containing border characteristics. It will be empty ``{}`` if not PDF or when no border information is provided. Technically, the PDF entries ``/Border``, ``/BS`` and ``/BE`` will be checked to build this information. The following keys can occur:
+      Meaningful for PDF only: A dictionary containing border characteristics. It will be ``None`` for non-PDFs and an empty dictionary if no border information exists. The following keys can occur:
 
       * ``width`` - a float indicating the border thickness in points.
-
-      * ``effect`` - a list specifying a border line effect like ``[1, 'C']``. The first entry "intensity" is an integer (from 0 to 2 for maximum intensity). The second is either 'S' for "no effect" or 'C' for a "cloudy" line.
 
       * ``dashes`` - a list of integers (arbitrarily limited to 10) specifying a line dash pattern in user units (usually points). ``[]`` means no dashes, ``[n]`` means equal on-off lengths of ``n`` points, longer lists will be interpreted as specifying alternating on-off length values. See the :ref:`AdobeManual` page 217 for more details.
 
@@ -277,30 +285,29 @@ There is a parent-child relationship between an annotation and its page. If the 
       
 Example
 --------
-Change the graphical image of an annotation. Also update the "author" and the text to be shown in the popup window:
-::
+Change the graphical image of an annotation. Also update the "author" and the text to be shown in the popup window::
+
  doc = fitz.open("circle-in.pdf")
  page = doc[0]                          # page 0
  annot = page.firstAnnot                # get the annotation
  annot.setBorder({"dashes": [3]})       # set dashes to "3 on, 3 off ..."
  
- # set border / popup color to blue and fill color to some light blue
- annot.setColors({"stroke":[0, 0, 1], "fill":[0.75, 0.8, 0.95]})
+ # set stroke and fill color to some blue
+ annot.setColors({"stroke":(0, 0, 1), "fill":(0.75, 0.8, 0.95)})
  info = annot.info                      # get info dict
- info["title"] = "Jorj X. McKie"        # author name in popup title
+ info["title"] = "Jorj X. McKie"        # set author
  
  # text in popup window ...
  info["content"] = "I changed border and colors and enlarged the image by 20%."
- info["subject"] = "Demonstration of PyMuPDF"     # some readers also show this
+ info["subject"] = "Demonstration of PyMuPDF"     # some PDF viewers also show this
  annot.setInfo(info)                    # update info dict
  r = annot.rect                         # take annot rect
  r.x1 = r.x0 + r.width  * 1.2           # new location has same top-left
  r.y1 = r.y0 + r.height * 1.2           # but 20% longer sides
  annot.setRect(r)                       # update rectangle
- annot.updateImage()                    # update appearance
  doc.save("circle-out.pdf", garbage=4)  # save
 
-This is how the circle annotation looks like, before and after the change:
+This is how the circle annotation looks like before and after the change (pop-up windows displayed using Nitro PDF viewer):
 
 |circle|
  
