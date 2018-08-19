@@ -236,57 +236,183 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: list
       :returns: A list of dictionaries. The entries are in the order as specified during PDF generation. For a description of the dictionary entries see below. Always use this method if you intend to make changes to the links of a page.
 
+   .. index::
+      pair: overlay; Page.insertText args
+      pair: fontsize; Page.insertText args
+      pair: fontname; Page.insertText args
+      pair: fontfile; Page.insertText args
+      pair: color; Page.insertText args
+      pair: rotate; Page.insertText args
+      pair: morph; Page.insertText args
+
    .. method:: insertText(point, text = text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
 
       PDF only: Insert text.
+
+   .. index::
+      pair: overlay; Page.insertTextbox args
+      pair: fontsize; Page.insertTextbox args
+      pair: fontname; Page.insertTextbox args
+      pair: fontfile; Page.insertTextbox args
+      pair: color; Page.insertTextbox args
+      pair: expandtabs; Page.insertTextbox args
+      pair: align; Page.insertTextbox args
+      pair: rotate; Page.insertTextbox args
+      pair: morph; Page.insertTextbox args
 
    .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
 
       PDF only: Insert text into the specified rectangle.
 
+   .. index::
+      pair: overlay; Page.drawLine args
+      pair: closePath; Page.drawLine args
+      pair: morph; Page.drawLine args
+      pair: dashes; Page.drawLine args
+      pair: roundCap; Page.drawLine args
+      pair: color; Page.drawLine args
+      pair: fill; Page.drawLine args
+      pair: width; Page.drawLine args
+
    .. method:: drawLine(p1, p2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
       PDF only: Draw a line from :ref:`Point` objects ``p1`` to ``p2``.
+
+   .. index::
+      pair: overlay; Page.drawZigzag args
+      pair: closePath; Page.drawZigzag args
+      pair: morph; Page.drawZigzag args
+      pair: dashes; Page.drawZigzag args
+      pair: roundCap; Page.drawZigzag args
+      pair: color; Page.drawZigzag args
+      pair: fill; Page.drawZigzag args
+      pair: width; Page.drawZigzag args
 
    .. method:: drawZigzag(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
       PDF only: Draw a zigzag line from :ref:`Point` objects ``p1`` to ``p2``.
 
+   .. index::
+      pair: overlay; Page.drawSquiggle args
+      pair: closePath; Page.drawSquiggle args
+      pair: morph; Page.drawSquiggle args
+      pair: dashes; Page.drawSquiggle args
+      pair: roundCap; Page.drawSquiggle args
+      pair: color; Page.drawSquiggle args
+      pair: fill; Page.drawSquiggle args
+      pair: width; Page.drawSquiggle args
+
    .. method:: drawSquiggle(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
       PDF only: Draw a squiggly (wavy, undulated) line from :ref:`Point` objects ``p1`` to ``p2``.
+
+   .. index::
+      pair: overlay; Page.drawCircle args
+      pair: closePath; Page.drawCircle args
+      pair: morph; Page.drawCircle args
+      pair: dashes; Page.drawCircle args
+      pair: roundCap; Page.drawCircle args
+      pair: color; Page.drawCircle args
+      pair: fill; Page.drawCircle args
+      pair: width; Page.drawCircle args
 
    .. method:: drawCircle(center, radius, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
       PDF only: Draw a circle around ``center`` with a radius of ``radius``.
 
+   .. index::
+      pair: overlay; Page.drawOval args
+      pair: closePath; Page.drawOval args
+      pair: morph; Page.drawOval args
+      pair: dashes; Page.drawOval args
+      pair: roundCap; Page.drawOval args
+      pair: color; Page.drawOval args
+      pair: fill; Page.drawOval args
+      pair: width; Page.drawOval args
+
    .. method:: drawOval(rect, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
       PDF only: Draw an oval (ellipse) within the given rectangle.
 
+   .. index::
+      pair: overlay; Page.drawSector args
+      pair: closePath; Page.drawSector args
+      pair: morph; Page.drawSector args
+      pair: dashes; Page.drawSector args
+      pair: roundCap; Page.drawSector args
+      pair: color; Page.drawSector args
+      pair: fill; Page.drawSector args
+      pair: width; Page.drawSector args
+      pair: fullSector; Page.drawSector args
+
    .. method:: drawSector(center, point, angle, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, fullSector = True, overlay = True, closePath = False, morph = None)
 
       PDF only: Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie).
+
+   .. index::
+      pair: overlay; Page.drawPolyline args
+      pair: closePath; Page.drawPolyline args
+      pair: morph; Page.drawPolyline args
+      pair: dashes; Page.drawPolyline args
+      pair: roundCap; Page.drawPolyline args
+      pair: color; Page.drawPolyline args
+      pair: fill; Page.drawPolyline args
+      pair: width; Page.drawPolyline args
 
    .. method:: drawPolyline(points, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
 
       PDF only: Draw several connected lines defined by a sequence of points.
 
 
+   .. index::
+      pair: overlay; Page.drawBezier args
+      pair: closePath; Page.drawBezier args
+      pair: morph; Page.drawBezier args
+      pair: dashes; Page.drawBezier args
+      pair: roundCap; Page.drawBezier args
+      pair: color; Page.drawBezier args
+      pair: fill; Page.drawBezier args
+      pair: width; Page.drawBezier args
+
    .. method:: drawBezier(p1, p2, p3, p4, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
 
       PDF only: Draw a cubic Bézier curve from ``p1`` to ``p4`` with the control points ``p2`` and ``p3``.
+
+   .. index::
+      pair: overlay; Page.drawCurve args
+      pair: closePath; Page.drawCurve args
+      pair: morph; Page.drawCurve args
+      pair: dashes; Page.drawCurve args
+      pair: roundCap; Page.drawCurve args
+      pair: color; Page.drawCurve args
+      pair: fill; Page.drawCurve args
+      pair: width; Page.drawCurve args
 
    .. method:: drawCurve(p1, p2, p3, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
 
       PDF only: This is a special case of ``drawBezier()``.
 
+   .. index::
+      pair: overlay; Page.drawRect args
+      pair: closePath; Page.drawRect args
+      pair: morph; Page.drawRect args
+      pair: dashes; Page.drawRect args
+      pair: roundCap; Page.drawRect args
+      pair: color; Page.drawRect args
+      pair: fill; Page.drawRect args
+      pair: width; Page.drawRect args
 
    .. method:: drawRect(rect, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
       PDF only: Draw a rectangle.
 
       .. note:: An efficient way to background-color a PDF page with the old Python paper color is ``page.drawRect(page.rect, color = py_color, fill = py_color, overlay = False)``, where ``py_color = getColor("py_color")``.
+
+   .. index::
+      pair: overlay; Page.insertImage args
+      pair: filename; Page.insertImage args
+      pair: pixmap; Page.insertImage args
+      pair: stream; Page.insertImage args
 
    .. method:: insertImage(rect, filename = None, pixmap = None, stream = None, overlay = True)
 
@@ -353,6 +479,9 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Return a list of images referenced by the page. Same as :meth:`Document.getPageImageList`.
 
+   .. index::
+      pair: matrix; Page.getSVGimage args
+
    .. method:: getSVGimage(matrix = fitz.Identity)
 
       Create an SVG image from the page. Only full page images are currently supported.
@@ -361,6 +490,12 @@ This is available for PDF documents only. There are basically two groups of meth
      :type matrix: :ref:`Matrix`
 
      :returns: a UTF-8 encoded string that contains the image. Because SVG has XML syntax it can be saved in a text file with extension ``.svg``.
+
+   .. index::
+      pair: matrix; Page.getPixmap args
+      pair: colorspace; Page.getPixmap args
+      pair: clip; Page.getPixmap args
+      pair: alpha; Page.getPixmap args
 
    .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, clip = None, alpha = True)
 
@@ -400,6 +535,12 @@ This is available for PDF documents only. There are basically two groups of meth
       PDF only: Sets the rotation of the page.
 
       :arg int rot: An integer specifying the required rotation in degrees. Should be an integer multiple of 90.
+
+   .. index::
+      pair: reuse_xref; Page.showPDFpage args
+      pair: keep_proportion; Page.showPDFpage args
+      pair: clip; Page.showPDFpage args
+      pair: overlay; Page.showPDFpage args
 
    .. method:: showPDFpage(rect, docsrc, pno = 0, keep_proportion = True, overlay = True, reuse_xref = 0, clip = None)
 

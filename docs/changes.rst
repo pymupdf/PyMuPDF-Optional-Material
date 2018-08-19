@@ -1,6 +1,15 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.17
+---------------------------
+* **Fixed** an error that intermittently caused an exception in :meth:`Page.showPDFpage`, when pages from many different source PDFs were shown.
+* **Changed** method :meth:`Document.extractImage` to now return more meta information about the extracted imgage. Also, its performance has been greatly improved. Several demo scripts have been changed to make use of this method.
+* **Changed** method :meth:`Document._getXrefStream` to now return ``None`` if the object is no stream and no longer raise an exception if otherwise.
+* **Added** method :meth:`Document._deleteObject` which deletes a PDF object identified by its xref. Only to be used by the experienced PDF expert.
+* **Added** a method :meth:`PaperRect` which returns a :ref:`Rect` for a supplied paper format string. Example: ``fitz.PaperRect("letter") = fitz.Rect(0.0, 0.0, 612.0, 792.0)``.
+* **Added** a :ref:`FAQ` chapter to this document.
+
 Changes in Version 1.13.16
 ---------------------------
 * **Added** support for correctly setting transparency (opacity) for certain annotation types.

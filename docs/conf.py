@@ -45,7 +45,7 @@ copyright = u'2015-2018, Jorj X. McKie'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '1.13.16'
+release = '1.13.17'
 
 # The short X.Y version.
 s = release.split(".")
@@ -94,8 +94,9 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
+html_theme = "classic"
 #html_theme = 'sphinxdoc'
-html_theme = "sphinx_rtd_theme"
+#html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -119,7 +120,7 @@ html_theme_options = {
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "img-pymupdf.jpg"
+#html_logo = "img-pymupdf.jpg"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -172,7 +173,7 @@ html_show_sourcelink = False
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-html_use_opensearch = ""
+html_use_opensearch = "html"
 
 # This is the file name suffix for HTML files (e.g. ".xhtml").
 #html_file_suffix = None
@@ -182,8 +183,7 @@ htmlhelp_basename = 'PyMuPDF'
 
 
 # -- Options for LaTeX output ---------------------------------------------
-latex_elements = {"fontpkg": "\\usepackage{sourcecodepro}",
-"papersize": "a4paper"}
+latex_elements = {"fontpkg":  r"\usepackage[sfdefault]{ClearSans} \usepackage[T1]{fontenc}"}
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
@@ -204,8 +204,8 @@ latex_logo = "img-pymupdf.jpg"
 #latex_show_pagerefs = True
 
 # If true, show URL addresses after external links.
-#latex_show_urls = False
-
+latex_show_urls = "footnote"
+latex_use_xindy = True
 # Documents to append as an appendix to all manuals.
 #latex_appendices = []
 

@@ -2,7 +2,7 @@ Installation
 =============
 Installation generally encompasses downloading and generating PyMuPDF and MuPDF from sources. This process consists of three steps described below under :ref:`InstallSource`.
 
-**However**, for popular configurations, binary setups via wheels are available, detailed out under :ref:`InstallBinary`. This process is **much faster**, less error-prone and requires the download of only one 3 MB file (either ``.zip`` or ``.whl``) - no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
+**However**, for popular configurations, binary setups via wheels are available, detailed out under :ref:`InstallBinary`. This process is **much faster**, less error-prone and requires the download of only one file (either ``.zip`` or ``.whl``) - no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
 
 .. _InstallSource:
 
@@ -129,7 +129,7 @@ The above choice should bring down your binary file size to around 8 to 10 MB.
 
 The MuPDF source includes generation procedures / makefiles for numerous platforms. For Windows platforms, Visual Studio solution and project definitions are provided.
 
-Consult additional installation hints on PyMuPDF's `main page <https://github.com/rk700/PyMuPDF/>`_ on Github. Among other things you will find a Wiki pages with details on building the Windows binaries or user provided installation experiences.
+Consult additional installation hints on PyMuPDF's `main page <https://github.com/rk700/PyMuPDF/>`_ on Github. Among other things you will find Wiki pages with details on building the Windows binaries or user provided installation experiences.
 
 Step 3: Build / Setup PyMuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

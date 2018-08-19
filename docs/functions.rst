@@ -13,37 +13,40 @@ Yet others are handy, general-purpose utilities.
 ==================================== ==============================================================
 :attr:`Document.FontInfos`           PDF only: information on inserted fonts
 :meth:`Annot._cleanContents`         PDF only: clean the annot's ``/Contents`` objects
-:meth:`Annot._getXref`               PDF only: return XREF number of annotation
+:meth:`Annot._getXref`               PDF only: return xref of annotation
 :meth:`ConversionHeader`             return header string for ``getText`` methods
 :meth:`ConversionTrailer`            return trailer string for ``getText`` methods
 :meth:`Document._delXmlMetadata`     PDF only: remove XML metadata
+:meth:`Document._deleteObject`       PDF only: delete an object
 :meth:`Document._getGCTXerrmsg`      retrieve C-level exception message
 :meth:`Document._getNewXref`         PDF only: create and return a new XREF entry
-:meth:`Document._getObjectString`    PDF only: return object source code
-:meth:`Document._getOLRootNumber`    PDF only: return / create XREF of ``/Outline``
-:meth:`Document._getPageObjNumber`   PDF only: return XREF and generation number of a page
+:meth:`Document._getObjectString`    PDF only: return object definition "source"
+:meth:`Document._getOLRootNumber`    PDF only: return / create xref of ``/Outline``
+:meth:`Document._getPageObjNumber`   PDF only: return xref and generation number of a page
 :meth:`Document._getPageXref`        PDF only: same as ``_getPageObjNumber()``
-:meth:`Document._getXmlMetadataXref` PDF only: return XML metadata XREF number
-:meth:`Document._getXrefLength`      PDF only: return length of XREF table
-:meth:`Document._getXrefStream`      PDF only: return content of a stream
-:meth:`Document._getXrefString`      PDF only: return object source code
+:meth:`Document._getXmlMetadataXref` PDF only: return XML metadata xref number
+:meth:`Document._getXrefLength`      PDF only: return length of xref table
+:meth:`Document._getXrefStream`      PDF only: return content of a stream object
+:meth:`Document._getXrefString`      PDF only: return object definition "source"
 :meth:`Document._updateObject`       PDF only: insert or update a PDF object
 :meth:`Document._updateStream`       PDF only: replace the stream of an object
 :meth:`Document.extractFont`         PDF only: extract embedded font
-:meth:`Document.extractImage`        PDF only: extract raw embedded image
+:meth:`Document.extractImage`        PDF only: extract embedded image
 :meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
 :meth:`getPDFnow`                    return the current timestamp in PDF format
 :meth:`getPDFstr`                    return PDF-compatible string
 :meth:`Page._cleanContents`          PDF only: clean the page's ``/Contents`` objects
 :meth:`Page._getContents`            PDF only: return a list of content numbers
-:meth:`Page._setContents`            PDF only: set page's /Contents object to specified yref
-:meth:`Page._getXref`                PDF only: return XREF number of page
+:meth:`Page._setContents`            PDF only: set page's /Contents object to specified xref
+:meth:`Page._getXref`                PDF only: return xref of page
 :meth:`Page.getDisplayList`          create the page's display list
 :meth:`Page.insertFont`              PDF only: store a new font in the document
 :meth:`Page.getTextBlocks`           extract text blocks as a Python list
 :meth:`Page.getTextWords`            extract text words as a Python list
 :meth:`Page.run`                     run a page through a device
-:meth:`PaperSize`                    return width, height for known paper formats
+:meth:`PaperSize`                    return width, height for a known paper format
+:meth:`PaperRect`                    return rectangle for a known paper format
+:attr:`paperSizes`                   dictionary of pre-defined paper formats
 ==================================== ==============================================================
 
    .. method:: PaperSize(s)
@@ -58,6 +61,27 @@ Yet others are handy, general-purpose utilities.
 
       :rtype: tuple
       :returns: ``(width, height)`` of the paper format. For an unknown format ``(-1, -1)`` is returned. Esamples: ``fitz.PaperSize("A4")`` returns ``(595, 842)`` and ``fitz.PaperSize("letter-l")`` delivers ``(792, 612)``.
+
+-----
+
+   .. method:: PaperRect(s)
+
+      Convenience function to return a :ref:`Rect` for a known paper format.
+
+      :arg str s: any format name supported by :meth:`PaperSize`.
+
+      :rtype: :ref:`Rect`
+      :returns: ``fitz.Rect(0, 0, width, height)`` with ``width, height = fitz.PaperSize(s)``.
+
+      >>> import fitz
+      >>> fitz.PaperRect("letter-l")
+      fitz.Rect(0.0, 0.0, 792.0, 612.0)
+      >>> 
+
+-----
+
+   .. attribute:: paperSizes
+      A dictionary of pre-defines paper formats. Used as basis for :meth:`PaperSize`.
 
 -----
 
@@ -98,6 +122,16 @@ Yet others are handy, general-purpose utilities.
       :arg str output: type of document. Use the same as the output parameter of ``getText()``.
 
       :rtype: str
+
+-----
+
+   .. method:: Document._deleteObject(xref)
+
+      PDF only: Delete an object given by its cross reference number.
+
+      :arg int xref: the cross reference number. Must be within the document's valid xref range.
+
+      .. caution:: Only use with extreme care: this may make the PDF unreadable.
 
 -----
 
@@ -212,12 +246,12 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page._getContents()
 
-      Return a list of XREF numbers of ``/Contents`` objects belongig to the page. The length of this list will always be at least one.
+      Return a list of xref numbers of ``/Contents`` objects belongig to the page. The length of this list will always be at least one (otherwise the PDF is damaged).
 
       :rtype: list
-      :returns: a list of XREF integers.
+      :returns: a list of xref integers.
 
-      Each page has one or more associated contents objects (streams) which contain PDF operator syntax describing what appears where on the page (like text or images, etc. See the :ref:`AdobeManual`, chapter "Operator Summary", page 985). This function only enumerates the XREF number(s) of such objects. To get the actual stream source, use function :meth:`Document._getXrefStream` with one of the numbers in this list. Use :meth:`Document._updateStream` to replace the content [#f1]_ [#f2]_.
+      Each page has one or more associated contents objects (streams) which contain PDF some operator syntax describing what appears where on the page (like text or images, etc. See the :ref:`AdobeManual`, chapter "Operator Summary", page 985). This function only enumerates the number(s) of such objects. To get the actual stream source, use function :meth:`Document._getXrefStream` with one of the numbers in this list. Use :meth:`Document._updateStream` to replace the content [#f1]_ [#f2]_.
 
 -----
 
@@ -238,7 +272,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page._cleanContents()
 
-      Clean all ``/Contents`` objects associated with this page (including contents of all annotations on the page). "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. If a page has several contents objects, they will be combined into one. Any discrepancies between ``/Contents`` and ``/Resources`` objects will also be resolved / corrected. Note that the resulting contents stream will be stored uncompressed (if you do not specify ``deflate`` on save). See :meth:`Page._getContents` for more details.
+      Clean all ``/Contents`` objects associated with this page (including contents of all annotations on the page). "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. If a page has several contents objects, they will be combined into one. Any discrepancies between ``/Contents`` and ``/Resources`` objects will also be resolved / corrected. Note that the resulting contents stream will be stored **uncompressed** (if you do not specify ``deflate`` on save). See :meth:`Page._getContents` for more details.
 
       :rtype: int
       :returns: 0 on success.
@@ -343,7 +377,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document._getXrefStream(xref)
 
-      Return decompressed content stream of the object referenced by ``xref``. If the object has / is no stream, an exception is raised.
+      Return the decompressed stream of the object referenced by ``xref``. If the object is no stream, ``None`` is returned.
 
       :arg int xref: XREF number.
       
@@ -379,29 +413,63 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document.extractImage(xref = 0)
 
-      PDF Only: Extract raw image data. The output can be directly stored in an image file, be used as input for packages like PIL, for :ref:`Pixmap` creation, etc.
+      PDF Only: Extract data and meta information of an image stored in the document. The output can directly be used to be stored as an image file, as input for PIL, :ref:`Pixmap` creation, etc. This method avoids using pixmaps wherever possible to present the image in its original format (e.g. as JPEG).
 
-      :arg int xref: cross reference number of an image object. If outside valid xref range, an exception is raised. If the object is not an image or other errors occur, an empty dictionary is returned.
+      :arg int xref: cross reference number of an image object. If the object is not an image or other errors occur, an empty dictionary is returned and no exception is generated. Must however be in range of valid PDF cross reference numbers.
 
       :rtype: *dict*
-      :returns: a dictionary with keys ``'ext'`` (the type of image as a string, e.g. ``'jpeg'``, usable also as file extension) and ``'image'`` (embedded image data as a ``bytes`` object).
+      :returns: a dictionary with the following keys
+      
+        * ``ext`` (*str*) image type (e.g. ``'jpeg'``), usable as image file extension
+        * ``smask`` (*int*) xref number of a stencil (/SMask) image or zero
+        * ``width`` (*int*) image width
+        * ``height`` (*int*) image height
+        * ``colorspace`` (*int*) the image's ``pixmap.n`` number (indicative only: depends on whether internal pixmaps had to be used)
+        * ``xres`` (*int*) resolution in x direction
+        * ``yres`` (*int*) resolution in y direction
+        * ``image`` (*bytes*) image data, usable as image file content
 
       >>> d = doc.extractImage(25)
       >>> d
       {}
-      >>> d = doc.extractImage(8593)
-      >>> d["ext"], d["image"]
-      ('jpeg', b'\xff\xd8\xff\xee\x00\x0eAdobe\x00d\x00\x00\x00\x00 ...)
+      >>> d = doc.extractImage(1373)
+      >>> d
+      {'ext': 'png', 'smask': 2934, 'width': 5, 'height': 629, 'colorspace': 3, 'xres': 96,
+      'yres': 96, 'image': b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x05\ ...'}
       >>> imgout = open("image." + d["ext"], "wb")
       >>> imgout.write(d["image"])
-      1238
+      102
       >>> imgout.close()
 
-      .. note:: You can also use this method for diagnostic purposes: creating a pixmap or a PIL image directly from this output will reflect the original image properties (width, height, alpha, etc.). These can be compared with the PDF object definition as shown in the PDF source, or the output of :meth:`Document.getPageImageList`. Another possible use would be outputting PDF images in their original format (e.g. JPEG, TIFF, GIF, etc.) and not necessarily converting them all to PNG, see `extract-img3.py <https://github.com/rk700/PyMuPDF/blob/master/demo/extract-img3.py>`_.
+      .. note:: There is a functional overlap with ``pix = fitz.Pixmap(doc, xref)``, followed by a ``pix.getPNGData()``. Main differences are that extractImage **(1)** does not only deliver PNG image formats, **(2)** is much faster with JPEG images, **(3)** usually results in much less disk storage for extracted images, **(4)** generates an empty *dict* for non-image xrefs (generates no exception). Look at the following example images within the same PDF.
+
+         * PNG image at xref 1268 -- Comparable execution time and identical output::
+
+            In [23]: %timeit pix = fitz.Pixmap(doc, 1268);pix.getPNGData()
+            10.8 ms ± 52.4 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+            In [24]: len(pix.getPNGData())
+            Out[24]: 21462
+            
+            In [25]: %timeit img = doc.extractImage(1268)
+            10.8 ms ± 86 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+            In [26]: len(img["image"])
+            Out[26]: 21462
+         
+         * JPEG image at xref 1186 -- :meth:`Document.extractImage` is thousands of times faster and produces a **much smaller** output::
+
+            In [27]: %timeit pix = fitz.Pixmap(doc, 1186);pix.getPNGData()
+            341 ms ± 2.86 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+            In [28]: len(pix.getPNGData())
+            Out[28]: 2599433
+            
+            In [29]: %timeit img = doc.extractImage(1186)
+            15.7 µs ± 116 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+            In [30]: len(img["image"])
+            Out[30]: 371177
 
    .. method:: Document.extractFont(xref, info_only = False)
 
-      PDF Only: Return an embedded font file's data and appropriate file extension. This can be used to store the font as an external file. The method does not throw exceptions (other than via checking for PDF).
+      PDF Only: Return an embedded font file's data and appropriate file extension. This can be used to store the font as an external file. The method does not throw exceptions (other than via checking for PDF and valid xref).
 
       :arg int xref: PDF object number of the font to extract.
       :arg bool info_only: only return font information, not the buffer. To be used for information-only purposes, saves allocation of large buffer areas.
@@ -421,7 +489,7 @@ Yet others are handy, general-purpose utilities.
       >>> ofile.write(buffer)
       >>> ofile.close()
 
-      .. caution:: The basename is returned unchanged from the PDF. So it may contain characters (such as blanks) which disqualify it as a valid filename for your operating system. Take appropriate action.
+      .. caution:: The basename is returned unchanged from the PDF. So it may contain characters (such as blanks) which may disqualify it as a valid filename for your operating system. Take appropriate action.
 
       .. note: The returned ``basename`` in general is **not** the original file name, but probably has some similarity.
 

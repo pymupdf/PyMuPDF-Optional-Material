@@ -134,7 +134,7 @@ We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an 
 
 wxPython
 ~~~~~~~~~~~~~
-Consult their documentation for adjustments to RGB pixmaps an potentially wxPython releases specifics.
+Consult their documentation for adjustments to RGB pixmaps and, potentially, specifics for your wxPython release.
 
 >>> bitmap = wx.BitmapFromBufferRGBA(pix.width, pix.height, pix.samples)
 
@@ -146,6 +146,12 @@ Please also see section 3.19 of the `Pillow documentation <https://Pillow.readth
 >>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
 >>> tkimg = ImageTk.PhotoImage(img)
 
+If your Python contains the **Tk 8.6** version, PNG files and image data are directly supported and you can get along **without using PIL**:
+
+>>> pngdata = pix.getPNGData()
+>>> tkimg = tk.PhotoImage(data = pngdata)
+
+If you are looking for a complete Tkinter script paging through a document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_. You need the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package (version > 2.9.0).
 
 PyQt4, PyQt5, PySide
 ~~~~~~~~~~~~~~~~~~~~~
@@ -327,6 +333,8 @@ With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/too
 Further Reading
 ================
 Also have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipies"** cover over 15 topics written in "How-To" style.
+
+This document also contains a :ref:`FAQ`.
 
 .. rubric:: Footnotes
 

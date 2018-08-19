@@ -51,7 +51,13 @@ For example, specifying a sequence ``s`` in any of the following ways
 * ``s = numpy.array((1, 2))``
 * ``s = bytearray((1, 2))``
 
-will make it usable in the following expressions: ``fitz.Point(s)`` or ``fitz.Point(x, y) + s`` or ``doc.select(s)`` (similarly with all geometry objects :ref:`Rect`, :ref:`IRect`, :ref:`Matrix` and :ref:`Point`).
+will make it usable in the following example expressions:
+
+* ``fitz.Point(s)``
+* ``fitz.Point(x, y) + s``
+* ``doc.select(s)``
+
+Similarly with all geometry objects :ref:`Rect`, :ref:`IRect`, :ref:`Matrix` and :ref:`Point`.
 
 Because all PyMuPDF geometry classes themselves are special cases of sequences, they can be freely used where sequences can be used, e.g. as arguments for functions like ``list()``, ``tuple()``, ``array.array()`` or ``numpy.array()``. Look at the following snippet to see this work.
 

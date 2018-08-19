@@ -48,7 +48,12 @@ There is a parent-child relationship between an annotation and its page. If the 
 
 .. class:: Annot
 
-   .. method:: getPixmap(matrix = fitz.Ientity, colorspace = fitz.csRGB, alpha = False)
+   .. index::
+      pair: matrix; Annot.getPixmap args
+      pair: colorspace; Annot.getPixmap args
+      pair: alpha; Annot.getPixmap args
+
+   .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, alpha = False)
 
       Creates a pixmap from the annotation as it appears on the page in untransformed coordinates. The pixmap's :ref:`IRect` equals ``Annot.rect.irect`` (see below).
 
@@ -147,6 +152,11 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :rtype: bytes
       :returns: the content of the attached file.
+
+   .. index::
+      pair: filename; Annot.fileUpd args
+      pair: ufilename; Annot.fileUpd args
+      pair: desc; Annot.fileUpd args
 
    .. method:: fileUpd(buffer = None, filename=None, ufilename=None, desc = None)
 

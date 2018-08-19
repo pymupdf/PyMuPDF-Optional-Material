@@ -52,6 +52,12 @@ A ``DisplayList`` is populated with objects from a page usually by executing :me
       :arg area: Only the part visible within this area will be considered when the list is run through the device.
       :type area: :ref:`Rect`
 
+   .. index::
+      pair: matrix; DisplayList.getPixmap args
+      pair: colorspace; DisplayList.getPixmap args
+      pair: clip; DisplayList.getPixmap args
+      pair: alpha; DisplayList.getPixmap args
+
    .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, alpha = 0, clip = None)
 
       Run the display list through a draw device and return a pixmap.

@@ -24,7 +24,7 @@ General Remarks
 
 6. Binary operators fully support in-place operations: if ``"°"`` denotes any binary operator, then ``a °= b`` is the same as ``a = a ° b``.
 
-7. For binary operations, the **second** operand may always be a number sequence of the same size as the left one. We allude to this fact by e.g. saying "point-like object" when we mean, that a :ref:`Point` is possible as well as any sequence of two numbers. Similar applies to "rect-like" (sequence length 4) or "matrix-like" (sequence length 6).
+7. For binary operations, the **second** operand may always be a number sequence of the same size as the left one. We allude to this fact by e.g. saying "x-like object" if a number sequence of same length as x is allowed.
 
 Unary Operations
 ------------------
@@ -32,17 +32,17 @@ Unary Operations
 +---------------+---------------------------------------------------------------+
 | **Operation** | **Result**                                                    |
 +===============+===============================================================+
-| bool(O)       | is false exactly if all components of ``O`` are zero.         |
+| bool(O)       | is false exactly if all components of "O" are zero.           |
 +---------------+---------------------------------------------------------------+
-| abs(O)        | is the Euclidean norm (square root of the sum of component    |
-|               | squares), if ``O`` is a :ref:`Point` or a :ref:`Matrix`.      |
-|               | For rectangles, its area is returned.                         |
+| abs(O)        | Euclidean norm (square root of the sum of component           |
+|               | squares), if "O" is a :ref:`Point` or a :ref:`Matrix`.        |
+|               | For rectangles, the area is returned.                         |
 +---------------+---------------------------------------------------------------+
-| +O            | is a copy of ``O``                                            |
+| +O            | copy of "O".                                                  |
 +---------------+---------------------------------------------------------------+
-| -O            | is a copy of ``O`` with negated components.                   |
+| -O            | copy of "O" with negated components.                          |
 +---------------+---------------------------------------------------------------+
-| ~m            | is the inverse of :ref:`Matrix` ``m``.                        |
+| ~m            | inverse of :ref:`Matrix` "m".                                 |
 +---------------+---------------------------------------------------------------+
 
 
@@ -55,28 +55,27 @@ For the operators ``+, -, *, /``, the **second operand** may be a number, which 
 | **Operation** | **Result**                                                    |
 +===============+===============================================================+
 |         a + b |                                                               |
-|               | component-wise execution, ``b`` must be ``a``\ -like.         |
+|               | component-wise execution, "b" must be "a"-like.               |
 |         a - b |                                                               |
 +---------------+---------------------------------------------------------------+
-|         a * m | ``a`` can be any geometry object and ``m`` must be matrix -   |
-|               | like. If ``a`` is a **point** or a **rectangle**, then        |
-|         a / m | ``a.transform(m)``, resp. ``a.transform(~m)`` is executed.    |
-|               | If ``a`` is a **matrix**, then ``a * m``,                     |
-|               | resp. ``a * ~m`` is executed.                                 |
+|         a * m | "a" can be any geometry object and "m" must be matrix-like.   |
+|               | If "a" is a **point** or a **rectangle**, then                |
+|         a / m | ``"a.transform(m)"``, resp. ``"a.transform(~m)"`` is          |
+|               | executed. If "a" is a **matrix**, then ``"a * m"``,           |
+|               | resp. ``"a * ~m"`` is executed.                               |
 +---------------+---------------------------------------------------------------+
-|         a & b | **intersection rectangle:** ``a`` must be a rectangle and     |
-|               | ``b`` rect-like.                                              |
-|               | Delivers the **largest rectangle**                            |
+|         a & b | **intersection rectangle:** "a" must be a rectangle and       |
+|               | "b" rect-like. Delivers the **largest rectangle**             |
 |               | contained in both operands.                                   |
 +---------------+---------------------------------------------------------------+
-|         a | b | **union rectangle:** ``a`` must be a rectangle, and ``b``     |
+|         a | b | **union rectangle:** "a" must be a rectangle, and "b"         |
 |               | can be point-like or rect-like.                               |
 |               | Delivers the **smallest rectangle** containing both operands. |
 +---------------+---------------------------------------------------------------+
-|      "b in a" | if ``b`` is a number, then ``b in tuple(a)`` is returned.     |
-|               | If ``b`` is point-like or rect-like, then ``a`` must be       |
-|               | a rectangle, and the result of ``a.contains(b)`` is returned. |
+|        b in a | if "b" is a number, then ``"b in tuple(a)"`` is returned.     |
+|               | If "b" is point-like or rect-like, then "a" must be a         |
+|               | rectangle, and ``"a.contains(b)"`` is returned.               |
 +---------------+---------------------------------------------------------------+
-|        a == b | is true if ``abs(a - b) == 0`` and ``type(a) == type(b)``     |
-|               | (but maybe there is ``id(a) != id(b)``).                      |
+|        a == b | is true if ``"abs(a - b) == 0"`` and ``"type(a) == type(b)"`` |
+|               | (but maybe there is ``"id(a) != id(b)"``).                    |
 +---------------+---------------------------------------------------------------+

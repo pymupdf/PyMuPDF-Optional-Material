@@ -64,6 +64,19 @@ For addional details on **embedded files** refer to Appendix 3.
 
 .. class:: Document
 
+    .. index::
+       pair: filename; open args
+       pair: stream; open args
+       pair: filetype; open args
+       pair: rect; open args
+       pair: fontsize; open args
+       pair: open; Document
+       pair: filename; Document args
+       pair: stream; Document args
+       pair: filetype; Document args
+       pair: rect; Document args
+       pair: fontsize; Document args
+
     .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, fontsize = 11)
 
       Creates a ``Document`` object.
@@ -116,6 +129,11 @@ For addional details on **embedded files** refer to Appendix 3.
       :rtype: :ref:`Page`
 
     .. note:: Conveniently, pages can also be loaded via indexes over the document: ``doc.loadPage(n) == doc[n]``. Consequently, a document can also be used as an iterator over its pages, e.g. ``for page in doc: ...`` and ``for page in reversed(doc): ...`` will yield the :ref:`Page`\ s of ``doc`` as ``page``.
+
+    .. index::
+       pair: from_page; Document.convertToPDF args
+       pair: to_page; Document.convertToPDF args
+       pair: rotate; Document.convertToPDF args
 
     .. method:: convertToPDF(from_page = -1, to_page = -1, rotate = 0)
 
@@ -249,6 +267,10 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :rtype: str
 
+    .. index::
+       pair: fontsize; Document.layout args
+       pair: rect; Document.layout args
+
     .. method:: layout(rect, fontsize = 11)
 
       Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
@@ -347,6 +369,13 @@ For addional details on **embedded files** refer to Appendix 3.
       :rtype: bytes
       :returns: a bytes object containing the complete document data.
 
+    .. index::
+       pair: from_page; Document.insertPDF args
+       pair: to_page; Document.insertPDF args
+       pair: start_at; Document.insertPDF args
+       pair: rotate; Document.insertPDF args
+       pair: links; Document.insertPDF args
+
     .. method:: insertPDF(docsrc, from_page = -1, to_page = -1, start_at = -1, rotate = -1, links = True)
 
       PDF only: Copy the page range **[from_page, to_page]** (including both) of PDF document ``docsrc`` into the current one. Inserts will start with page number ``start_at``. Negative values can be used to indicate default values. All pages thus copied will be rotated as specified. Links can be excluded in the target, see below. All page numbers are zero-based.
@@ -368,9 +397,17 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. note:: ``docsrc`` bookmarks **will not be copied**. It is easy however, to recover a table of contents for the resulting document. Look at the examples below and at program `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the *examples* directory: it can join PDF documents and at the same time piece together respective parts of the tables of contents.
 
+    .. index::
+       pair: fontsize; Document.insertPage args
+       pair: width; Document.insertPage args
+       pair: height; Document.insertPage args
+       pair: fontname; Document.insertPage args
+       pair: fontfile; Document.insertPage args
+       pair: color; Document.insertPage args
+
     .. method:: insertPage(to = -1, text = None, fontsize = 11, width = 595, height = 842, fontname = "Helvetica", fontfile = None, color = (0, 0, 0))
 
-      PDF only: Insert an new page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted - provided as a string or as a asequence.
+      PDF only: Insert an new page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted - provided as a string or as a sequence.
 
       :arg int to: page number (0-based) in front of which to insert. Valid specifications must be in range ``-1 <= pno <= len(doc)``. The default ``-1`` and ``pno = len(doc)`` indicate end of document, i.e. after the last page.
 
@@ -402,6 +439,10 @@ For addional details on **embedded files** refer to Appendix 3.
       4. For now, the inserted text should restrict itself to one byte character codes.
       5. An easy way to create pages with a usual paper format, use a statement like ``width, height = fitz.PaperSize("A4-L")``.
       6. To simplify color specification, we provide a :ref:`ColorDatabase`. This allows you to specify ``color = getColor("turquoise")``, without bothering about any more details.
+
+    .. index::
+       pair: width; Document.newPage args
+       pair: height; Document.newPage args
 
     .. method:: newPage(to = -1, width = 595, height = 842)
     
@@ -452,6 +493,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int to: the page number in front of which to insert the moved page. To insert after the last page (default), specify ``-1``.
 
+    .. index::
+       pair: filename; Document.embeddedFileAdd args
+       pair: ufilename; Document.embeddedFileAdd args
+       pair: desc; Document.embeddedFileAdd args
+
     .. method:: embeddedFileAdd(buffer, name, filename = None, ufilename = None, desc = None)
 
       PDF only: Embed a new file. All string parameters except the name may be unicode (in previous versions, only ASCII worked correctly). File contents will be compressed (where beneficial).
@@ -498,6 +544,11 @@ For addional details on **embedded files** refer to Appendix 3.
           * ``desc`` - (*str*) description
           * ``size`` - (*int*) original file size
           * ``length`` - (*int*) compressed file length
+
+    .. index::
+       pair: filename; Document.embeddedFileUpd args
+       pair: ufilename; Document.embeddedFileUpd args
+       pair: desc; Document.embeddedFileUpd args
 
     .. method:: embeddedFileUpd(n, buffer = None, filename = None, ufilename = None, desc = None)
 
@@ -651,8 +702,8 @@ The results of this method can of course also be achieved using combinations of 
 
 In general, any sequence of integers that are in the document's page range can be used. Here are some illustrations.
 
-Delete pages with no text:
-::
+Delete pages with no text::
+
  import fitz
  doc = fitz.open("any.pdf")
  r = list(range(len(doc)))                  # list of page numbers
@@ -765,8 +816,8 @@ Obviously, similar ways can be found in more general situations. Just make sure 
 
 Other Examples
 ----------------
-**Extract all page-referenced images of a PDF into separate PNG files:**
-::
+**Extract all page-referenced images of a PDF into separate PNG files**::
+
  for i in range(len(doc)):
      imglist = doc.getPageImageList(i)
      for img in imglist:

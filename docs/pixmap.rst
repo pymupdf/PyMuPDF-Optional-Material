@@ -179,7 +179,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       Change the alpha values. The pixmap must have an alpha channel.
 
-      :arg bytes/bytearray alphavalues: the new alpha values. If provided, its length must be at least ``width * height``. If omitted, all alpha values are to 255 (no transparency).
+      :arg bytes/bytearray alphavalues: the new alpha values. If provided, its length must be at least ``width * height``. If omitted, all alpha values are set to 255 (no transparency).
 
    .. method:: invertIRect([irect])
 
@@ -322,9 +322,11 @@ The following file types are supported as input to construct pixmaps: **BMP, JPE
 
 1. Directly create a pixmap with ``Pixmap(filename)`` or ``Pixmap(byterray)``. The pixmap will then have properties as determined by the image.
 
-2. Open such files with ``fitz.open(...)``. The result will then appear as a document containing one single page. Creating a pixmap of this page offers all options available in this context: apply a matrix, choose colorspace and alpha, confine the pixmap to a clip area, etc.
+2. Open such files with ``fitz.open(...)``. The result will then appear as a document containing one single page. Creating a pixmap of this page offers all the options available in this context: apply a matrix, choose colorspace and alpha, confine the pixmap to a clip area, etc.
 
-**SVG images** are only supported via method 2 above, not directly as pixmaps. If you need a **vector image** from the SVG, you must first convert it to a PDF.  Try :meth:`Document.convertToPDF`. If this does not work for you, look for other SVG-to-PDF conversion tools like the Python package `svglib <https://pypi.org/project/svglib>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
+**SVG images** are only supported via method 2 above, not directly as pixmaps. But remember: the result of this is a **raster image** as is always the case with pixmaps.
+
+If you need a **vector image** from the SVG, you must first convert it to a PDF. Try :meth:`Document.convertToPDF`. If this does not work for you, look for other SVG-to-PDF conversion tools like the Python package `svglib <https://pypi.org/project/svglib>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
 
 Details on Saving Images with ``writeImage()``
 -----------------------------------------------
@@ -335,18 +337,18 @@ The following table shows possible combinations of file extensions, output forma
 
 |wimgopt|
 
-.. note:: Not all image file types are available, or at least common on all platforms, e.g. PAM is mostly unknown on Windows. Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that as a PNG.
+.. note:: Not all image file types are available (or at least common) on all platforms. E.g. PAM is mostly unknown on Windows. Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that as a PNG.
 
 .. _examples:
 
-Pixmap Example Code Snippets
+Pixmap Code Snippets
 -----------------------------
 
-Example 1: Gluing Images
-~~~~~~~~~~~~~~~~~~~~~~~~~
+Example 1: Glueing Images
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This shows how pixmaps can be used for purely graphical, non-PDF purposes. The script reads a PNG picture and creates a new PNG file which consist of 3 * 4 tiles of the original one:
-::
+This shows how pixmaps can be used for purely graphical, non-PDF purposes. The script reads a PNG picture and creates a new PNG file which consist of 3 * 4 tiles of the original one::
+
  import fitz
  # create a pixmap of a picture
  pix0 = fitz.Pixmap("editra.png")
@@ -370,7 +372,6 @@ This shows how pixmaps can be used for purely graphical, non-PDF purposes. The s
          fn = "target-%i-%i.png" % (i, j)
          tar_pix.writePNG(fn) 
 
-
 .. |editra| image:: img-editra.png
 
 This is the input picture ``editra.png`` (taken from the wxPython directory ``/tools/Editra/pixmaps``):
@@ -386,8 +387,8 @@ Here is the output, showing some intermediate picture and the final result:
 Example 2: Interfacing with NumPy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This shows how to create a PNG file from a numpy array (several times faster than most other methods):
-::
+This shows how to create a PNG file from a numpy array (several times faster than most other methods)::
+
  import numpy as np
  import fitz
  #==============================================================================

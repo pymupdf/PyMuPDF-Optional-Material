@@ -67,6 +67,9 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
 
+   ..index::
+      pair: breadth; Shape.drawSquiggle args
+
    .. method:: drawSquiggle(p1, p2, breadth = 2)
 
       Draw a squiggly (wavy, undulated) line from :ref:`Point` objects ``p1`` to ``p2``. An integer number of full wave periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted as necessary to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
@@ -89,6 +92,9 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       .. image:: img-squiggly.png
 
       .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/rk700/PyMuPDF/blob/master/demo/draw-sines.py>`_.
+
+   ..index::
+      pair: breadth; Shape.drawZigzag args
 
    .. method:: drawZigzag(p1, p2, breadth = 2)
 
@@ -183,6 +189,9 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       .. image:: img-drawCurve.png
 
+   .. index::
+      pair: fullSector; Shape.drawSector args
+
    .. method:: drawSector(center, point, angle, fullSector = True)
 
       Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie).
@@ -217,6 +226,14 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       :rtype: :ref:`Point`
       :returns: ``rect.top_left`` (top-left corner of the rectangle).
 
+   .. index::
+      pair: fontsize; Shape.insertText args
+      pair: fontname; Shape.insertText args
+      pair: fontfile; Shape.insertText args
+      pair: color; Shape.insertText args
+      pair: rotate; Shape.insertText args
+      pair: morph; Shape.insertText args
+
    .. method:: insertText(point, text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), rotate = 0, morph = None)
 
       Insert text lines beginning at a :ref:`Point` ``point``.
@@ -233,6 +250,16 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       :returns: number of lines inserted.
 
       For a description of the other parameters see :ref:`CommonParms`.
+
+   .. index::
+      pair: fontsize; Shape.insertTextbox args
+      pair: fontname; Shape.insertTextbox args
+      pair: fontfile; Shape.insertTextbox args
+      pair: color; Shape.insertTextbox args
+      pair: rotate; Shape.insertTextbox args
+      pair: morph; Shape.insertTextbox args
+      pair: expandtabs; Shape.insertTextbox args
+      pair: align; Shape.insertTextbox args
 
    .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, rotate = 0, morph = None)
 
@@ -262,6 +289,16 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       For a description of the other parameters see :ref:`CommonParms`.
 
+   .. index::
+      pair: color; Shape.finish args
+      pair: width; Shape.finish args
+      pair: fill; Shape.finish args
+      pair: roundCap; Shape.finish args
+      pair: dashes; Shape.finish args
+      pair: closePath; Shape.finish args
+      pair: even_odd; Shape.finish args
+      pair: morph; Shape.finish args
+
    .. method:: finish(width = 1, color = (0, 0, 0), fill = None, roundCap = True, dashes = None, closePath = True, even_odd = False, morph = (pivot, matrix))
 
       Finish a set of ``draw*()`` methods by applying :ref:`CommonParms` to all of them. This method also supports morphing the resulting compound drawing using a pivotal :ref:`Point`.
@@ -274,6 +311,9 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       .. note:: Method **"even-odd"** counts the number of overlaps of areas. Pixels in areas overlapping an odd number of times are regarded **inside**, otherwise **outside**. In contrast, the default method **"nonzero winding"** also looks at the area orientation: it counts ``+1`` if an area is drawn counter-clockwise and ``-1`` else. If the result is zero,the pixel is regarded **outside**, otherwise **inside**. In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
 
+   .. index::
+      pair: overlay; Shape.commit args
+  
    .. method:: commit(overlay = True)
 
       Update the page's ``/Contents`` with the accumulated drawing commands. If a ``Shape`` is not committed, the page will not be changed. The method must be preceeded with at least one ``finish()`` or one text insertion method.
