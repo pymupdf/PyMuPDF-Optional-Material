@@ -100,7 +100,15 @@ Question remains: **"How do I know those cross reference numbers 'xref' of image
 a. **"Inspect the page objects"** Loop through the document's page number list and execute ``imglist = doc.getPageImageList(pno)`` for each page number "pno". This yields a list of lists. Each item "img" in "imglist" contains the xref of an image shown on that page as ``img[0]``. This xref can then be used with one of the above methods. Use this method for valid (undamaged) documents. Note however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
 b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue - this xref is no image. Use this method if the PDF is damaged (unusable pages). Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction.
 
-For both extraction approaches, there exist ready-to-use general purpose scripts: `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imga.py>`_, and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imgb.py>`_.
+For both extraction approaches, there exist ready-to-use general purpose scripts:
+
+`extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imga.py>`_ extracts images by page:
+
+.. image:: img-extract-imga.jpg
+
+and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imgb.py>`_ extracts images by cross reference number:
+
+.. image:: img-extract-imgb.jpg
 
 
 ----------

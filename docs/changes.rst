@@ -1,6 +1,10 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.18
+---------------------------
+* **Added** method :meth:`TextPage.extractRAWDICT`, and a corresponding new string parameter "rawdict" to method :meth:`Page.getText`. It extracts text and images from a page in Python *dict* form like :meth:`TextPage.extractDICT`, but with the detail level of :meth:`TextPage.extractXML`, which is position information down to each single character.
+
 Changes in Version 1.13.17
 ---------------------------
 * **Fixed** an error that intermittently caused an exception in :meth:`Page.showPDFpage`, when pages from many different source PDFs were shown.

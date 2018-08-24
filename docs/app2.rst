@@ -105,60 +105,127 @@ To address the font issue, you can use a simple utility script to scan through t
 
 
 
-DICT or JSON
-~~~~~~~~~~~~~~
+DICT (or JSON)
+~~~~~~~~~~~~~~~~
 
 DICT (JSON) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` - boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output. Here is how this looks like::
 
- {"width": 595.276, "height": 841.89,
-  "blocks": [
-   {"type": 1, "bbox": [327.526, 88.936, 523.276, 175.186],
-    "ext": "jpeg", "width": 261, "height": 115, "image":
- <bytes / bytearray object, base64 encoded if JSON>
-   },
-   {"type": 0, "bbox": [195.483, 189.041, 523.243, 218.91],
-    "lines": [
-     {"bbox": [195.483, 189.041, 523.243, 218.91], "wmode": 0, "dir": [1, 0],
-      "spans": [
-       {"font": "SFSX2488", "size": 24.7871, "flags": 20, "text": "PyMuPDF Documentation"} 
-      ]
-     }
-    ]
-   },
-   {"type": 0, "bbox": [404.002, 223.505, 523.305, 244.49],
-    "lines": [
-     {"bbox": [404.002, 223.505, 523.305, 244.49], "wmode": 0, "dir": [1, 0],
-      "spans": [
-       {"font": "SFSO1728", "size": 17.2154, "flags": 22, "text": "Release 1.12.0"} 
-      ]
-     }
-    ]
-   },
-   {"type": 0, "bbox": [400.529, 371.31, 517.284, 392.312],
-    "lines": [
-     {"bbox": [400.529, 371.31, 517.284, 392.312], "wmode": 0, "dir": [1, 0],
-      "spans": [
-       {"font": "SFSX1728", "size": 17.2154, "flags": 20, "text": "Jorj X. McKie"} 
-      ]
-     }
-    ]
-   },
-   {"type": 0, "bbox": [448.484, 637.531, 523.252, 652.403],
-    "lines": [
-     {"bbox": [448.484, 637.531, 523.252, 652.403], "wmode": 0, "dir": [1, 0],
-      "spans": [
-       {"font": "SFSX1200", "size": 11.9552, "flags": 20, "text": "Dec 13, 2017"} 
-      ]
-     }
-    ]
-   }
-  ]
- }
+ In [2]: doc = fitz.open("pymupdf.pdf")
+ In [3]: page = doc[0]
+ In [4]: d = page.getText("dict")
+ In [5]: d
+ Out[5]: 
+ {'width': 612.0,
+ 'height': 792.0,
+ 'blocks': [{'type': 1,
+   'bbox': [344.25, 88.93597412109375, 540.0, 175.18597412109375],
+   'width': 261,
+   'height': 115,
+   'ext': 'jpeg',
+   'image': b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01 ... <more data> ...'},
+  {'type': 0,
+   'lines': [{'wmode': 0,
+     'dir': (1.0, 0.0),
+     'spans': [{'font': 'ClearSans-Bold',
+       'size': 24.787099838256836,
+       'flags': 20,
+       'text': 'PyMuPDF Documentation'}],
+     'bbox': (251.24600219726562,
+      184.3526153564453,
+      539.9661254882812,
+      218.6648406982422)}],
+   'bbox': (251.24600219726562,
+    184.3526153564453,
+    539.9661254882812,
+    218.6648406982422)},
+  {'type': 0,
+   'lines': [{'wmode': 0,
+     'dir': (1.0, 0.0),
+     'spans': [{'font': 'ClearSans-BoldItalic',
+       'size': 17.21540069580078,
+       'flags': 22,
+       'text': 'Release 1.13.18'}],
+     'bbox': (412.5299987792969,
+      220.4202880859375,
+      540.0100708007812,
+      244.234375)}],
+   'bbox': (412.5299987792969,
+    220.4202880859375,
+    540.0100708007812,
+    244.234375)},
+  {'type': 0,
+   'lines': [{'wmode': 0,
+     'dir': (1.0, 0.0),
+     'spans': [{'font': 'ClearSans-Bold',
+       'size': 17.21540069580078,
+       'flags': 20,
+       'text': 'Jorj X. McKie'}],
+     'bbox': (432.9129943847656,
+      355.5234680175781,
+      534.0018310546875,
+      379.3543701171875)}],
+   'bbox': (432.9129943847656,
+    355.5234680175781,
+    534.0018310546875,
+    379.3543701171875)},
+  {'type': 0,
+   'lines': [{'wmode': 0,
+     'dir': (1.0, 0.0),
+     'spans': [{'font': 'ClearSans-Bold',
+       'size': 11.9552001953125,
+       'flags': 20,
+       'text': 'Aug 23, 2018'}],
+     'bbox': (465.7779846191406,
+      597.5914916992188,
+      539.995849609375,
+      614.1408081054688)}],
+   'bbox': (465.7779846191406,
+    597.5914916992188,
+    539.995849609375,
+    614.1408081054688)}]}
+ In [6]: 
+
+RAWDICT
+~~~~~~~~~~~~~~~~
+This dictionary is an **information superset of DICT** and takes the detail level one step deeper. It looks exactly like the above, except that the ``"text"`` items (*string*) are replaced by ``"chars"`` items (*list*). Each ``"chars"`` entry is a character *dict*. For example, here is what you would see in place of item ``'text': 'PyMuPDF Documentation'`` above::
+
+       'chars': [{'c': 'P',
+         'origin': (251.24600219726562, 211.052001953125),
+         'bbox': (251.24600219726562,
+          184.3526153564453,
+          266.2421875,
+          218.6648406982422)},
+        {'c': 'y',
+         'origin': (266.2421875, 211.052001953125),
+         'bbox': (266.2421875,
+          184.3526153564453,
+          279.3793640136719,
+          218.6648406982422)},
+        {'c': 'M',
+         'origin': (279.3793640136719, 211.052001953125),
+         'bbox': (279.3793640136719,
+          184.3526153564453,
+          299.5560607910156,
+          218.6648406982422)},
+        ... <more character dicts> ...  
+        {'c': 'o',
+         'origin': (510.84130859375, 211.052001953125),
+         'bbox': (510.84130859375,
+          184.3526153564453,
+          525.2426147460938,
+          218.6648406982422)},
+        {'c': 'n',
+         'origin': (525.2426147460938, 211.052001953125),
+         'bbox': (525.2426147460938,
+          184.3526153564453,
+          539.9661254882812,
+          218.6648406982422)}]}]
+
 
 XML
 ~~~
 
-The XML version takes the level of detail even a lot deeper: every single character is provided with its position detail, and every span also contains font information::
+The XML version extracts text (no images) with the detail level of RAWDICT::
  
  <page width="595.276" height="841.89">
  <image bbox="327.526 88.936038 523.276 175.18604" />
@@ -185,7 +252,7 @@ The XML version takes the level of detail even a lot deeper: every single charac
  (... omitted data ...)
  </page>
 
-We have successfully tested ``lxml`` to interpret this output.
+.. note:: We have successfully tested `lxml <https://pypi.org/project/lxml/>`_ to interpret this output.
 
 XHTML
 ~~~~~
@@ -206,23 +273,21 @@ Further Remarks
 
 1. We have modified MuPDF's **plain text** extraction: The original prints out every line followed by a newline character. This leads to a rather ragged, space-wasting look. We have combined all lines of a text block into one, separating lines by space characters. We also do not add extra newline characters at the end of blocks.
 
-2. The extraction methods each have its own default behavior concerning images: "TEXT" and "XML" do not extract images, while the others do. On occasion it may make sense to switch off images for them, too. See chapter :ref:`cooperation` on how to achieve this. Use an argument of ``3`` when you create the :ref:`TextPage`.
+2. The extraction methods each have its own default behavior concerning images: "TEXT" and "XML" do not extract images, while the others do. On occasion it may make sense to **switch off images** for them, too. See chapter :ref:`cooperation` on how to achieve this. To **exclude images**, use an argument of ``3`` when you create the :ref:`TextPage`.
 
 3. Apart from the above "standard" ones, we offer additional extraction methods :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` for performance reasons. They return lists of a page's text blocks, resp. words. Each list item contains text accompanied by its rectangle ("bbox", location on the page). This should help to resolve extraction issues around multi-column or boxed text.
 
-4. For uttermost detail, down to the level of one character, use XML extraction.
+4. For uttermost detail, down to the level of one character, use RAWDICT extraction.
 
 
 Performance
 ~~~~~~~~~~~~
-The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements. More information of course means that more processing is required and a higher data volume is generated.
+The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements. Generally, more information of course means that more processing is required and a higher data volume is generated.
 
-To begin with, all methods are **very fast** in relation to what is out there on the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, XML, processes all 1'310 pages of the :ref:`AdobeManual` in less than 8 seconds.
+To begin with, all methods are **very fast** in relation to other products out there in the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1'310 pages of the :ref:`AdobeManual` in just 8.3 seconds.
 
-Relative to each other, **"XML"** is about 2 times slower than **"TEXT"**, the others range between them. E.g. **"DICT" / "JSON", "HTML", "XHTML"**  need about 20% more time than **"TEXT"** (heavily depending on the size of images contained in the document), whereas :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` are only 1% resp. 3% slower than **"TEXT"**.
+Relative to each other, **"RAWDICT"** is about 4 times slower than **"TEXT"**, the others range between them. E.g. **"DICT" / "JSON", "HTML", "XHTML"**  need about 20% more time than **"TEXT"** (heavily depending on the amount and size of images contained in the document), whereas :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` are only 1% resp. 3% slower than **"TEXT"**.
 
 In versions prior to v1.13.1, JSON was a standalone extraction method. After we have added the DICT extraction, JSON output is now created from it, using the **json** module contained in Python for serialization. We believe, DICT output is more handy for the programmer's purpose, because all of its information is directly usable - including images. Previously, for JSON, you had to bsae64-decode images before using them. We also have replaced the old "imgtype" dictionary key (an integer bit code) with the key "ext", which contains the appropriate extension string for the image.
-
-Overall, these changes also allow image extraction for non-PDF documents. 
 
 Look into the previous chapter **Appendix 1** for more performance information.

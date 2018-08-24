@@ -118,7 +118,7 @@ This example creates a **raster** image of a page's content:
 
 >>> pix = page.getPixmap()
 
-``pix`` is a :ref:`Pixmap` object that contains an **RGBA** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGB** image (i.e. containing no alpha channel), specify ``pix = page.getPixmap(alpha = False)``.
+``pix`` is a :ref:`Pixmap` object that (in this case) contains an **RGBA** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGB** image (i.e. containing no alpha channel), specify ``pix = page.getPixmap(alpha = False)``.
 
 .. note:: You can also create a **vector** image of a page by using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/rk700/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
@@ -149,7 +149,7 @@ Please also see section 3.19 of the `Pillow documentation <https://Pillow.readth
 If your Python contains the **Tk 8.6** version, PNG files and image data are directly supported and you can get along **without using PIL**:
 
 >>> pngdata = pix.getPNGData()
->>> tkimg = tk.PhotoImage(data = pngdata)
+>>> tkimg = tkinter.PhotoImage(data = pngdata)
 
 If you are looking for a complete Tkinter script paging through a document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_. You need the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package (version > 2.9.0).
 
@@ -174,6 +174,8 @@ Use one of the following strings for ``"type"`` to obtain different formats [#f2
 * ``"html"``: creates a full visual version of the page including any images. This can be displayed with your internet browser.
 
 * ``"dict"``: same information level as HTML, but provided as a Python dictionary. See :meth:`TextPage.extractDICT` for details of its structure.
+
+* ``"rawdict"``: a super-set of :meth:`TextPage.extractDICT`. It additionally provides character detail information like XML. See :meth:`TextPage.extractRAWDICT` for details of its structure.
 
 * ``"xhtml"``: text information level as the TEXT version but includes images. Can also be displayed by internet browsers.
 
