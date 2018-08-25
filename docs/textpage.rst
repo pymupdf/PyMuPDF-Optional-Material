@@ -106,10 +106,12 @@ bbox            block / image rectangle, formatted as ``list(fitz.Rect)``
 ext             image type *(str)*, as its file extension, see below
 width           original image width *(float)*
 height          original image height *(float)*
-image           image content *(bytearray)*, may be empty if not supported!
+image           image content *(bytes/bytearray)*
 =============== ===============================================================
 
 Possible values of key ``"ext"`` are ``"bmp"``, ``"gif"``, ``"jpeg"``, ``"jpx"`` (JPEG 2000), ``"jxr"`` (JPEG XR), ``"png"``, ``"pnm"``, and ``"tiff"``.
+
+.. note:: All of the above values may be zero or contain empty objects respectively. In an effort to provide complete information we may return entries like ``{'type': 1, 'bbox': [0.0, 0.0, 0.0, 0.0], 'width': 0, 'height': 0, 'ext': 'png', 'image': b''}``.
 
 
 **Text block:**

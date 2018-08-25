@@ -71,7 +71,37 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
       base14            Base-14 fonts (should always be true)
       ================= ===================================================
 
-      For an explanation of the term "TOFU" see `this Wikipedia article <https://en.wikipedia.org/wiki/Noto_fonts>`_.
+      For an explanation of the term "TOFU" see `this Wikipedia article <https://en.wikipedia.org/wiki/Noto_fonts>`_.::
+
+       In [1]: import fitz
+       In [2]: tools = fitz.Tools()
+       In [3]: tools.fitz_config
+       Out[3]: 
+       {'plotter-g': True,
+        'plotter-rgb': True,
+        'plotter-cmyk': True,
+        'plotter-n': True,
+        'pdf': True,
+        'xps': True,
+        'svg': True,
+        'cbz': True,
+        'img': True,
+        'tiff': True,
+        'html': True,
+        'epub': True,
+        'gprf': False,
+        'jpx': True,
+        'js': True,
+        'tofu': False,
+        'tofu-cjk': True,
+        'tofu-cjk-ext': False,
+        'tofu-cjk-lang': False,
+        'tofu-emoji': False,
+        'tofu-historic': False,
+        'tofu-symbol': False,
+        'tofu-sil': False,
+        'icc': False,
+        'base14': True}
 
    .. attribute:: store_maxsize
 

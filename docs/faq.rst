@@ -377,6 +377,13 @@ Use this to create the page with another pre-defined paper format:
 
 The convenience function :meth:`PaperSize` knows over 40 industry standard paper formats to choose from. To see them, inspect dictionary :attr:`paperSizes`. Pass the desired dictionary key to :meth:`PaperSize` to retrieve the paper dimensions. Upper and lower case is supported. If you append "-L" to the format name, the landscape version is returned.
 
+.. note:: Here is a 3-liner that creates a PDF with one empty page. Its file size is 470 bytes:
+
+   >>> doc = fitz.open()
+   >>> doc.newPage()
+   >>> doc.save("A4.pdf")
+
+
 **insertPage**
 
 :meth:`Document.insertPage` also inserts a new page and accepts the same parameters ``to``, ``width`` and ``height``. But it lets you also insert arbitrary text into the new page and returns the number of inserted lines::

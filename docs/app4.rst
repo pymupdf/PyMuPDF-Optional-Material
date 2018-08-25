@@ -7,22 +7,25 @@ Appendix 4: Assorted Technical Information
 
 PDF Base 14 Fonts
 ---------------------
-The following 14 builtin font names must be supported by every PDF aplication. They are available as the Python list ``fitz.Base14_Fonts``:
+The following 14 builtin font names must be supported by every PDF viewer aplication. They are available as follows::
 
-* Courier
-* Courier-Oblique
-* Courier-Bold
-* Courier-BoldOblique
-* Helvetica
-* Helvetica-Oblique
-* Helvetica-Bold
-* Helvetica-BoldOblique
-* Times-Roman
-* Times-Bold
-* Times-Italic
-* Times-BoldItalic
-* Symbol
-* ZapfDingbats
+ In [1]: import fitz
+ In [2]: fitz.Base14_fontnames
+ Out[2]: 
+ ('Courier',
+  'Courier-Oblique',
+  'Courier-Bold',
+  'Courier-BoldOblique',
+  'Helvetica',
+  'Helvetica-Oblique',
+  'Helvetica-Bold',
+  'Helvetica-BoldOblique',
+  'Times-Roman',
+  'Times-Italic',
+  'Times-Bold',
+  'Times-BoldItalic',
+  'Symbol',
+  'ZapfDingbats')
 
 ------------
 
@@ -31,7 +34,7 @@ The following 14 builtin font names must be supported by every PDF aplication. T
 Adobe PDF Reference 1.7
 ---------------------------
 
-This PDF Reference manual published by Adobe is frequently quoted throughout this documentation. It can be viewed and downloaded from here: http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf.
+This PDF Reference manual published by Adobe is frequently quoted throughout this documentation. It can be viewed and downloaded from `here <http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf>`_.
 
 ------------
 
@@ -39,11 +42,11 @@ This PDF Reference manual published by Adobe is frequently quoted throughout thi
 
 Using Python Sequences as Arguments in PyMuPDF
 ------------------------------------------------
-In most cases, when PyMuPDF objects and methods require a Python list of numerical values, other Python sequence types are also allowed. Classes implement the sequence protocol, if they have a ``__getitem__()`` method.
+When PyMuPDF objects and methods require a Python **list** of numerical values, other Python **sequence types** are also allowed. Python classes are said to implement the **sequence protocol**, if they have a ``__getitem__()`` method.
 
-This generally means, you can interchangeably use Python ``list`` or ``tuple`` or even ``array.array``, ``numpy.array`` and ``bytearray`` types in these cases.
+This basically means, you can interchangeably use Python ``list`` or ``tuple`` or even ``array.array``, ``numpy.array`` and ``bytearray`` types in these cases.
 
-For example, specifying a sequence ``s`` in any of the following ways
+For example, specifying a sequence ``"s"`` in any of the following ways
 
 * ``s = [1, 2]``
 * ``s = (1, 2)``
@@ -59,7 +62,7 @@ will make it usable in the following example expressions:
 
 Similarly with all geometry objects :ref:`Rect`, :ref:`IRect`, :ref:`Matrix` and :ref:`Point`.
 
-Because all PyMuPDF geometry classes themselves are special cases of sequences, they can be freely used where sequences can be used, e.g. as arguments for functions like ``list()``, ``tuple()``, ``array.array()`` or ``numpy.array()``. Look at the following snippet to see this work.
+Because all PyMuPDF geometry classes themselves are special cases of sequences, they can be freely used where numerical sequences can be used, e.g. as arguments for functions like ``list()``, ``tuple()``, ``array.array()`` or ``numpy.array()``. Look at the following snippet to see this work.
 
 >>> import fitz, array, numpy as np
 >>> m = fitz.Matrix(1, 2, 3, 4, 5, 6)
