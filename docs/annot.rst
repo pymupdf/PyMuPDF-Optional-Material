@@ -6,9 +6,9 @@ Annot
 ================
 Quote from the :ref:`AdobeManual`: "An annotation associates an object such as a note, sound, or movie with a location on a page of a PDF document, or provides a way to interact with the user by means of the mouse and keyboard."
 
-This class supports accessing such annotations - not only for PDF files, but for all MuPDF supported document types. However, only a few methods and properties apply to non-PDF documents.
+This class supports accessing such annotations -- not only for PDF files, but for all MuPDF supported document types. However, only a few methods and properties apply to non-PDF documents.
 
-There is a parent-child relationship between an annotation and its page. If the page object becomes unusable (closed document, any document structure change, etc.), then so does every of its existing annotation objects - an exception is raised saying that the object is "orphaned", whenever an annotation property or method is accessed.
+There is a parent-child relationship between an annotation and its page. If the page object becomes unusable (closed document, any document structure change, etc.), then so does every of its existing annotation objects -- an exception is raised saying that the object is "orphaned", whenever an annotation property or method is accessed.
 
 
 ============================ ==============================================================
@@ -204,17 +204,17 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Meaningful for PDF only: A dictionary containing various information. All fields are (unicode) strings.
 
-      * ``name`` - e.g. for ``[12, 'Stamp']`` type annotations it will contain the stamp text like ``Sold`` or ``Experimental``.
+      * ``name`` -- e.g. for ``[12, 'Stamp']`` type annotations it will contain the stamp text like ``Sold`` or ``Experimental``.
 
-      * ``content`` - a string containing the text for type ``Text`` and ``FreeText`` annotations. Commonly used for filling the text field of annotation pop-up windows. For ``FileAttachment`` it should be used as description for the attached file. Initially just contains the filename.
+      * ``content`` -- a string containing the text for type ``Text`` and ``FreeText`` annotations. Commonly used for filling the text field of annotation pop-up windows. For ``FileAttachment`` it should be used as description for the attached file. Initially just contains the filename.
 
-      * ``title`` - a string containing the title of the annotation pop-up window. By convention, this is used for the annotation author.
+      * ``title`` -- a string containing the title of the annotation pop-up window. By convention, this is used for the annotation author.
 
-      * ``creationDate`` - creation timestamp.
+      * ``creationDate`` -- creation timestamp.
 
-      * ``modDate`` - last modified timestamp.
+      * ``modDate`` -- last modified timestamp.
 
-      * ``subject`` - subject, an optional string.
+      * ``subject`` -- subject, an optional string.
 
       :rtype: dict
 
@@ -235,17 +235,17 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       PDF only: A list containing point ("vertices") coordinates (each given by a pair of floats) for various types of annotations:
       
-      * ``Line`` - the starting and ending coordinates (2 float pairs).
-      * ``[2, 'FreeText', 'FreeTextCallout']`` - 2 or 3 float pairs designating the starting, the (optional) knee point, and the ending coordinates.
-      * ``PolyLine`` / ``Polygon`` - the coordinates of the edges connected by line pieces (n float pairs for n points).
-      * text markup annotations - 4 float pairs specifying the ``QuadPoints`` of the marked text span (see :ref:`AdobeManual`, page 634).
-      * ``Ink`` - list of one to many sublists of vertex coordinates. Each such sublist represents a separate line in the drawing.
+      * ``Line`` -- the starting and ending coordinates (2 float pairs).
+      * ``[2, 'FreeText', 'FreeTextCallout']`` -- 2 or 3 float pairs designating the starting, the (optional) knee point, and the ending coordinates.
+      * ``PolyLine`` / ``Polygon`` -- the coordinates of the edges connected by line pieces (n float pairs for n points).
+      * text markup annotations -- 4 float pairs specifying the ``QuadPoints`` of the marked text span (see :ref:`AdobeManual`, page 634).
+      * ``Ink`` -- list of one to many sublists of vertex coordinates. Each such sublist represents a separate line in the drawing.
 
       :rtype: list
 
    .. attribute:: widget
 
-      PDF only: A class containing all properties of a **form field** - including the following three attributes. ``None`` for other annotation types.
+      PDF only: A class containing all properties of a **form field** -- including the following three attributes. ``None`` for other annotation types.
 
       :rtype: :ref:`Widget`
 
@@ -285,11 +285,11 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Meaningful for PDF only: A dictionary containing border characteristics. It will be ``None`` for non-PDFs and an empty dictionary if no border information exists. The following keys can occur:
 
-      * ``width`` - a float indicating the border thickness in points.
+      * ``width`` -- a float indicating the border thickness in points.
 
-      * ``dashes`` - a list of integers (arbitrarily limited to 10) specifying a line dash pattern in user units (usually points). ``[]`` means no dashes, ``[n]`` means equal on-off lengths of ``n`` points, longer lists will be interpreted as specifying alternating on-off length values. See the :ref:`AdobeManual` page 217 for more details.
+      * ``dashes`` -- a list of integers (arbitrarily limited to 10) specifying a line dash pattern in user units (usually points). ``[]`` means no dashes, ``[n]`` means equal on-off lengths of ``n`` points, longer lists will be interpreted as specifying alternating on-off length values. See the :ref:`AdobeManual` page 217 for more details.
 
-      * ``style`` - 1-byte border style: ``S`` (Solid) = solid rectangle surrounding the annotation, ``D`` (Dashed) = dashed rectangle surrounding the annotation, the dash pattern is specified by the ``dashes`` entry, ``B`` (Beveled) = a simulated embossed rectangle that appears to be raised above the surface of the page, ``I`` (Inset) = a simulated engraved rectangle that appears to be recessed below the surface of the page, ``U`` (Underline) = a single line along the bottom of the annotation rectangle.
+      * ``style`` -- 1-byte border style: ``S`` (Solid) = solid rectangle surrounding the annotation, ``D`` (Dashed) = dashed rectangle surrounding the annotation, the dash pattern is specified by the ``dashes`` entry, ``B`` (Beveled) = a simulated embossed rectangle that appears to be raised above the surface of the page, ``I`` (Inset) = a simulated engraved rectangle that appears to be recessed below the surface of the page, ``U`` (Underline) = a single line along the bottom of the annotation rectangle.
 
       :rtype: dict
       

@@ -32,7 +32,7 @@ A ``DisplayList`` is populated with objects from a page usually by executing :me
 
       Create a new display list.
 
-      :arg mediabox: The page's rectangle - output of ``page.bound()``.
+      :arg mediabox: The page's rectangle -- output of ``page.bound()``.
       :type mediabox: :ref:`Rect`
 
       :rtype: ``DisplayList``
@@ -41,7 +41,7 @@ A ``DisplayList`` is populated with objects from a page usually by executing :me
     
       Run the display list through a device. The device will populate the display list with its "commands" (i.e. text extraction or image creation). The display list can later be used to "read" a page many times without having to re-interpret it from the document file.
 
-      You will most probably instead use one of the specialized run methods below - ``getPixmap()`` or ``getTextPage()``.
+      You will most probably instead use one of the specialized run methods below -- ``getPixmap()`` or ``getTextPage()``.
 
       :arg device: Device
       :type device: :ref:`Device`

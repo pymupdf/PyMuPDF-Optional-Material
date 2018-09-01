@@ -12,8 +12,8 @@ Information of interest are
 
 General structure of a TextPage
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-:ref:`TextPage` is one of PyMuPDF's classes. It is normally created behind the curtain, when :ref:`Page` text extraction methods are used, but it is also available directly. In any case, an intermediate class, :ref:`DisplayList` must be created first (display lists contain interpreted pages, they also provide the input for :ref:`Pixmap` creation). Information contained in a :ref:`TextPage` has the following hierarchy. Other than its name suggests, images may optionally also be part of a text page.
-::
+:ref:`TextPage` is one of PyMuPDF's classes. It is normally created behind the curtain, when :ref:`Page` text extraction methods are used, but it is also available directly. In any case, an intermediate class, :ref:`DisplayList` must be created first (display lists contain interpreted pages, they also provide the input for :ref:`Pixmap` creation). Information contained in a :ref:`TextPage` has the following hierarchy. Other than its name suggests, images may optionally also be part of a text page::
+
  <page>
      <text block>
          <line>
@@ -45,7 +45,7 @@ An example output::
 HTML
 ~~~~
 
-HTML output fully reflects the structure of the page's ``TextPage`` - much like DICT or JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed be an internate browser. Our above example::
+HTML output fully reflects the structure of the page's ``TextPage`` -- much like DICT or JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed be an internate browser. Our above example::
 
  <div style="width:595pt;height:841pt">
  <img style="top:88pt;left:327pt;width:195pt;height:86pt" src="data:image/jpeg;base64,
@@ -62,9 +62,9 @@ Controlling Quality of HTML Output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Though HTML output has improved a lot in MuPDF v1.12.0, it currently is not yet bug-free: we have found problems in the areas **font support** and **image positioning**.
 
-* HTML text contains references to the fonts used of the original document. If these are not known to the browser (a fat chance!), it will replace them with his assumptions, which probably will let the result look awkward. This issue varies greatly by browser - on my Windows machine, MS Edge worked just fine, whereas Firefox looked horrible.
+* HTML text contains references to the fonts used of the original document. If these are not known to the browser (a fat chance!), it will replace them with his assumptions, which probably will let the result look awkward. This issue varies greatly by browser -- on my Windows machine, MS Edge worked just fine, whereas Firefox looked horrible.
 
-* For PDFs with a complex structure, images may not be positioned and / or sized correctly. This seems to be the case for rotated pages and pages, where the various possible page bbox variants do not coincide (e.g. ``MediaBox != CropBox``). We do not know yet, how to address this - we filed a bug at MuPDF's site.
+* For PDFs with a complex structure, images may not be positioned and / or sized correctly. This seems to be the case for rotated pages and pages, where the various possible page bbox variants do not coincide (e.g. ``MediaBox != CropBox``). We do not know yet, how to address this -- we filed a bug at MuPDF's site.
 
 To address the font issue, you can use a simple utility script to scan through the HTML file and replace font references. Here is a little example that replaces all fonts with one of the :ref:`Base-14-Fonts`: serifed fonts will become "Times", non-serifed "Helvetica" and monospaced will become "Courier". Their respective variations for "bold", "italic", etc. are hopefully done correctly by your browser::
 
@@ -108,7 +108,7 @@ To address the font issue, you can use a simple utility script to scan through t
 DICT (or JSON)
 ~~~~~~~~~~~~~~~~
 
-DICT (JSON) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` - boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output. Here is how this looks like::
+DICT (JSON) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` -- boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output. Here is how this looks like::
 
  In [2]: doc = fitz.open("pymupdf.pdf")
  In [3]: page = doc[0]
@@ -284,10 +284,23 @@ Performance
 ~~~~~~~~~~~~
 The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements. Generally, more information of course means that more processing is required and a higher data volume is generated.
 
-To begin with, all methods are **very fast** in relation to other products out there in the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1'310 pages of the :ref:`AdobeManual` in just 8.3 seconds.
+To begin with, all methods are **very fast** in relation to other products out there in the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1'310 pages of the :ref:`AdobeManual` in less than 9 seconds (simple text needs less than 2 seconds here).
 
-Relative to each other, **"RAWDICT"** is about 4 times slower than **"TEXT"**, the others range between them. E.g. **"DICT" / "JSON", "HTML", "XHTML"**  need about 20% more time than **"TEXT"** (heavily depending on the amount and size of images contained in the document), whereas :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` are only 1% resp. 3% slower than **"TEXT"**.
+Relative to each other, **"RAWDICT"** is about 4.6 times slower than **"TEXT"**, the others range between them. The following table shows **relative runtimes** with **"TEXT"** set to 1, measured across ca. 1550 text-heavy and 250 image-heavy pages.
 
-In versions prior to v1.13.1, JSON was a standalone extraction method. After we have added the DICT extraction, JSON output is now created from it, using the **json** module contained in Python for serialization. We believe, DICT output is more handy for the programmer's purpose, because all of its information is directly usable - including images. Previously, for JSON, you had to bsae64-decode images before using them. We also have replaced the old "imgtype" dictionary key (an integer bit code) with the key "ext", which contains the appropriate extension string for the image.
+======= ====== =====================================================================
+Method  Time   Comments
+======= ====== =====================================================================
+TEXT     1.00  no images, plain text, line breaks
+WORDS    1.07  no images, word level text with bboxes
+BLOCKS   1.10  image bboxes (only), block level text with bboxes
+XML      2.30  no images, char level text, layout and font details
+DICT     2.68  **binary** images, span level text, layout and font details
+XHTML    3.51  **base64** images, span level text, no layout info
+HTML     3.60  **base64** images, span level text, layout and font details
+RAWDICT  4.61  **binary** images, char level text, layout and font details
+======= ====== =====================================================================
+
+In versions prior to v1.13.1, JSON was a standalone extraction method. Since we have added the DICT extraction, JSON output is now created from it, using the **json** module contained in Python for serialization. We believe, DICT output is more handy for the programmer's purpose, because all of its information is directly usable -- including images. Previously, for JSON, you had to bsae64-decode images before you could use them. We also have replaced the old "imgtype" dictionary key (an integer bit code) with the key "ext", which contains the appropriate extension string for the image.
 
 Look into the previous chapter **Appendix 1** for more performance information.

@@ -1,6 +1,3 @@
-.. raw:: pdf
-
-    PageBreak
 
 =========
 Tutorial
@@ -53,7 +50,7 @@ Some :ref:`Document` Methods and Attributes
 
 Accessing Meta Data
 ========================
-PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may always contain data. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings or ``None`` if not otherwise indicated. Also be aware that not all of them always contain meaningful data - even if they are not ``None``.
+PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may always contain data. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings or ``None`` if not otherwise indicated. Also be aware that not all of them always contain meaningful data -- even if they are not ``None``.
 
 ============== =================================
 **Key**        **Value**
@@ -197,7 +194,7 @@ PDF Maintenance
 ==================
 PDFs are the only document type that can be **modified** using PyMuPDF. Other files are read-only.
 
-However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the result of this conversion. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `xps-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/xps-converter.py>`_.
+However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the result of this conversion. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `pdf-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/pdf-converter.py>`_ which can convert any supported document to PDF.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
@@ -297,46 +294,11 @@ It is often desirable to "close" a document to relinquish control of the underly
 
 This can be achieved by the :meth:`Document.close` method. Apart from closing the underlying file, buffer areas associated with the document will be freed.
 
-Example: Dynamically Cleaning up Corrupt PDF Documents
-========================================================
-This shows a potential use of PyMuPDF with another Python PDF library (`pdfrw <https://pypi.python.org/pypi/pdfrw>`_).
-
-If a clean, non-corrupt / decompressed / decrypted PDF is needed, one could dynamically invoke PyMuPDF to recover from problems like so:
-::
- import sys
- from pdfrw import PdfReader
- import fitz
- from io import BytesIO
-
- #---------------------------------------
- # 'Tolerant' PDF reader
- # Adjust appropriately for decryption
- #---------------------------------------
- def reader(fname):
-     idata = open(fname, "rb").read()
-     ibuffer = BytesIO(idata)                # convert to stream
-     try:
-         return PdfReader(ibuffer)           # try this first
-     except:                                 # problem! heal it with PyMuPDF
-         # put a repaired version in memory
-         c = fitz.open("pdf", idata).write(garbage=4)
-         idata = None                        # free some storage
-         return PdfReader(BytesIO(c))        # let pdfrw retry
- #---------------------------------------
- # Main program
- #---------------------------------------
- pdf = reader("pymupdf.pdf")
- print pdf.Info
- # do further processing
-
-
-With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/>`_ for Windows only but it is reported to also run under `Wine <https://www.winehq.org/>`_) a similar result can be achieved, see `here <http://www.overthere.co.uk/2013/07/22/improving-pypdf2-with-pdftk/>`_. However, you must invoke it as a separate process via ``subprocess.Popen``, using stdin and stdout as communication vehicles.
-
 Further Reading
 ================
-Also have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipies"** cover over 15 topics written in "How-To" style.
+Also have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipes"** cover over 15 topics written in "How-To" style.
 
-This document also contains a :ref:`FAQ`.
+This document also contains a :ref:`FAQ`. This chapter has close connection to the aforementioned recipes, and it will be extended with more content over time.
 
 .. rubric:: Footnotes
 

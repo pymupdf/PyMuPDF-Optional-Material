@@ -64,7 +64,7 @@ This class represents text and images shown on a document page. All MuPDF docume
 
    .. method:: extractRAWDICT
 
-      Extract content as a Python dictionary - technically similar to :meth:`extractDICT`, and it contains that information as a subset (including any images). It provides additional detail down to each character, which makes using XML obsolete in many cases. See below for the structure.
+      Extract content as a Python dictionary -- technically similar to :meth:`extractDICT`, and it contains that information as a subset (including any images). It provides additional detail down to each character, which makes using XML obsolete in many cases. See below for the structure.
 
       :rtype: dict
 

@@ -95,7 +95,7 @@ Because SWIG goes a long way to keep the Python and the C level in sync, everyth
 
 But just no longer accessing invalidated objects is actually not enough: They should rather be actively deleted entirely, to also free C-level resources (meaning allocated memory).
 
-The reason for these rules lies in the fact that there is a hierachical 2-level one-to-many relationship between a document and its pages and also between a page and its links / annotations. To maintain a consistent situation, any of the above actions must lead to a complete reset - in **Python and, synchronously, in C**.
+The reason for these rules lies in the fact that there is a hierachical 2-level one-to-many relationship between a document and its pages and also between a page and its links / annotations. To maintain a consistent situation, any of the above actions must lead to a complete reset -- in **Python and, synchronously, in C**.
 
 SWIG cannot know about this and consequently does not do it.
 
@@ -204,7 +204,7 @@ Observe the following guideline for optimum results:
 
 The second XObject is small (just about 270 bytes), specific to the containing rectangle, and therefore different each time.
 
-If no precautions are taken, process **step 1** leads to another XObject on every invocation - even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time and memory usage.
+If no precautions are taken, process **step 1** leads to another XObject on every invocation -- even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time and memory usage.
 
 If you forget to use ``reuse_xref``, garbage collection (``mutool clean -gggg`` or save option ``garbage = 4``) can still take care of any duplicates.
 

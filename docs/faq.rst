@@ -40,6 +40,8 @@ You do not always need the full image of a page. This may be the case e.g. when 
 Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of your page, thus using a four times better resolution.
 
 .. image:: img-clip.jpg
+   :align: center
+   :scale: 80
 
 >>> mat = fitz.Matrix(2, 2)                  # zoom factor 2 in each direction
 >>> rect = page.rect                         # page rectangle
@@ -95,21 +97,24 @@ Like any other "object" in a PDF, embedded images are identified by a cross refe
 
 2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided - mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data is identical). Otherwise, this method is **thousands of times faster**, and in most cases the **image data is much smaller**, too.
 
-Question remains: **"How do I know those cross reference numbers 'xref' of images?"**.
+The question remains: **"How do I know those cross reference numbers 'xref' of images?"**. There are two answers to this:
 
-a. **"Inspect the page objects"** Loop through the document's page number list and execute ``imglist = doc.getPageImageList(pno)`` for each page number "pno". This yields a list of lists. Each item "img" in "imglist" contains the xref of an image shown on that page as ``img[0]``. This xref can then be used with one of the above methods. Use this method for valid (undamaged) documents. Note however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
-b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue - this xref is no image. Use this method if the PDF is damaged (unusable pages). Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction.
+a. **"Inspect the page objects"** Loop through the document's page number list and execute :meth:`Document.getPageImageList` for each page number. The result is a list of list, and its items look like ``[xref, smask, ...]``, containing the xref of an image shown on that page. This xref can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
+b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue - this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
 
 For both extraction approaches, there exist ready-to-use general purpose scripts:
 
 `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imga.py>`_ extracts images by page:
 
 .. image:: img-extract-imga.jpg
+   :align: center
+   :scale: 80
 
 and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imgb.py>`_ extracts images by cross reference number:
 
 .. image:: img-extract-imgb.jpg
-
+   :align: center
+   :scale: 80
 
 ----------
 
@@ -127,6 +132,8 @@ If ``smask == 0`` then the image encountered via xref can be processed as it is.
 To recover the original image using PyMuPDF, the procedure depicted as follows must be executed:
 
 .. image:: img-stencil.jpg
+   :align: center
+   :scale: 60
 
 >>> pix1 = fitz.Pixmap(doc, xref)    # (1) pixmap of image w/o alpha
 >>> pix2 = fitz.Pixmap(doc, smask)   # (2) stencil pixmap
@@ -175,6 +182,8 @@ This will generate a PDF marginally larger than the combined pictures's size. So
 The above script needed about 1 minute on my machine for 149 pictures with a total size of 514 MB (and about the same resulting PDF size).
 
 .. image:: img-import-progress.jpg
+   :align: center
+   :scale: 80
 
 An alternative would be using :meth:`Page.insertImage` in the for loop:
 
@@ -214,6 +223,8 @@ Another approach is to just embed the images and abdicate displaying them as pag
  doc.save("all-my-pics-embedded.pdf")
 
 .. image:: img-embed-progress.jpg
+   :align: center
+   :scale: 80
 
 This is by far the fastest method, and it also produces the smallest possible output file size. The above pictures needed 20 seonds on my machine and yielded a PDF size of 510 MB.
 
@@ -271,7 +282,6 @@ As a starting point take the above mentioned `script <https://github.com/rk700/P
 
 How to :index:`Extract Tables <pair: extract; table>` from Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 If you see a table in a document, you are not normally looking at something like an embedded Excel or other identifyable object. It usually is just text, formatted to appear as appropriate.
 
 Extracting a tabular data from such a page area therefore means that you must find a way to **(1)** graphically indicate table and column borders, and **(2)** then extract text based on this information.
@@ -279,6 +289,69 @@ Extracting a tabular data from such a page area therefore means that you must fi
 The wxPython GUI script `wxTableExtract.py <https://github.com/rk700/PyMuPDF/blob/master/examples/wxTableExtract.py>`_ strives to exactly do that. You may want to have a look at it and adjust it to your liking.
 
 ----------
+
+How to Search for and Mark Text
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+There is a standard search function to search for arbitrary text on a page: :meth:`Page.searchFor`. It returns a list of :ref:`Rect` objects which surround a found occurrence. These rectangles can for example be used to automatically insert annotations which visibly mark the found text.
+
+This method has advantages and drawbacks. Pros are
+
+* the search string can contain blanks and wrap across lines
+* upper or lower cases are treated equal
+
+Disadvantages:
+
+* you cannot determine the number of found items beforehand: if ``hit_max`` rectangles are returned you do not know if and how many more you may have missed.
+
+But you have other options::
+
+ import sys
+ import fitz
+ 
+ def mark_word(page, text):
+     """Underline each word that contains 'text'.
+     """
+     found = 0
+     wlist = page.getTextWords()        # make the word list
+     for w in wlist:                    # scan through all words on page
+         if text in w[4]:               # w[4] is the word's string
+             found += 1                 # count
+             r = fitz.Rect(w[:4])       # make rect from word bbox
+             page.addUnderlineAnnot(r)  # underline
+     return found
+ 
+ fname = sys.argv[1]                    # filename
+ text = sys.argv[2]                     # search string
+ doc = fitz.open(fname)
+
+ print("underlining words containing '%s' in document '%s'" % (word, doc.name))
+
+ new_doc = False                        # indicator if anything found at all
+
+ for page in doc:                       # scan through the pages
+     found = mark_word(page, text)      # mark the page's words
+     if found:                          # if anything found ...
+         new_doc = True
+         print("found '%s' %i times on page %i" % (text, found, page.number + 1))
+ 
+ if new_doc:
+     doc.save("marked-" + doc.name)
+
+This script uses :meth:`Page.getTextWords` to look for a string, handed in via cli parameter. This method separates a page's text into "words" using spaces and line breaks as delimiters. Therefore the words in this lists contain no spaces or line breaks. Further remarks:
+
+* If found, the **complete word containing the string** is marked (underlined) -- not only the search string.
+* The search string may **not contain spaces** or other white space.
+* As shown here, upper / lower cases are **respected**. But this can be changed by using the string method ``lower()`` (or even regular expressions) in function ``mark_word``.
+* There is **no upper limit**: all occurrences will be detected.
+* You can use **anything** to mark the word: 'Underline', 'Highlight', 'StrikeThrough' or 'Square' annotations, etc.
+* Here is an example snippet of a page of this manual, where "MuPDF" has been used as the search string. Note that all string **containing "MuPDF"** have been underlined.
+
+.. image:: img-markedpdf.jpg
+   :align: center
+   :scale: 60
+
+----------
+
 
 General
 --------
@@ -349,7 +422,9 @@ It is easy to join PDFs with method :meth:`Document.insertPDF`. Given open PDF d
 
 The GUI script `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ uses this method to join a list of files while also joining the respective table of contents segments. It looks like this:
 
-.. image:: img-pdfjoiner.png 
+.. image:: img-pdfjoiner.jpg
+   :scale: 60
+   :align: center
 
 ----------
 
@@ -402,3 +477,43 @@ The text parameter can be a (sequence of) string (assuming UTF-8 encoding). Inse
 
 ----------
 
+How To Dynamically Clean Up Corrupt PDFs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This shows a potential use of PyMuPDF with another Python PDF library (the excellent pure Python package `pdfrw <https://pypi.python.org/pypi/pdfrw>`_ is used here as an example).
+
+If a clean, non-corrupt / decompressed / decrypted PDF is needed, one could dynamically invoke PyMuPDF to recover from many problems like so::
+
+ import sys
+ from io import BytesIO
+ from pdfrw import PdfReader
+ import fitz
+ 
+ #---------------------------------------
+ # 'Tolerant' PDF reader
+ #---------------------------------------
+ def reader(fname, password = None):
+     idata = open(fname, "rb").read()        # read the PDF into memory and
+     ibuffer = BytesIO(idata)                # convert to stream
+     if password is None:
+         try:
+             return PdfReader(ibuffer)       # if this works: fine!
+         except:
+             pass
+     del ibuffer                             # free some storage
+     # either we need a password or it is a problem-PDF
+     # create a repaired / decrypted version
+     doc = fitz.open("pdf", idata)
+     if password is not None:                # decrypt if password provided
+         doc.authenticate(password)
+     c = doc.write(garbage=4)
+     del doc                                 # close & delete doc
+     return PdfReader(BytesIO(c))            # let pdfrw retry
+ #---------------------------------------
+ # Main program
+ #---------------------------------------
+ pdf = reader("pymupdf.pdf", password = None) # inlude a password if necessary
+ print pdf.Info
+ # do further processing
+
+With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/>`_ for Windows only, but reported to also run under `Wine <https://www.winehq.org/>`_) a similar result can be achieved, see `here <http://www.overthere.co.uk/2013/07/22/improving-pypdf2-with-pdftk/>`_. However, you must invoke it as a separate process via ``subprocess.Popen``, using stdin and stdout as communication vehicles.

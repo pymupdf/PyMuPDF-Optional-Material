@@ -118,7 +118,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       :arg sequence points: a sequence of :ref:`Point` objects. Its length must at least be 2 (in which case it is equivalent to ``drawLine()``).
 
       :rtype: :ref:`Point`
-      :returns: ``points[-1]`` - the last point in the argument sequence.
+      :returns: ``points[-1]`` -- the last point in the argument sequence.
 
    .. method:: drawBezier(p1, p2, p3, p4)
 
@@ -139,7 +139,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       :rtype: :ref:`Point`
       :returns: the end point, ``p4``.
 
-      .. note:: The points do not need to be different - experiment a bit with some of them being equal!
+      .. note:: The points do not need to be different -- experiment a bit with some of them being equal!
 
       Example:
 
@@ -241,7 +241,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       :arg point: the bottom-left position of the first ``text`` character in pixels. ``point.x`` specifies the distance from left border, ``point.y`` the distance from top of page. This is independent from text orientation as requested by ``rotate``. However, there must always be sufficient room "above", which can mean the distance from any of the four page borders.
       :type point: :ref:`Point`
 
-      :arg text: the text to be inserted. May be specified as either a string type or as a sequence type. For sequences, or strings containing line breaks ``\n``, several lines will be inserted. No care will be taken if lines are too wide, but the number of inserted lines will be limited by "vertical" space on the page (in the sense of reading direction as established by the ``rotate`` parameter). Any rest of ``text`` is discarded - the return code however contains the number of inserted lines. Only single byte character codes are currently supported.
+      :arg text: the text to be inserted. May be specified as either a string type or as a sequence type. For sequences, or strings containing line breaks ``\n``, several lines will be inserted. No care will be taken if lines are too wide, but the number of inserted lines will be limited by "vertical" space on the page (in the sense of reading direction as established by the ``rotate`` parameter). Any rest of ``text`` is discarded -- the return code however contains the number of inserted lines. Only single byte character codes are currently supported.
       :type text: str or sequence
 
       :arg int rotate: determines whether to rotate the text. Acceptable values are multiples of 90 degrees. Default is 0 (no rotation), meaning horizontal text lines oriented from left to right. 180 means text is shown upside down from **right to left**. 90 means counter-clockwise rotation, text running **upwards**. 270 (or -90) means clockwise rotation, text running **downwards**. In any case, ``point`` specifies the bottom-left coordinates of the first character's rectangle. Multiple lines, if present, always follow the reading direction established by this parameter. So line 2 is located **above** line 1 in case of ``rotate = 180``, etc.
@@ -279,7 +279,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       :rtype: float
       :returns:
-          **If positive or zero**: successful execution. The value returned is the unused rectangle line space in pixels. This may safely be ignored - or be used to optimize the rectangle, position subsequent items, etc.
+          **If positive or zero**: successful execution. The value returned is the unused rectangle line space in pixels. This may safely be ignored -- or be used to optimize the rectangle, position subsequent items, etc.
 
           **If negative**: no execution. The value returned is the space deficit to store text lines. Enlarge rectangle, decrease ``fontsize``, decrease text amount, etc.
 
@@ -406,7 +406,7 @@ Notes
 
 3. Text insertions may occur anywhere before the commit (they neither touch :attr:`Shape.contents` nor :attr:`Shape.lastPoint`). They are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``.
 
-4. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page - thus providing a way to control graphical layers.
+4. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page -- thus providing a way to control graphical layers.
 
 5. Only ``commit`` will update the page's contents, the other methods are basically string manipulations. With many draw / text operations, this will result in a much better performance, than issuing the corresponding page methods separately (they each do their own commit).
 
@@ -501,7 +501,7 @@ Common Parameters
 
 **color / fill** (*list, tuple*)
 
-  Line and fill colors are always specified as RGB triples of floats from 0 to 1. To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names - see section :ref:`ColorDatabase`.
+  Line and fill colors are always specified as RGB triples of floats from 0 to 1. To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names -- see section :ref:`ColorDatabase`.
 
 ----
 

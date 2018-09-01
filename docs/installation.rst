@@ -2,7 +2,7 @@ Installation
 =============
 Installation generally encompasses downloading and generating PyMuPDF and MuPDF from sources. This process consists of three steps described below under :ref:`InstallSource`.
 
-**However**, for popular configurations, binary setups via wheels are available, detailed out under :ref:`InstallBinary`. This process is **much faster**, less error-prone and requires the download of only one file (either ``.zip`` or ``.whl``) - no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
+**However**, for popular configurations, binary setups via wheels are available, detailed out under :ref:`InstallBinary`. This process is **much faster**, less error-prone and requires the download of only one file (either ``.zip`` or ``.whl``) -- no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
 
 .. _InstallSource:
 
@@ -15,7 +15,7 @@ Download this repository and unzip / decompress it. This will give you a folder,
 
 Step 2: Download and Generate MuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Download ``mupdf-x.xx-source.tar.gz`` from http://mupdf.com/downloads and unzip / decompress it. Call the resulting folder ``mupdf``. The latest MuPDF **development sources** are available on https://github.com/ArtifexSoftware/mupdf - this is **not** what you want here.
+Download ``mupdf-x.xx-source.tar.gz`` from http://mupdf.com/downloads and unzip / decompress it. Call the resulting folder ``mupdf``. The latest MuPDF **development sources** are available on https://github.com/ArtifexSoftware/mupdf -- this is **not** what you want here.
 
 Make sure you download the (sub-) version for which PyMuPDF has stated its compatibility. The various Linux flavors usually have their own specific ways to support download of packages which we cannot cover here. Do not hesitate posting issues to our web site or sending an e-mail to the authors for getting support.
 

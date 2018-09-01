@@ -10,13 +10,13 @@ In some situations, performance improvements may be achievable, when you fall ba
 
 Create a DisplayList
 ---------------------
-A :ref:`DisplayList` represents an interpreted document page. Methods for pixmap creation, text extraction and text search are  - behind the curtain - all using the page's display list to perform their tasks. If a page must be rendered several times (e.g. because of changed zoom levels), or if text search and text extraction should both be performed, overhead can be saved, if the display list is created only once and then used for all other tasks.
+A :ref:`DisplayList` represents an interpreted document page. Methods for pixmap creation, text extraction and text search are  -- behind the curtain -- all using the page's display list to perform their tasks. If a page must be rendered several times (e.g. because of changed zoom levels), or if text search and text extraction should both be performed, overhead can be saved, if the display list is created only once and then used for all other tasks.
 
 >>> dl = page.getDisplayList()              # create the display list
 
 You can also create display lists for many pages "on stack" (in a list), may be during document open, during idling times, or you store it when a page is visited for the first time (e.g. in GUI scripts).
 
-Note, that for everything what follows, only the display list is needed - the corresponding :ref:`Page` object could have been deleted.
+Note, that for everything what follows, only the display list is needed -- the corresponding :ref:`Page` object could have been deleted.
 
 Generate Pixmap
 ------------------
@@ -41,7 +41,7 @@ Extract Text
 ----------------
 With the same :ref:`TextPage` object from above, we can now immediately use any or all of the 5 text extraction methods.
 
-.. note:: Above, we have created our text page without argument. This leads to a default argument of ``3 = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE``, IAW images will **not** be extracted - see below.
+.. note:: Above, we have created our text page without argument. This leads to a default argument of ``3 = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE``, IAW images will **not** be extracted -- see below.
 
 >>> txt  = tp.extractText()                  # plain text format
 >>> json = tp.extractJSON()                  # json format

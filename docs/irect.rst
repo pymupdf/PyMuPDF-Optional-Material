@@ -69,7 +69,7 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
    .. method:: intersect(ir)
 
-      The intersection (common rectangular area) of the current rectangle and ``ir`` is calculated and replaces the current rectangle. If either rectangle is empty, the result is also empty. If one of the rectangles is infinite, the other one is taken as the result - and hence also infinite if both rectangles were infinite.
+      The intersection (common rectangular area) of the current rectangle and ``ir`` is calculated and replaces the current rectangle. If either rectangle is empty, the result is also empty. If one of the rectangles is infinite, the other one is taken as the result -- and hence also infinite if both rectangles were infinite.
 
       :arg ir: Second rectangle.
       :type ir: :ref:`IRect`

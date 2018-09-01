@@ -15,8 +15,8 @@ Since all points or pixels live in a two-dimensional space, one column vector of
 
 Please note:
 
-    * the below methods are just convenience functions - everything they do, can also be achieved by directly manipulating the six numerical values
-    * all manipulations can be combined - you can construct a matrix that rotates **and** shears **and** scales **and** shifts, etc. in one go. If you however choose to do this, do have a look at the **remarks** further down or at the :ref:`AdobeManual`.
+    * the below methods are just convenience functions -- everything they do, can also be achieved by directly manipulating the six numerical values
+    * all manipulations can be combined -- you can construct a matrix that rotates **and** shears **and** scales **and** shifts, etc. in one go. If you however choose to do this, do have a look at the **remarks** further down or at the :ref:`AdobeManual`.
 
 ================================ ==============================================
 **Method / Attribute**             **Description**
@@ -126,13 +126,13 @@ Please note:
 
    .. attribute:: b
 
-      Causes a shearing effect: each ``Point(x, y)`` will become ``Point(x, y - b*x)``. Therefore, looking from left to right, e.g. horizontal lines will be "tilt" - downwards if b > 0, upwards otherwise (b is the tangens of the tilting angle).
+      Causes a shearing effect: each ``Point(x, y)`` will become ``Point(x, y - b*x)``. Therefore, looking from left to right, e.g. horizontal lines will be "tilt" -- downwards if b > 0, upwards otherwise (b is the tangens of the tilting angle).
 
       :type: float
 
    .. attribute:: c
 
-      Causes a shearing effect: each ``Point(x, y)`` will become ``Point(x - c*y, y)``. Therefore, looking upwards, vertical lines will be "tilt" - to the left if c > 0, to the right otherwise (c ist the tangens of the tilting angle).
+      Causes a shearing effect: each ``Point(x, y)`` will become ``Point(x - c*y, y)``. Therefore, looking upwards, vertical lines will be "tilt" -- to the left if c > 0, to the right otherwise (c ist the tangens of the tilting angle).
 
       :type: float
 
@@ -162,7 +162,7 @@ Remarks 2
 ---------
 Changes of matrix properties and execution of matrix methods can be executed consecutively. This is the same as multiplying the respective matrices.
 
-Matrix multiplications are **not commutative** - changing the execution sequence in general changes the result. So it can quickly become unclear which result a transformation will yield.
+Matrix multiplications are **not commutative** -- changing the execution sequence in general changes the result. So it can quickly become unclear which result a transformation will yield.
 
 To keep results foreseeable for a series of transformations, Adobe recommends the following approach (:ref:`AdobeManual`, page 206):
 

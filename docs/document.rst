@@ -172,7 +172,7 @@ For addional details on **embedded files** refer to Appendix 3.
               doc.insertPDF(imgpdf)             # insert the image PDF
       >>> doc.save("allmyimages.pdf")
 
-      .. note:: The method uses the same logic as the ``mutool convert`` CLI. This works very well in most cases - however, beware of the following limitations.
+      .. note:: The method uses the same logic as the ``mutool convert`` CLI. This works very well in most cases -- however, beware of the following limitations.
 
         * Image files: perfect, no issues detected. Apparently however, image transparency is ignored. If you need that (like for a watermark), use :meth:`Page.insertImage` instead. Otherwise, this method is recommended for its much better prformance.
         * XPS: appearance very good. Links work fine, outlines (bookmarks) are lost, but can easily be recovered [#f2]_.
@@ -189,10 +189,10 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :returns: a list of lists. Each entry has the form ``[lvl, title, page, dest]``. Its entries have the following meanings:
 
-        * ``lvl`` - hierarchy level (positive *int*). The first entry is always 1. Entries in a row are either **equal**, **increase** by 1, or **decrease** by any number.
-        * ``title`` - title (*str*)
-        * ``page`` - 1-based page number (*int*). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
-        * ``dest`` - (*dict*) included only if ``simple = False``. Contains details of the link destination.
+        * ``lvl`` -- hierarchy level (positive *int*). The first entry is always 1. Entries in a row are either **equal**, **increase** by 1, or **decrease** by any number.
+        * ``title`` -- title (*str*)
+        * ``page`` -- 1-based page number (*int*). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
+        * ``dest`` -- (*dict*) included only if ``simple = False``. Contains details of the link destination.
 
     .. method:: getPagePixmap(pno, *args, **kwargs)
 
@@ -356,7 +356,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: saves the document incrementally. This is a convenience abbreviation for ``doc.save(doc.name, incremental = True)``.
 
-    .. caution:: A PDF may not be encrypted, but still be password protected against changes - see the ``permissions`` property. Performing incremental saves if ``permissions["edit"] == False`` can lead to unpredictable results. Save to a new file in such a case. We also consider raising an exception under this condition.
+    .. caution:: A PDF may not be encrypted, but still be password protected against changes -- see the ``permissions`` property. Performing incremental saves if ``permissions["edit"] == False`` can lead to unpredictable results. Save to a new file in such a case. We also consider raising an exception under this condition.
 
     .. method:: searchPageFor(pno, text, hit_max = 16)
 
@@ -407,7 +407,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: insertPage(to = -1, text = None, fontsize = 11, width = 595, height = 842, fontname = "Helvetica", fontfile = None, color = (0, 0, 0))
 
-      PDF only: Insert an new page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted - provided as a string or as a sequence.
+      PDF only: Insert an new page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted -- provided as a string or as a sequence.
 
       :arg int to: page number (0-based) in front of which to insert. Valid specifications must be in range ``-1 <= pno <= len(doc)``. The default ``-1`` and ``pno = len(doc)`` indicate end of document, i.e. after the last page.
 
@@ -448,7 +448,7 @@ For addional details on **embedded files** refer to Appendix 3.
     
       PDF only: Convenience method: insert an empty page like ``insertPage()`` does. Valid parameters have the same meaning. However, no text can be inserted, instead the inserted page object is returned.
 
-      If you do not need to insert text with your new page right away, then this method is the more convenient one: it saves you one statement if you need it for subsequent work - see the below example.
+      If you do not need to insert text with your new page right away, then this method is the more convenient one: it saves you one statement if you need it for subsequent work -- see the below example.
 
       :rtype: :ref:`Page`
       :returns: the page object just inserted.
@@ -538,12 +538,12 @@ For addional details on **embedded files** refer to Appendix 3.
       :rtype: dict
       :returns: a dictionary with the following keys:
 
-          * ``name`` - (*str*) name under which this entry is stored
-          * ``filename`` - (*str*) filename
-          * ``ufilename`` - (*unicode*) filename
-          * ``desc`` - (*str*) description
-          * ``size`` - (*int*) original file size
-          * ``length`` - (*int*) compressed file length
+          * ``name`` -- (*str*) name under which this entry is stored
+          * ``filename`` -- (*str*) filename
+          * ``ufilename`` -- (*unicode*) filename
+          * ``desc`` -- (*str*) description
+          * ``size`` -- (*int*) original file size
+          * ``length`` -- (*int*) compressed file length
 
     .. index::
        pair: filename; Document.embeddedFileUpd args
@@ -607,7 +607,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: needsPass
 
-      Contains an indicator showing whether the document is encrypted (``True``) or not (``False``). This indicator remains unchanged - **even after the document has been authenticated**. Precludes incremental saves if ``True``.
+      Contains an indicator showing whether the document is encrypted (``True``) or not (``False``). This indicator remains unchanged -- **even after the document has been authenticated**. Precludes incremental saves if ``True``.
 
       :type: bool
 
@@ -839,4 +839,4 @@ Other Examples
 
 .. [#f1] Content streams describe what (e.g. text or images) appears where and how on a page. PDF uses a specialized mini language similar to PostScript to do this (pp. 985 in :ref:`AdobeManual`), which gets interpreted when a page is loaded.
 
-.. [#f2] However, you **can** use :meth:`Document.getToC` and :meth:`Page.getLinks` (which are available for all document types) and copy this information over to the output PDF. See demo `xps-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/XPS-converter.py>`_.
+.. [#f2] However, you **can** use :meth:`Document.getToC` and :meth:`Page.getLinks` (which are available for all document types) and copy this information over to the output PDF. See demo `pdf-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/pdf-converter.py>`_.

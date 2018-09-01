@@ -587,11 +587,14 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Shape`
       :returns: a new :ref:`Shape` to use for compound drawings. See description there.
 
+   .. index::
+      pair: hit_max; Page.searchFor args
+
    .. method:: searchFor(text, hit_max = 16)
 
       Searches for ``text`` on a page. Identical to :meth:`TextPage.search`.
 
-      :arg str text: Text to searched for. Upper / lower case is ignored.
+      :arg str text: Text to search for. Upper / lower case is ignored. The string may contain spaces.
 
       :arg int hit_max: Maximum number of occurrences accepted.
 

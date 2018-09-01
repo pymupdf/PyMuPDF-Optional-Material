@@ -10,7 +10,7 @@ Following are three sections that deal with different aspects of performance:
 * text extraction
 * image rendering
 
-In each section, the same fixed set of PDF files is being processed by a set of tools. The set of tools varies - for reasons we will explain in the section.
+In each section, the same fixed set of PDF files is being processed by a set of tools. The set of tools varies -- for reasons we will explain in the section.
 
 .. |fsizes| image:: img-filesizes.png
 
@@ -31,9 +31,9 @@ To yet find an answer to the question, we therefore measure the time to copy a P
 
 All tools are either platform independent, or at least can run both, on Windows and Unix / Linux (pdftk).
 
-**Poppler** is missing here, because it specifically is a Linux tool set, although we know there exist Windows ports (created with considerable effort apparently). Technically, it is a C/C++ library, for which a Python binding exists - in so far somewhat comparable to PyMuPDF. But Poppler in contrast is tightly coupled to **Qt** and **Cairo**. We may still include it in future, when a more handy Windows installation is available. We have seen however some `analysis  <http://hzqtc.github.io/2012/04/poppler-vs-mupdf.html>`_, that hints at a much lower performance than MuPDF. Our comparison of text extraction speeds also show a much lower performance of Poppler's PDF code base **Xpdf**.
+**Poppler** is missing here, because it specifically is a Linux tool set, although we know there exist Windows ports (created with considerable effort apparently). Technically, it is a C/C++ library, for which a Python binding exists -- in so far somewhat comparable to PyMuPDF. But Poppler in contrast is tightly coupled to **Qt** and **Cairo**. We may still include it in future, when a more handy Windows installation is available. We have seen however some `analysis  <http://hzqtc.github.io/2012/04/poppler-vs-mupdf.html>`_, that hints at a much lower performance than MuPDF. Our comparison of text extraction speeds also show a much lower performance of Poppler's PDF code base **Xpdf**.
 
-Image rendering of MuPDF also is about three times faster than the one of Xpdf when comparing the command line tools ``mudraw`` of MuPDF and ``pdftopng`` of Xpdf - see part 3 of this chapter.
+Image rendering of MuPDF also is about three times faster than the one of Xpdf when comparing the command line tools ``mudraw`` of MuPDF and ``pdftopng`` of Xpdf -- see part 3 of this chapter.
 
 ========= ==========================================================================
 Tool      Description
@@ -87,7 +87,7 @@ PyMuPDF is by far the fastest: on average 4.5 times faster than the second best 
 
 Where PyMuPDF only requires less than 13 seconds to process all files, pdftk affords itself almost 4 minutes.
 
-By far the slowest tool is PyPDF2 - it is more than 66 times slower than PyMuPDF and 15 times slower than pdfrw! The main reason for PyPDF2's bad look comes from the Adobe manual. It obviously is slowed down by the linear file structure and the immense amount of bookmarks of this file. If we take out this special case, then PyPDF2 is only 21.5 times slower than PyMuPDF, 4.5 times slower than pdfrw and 1.2 times slower than pdftk.
+By far the slowest tool is PyPDF2 -- it is more than 66 times slower than PyMuPDF and 15 times slower than pdfrw! The main reason for PyPDF2's bad look comes from the Adobe manual. It obviously is slowed down by the linear file structure and the immense amount of bookmarks of this file. If we take out this special case, then PyPDF2 is only 21.5 times slower than PyMuPDF, 4.5 times slower than pdfrw and 1.2 times slower than pdftk.
 
 If we look at the output PDFs, there is one surprise:
 
@@ -111,7 +111,7 @@ The following table shows a run time comparison. PyMuPDF's methods appear as "fi
 * **extractJSON():** text extraction with layout information (using ``GetText(..., output = "json")``)
 * **pdfminer:** a pure Python PDF tool specialized on text extraction tasks
 
-All tools have been used with their most basic, fanciless functionality - no layout re-arrangements, etc.
+All tools have been used with their most basic, fanciless functionality -- no layout re-arrangements, etc.
 
 For demonstration purposes, we have included a version of ``GetText(doc, output = "json")``, that also re-arranges the output according to occurrence on the page.
 

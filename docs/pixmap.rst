@@ -55,7 +55,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: __init__(self, colorspace, irect, alpha)
 
-      **New empty pixmap:** Create an empty pixmap of size and origin given by the rectangle. So, ``irect.top_left`` designates the top left corner of the pixmap, and its width and height are ``irect.width`` resp. ``irect.height``. Note that the image area is **not initialized** and will contain crap data - use :meth:`clearWith` to be sure.
+      **New empty pixmap:** Create an empty pixmap of size and origin given by the rectangle. So, ``irect.top_left`` designates the top left corner of the pixmap, and its width and height are ``irect.width`` resp. ``irect.height``. Note that the image area is **not initialized** and will contain crap data -- use :meth:`clearWith` to be sure.
 
       :arg colorspace: colorspace.
       :type colorspace: :ref:`Colorspace`
@@ -114,7 +114,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: __init__(self, colorspace, width, height, samples, alpha)
 
-      **From plain pixels:** Create a pixmap from ``samples``. Each pixel must be represented by a number of bytes as controlled by the ``colorspace`` and ``alpha`` parameters. The origin of the resulting pixmap is ``(0, 0)``. This method is useful when raw image data are provided by some other program - see :ref:`examples` below.
+      **From plain pixels:** Create a pixmap from ``samples``. Each pixel must be represented by a number of bytes as controlled by the ``colorspace`` and ``alpha`` parameters. The origin of the resulting pixmap is ``(0, 0)``. This method is useful when raw image data are provided by some other program -- see :ref:`examples` below.
 
       :arg colorspace: Colorspace of image.
       :type colorspace: :ref:`Colorspace`
@@ -326,7 +326,7 @@ The following file types are supported as input to construct pixmaps: **BMP, JPE
 
 **SVG images** are only supported via method 2 above, not directly as pixmaps. But remember: the result of this is a **raster image** as is always the case with pixmaps.
 
-If you need a **vector image** from the SVG, you must first convert it to a PDF. Try :meth:`Document.convertToPDF`. If this does not work for you, look for other SVG-to-PDF conversion tools like the Python package `svglib <https://pypi.org/project/svglib>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
+If you need a **vector image** from the SVG, you must first convert it to a PDF. Try :meth:`Document.convertToPDF`. If this does not work for you, look for other SVG-to-PDF conversion tools like the Python packages `svglib <https://pypi.org/project/svglib>`_, `CairoSVG <https://pypi.org/project/cairosvg>`_, `Uniconvertor <https://sk1project.net/modules.php?name=Products&product=uniconvertor&op=download>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
 
 Details on Saving Images with ``writeImage()``
 -----------------------------------------------

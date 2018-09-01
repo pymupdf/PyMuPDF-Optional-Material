@@ -1,6 +1,15 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.19
+---------------------------
+This version contains some technical / performance improvements and bug fixes.
+
+* **Changed** memory management: for Python 3 builds, Python memory management is exclusively used across all C-level code (i.e. no more native ``malloc()`` in MuPDF code or PyMuPDF interface code). This leads to improved memory usage profiles and also some runtime improvements: we have seen > 2% shorter runtimes for text extractions and pixmap creations (on Windows machines only to date).
+* **Fixed** an error occurring in Python 2.7, which crashed the interpreter when using :meth:`TextPage.extractRAWDICT` (= ``Page.getText("rawdict")``).
+* **Fixed** an error occurring in Python 2.7, when creating link destinations.
+* **Extended** the :ref:`FAQ` chapter with more examples.
+
 Changes in Version 1.13.18
 ---------------------------
 * **Added** method :meth:`TextPage.extractRAWDICT`, and a corresponding new string parameter "rawdict" to method :meth:`Page.getText`. It extracts text and images from a page in Python *dict* form like :meth:`TextPage.extractDICT`, but with the detail level of :meth:`TextPage.extractXML`, which is position information down to each single character.
@@ -53,7 +62,7 @@ Changes in Version 1.13.12
 * **Fixed** issue #180 ("page.getText(output='dict') return invalid bbox"). Note that this is a circumvention of an MuPDF error, which generates zero-height character rectangles in some cases. When this happens, this fix ensures a bbox height of at least fontsize.
 * **Changed** for ListBox and ComboBox widgets, the attribute list of selectable values has been renamed to :attr:`Widget.choice_values`.
 * **Changed** when adding widgets, any missing of the :ref:`Base-14-Fonts` is automatically added to the PDF. Widget text fonts can now also be chosen from existing widget fonts. Any specified field values are now honored and lead to a field with a preset value.
-* **Added** :meth:`Annot.updateWidget` which allows changing existing form fields - including the field value.
+* **Added** :meth:`Annot.updateWidget` which allows changing existing form fields -- including the field value.
 
 Changes in Version 1.13.11
 ---------------------------
@@ -88,7 +97,7 @@ Changes in Version 1.13.4
 
 Changes in Version 1.13.3
 --------------------------
-Introduces a way to convert **any MuPDF supported document** to a PDF. If you ever wanted PDF versions of your XPS, EPUB, CBZ or FB2 files - here is a way to do this.
+Introduces a way to convert **any MuPDF supported document** to a PDF. If you ever wanted PDF versions of your XPS, EPUB, CBZ or FB2 files -- here is a way to do this.
 
 * :meth:`Document.convertToPDF` returns a Python ``bytes`` object in PDF format. Can be opened like normal in PyMuPDF, or be written to disk with the ``".pdf"`` extension.
 
@@ -101,7 +110,7 @@ The major enhancement is PDF form field support. Form fields are annotations of 
 
 Changes in Version 1.13.1
 --------------------------
-* :meth:`TextPage.extractDICT` is a new method to extract the contents of a document page (text and images). All document types are supported as with the other :ref:`TextPage` ``extract*()`` methods. The returned object is a dictionary of nested lists and other dictionaries, and **exactly equal** to the JSON-deserialization of the old :meth:`TextPage.extractJSON`. The difference is that the result is created directly - no JSON module is used. Because the user needs no JSON module to interpet the information, it should be easier to use, and also have a better performance, because it contains images in their original **binary format** - they need not be base64-decoded.
+* :meth:`TextPage.extractDICT` is a new method to extract the contents of a document page (text and images). All document types are supported as with the other :ref:`TextPage` ``extract*()`` methods. The returned object is a dictionary of nested lists and other dictionaries, and **exactly equal** to the JSON-deserialization of the old :meth:`TextPage.extractJSON`. The difference is that the result is created directly -- no JSON module is used. Because the user needs no JSON module to interpet the information, it should be easier to use, and also have a better performance, because it contains images in their original **binary format** -- they need not be base64-decoded.
 * :meth:`Page.getText` correspondingly supports the new parameter value ``"dict"`` to invoke the above method.
 * :meth:`TextPage.extractJSON` (resp. ``Page.getText("json")``) is still supported for convenience, but its use is expected to decline.
 
@@ -168,7 +177,7 @@ This is an extension of version 1.12.0.
 
 Changes in Version 1.12.0
 --------------------------
-This version is based on and requires MuPDF v1.12.0. The new MuPDF version contains quite a number of changes - most of them around text extraction. Some of the changes impact the programmer's API.
+This version is based on and requires MuPDF v1.12.0. The new MuPDF version contains quite a number of changes -- most of them around text extraction. Some of the changes impact the programmer's API.
 
 * :meth:`Outline.saveText` and :meth:`Outline.saveXML` have been deleted without replacement. You probably haven't used them much anyway. But if you are looking for a replacement: the output of :meth:`Document.getToC` can easily be used to produce something equivalent.
 
@@ -208,7 +217,7 @@ Changes in Version 1.11.1
 --------------------------------
 This is an extension of v1.11.0.
 
-* New class ``Shape``. It facilitates and extends the creation of image shapes on PDF pages. It contains multiple methods for creating elementary shapes like lines, rectangles or circles, which can be combined into more complex ones and be given common properties like line width or colors. Combined shapes are handled as a unit and e.g. be "morphed" together. The class can accumulate multiple complex shapes and put them all in the page's foreground or background - thus also reducing the number of updates to the page's ``/Contents`` object.
+* New class ``Shape``. It facilitates and extends the creation of image shapes on PDF pages. It contains multiple methods for creating elementary shapes like lines, rectangles or circles, which can be combined into more complex ones and be given common properties like line width or colors. Combined shapes are handled as a unit and e.g. be "morphed" together. The class can accumulate multiple complex shapes and put them all in the page's foreground or background -- thus also reducing the number of updates to the page's ``/Contents`` object.
 
 * All ``Page`` draw methods now use the new ``Shape`` class.
 
@@ -224,7 +233,7 @@ Changes in Version 1.11.0
 --------------------------------
 This version is based on and requires MuPDF v1.11.
 
-Though MuPDF has declared it as being mostly a bug fix version, one major new feature is indeed contained: support of embedded files - also called portfolios or collections. We have extended PyMuPDF functionality to embrace this up to an extent just a little beyond the ``mutool`` utility as follows.
+Though MuPDF has declared it as being mostly a bug fix version, one major new feature is indeed contained: support of embedded files -- also called portfolios or collections. We have extended PyMuPDF functionality to embrace this up to an extent just a little beyond the ``mutool`` utility as follows.
 
 * The ``Document`` class now support embedded files with several new methods and one new property:
 
@@ -232,8 +241,8 @@ Though MuPDF has declared it as being mostly a bug fix version, one major new fe
     - ``embeddedFileGet()`` retrieves the (decompressed) content of an entry into a ``bytes`` buffer.
     - ``embeddedFileAdd(...)`` inserts new content into the PDF portfolio. We (in contrast to ``mutool``) **restrict** this to entries with a **new name** (no duplicate names allowed).
     - ``embeddedFileDel(...)`` deletes an entry from the portfolio (function not offered in MuPDF).
-    - ``embeddedFileSetInfo()`` - changes filename or description of an embedded file.
-    - ``embeddedFileCount`` - contains the number of embedded files.
+    - ``embeddedFileSetInfo()`` -- changes filename or description of an embedded file.
+    - ``embeddedFileCount`` -- contains the number of embedded files.
 
 * Several enhancements deal with streamlining geometry objects. These are not connected to the new MuPDF version and most of them are also reflected in PyMuPDF v1.10.0. Among them are new properties to identify the corners of rectangles by name (e.g. ``Rect.bottom_right``) and new methods to deal with set-theoretic questions like ``Rect.contains(x)`` or ``IRect.intersects(x)``. Special effort focussed on supporting more "Pythonic" language constructs: ``if x in rect ...`` is equivalent to ``rect.contains(x)``.
 
@@ -252,7 +261,7 @@ Changes in Version 1.10.0
 
 MuPDF v1.10 Impact
 ~~~~~~~~~~~~~~~~~~~~~~~~
-MuPDF version 1.10 has a significant impact on our bindings. Some of the changes also affect the API - in other words, **you** as a PyMuPDF user.
+MuPDF version 1.10 has a significant impact on our bindings. Some of the changes also affect the API -- in other words, **you** as a PyMuPDF user.
 
 * Link destination information has been reduced. Several properties of the ``linkDest`` class no longer contain valuable information. In fact, this class as a whole has been deleted from MuPDF's library and we in PyMuPDF only maintain it to provide compatibilty to existing code.
 
@@ -260,7 +269,7 @@ MuPDF version 1.10 has a significant impact on our bindings. Some of the changes
 
     - A new ``config.h`` file can be used to de-select unwanted features in the C base code. Using this feature we have been able to reduce the size of our binary ``_fitz.o`` / ``_fitz.pyd`` by about 50% (from 9 MB to 4.5 MB). When UPX-ing this, the size goes even further down to a very handy 2.3 MB.
 
-    - The alpha (transparency) channel for pixmaps is now optional. Letting alpha default to ``False`` significantly reduces pixmap sizes (by 20% - CMYK, 25% - RGB, 50% - GRAY). Many ``Pixmap`` constructors therefore now accept an ``alpha`` boolean to control inclusion of this channel. Other pixmap constructors (e.g. those for file and image input) create pixmaps with no alpha alltogether. On the downside, save methods for pixmaps no longer accept a ``savealpha`` option: this channel will always be saved when present. To minimize code breaks, we have left this parameter in the call patterns - it will just be ignored.
+    - The alpha (transparency) channel for pixmaps is now optional. Letting alpha default to ``False`` significantly reduces pixmap sizes (by 20% -- CMYK, 25% -- RGB, 50% -- GRAY). Many ``Pixmap`` constructors therefore now accept an ``alpha`` boolean to control inclusion of this channel. Other pixmap constructors (e.g. those for file and image input) create pixmaps with no alpha alltogether. On the downside, save methods for pixmaps no longer accept a ``savealpha`` option: this channel will always be saved when present. To minimize code breaks, we have left this parameter in the call patterns -- it will just be ignored.
 
 * ``DisplayList`` and ``TextPage`` class constructors now **require the mediabox** of the page they are referring to (i.e. the ``page.bound()`` rectangle). There is no way to construct this information from other sources, therefore a source code change cannot be avoided in these cases. We assume however, that not many users are actually employing these rather low level classes explixitely. So the impact of that change should be minor.
 

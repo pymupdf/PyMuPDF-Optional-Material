@@ -143,7 +143,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document._getXmlMetadataXref()
 
-      Return he XML-based metadata object id from the PDF if present - also refer to :meth:`Document._delXmlMetadata`. You can use it to retrieve the content via :meth:`Document._getXrefStream` and then work with it using some XML software.
+      Return he XML-based metadata object id from the PDF if present -- also refer to :meth:`Document._delXmlMetadata`. You can use it to retrieve the content via :meth:`Document._getXrefStream` and then work with it using some XML software.
 
 -----
 
@@ -204,7 +204,7 @@ Yet others are handy, general-purpose utilities.
       :returns: a list whose items are lists with the following entries:
 
                 * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
-                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word - not only letters. So, ``    Hello   world!   `` will yield the two words ``Hello`` and ``world!``.
+                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word -- not only letters. So, ``    Hello   world!   `` will yield the two words ``Hello`` and ``world!``.
                 * ``block_n, line_n, word_n``: 0-based counters for block, line and word *(int)*.
 
 -----
@@ -221,7 +221,7 @@ Yet others are handy, general-purpose utilities.
       
             .. note::  Certain font files can contain more than one font. This parameter can be used to select the right one. PyMuPDF has no way to tell whether the font file indeed contains a font for any non-zero index.
 
-            .. caution:: Only the first choice of ``idx`` will be honored - subsequent specifications are ignored.
+            .. caution:: Only the first choice of ``idx`` will be honored -- subsequent specifications are ignored.
 
       :arg bool set_simple: When inserting from a font file, a "Type0" font will be installed by default. This option causes the font to be installed as a simple font instead. Only 1-byte characters will then be presented correctly, others will appear as "?" (question mark).
 
@@ -290,7 +290,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Annot._cleanContents()
 
-      Clean the ``/Contents`` streams associated with the annotation. This is the same type of action :meth:`Page._cleanContents` performs - just restricted to this annotation.
+      Clean the ``/Contents`` streams associated with the annotation. This is the same type of action :meth:`Page._cleanContents` performs -- just restricted to this annotation.
 
       :rtype: int
       :returns: 0 if successful (exception raised otherwise).
@@ -334,7 +334,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document._getGCTXerrmsg()
 
-      Retrieve exception message text issued by PyMuPDF's low-level code. This in most cases, but not always, are MuPDF messages. This string will never be cleared - only overwritten as needed. Only rely on it if a ``RuntimeError`` had been raised.
+      Retrieve exception message text issued by PyMuPDF's low-level code. This in most cases, but not always, are MuPDF messages. This string will never be cleared -- only overwritten as needed. Only rely on it if a ``RuntimeError`` had been raised.
 
       :rtype: str
       :returns: last C-level error message on occasion of a ``RuntimeError`` exception.
@@ -400,7 +400,7 @@ Yet others are handy, general-purpose utilities.
       
       If you update a contents stream, you should use save parameter ``clean = True``. This ensures consistency between PDF operator source and the object structure.
       
-      Example: Let us assume that you no longer want a certain image appear on a page. This can be achieved by deleting [#f2]_ the respective reference in its contents source(s) - and indeed: the image will be gone after reloading the page. But the page's ``/Resources`` object would still [#f3]_ show the image as being referenced by the page. This save option will clean up any such mismatches.
+      Example: Let us assume that you no longer want a certain image appear on a page. This can be achieved by deleting [#f2]_ the respective reference in its contents source(s) -- and indeed: the image will be gone after reloading the page. But the page's ``/Resources`` object would still [#f3]_ show the image as being referenced by the page. This save option will clean up any such mismatches.
 
 -----
 
@@ -477,8 +477,8 @@ Yet others are handy, general-purpose utilities.
       :rtype: tuple
       :returns: a tuple ``(basename, ext, subtype, buffer)``, where ``ext`` is a 3-byte suggested file extension (*str*), ``basename`` is the font's name (*str*), ``subtype`` is the font's type (e.g. "Type1") and ``buffer`` is a bytes object containing the font file's content (or ``b""``). For possible extension values and their meaning see :ref:`FontExtensions`. Return details on error:
 
-            * ``("", "", "", b"")`` - invalid xref or xref is not a (valid) font object.
-            * ``(basename, "n/a", "Type1", b"")`` - ``basename`` is one of the :ref:`Base-14-Fonts`, which cannot be extracted.
+            * ``("", "", "", b"")`` -- invalid xref or xref is not a (valid) font object.
+            * ``(basename, "n/a", "Type1", b"")`` -- ``basename`` is one of the :ref:`Base-14-Fonts`, which cannot be extracted.
 
       Example:
 
@@ -497,14 +497,14 @@ Yet others are handy, general-purpose utilities.
 
        Contains following information for any font inserted via :meth:`Page.insertFont`:
 
-       * xref *(int)* - XREF number of the ``/Type/Font`` object.
-       * info *(dict)* - detail font information with the following keys:
+       * xref *(int)* -- XREF number of the ``/Type/Font`` object.
+       * info *(dict)* -- detail font information with the following keys:
 
-            * name *(str)* - name of the basefont
-            * idx *(int)* - index number for multi-font files
-            * type *(str)* - font type (like "TrueType", "Type0", etc.)
-            * ext *(str)* - extension to be used, when font is extracted to a file (see :ref:`FontExtensions`).
-            * glyphs (*list*) - list of glyph numbers and widths (filled by textinsertion methods).
+            * name *(str)* -- name of the basefont
+            * idx *(int)* -- index number for multi-font files
+            * type *(str)* -- font type (like "TrueType", "Type0", etc.)
+            * ext *(str)* -- extension to be used, when font is extracted to a file (see :ref:`FontExtensions`).
+            * glyphs (*list*) -- list of glyph numbers and widths (filled by textinsertion methods).
 
       :rtype: list
 

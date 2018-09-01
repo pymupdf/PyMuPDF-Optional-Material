@@ -50,7 +50,7 @@ Outline
 
    .. attribute:: is_open
 
-      Or ``isOpen`` - an indicator showing whether any sub-outlines should be expanded (``True``) or be collapsed (``False``). This information should be interpreted by PDF display software accordingly.
+      Or ``isOpen`` -- an indicator showing whether any sub-outlines should be expanded (``True``) or be collapsed (``False``). This information should be interpreted by PDF display software accordingly.
 
       :type: bool
 

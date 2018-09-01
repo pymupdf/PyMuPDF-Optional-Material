@@ -4,12 +4,12 @@
 Rect
 ==========
 
-``Rect`` represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are viewed as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their intuitive meanings - read on.
+``Rect`` represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are viewed as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their intuitive meanings -- read on.
 
 The following remarks are also valid for :ref:`IRect` objects:
 
 * Rectangle borders are always parallel to the respective X- and Y-axes.
-* The constructing points can be anywhere in the plane - they need not even be different, and e.g. "top left" need not be the geometrical "north-western" point.
+* The constructing points can be anywhere in the plane -- they need not even be different, and e.g. "top left" need not be the geometrical "north-western" point.
 * For any given quadruple of numbers, the geometrically "same" rectangle can be defined in (up to) four different ways: Rect(P\ :sub:`x0,y0`, P\ :sub:`x1,y1`\ ), Rect(P\ :sub:`x1,y1`, P\ :sub:`x0,y0`\ ), Rect(P\ :sub:`x0,y1`, P\ :sub:`x1,y0`\ ), and Rect(P\ :sub:`x1,y0`, P\ :sub:`x0,y1`\ ).
 
 Hence some useful classification:
@@ -249,7 +249,7 @@ For a general background, see chapter :ref:`Algebra`.
 Examples
 ----------
 
-**Example 1 - different ways of construction:**
+**Example 1 -- different ways of construction:**
 
 >>> p1 = fitz.Point(10, 10)
 >>> p2 = fitz.Point(300, 450)
@@ -266,7 +266,7 @@ fitz.Rect(10.0, 10.0, 300.0, 450.0)
 >>> fitz.Rect(p1, 300, 450)
 fitz.Rect(10.0, 10.0, 300.0, 450.0)
 
-**Example 2 - what happens during rounding:**
+**Example 2 -- what happens during rounding:**
 
 >>> r = fitz.Rect(0.5, -0.01, 123.88, 455.123456)
 >>>
@@ -276,7 +276,7 @@ fitz.Rect(0.5, -0.009999999776482582, 123.87999725341797, 455.1234436035156)
 >>> r.round()     # = r.irect
 fitz.IRect(0, -1, 124, 456)
 
-**Example 3 - inclusion and itersection:**
+**Example 3 -- inclusion and itersection:**
 
 >>> m = fitz.Matrix(45)
 >>> r = fitz.Rect(10, 10, 410, 610)
@@ -292,7 +292,7 @@ fitz.Rect(15.0, 15.0, 415.0, 615.0)
 >>> r & fitz.Rect(0, 0, 15, 15)
 fitz.Rect(10.0, 10.0, 15.0, 15.0)
 
-**Example 4 - containment:**
+**Example 4 -- containment:**
 
 >>> r = fitz.Rect(...)     # any rectangle
 >>> ir = r.irect           # its IRect version
@@ -313,7 +313,7 @@ True
 >>> r.x0 in r
 True
 
-**Example 5 - create a finite copy:**
+**Example 5 -- create a finite copy:**
 
 Create a copy that is **guarantied to be finite** in two ways:
 
@@ -327,14 +327,14 @@ Create a copy that is **guarantied to be finite** in two ways:
 >>> s = (+r).normalize()
 >>> # r.normalize() changes r itself!
 
-**Example 6 - adding a Python sequence:**
+**Example 6 -- adding a Python sequence:**
 
 Enlarge rectangle by 5 pixels in every direction:
 
 >>> r  = fitz.Rect(...)
 >>> r1 = r + (-5, -5, 5, 5)
 
-**Example 7 - inline operations:**
+**Example 7 -- inline operations:**
 
 Replace a rectangle with its transformation by the inverse of a matrix-like object:
 

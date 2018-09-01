@@ -17,7 +17,7 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: border_style
 
-       A string defining the line style of the field's border. See :attr:`Annot.border`. Default is "s" ("Solid") - a continuous line. Only the first character (upper or lower case) will be regarded when creating a widget.
+       A string defining the line style of the field's border. See :attr:`Annot.border`. Default is "s" ("Solid") -- a continuous line. Only the first character (upper or lower case) will be regarded when creating a widget.
 
     .. attribute:: border_width
 
@@ -81,7 +81,7 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: text_type
 
-       An integer defining acceptable text types (e.g. numeric, date, time, etc.). For reference only for the time being - will be ignored when creating or updating widgets.
+       An integer defining acceptable text types (e.g. numeric, date, time, etc.). For reference only for the time being -- will be ignored when creating or updating widgets.
 
 
 Standard Fonts for Widgets

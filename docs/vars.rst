@@ -33,31 +33,31 @@ Constants
 
 .. py:data:: CS_RGB
 
-    1 - Type of :ref:`Colorspace` is RGBA
+    1 -- Type of :ref:`Colorspace` is RGBA
 
     :rtype: int
 
 .. py:data:: CS_GRAY
 
-    2 - Type of :ref:`Colorspace` is GRAY
+    2 -- Type of :ref:`Colorspace` is GRAY
 
     :rtype: int
 
 .. py:data:: CS_CMYK
 
-    3 - Type of :ref:`Colorspace` is CMYK
+    3 -- Type of :ref:`Colorspace` is CMYK
 
     :rtype: int
 
 .. py:data:: VersionBind
 
-    'x.xx.x' - version of PyMuPDF (these bindings)
+    'x.xx.x' -- version of PyMuPDF (these bindings)
 
     :rtype: string
 
 .. py:data:: VersionFitz
 
-    'x.xxx' - version of MuPDF
+    'x.xxx' -- version of MuPDF
 
     :rtype: string
 
@@ -71,7 +71,7 @@ Constants
 
 .. py:data:: version
 
-    (VersionBind, VersionFitz, timestamp) - combined version information where ``timestamp`` is the generation point in time formatted as "YYYYMMDDhhmmss".
+    (VersionBind, VersionFitz, timestamp) -- combined version information where ``timestamp`` is the generation point in time formatted as "YYYYMMDDhhmmss".
 
     :rtype: tuple
 
@@ -99,19 +99,19 @@ Text Alignment
 -----------------------
 .. py:data:: TEXT_ALIGN_LEFT
 
-    0 - align left.
+    0 -- align left.
 
 .. py:data:: TEXT_ALIGN_CENTER
 
-    1 - align center.
+    1 -- align center.
 
 .. py:data:: TEXT_ALIGN_RIGHT
 
-    2 - align right.
+    2 -- align right.
 
 .. py:data:: TEXT_ALIGN_JUSTIFY
 
-    3 - align justify.
+    3 -- align justify.
 
 .. _TextPreserve:
 
@@ -121,15 +121,15 @@ Options controlling the amount of data a text device parses into a :ref:`TextPag
 
 .. py:data:: TEXT_PRESERVE_LIGATURES
 
-    1 - If this option is activated ligatures are passed through to the application in their original form. If this option is deactivated ligatures are expanded into their constituent parts, e.g. the ligature ffi is expanded into three  eparate characters f, f and i.
+    1 -- If this option is activated ligatures are passed through to the application in their original form. If this option is deactivated ligatures are expanded into their constituent parts, e.g. the ligature ffi is expanded into three  eparate characters f, f and i.
 
 .. py:data:: TEXT_PRESERVE_WHITESPACE
 
-    2 - If this option is activated whitespace is passed through to the application in its original form. If this option is deactivated any type of horizontal whitespace (including horizontal tabs) will be replaced with space characters of variable width.
+    2 -- If this option is activated whitespace is passed through to the application in its original form. If this option is deactivated any type of horizontal whitespace (including horizontal tabs) will be replaced with space characters of variable width.
 
 .. py:data:: TEXT_PRESERVE_IMAGES
 
-    4 - If this option is set, then images will be stored in the structured text structure. The default is to ignore all images.
+    4 -- If this option is set, then images will be stored in the structured text structure. The default is to ignore all images.
 
 
 .. _linkDest Kinds:
@@ -140,31 +140,31 @@ Possible values of :attr:`linkDest.kind` (link destination kind). For details co
 
 .. py:data:: LINK_NONE
 
-    0 - No destination. Indicates a dummy link.
+    0 -- No destination. Indicates a dummy link.
 
     :rtype: int
 
 .. py:data:: LINK_GOTO
 
-    1 - Points to a place in this document.
+    1 -- Points to a place in this document.
 
     :rtype: int
 
 .. py:data:: LINK_URI
 
-    2 - Points to a URI - typically a resource specified with internet syntax.
+    2 -- Points to a URI -- typically a resource specified with internet syntax.
 
     :rtype: int
 
 .. py:data:: LINK_LAUNCH
 
-    3 - Launch (open) another file (of any "executable" type).
+    3 -- Launch (open) another file (of any "executable" type).
 
     :rtype: int
 
 .. py:data:: LINK_GOTOR
 
-    5 - Points to a place in another PDF document.
+    5 -- Points to a place in another PDF document.
 
     :rtype: int
 
@@ -225,83 +225,83 @@ Possible values (integer) for PDF annotation types. See chapter 8.4.5, pp. 615 o
 
 .. py:data:: ANNOT_TEXT
 
-    0 - Text annotation
+    0 -- Text annotation
 
 .. py:data:: ANNOT_LINK
 
-    1 - Link annotation
+    1 -- Link annotation
 
 .. py:data:: ANNOT_FREETEXT
 
-    2 -  Free text annotation
+    2 --  Free text annotation
 
 .. py:data:: ANNOT_LINE
 
-    3 - Line annotation
+    3 -- Line annotation
 
 .. py:data:: ANNOT_SQUARE
 
-    4 -  Square annotation
+    4 --  Square annotation
 
 .. py:data:: ANNOT_CIRCLE
 
-    5 -  Circle annotation
+    5 --  Circle annotation
 
 .. py:data:: ANNOT_POLYGON
 
-    6 - Polygon annotation
+    6 -- Polygon annotation
 
 .. py:data:: ANNOT_POLYLINE
 
-    7 - PolyLine annotation
+    7 -- PolyLine annotation
 
 .. py:data:: ANNOT_HIGHLIGHT
 
-    8 -  Highlight annotation
+    8 --  Highlight annotation
 
 .. py:data:: ANNOT_UNDERLINE
 
-    9 - Underline annotation
+    9 -- Underline annotation
 
 .. py:data:: ANNOT_SQUIGGLY
 
-    10 -  Squiggly-underline annotation
+    10 --  Squiggly-underline annotation
 
 .. py:data:: ANNOT_STRIKEOUT
 
-    11 - Strikeout annotation
+    11 -- Strikeout annotation
 
 .. py:data:: ANNOT_STAMP
 
-    12 -  Rubber stamp annotation
+    12 --  Rubber stamp annotation
 
 .. py:data:: ANNOT_CARET
 
-    13 - Caret annotation
+    13 -- Caret annotation
 
 .. py:data:: ANNOT_INK
 
-    14 -  Ink annotation
+    14 --  Ink annotation
 
 .. py:data:: ANNOT_POPUP
 
-    15 -  Pop-up annotation
+    15 --  Pop-up annotation
 
 .. py:data:: ANNOT_FILEATTACHMENT
 
-    16 - File attachment annotation
+    16 -- File attachment annotation
 
 .. py:data:: ANNOT_SOUND
 
-    17 - Sound annotation
+    17 -- Sound annotation
 
 .. py:data:: ANNOT_MOVIE
 
-    18 - Movie annotation
+    18 -- Movie annotation
 
 .. py:data:: ANNOT_WIDGET
 
-    19 - Widget annotation. This annotation comes with the following subtypes:
+    19 -- Widget annotation. This annotation comes with the following subtypes:
 
 .. py:data:: ANNOT_WG_NOT_WIDGET
 
@@ -337,23 +337,23 @@ Possible values (integer) for PDF annotation types. See chapter 8.4.5, pp. 615 o
 
 .. py:data:: ANNOT_SCREEN
 
-    20 - Screen annotation
+    20 -- Screen annotation
 
 .. py:data:: ANNOT_PRINTERMARK
 
-    21 - Printers mark annotation
+    21 -- Printers mark annotation
 
 .. py:data:: ANNOT_TRAPNET
 
-    22 - Trap network annotation
+    22 -- Trap network annotation
 
 .. py:data:: ANNOT_WATERMARK
 
-    23 - Watermark annotation
+    23 -- Watermark annotation
 
 .. py:data:: ANNOT_3D
 
-    24 - 3D annotation
+    24 -- 3D annotation
 
 .. _Annotation Flags:
 
@@ -365,43 +365,43 @@ Possible mask values for PDF annotation flags.
 
 .. py:data:: ANNOT_XF_Invisible
 
-    1 - If set, do not display the annotation if it does not belong to one of the standard annotation types and no annotation handler is available. If clear, display such an unknown annotation using an appearance stream specified by its appearance dictionary, if any.
+    1 -- If set, do not display the annotation if it does not belong to one of the standard annotation types and no annotation handler is available. If clear, display such an unknown annotation using an appearance stream specified by its appearance dictionary, if any.
 
 .. py:data:: ANNOT_XF_Hidden
 
-    2 - If set, do not display or print the annotation or allow it to interact with the user, regardless of its annotation type or whether an annotation handler is available. In cases where screen space is limited, the ability to hide and show annotations selectively can be used in combination with appearance streams to display auxiliary pop-up information similar in function to online help systems.
+    2 -- If set, do not display or print the annotation or allow it to interact with the user, regardless of its annotation type or whether an annotation handler is available. In cases where screen space is limited, the ability to hide and show annotations selectively can be used in combination with appearance streams to display auxiliary pop-up information similar in function to online help systems.
 
 .. py:data:: ANNOT_XF_Print
 
-    4 - If set, print the annotation when the page is printed. If clear, never print the annotation, regardless of whether it is displayed on the screen. This can be useful, for example, for annotations representing interactive pushbuttons, which would serve no meaningful purpose on the printed page.
+    4 -- If set, print the annotation when the page is printed. If clear, never print the annotation, regardless of whether it is displayed on the screen. This can be useful, for example, for annotations representing interactive pushbuttons, which would serve no meaningful purpose on the printed page.
 
 .. py:data:: ANNOT_XF_NoZoom
 
-    8 - If set, do not scale the annotation's appearance to match the magnification of the page. The location of the annotation on the page (defined by the upper-left corner of its annotation rectangle) remains fixed, regardless of the page magnification.
+    8 -- If set, do not scale the annotation's appearance to match the magnification of the page. The location of the annotation on the page (defined by the upper-left corner of its annotation rectangle) remains fixed, regardless of the page magnification.
 
 .. py:data:: ANNOT_XF_NoRotate
 
-    16 -  If set, do not rotate the annotation's appearance to match the rotation of the page. The upper-left corner of the annotation rectangle remains in a fixed location on the page, regardless of the page rotation.
+    16 --  If set, do not rotate the annotation's appearance to match the rotation of the page. The upper-left corner of the annotation rectangle remains in a fixed location on the page, regardless of the page rotation.
 
 .. py:data:: ANNOT_XF_NoView
 
-    32 -  If set, do not display the annotation on the screen or allow it to interact with the user. The annotation may be printed (depending on the setting of the Print flag) but should be considered hidden for purposes of on-screen display and user interaction.
+    32 --  If set, do not display the annotation on the screen or allow it to interact with the user. The annotation may be printed (depending on the setting of the Print flag) but should be considered hidden for purposes of on-screen display and user interaction.
 
 .. py:data:: ANNOT_XF_ReadOnly
 
-    64 - If set, do not allow the annotation to interact with the user. The annotation may be displayed or printed (depending on the settings of the NoView and Print flags) but should not respond to mouse clicks or change its appearance in response to mouse motions.
+    64 -- If set, do not allow the annotation to interact with the user. The annotation may be displayed or printed (depending on the settings of the NoView and Print flags) but should not respond to mouse clicks or change its appearance in response to mouse motions.
 
 .. py:data:: ANNOT_XF_Locked
 
-    128 - If set, do not allow the annotation to be deleted or its properties (including position and size) to be modified by the user. However, this flag does not restrict changes to the annotation's contents, such as the value of a form field.
+    128 -- If set, do not allow the annotation to be deleted or its properties (including position and size) to be modified by the user. However, this flag does not restrict changes to the annotation's contents, such as the value of a form field.
 
 .. py:data:: ANNOT_XF_ToggleNoView
 
-    256 - If set, invert the interpretation of the NoView flag for certain events. A typical use is to have an annotation that appears only when a mouse cursor is held over it.
+    256 -- If set, invert the interpretation of the NoView flag for certain events. A typical use is to have an annotation that appears only when a mouse cursor is held over it.
 
 .. py:data:: ANNOT_XF_LockedContents
 
-    512 - If set, do not allow the contents of the annotation to be modified by the user. This flag does not restrict deletion of the annotation or changes to other annotation properties, such as position and size.
+    512 -- If set, do not allow the contents of the annotation to be modified by the user. This flag does not restrict deletion of the annotation or changes to other annotation properties, such as position and size.
 
 .. _Annotation Line Ends:
 
@@ -411,43 +411,43 @@ The following descriptions are taken from the :ref:`AdobeManual` Table 8.27 on p
 
 .. py:data:: ANNOT_LE_None
 
-    0 - No line ending.
+    0 -- No line ending.
 
 .. py:data:: ANNOT_LE_Square
 
-    1 - A square filled with the annotation's interior color, if any.
+    1 -- A square filled with the annotation's interior color, if any.
 
 .. py:data:: ANNOT_LE_Circle
 
-    2 - A circle filled with the annotation's interior color, if any.
+    2 -- A circle filled with the annotation's interior color, if any.
 
 .. py:data:: ANNOT_LE_Diamond
 
-    3 - A diamond shape filled with the annotation's interior color, if any.
+    3 -- A diamond shape filled with the annotation's interior color, if any.
 
 .. py:data:: ANNOT_LE_OpenArrow
 
-    4 - Two short lines meeting in an acute angle to form an open arrowhead.
+    4 -- Two short lines meeting in an acute angle to form an open arrowhead.
 
 .. py:data:: ANNOT_LE_ClosedArrow
 
-    5 - Two short lines meeting in an acute angle as in the OpenArrow style (see above) and connected by a third line to form a triangular closed arrowhead filled with the annotation's interior color, if any.
+    5 -- Two short lines meeting in an acute angle as in the OpenArrow style (see above) and connected by a third line to form a triangular closed arrowhead filled with the annotation's interior color, if any.
 
 .. py:data:: ANNOT_LE_Butt
 
-    6 - (PDF 1.5) A short line at the endpoint perpendicular to the line itself.
+    6 -- (PDF 1.5) A short line at the endpoint perpendicular to the line itself.
 
 .. py:data:: ANNOT_LE_ROpenArrow
 
-    7 - (PDF 1.5) Two short lines in the reverse direction from OpenArrow.
+    7 -- (PDF 1.5) Two short lines in the reverse direction from OpenArrow.
 
 .. py:data:: ANNOT_LE_RClosedArrow
 
-    8 - (PDF 1.5) A triangular closed arrowhead in the reverse direction from ClosedArrow.
+    8 -- (PDF 1.5) A triangular closed arrowhead in the reverse direction from ClosedArrow.
 
 .. py:data:: ANNOT_LE_Slash
 
-    9 - (PDF 1.6) A short line at the endpoint approximately 30 degrees clockwise from perpendicular to the line itself.
+    9 -- (PDF 1.6) A short line at the endpoint approximately 30 degrees clockwise from perpendicular to the line itself.
 
 .. _WidgetFieldFlags:
 

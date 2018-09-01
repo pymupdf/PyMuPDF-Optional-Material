@@ -8,7 +8,7 @@ In addition, the underlying C library MuPDF also raises exceptions on the Python
 In general, ``RuntimeError`` is raised by the C-level (MuPdf or PyMuPDF), other exception types are always raised on the Python level.
 
 **annot has no /AP**
-    * Bad specification - no changes possible for this annotation.
+    * Bad specification -- no changes possible for this annotation.
 
 **arg 1 not bytes or bytearray**
     * Specify parameter as type ``bytes`` or ``bytearray``.
@@ -20,10 +20,10 @@ In general, ``RuntimeError`` is raised by the C-level (MuPdf or PyMuPDF), other 
     * An embedded / attached file is not a stream. Repair PDF.
 
 **buffer too large to deflate**
-    * Internal error - report an issue.
+    * Internal error -- report an issue.
 
 **cannot deflate buffer**
-    * Internal error - report an issue.
+    * Internal error -- report an issue.
 
 **cannot open <path>: No such file or directory**
     * Specify a valid file name / path.
@@ -40,7 +40,7 @@ In general, ``RuntimeError`` is raised by the C-level (MuPdf or PyMuPDF), other 
 **could not load root object**
     * Root object of PDF not found. Repair PDF.
 
-**encrypted file - save to new**
+**encrypted file -- save to new**
     * Trying incremental save for a decrypted file. Save to a new file.
 
 **exactly one of filename, pixmap or stream must be given**
@@ -173,7 +173,7 @@ In general, ``RuntimeError`` is raised by the C-level (MuPdf or PyMuPDF), other 
     * If text starts at :ref:`Point` ``point``, ``fontsize <= point.y <= (page height - fontsize * 1.2)`` must be true.
 
 **type(ap) invalid**
-    * Internal error - report an issue.
+    * Internal error -- report an issue.
 
 **type(imagedata) invalid**
     * Use type ``bytearray``.
@@ -188,7 +188,7 @@ In general, ``RuntimeError`` is raised by the C-level (MuPdf or PyMuPDF), other 
     * Trying to create a pixmap from a non-image PDF object.
 
 **xref invalid**
-    * Internal error - report an issue.
+    * Internal error -- report an issue.
 
 **xref is not a stream**
     * Trying to access the stream part of a non-stream object.
