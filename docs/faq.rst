@@ -82,6 +82,8 @@ You have basically two options:
     >>> blocks = d["blocks"]
     >>> imgblocks = [b for b in blocks if b["type"] == 1]
 
+    .. note:: Of course you can use this method for PDFs, too!
+
 ----------
 
 .. index::
@@ -152,7 +154,9 @@ The scripts `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blo
 
 How to Make a PDF of All your Pictures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-We show two scripts that take a list of image files and put them all in one PDF.
+We show here **three scripts** that take a list of (image and other) files and put them all in one PDF.
+
+**Method 1: Inserting Images as Pages**
 
 The first one converts each image to a PDF page with the same dimensions::
 
@@ -177,7 +181,7 @@ The first one converts each image to a PDF page with the same dimensions::
  
  doc.save("all-my-pics.pdf")
 
-This will generate a PDF marginally larger than the combined pictures's size. Some numbers on performance:
+This will generate a PDF only marginally larger than the combined pictures' size. Some numbers on performance:
 
 The above script needed about 1 minute on my machine for 149 pictures with a total size of 514 MB (and about the same resulting PDF size).
 
@@ -185,32 +189,23 @@ The above script needed about 1 minute on my machine for 149 pictures with a tot
    :align: center
    :scale: 80
 
-An alternative would be using :meth:`Page.insertImage` in the for loop:
+Look `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-inserted.py>`_ for a more complete source code: it offers a directory selection dialog and skips unsupported files and non-file entries.
 
->>> ...
->>> for f in imglist:
-        pix = fitz.Pixmap(os.path.join(imgdir, f)) # make a pixmap from pic
-        rect = pix.irect.rect
-        page = doc.newPage(width = rect.width,
-                           height = rect.height)
-        page.insertImage(rect, pixmap = pix)
->>> ...
+.. note:: We could have used :meth:`Page.insertImage` instead of :meth:`Page.showPDFpage`, and the result would have been a similar looking file. However, depending on the image type, it may store **images uncompressed**. Therefore, the save option ``deflate = True`` must be used to achieve a reasonable file size, which hugely increases the runtime for large numbers of images. So this alternative **cannot be recommended** here.
 
-This will produce the same type of file, but it stores **images uncompressed**. So the ``deflate = True`` must be used to achieve a reasonable file size, which hugely increases the runtime for large numbers of images. So this alternative **cannot be recommended**.
+**Method 2: Embedding Files**
 
-Another approach is to just embed the images and abdicate displaying them as pages. You would then need a suitable PDF viewer that can display and / or detach embedded files::
+The second script **embeds** the (image) files. You would need a suitable PDF viewer that can display and / or extract embedded files::
 
  import os, fitz
  import PySimpleGUI as psg                    # for showing progress bar
  doc = fitz.open()                            # PDF with the pictures
  imgdir = "D:/2012_10_05"                     # where the pictures are
- rect = fitz.PaperRect("a4") + (36, 36, -36, -36)  # protocol area in PDF page
+ 
  imglist = os.listdir(imgdir)                 # list of pictures
  imgcount = len(imglist)                      # pic count
  imglist.sort()                               # nicely sort them
- # make protocol text
- text = "Contains the following %i files from '%s':\n\n" % (imgcount, imgdir)
- text += ", ".join(imglist)
+
  for i, f in enumerate(imglist):
      img = open(os.path.join(imgdir,f), "rb").read()    # make pic stream
      doc.embeddedFileAdd(img, f, filename=f,            # and embed it
@@ -219,18 +214,27 @@ Another approach is to just embed the images and abdicate displaying them as pag
          i+1, imgcount)
  
  page = doc.newPage()                         # at least 1 page is needed,
- page.insertTextbox(rect, text)               # so put protocol text in it
+ 
  doc.save("all-my-pics-embedded.pdf")
 
 .. image:: img-embed-progress.jpg
    :align: center
    :scale: 80
 
-This is by far the fastest method, and it also produces the smallest possible output file size. The above pictures needed 20 seonds on my machine and yielded a PDF size of 510 MB.
+This is by far the fastest method, and it also produces the smallest possible output file size. The above pictures needed 20 seonds on my machine and yielded a PDF size of 510 MB. Look `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-embedded.py>`_ for a more complete source code: it offers a direcory selection dialog and skips non-file entries.
 
-.. note:: This method can also be used to embed **arbitrary files** - not just images.
+**Method 3: Attaching Files**
 
-.. note:: We strongly recommend using the awesome package `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ to display a progress meter for tasks that may run for an extended time, like this one. It's pure Python, uses Tkinter (no additional GUI package) and requires just one more line of code!
+A third way to achieve this task is **attaching files** via page annotations see `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-attached.py>`_ for the complete source code.
+
+This has a similar performance as the previous script and it also produces a similar file size. In this example, we have chosen a small page size to demonstrate the automatic generation of "protocol" pages as necessary. Here is the first page:
+
+.. image:: img-attach-result.jpg
+   :align: center
+
+.. note:: Both, the **embed** and the **attach** methods can be used for **arbitrary files** - not just images.
+
+.. note:: We strongly recommend using the awesome package `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ to display a progress meter for tasks that may run for an extended time span. It's pure Python, uses Tkinter (no additional GUI package) and requires just one more line of code!
 
 ----------
 
