@@ -24,20 +24,20 @@ This method has many options for influencing the result. The most important amon
 
 In the following, we apply a :index:`zoom factor <pair: resolution;zoom>` of 2 to each dimension, which will generate an image with a four times better resolution for us.
 
->>> zoom_x = 2.0                       # horizontal zoom
->>> zomm_y = 2.0                       # vertical zoom
->>> mat = fitz.Matrix(zoom_x, zomm_y)  # zoom factor 2 in each dimension
+>>> zoom_x = 2.0                       # horizontal zoom: 200%
+>>> zoom_y = 2.0                       # vertical zoom: 200%
+>>> mat = fitz.Matrix(zoom_x, zoom_y)  # zoom factor 2 in each dimension
 >>> pix = page.getPixmap(matrix = mat) # use 'mat' instead of the identity matrix
 
-The resulting pixmap will be 4 times bigger than normal.
+The resulting pixmap will be 4 times bigger than normal. Zoom factors can be any positive float.
 
 ----------
 
 How to Create :index:`Partial Pixmaps` (Clips)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You do not always need the full image of a page. This may be the case e.g. when you display the image in a GUI and would like to zoom into a part of the page.
+You do not always need the full image of a page. This may be the case e.g. when you display the image in a GUI and would like to show an enlarged part.
 
-Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of your page, thus using a four times better resolution.
+Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of it, thus using a four times higher resolution.
 
 .. image:: img-clip.jpg
    :align: center
@@ -51,11 +51,13 @@ Let's assume your GUI window has room to display a full document page, but you n
 
 In the above we construct ``clip`` by specifying two diagonally opposite points: the middle point ``mp`` of the page rectangle, and its bottom right, ``rect.br``.
 
+Also have a look at `this <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ script, which has an integrated zooming feature.
+
 ----------
 
 How to :index:`Suppress <pair: suppress; annotation>` Annotation Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Normally, the pixmap of a page also includes the images of any annotations. There currently is now direct way to suppress this.
+Normally, the pixmap of a page also includes the images of any annotations. There currently is no direct way to suppress this.
 
 But it can be achieved using a little circumvention like in `this <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/show-no-annots.py>`_ script.
 
@@ -68,15 +70,15 @@ But it can be achieved using a little circumvention like in `this <https://githu
 How to Extract Images: Non-PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You have basically two options:
+You can extract images from **any document** in one of the following two ways.
 
-1. Convert your document to a PDF, and then use any of the PDF-only extraction methods. This snippet will convert a document to PDF:
+1. Convert your document to a PDF, and then use any of the PDF-only extraction methods. This snippet will convert a document to a memory-resident, temporary PDF, which you can use for this:
 
     >>> pdfbytes = doc.convertToPDF()
     >>> pdf = fitz.open("pdf", pdfbytes)
     >>> # now use 'pdf' like any PDF document
 
-2. Use :meth:`Page.getText` with the "dict" parameter. This will extract all text and images shown on the page, formatted as a Python dictionary. Every image will occur in an image block, containing meta information and the binary image data. For details of the dictionary's structure, see :ref:`TextPage`. This creates a list of all images shown on a page:
+2. Use :meth:`Page.getText` with the "dict" parameter. This will extract all text and images shown on the page, formatted as a Python dictionary. Every image will occur in an image block, containing meta information and the binary image data. For details of the dictionary's structure, see :ref:`TextPage`. This snippet creates a list of all images shown on a page:
 
     >>> d = page.getText("dict")
     >>> blocks = d["blocks"]
@@ -93,16 +95,16 @@ You have basically two options:
 How to Extract Images: PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Like any other "object" in a PDF, embedded images are identified by a cross reference number (xref, an integer). If you know this number, you have two ways to access the image's data. The following assumes you have opened a PDF under the name "doc":
+Like any other "object" in a PDF, embedded images are identified by a cross reference number (xref, a positive integer). If you know this number, you have two ways to access the image's data. The following assumes you have opened a PDF under the name "doc":
 
 1. Create a :ref:`Pixmap` of the image with instruction ``pix = fitz.Pixmap(doc, xref)``. This method is **very** fast (single digit micro-seconds). The pixmap's properties (width, height, ...) will reflect the ones of the image. As usual, you can save it as a PNG via method :meth:`Pixmap.writePNG` (or get the corresponding binary data :meth:`Pixmap.getPNGData`). There is no way to tell which image format the embedded original has.
 
-2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided - mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data is identical). Otherwise, this method is **thousands of times faster**, and in most cases the **image data is much smaller**, too.
+2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided - mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data is identical). For other image types, :meth:`Document.extractImage` is **many thousands of times faster** than the pixmap-based method , and in most cases its **image data is much smaller**, too.
 
 The question remains: **"How do I know those cross reference numbers 'xref' of images?"**. There are two answers to this:
 
 a. **"Inspect the page objects"** Loop through the document's page number list and execute :meth:`Document.getPageImageList` for each page number. The result is a list of list, and its items look like ``[xref, smask, ...]``, containing the xref of an image shown on that page. This xref can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
-b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue - this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
+b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each xref. If the returned dictionary is empty, then continue -- this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
 
 For both extraction approaches, there exist ready-to-use general purpose scripts:
 
@@ -356,7 +358,6 @@ This script uses :meth:`Page.getTextWords` to look for a string, handed in via c
 
 ----------
 
-
 General
 --------
 
@@ -396,7 +397,7 @@ How to Delete and Re-Arrange Pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 With PyMuPDF you have all options to copy, move, delete or re-arrange the pages of a PDF. Intuitive methods exist that allow you to do this on a page-by-page level, like the :meth:`Document.copyPage` method.
 
-Or you alternatively prepare a complete new page layout in form of a Python sequence, that contains the page numbers you want, in the sequence you want, and as many times as you want each page. The following may illustrate what can be done with :meth:`Document.select`:
+Or you alternatively prepare a complete new page layout in form of a Python sequence, that contains the page numbers you want, in the sequence you want, and as many times as you want each page. The following illustrates what can be done with :meth:`Document.select`:
 
 ``doc.select([1, 1, 1, 5, 4, 9, 9, 9, 0, 2, 2, 2])``
 
@@ -521,3 +522,43 @@ If a clean, non-corrupt / decompressed / decrypted PDF is needed, one could dyna
  # do further processing
 
 With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/>`_ for Windows only, but reported to also run under `Wine <https://www.winehq.org/>`_) a similar result can be achieved, see `here <http://www.overthere.co.uk/2013/07/22/improving-pypdf2-with-pdftk/>`_. However, you must invoke it as a separate process via ``subprocess.Popen``, using stdin and stdout as communication vehicles.
+
+----------
+
+.. index::
+   pair: reflowable;document
+   pair: reflowable;bookmark
+
+How To Deal with Reflowable Documents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Some document types have no fixed layout. People using an e-book reader will know this, but every internet browser is also capable of re-layouting a web site (changing app window, font size changes, ...). Such documents are called "reflowable".
+
+PyMuPDF supports this in the following way:
+
+1. A reflowable document's layout can be set when opening it -- via parameters ``"rect"``, ``"width"``, ``"height"`` and ``"fontsize"``.
+
+2. Any time later, the document can be re-layouted using :meth:`Document.layout`. Page numbers can be tracked across this process.
+
+    * ``bm = doc.makeBookmark(pno)`` creates a "bookmark" for any current page number ``pno``.
+
+    * after re-layouting, :meth:`Document.findBookmark` returns its new number::
+
+        In [1]: import fitz
+        In [2]: doc = fitz.open("some.epub")      # a reflowable document
+        In [3]: len(doc)                          # current number of pages
+        Out[3]: 251
+        In [4]: doc[0].rect                       # check old size of some page
+        Out[4]: fitz.Rect(0.0, 0.0, 450.0, 600.0)
+        In [5]: bm1 = doc.makeBookmark(150)       # bookmark page 150
+        In [6]: bm2 = doc.makeBookmark(-1)        # bookmark last page
+        In [7]: doc.layout(width=600, height=800) # change the layout
+        In [8]: len(doc)                          # new number of pages
+        Out[8]: 133
+        In [9]: doc[0].rect                       # check page size again
+        Out[9]: fitz.Rect(0.0, 0.0, 600.0, 800.0)
+        In [10]: doc.findBookmark(bm1)            # new number for page 150
+        Out[10]: 78
+        In [11]: doc.findBookmark(bm2)            # new number for last page
+        Out[11]: 132
+
+.. note:: The term "bookmark" in this context has nothing to do with :attr:`Document.outline` or entries in the table of contents list, which are sometimes also called bookmarks. Layout bookmarks are internally calculated integers (*long* in Python 2), which must not be changed in any way.

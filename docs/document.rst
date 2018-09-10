@@ -15,16 +15,17 @@ For addional details on **embedded files** refer to Appendix 3.
 ===================================== ==========================================================
 :meth:`Document.authenticate`         decrypt the document
 :meth:`Document.close`                close the document
-:meth:`Document.copyPage`             PDF only: copy a page to another location
 :meth:`Document.convertToPDF`         write a PDF version to memory
+:meth:`Document.copyPage`             PDF only: copy a page to another location
 :meth:`Document.deletePage`           PDF only: delete a page by its number
 :meth:`Document.deletePageRange`      PDF only: delete a range of pages
 :meth:`Document.embeddedFileAdd`      PDF only: add a new embedded file from buffer
 :meth:`Document.embeddedFileDel`      PDF only: delete an embedded file entry
 :meth:`Document.embeddedFileGet`      PDF only: extract an embedded file buffer
 :meth:`Document.embeddedFileInfo`     PDF only: metadata of an embedded file
-:meth:`Document.embeddedFileUpd`      PDF only: change an embedded file
 :meth:`Document.embeddedFileSetInfo`  PDF only: change metadata of an embedded file
+:meth:`Document.embeddedFileUpd`      PDF only: change an embedded file
+:meth:`Document.findBookmark`         get page number after :meth:`layout`
 :meth:`Document.getPageFontList`      PDF only: make a list of fonts on a page
 :meth:`Document.getPageImageList`     PDF only: make a list of images on a page
 :meth:`Document.getPagePixmap`        create a pixmap of a page by page number
@@ -32,8 +33,9 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.getToC`               create a table of contents
 :meth:`Document.insertPage`           PDF only: insert a new page
 :meth:`Document.insertPDF`            PDF only: insert pages from another PDF
-:meth:`Document.layout`               re-paginate the document (if supported)
+:meth:`Document.layout`               re-paginate reflowable document
 :meth:`Document.loadPage`             read a page
+:meth:`Document.makeBookmark`         bookmark a page before a :meth:`layout`
 :meth:`Document.movePage`             PDF only: move a page to another location
 :meth:`Document.newPage`              PDF only: insert a new empty page
 :meth:`Document.save`                 PDF only: save the document
@@ -77,7 +79,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: rect; Document args
        pair: fontsize; Document args
 
-    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, fontsize = 11)
+    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, width = 0, height = 0, fontsize = 11)
 
       Creates a ``Document`` object.
 
@@ -91,10 +93,14 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
+      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. Must be non-empty and finite if specified.
       :type rect: :ref:`Rect`
 
-      :arg float fontsize: the default fontsize for reflowable document types. This parameter is ignored if parameter ``rect`` is not specified. Together with ``rect`` the page layout is recalculated.
+      :arg float width: desired page width for a reflowable document. Ignored if ``rect`` is given.
+      :arg float height: desired page height for a reflowable document. Ignored if ``rect`` is given.
+      :arg float fontsize: the default fontsize for a reflowable document. Ignored if no new page dimension is provided.
+
+      .. note:: ``rect``, ``width``, ``height`` and ``fontsize`` are used to calculate the layout of a reflowable document, otherwise ignored. Also refer to :meth:`layout`.
 
       Overview of possible forms (using the ``open`` synonym of ``Document``):
 
@@ -270,21 +276,47 @@ For addional details on **embedded files** refer to Appendix 3.
     .. index::
        pair: fontsize; Document.layout args
        pair: rect; Document.layout args
+       pair: width; Document.layout args
+       pair: height; Document.layout args
+       pair: bookmark; layout
+       pair: reflowable; layout
 
-    .. method:: layout(rect, fontsize = 11)
+    .. method:: layout(rect = None, width = 0, height = 0, fontsize = 11)
 
-      Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
+      Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types, like e-books and HTML, and is ignored otherwise. Supported documents have ``True`` in property :attr:`isReflowable`.
 
-      :arg rect: desired page size. Must be finite, not empty and start at point (0, 0).
+      :arg rect: desired page size. Must be finite and not empty. If not provided, width and height must both be positive.
       :type rect: :ref:`Rect`
 
+      :arg float width: the desired page width. Ignored if ``rect`` is given.
+      :arg float height: the desired page height. Ignored if ``rect`` is given.
       :arg float fontsize: the desired default fontsize.
+
+      .. note:: This method is intended for applications displaying e-books. After execution, the document's number of pages probably have changed and any existing :ref:`Page` objects have been invalidated. You can however track, which new number a page is receiving after execution -- see :meth:`makeBookmark` and :meth:`findBookmark`.
+
+    .. method:: makeBookmark(pno)
+
+       Create a "bookmark" for a page number. Use it to find the page's new number after :meth:`layout`.
+
+       :arg int pno: page number, 0-based, ``< len(doc)``.
+
+       :rtype: long
+       :returns: a *long* (Python 2, else just *int*) integer containing the internal position of the page. Use this number as argument for :meth:`findBookmark` to get the page's new number after :meth:`layout`. For any invalid page number 0 is returned. If the document is not reflowable, ``None`` is returned.
+
+    .. method:: findBookmark(bookmark)
+
+       Find the page number for a previously created "bookmark" after :meth:`layout`.
+
+       :arg long bookmark: the bookmark.
+
+       :rtype: int
+       :returns: the new page number for a bookmarked page, after :meth:`layout`. For any invalid argument or unsupported documents -1 is returned.
 
     .. method:: select(s)
 
-      PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty sequences or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
+      PDF only: Keeps only those pages in the document whose numbers occur in the list and deletes all others. Empty sequences or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
 
-      :arg sequence s: A sequence (see :ref:`SequenceTypes`) of page numbers (zero-based) to be included. Pages not in the sequence will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the sequence exactly as specified.
+      :arg sequence s: A sequence (see :ref:`SequenceTypes`) of page numbers (zero-based) to be included. Pages not in the sequence will be deleted (from memory) and become unavailable until the document is reopened. Selected page numbers can **occur multiple times and in any order:** the resulting document will reflect the sequence exactly as specified.
 
     .. method:: setMetadata(m)
 

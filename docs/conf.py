@@ -45,7 +45,7 @@ copyright = u'2015-2018, Jorj X. McKie'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '1.13.19'
+release = '1.13.20'
 
 # The short X.Y version.
 s = release.split(".")

@@ -52,15 +52,15 @@ Yet others are handy, general-purpose utilities.
    .. method:: PaperSize(s)
 
       Convenience function to return width and height of a known paper format code. These values are given in pixels for the standard resolution 72 pixels = 1 inch.
-      
-      Currently defined formats include **'A0'** through **'A10'**, **'B0'** through **'B10'**, **'C0'** through **'C10'**, **'Card-4x6'**, **'Card-5x7'**, **'Commercial'**, **'Executive'**, **'Invoice'**, **'Ledger'**, **'Legal'**, **'Legal-13'**, **'Letter'**, **'Monarch'** and **'Tabloid-Extra'**, each in either portrait or landscape format.
+
+      For currently defined formats, see :attr:`paperSizes`.
 
       A format name must be supplied as a string (case **in** \sensitive), optionally suffixed with "-L" (landscape) or "-P" (portrait). No suffix defaults to portrait.
 
       :arg str s: any format name from above (upper or lower case), like ``"A4"`` or ``"letter-l"``.
 
       :rtype: tuple
-      :returns: ``(width, height)`` of the paper format. For an unknown format ``(-1, -1)`` is returned. Esamples: ``fitz.PaperSize("A4")`` returns ``(595, 842)`` and ``fitz.PaperSize("letter-l")`` delivers ``(792, 612)``.
+      :returns: ``(width, height)`` of the paper format, for an unknown format ``(-1, -1)``. Esamples: ``fitz.PaperSize("A4")`` returns ``(595, 842)`` and ``fitz.PaperSize("letter-l")`` delivers ``(792, 612)``.
 
 -----
 
@@ -81,7 +81,55 @@ Yet others are handy, general-purpose utilities.
 -----
 
    .. attribute:: paperSizes
-      A dictionary of pre-defines paper formats. Used as basis for :meth:`PaperSize`.
+
+      A dictionary of pre-defines paper formats. Used as basis for :meth:`PaperSize`::
+
+            In [32]: fitz.paperSizes
+            Out[32]: 
+            {'a0': (2384, 3370),
+            'a1': (1684, 2384),
+            'a10': (74, 105),
+            'a2': (1191, 1684),
+            'a3': (842, 1191),
+            'a4': (595, 842),
+            'a5': (420, 595),
+            'a6': (298, 420),
+            'a7': (210, 298),
+            'a8': (147, 210),
+            'a9': (105, 147),
+            'b0': (2835, 4008),
+            'b1': (2004, 2835),
+            'b10': (88, 125),
+            'b2': (1417, 2004),
+            'b3': (1001, 1417),
+            'b4': (709, 1001),
+            'b5': (499, 709),
+            'b6': (354, 499),
+            'b7': (249, 354),
+            'b8': (176, 249),
+            'b9': (125, 176),
+            'c0': (2599, 3677),
+            'c1': (1837, 2599),
+            'c10': (79, 113),
+            'c2': (1298, 1837),
+            'c3': (918, 1298),
+            'c4': (649, 918),
+            'c5': (459, 649),
+            'c6': (323, 459),
+            'c7': (230, 323),
+            'c8': (162, 230),
+            'c9': (113, 162),
+            'card-4x6': (288, 432),
+            'card-5x7': (360, 504),
+            'commercial': (297, 684),
+            'executive': (522, 756),
+            'invoice': (396, 612),
+            'ledger': (792, 1224),
+            'legal': (612, 1008),
+            'legal-13': (612, 936),
+            'letter': (612, 792),
+            'monarch': (279, 540),
+            'tabloid-extra': (864, 1296)}
 
 -----
 
@@ -104,6 +152,8 @@ Yet others are handy, general-purpose utilities.
       :rtype: str
       :returns: PDF-compatible string enclosed in either ``()`` or ``<>``.
 
+-----
+
    .. method:: ConversionHeader(output = "text", filename = "UNKNOWN")
 
       Return the header string required to make a valid document out of page text outputs.
@@ -114,6 +164,7 @@ Yet others are handy, general-purpose utilities.
 
       :rtype: str
 
+-----
 
    .. method:: ConversionTrailer(output)
 
@@ -131,7 +182,7 @@ Yet others are handy, general-purpose utilities.
 
       :arg int xref: the cross reference number. Must be within the document's valid xref range.
 
-      .. caution:: Only use with extreme care: this may make the PDF unreadable.
+      .. caution:: Only use with extreme care -- this may make the PDF unreadable.
 
 -----
 
@@ -182,30 +233,34 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page.getTextBlocks(images = False)
 
-      Extract all blocks of the page's :ref:`TextPage` as a Python list. Provides basic positioning information but at a much higher speed than :meth:`TextPage.extractDICT`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
+      Extract all blocks of the page's :ref:`TextPage` as a Python list. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
 
       :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only image metadata, **not the binary image data** itself is extracted, see below (use the resp. :meth:`Page.getText` versions for accessing full information detail).
 
       :rtype: *list*
-      :returns: a list whose items have the following entries.
+      :returns: a list whose items ``[x0, y0, x1, y1, text, block_n, type]`` are flat lists with the following entries.
 
                 * ``x0, y0, x1, y1``: 4 floats defining the bbox of the block.
                 * ``text``: concatenated text lines in the block *(str)*. If this is an image block, a text like this is contained: ``<image: DeviceRGB, width 511, height 379, bpc 8>`` (original image properties).
                 * ``block_n``: 0-based block number *(int)*.
                 * ``type``: block type *(int)*, 0 = text, 1 = image.
 
+      .. note:: This has functional overlaps with other text extraction methods, but provides basic positioning information at a much higher speed than most others. Like the following function, :meth:`Page.getTextWords`, it is only a single digit percentage slower that plain text extraction.
+
 -----
 
    .. method:: Page.getTextWords()
 
-      Extract all words of the page's :ref:`TextPage` as a Python list. A "word" in this context is any character string surrounded by spaces. Provides positioning information for each word, similar to information contained in :meth:`TextPage.extractDICT` or :meth:`TextPage.extractXML`, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
+      Extract all words of the page's :ref:`TextPage` as a Python list. A "word" in this context is any character string surrounded by (white) spaces -- it will not contain white spaces itself. Provides positioning information for each word, similar to information contained in :meth:`TextPage.extractDICT` or :meth:`TextPage.extractXML`, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
 
       :rtype: list
-      :returns: a list whose items are lists with the following entries:
+      :returns: a list whose items ``[x0, y0, x1, y1, word, block_n, line_n, word_n]`` are flat lists with the following entries:
 
                 * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
                 * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word -- not only letters. So, ``    Hello   world!   `` will yield the two words ``Hello`` and ``world!``.
                 * ``block_n, line_n, word_n``: 0-based counters for block, line and word *(int)*.
+
+      .. note:: This has functional overlaps with other text extraction methods, but provides basic positioning information at a much higher speed than most others. Like the previous function, :meth:`Page.getTextBlocks`, it is only a single digit percentage slower that plain text extraction.
 
 -----
 

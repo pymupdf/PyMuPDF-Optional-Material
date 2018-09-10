@@ -282,24 +282,30 @@ Further Remarks
 
 Performance
 ~~~~~~~~~~~~
-The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements. Generally, more information of course means that more processing is required and a higher data volume is generated.
+The text extraction methods differ significantly: in terms of information they supply, and in terms of run time and resource requirements. Generally, more information of course means that more processing is required and a higher data volume is generated.
 
 To begin with, all methods are **very fast** in relation to other products out there in the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1'310 pages of the :ref:`AdobeManual` in less than 9 seconds (simple text needs less than 2 seconds here).
 
-Relative to each other, **"RAWDICT"** is about 4.6 times slower than **"TEXT"**, the others range between them. The following table shows **relative runtimes** with **"TEXT"** set to 1, measured across ca. 1550 text-heavy and 250 image-heavy pages.
+Relative to each other, **"RAWDICT"** is about 4.6 times slower than **"TEXT"**, the others range between them. The following table shows **processing speed relative to "TEXT" extraction** (set to 1.00), measured across 1800 pages, consisting of a mixture of ca. 1550 text-heavy and 250 image-heavy pages.
 
-======= ====== =====================================================================
-Method  Time   Comments
-======= ====== =====================================================================
-TEXT     1.00  no images, plain text, line breaks
-WORDS    1.07  no images, word level text with bboxes
-BLOCKS   1.10  image bboxes (only), block level text with bboxes
-XML      2.30  no images, char level text, layout and font details
-DICT     2.68  **binary** images, span level text, layout and font details
-XHTML    3.51  **base64** images, span level text, no layout info
-HTML     3.60  **base64** images, span level text, layout and font details
-RAWDICT  4.61  **binary** images, char level text, layout and font details
-======= ====== =====================================================================
+Please note that these numbers can only serve as a rough indicator -- they will vary a lot, especially with the amount of image data. As an illustration, look at the last column to see the relative speed, when there is **no text** at all:
+
+* methods TEXT, WORDS, BLOCKS and XML have nothing to do -- and therefore do not differ in speed.
+
+* both, DICT and RAWDICT,  are **6 times faster** than XHTML or HTML - which by far are the slowest of all now.
+
+=========== ========= ===================================================================== ===========
+**Method**  **Time**  **Comments**                                                          **no text**
+=========== ========= ===================================================================== ===========
+TEXT        1.00      **no** images, **plain** text, line breaks                               1.00
+WORDS       1.07      **no** images, **word** level text with bboxes                           1.00
+BLOCKS      1.09      image **bboxes (only)**, **block** level text with bboxes                1.00
+XML         2.30      **no** images, **char** level text, layout and font details              1.00
+DICT        2.70      **binary** images, **span** level text, layout and font details          1.25
+XHTML       3.50      **base64** images, **span** level text, no layout info                   7.71
+HTML        3.60      **base64** images, **span** level text, layout and font details          7.72
+RAWDICT     4.60      **binary** images, **char** level text, layout and font details          1.28
+=========== ========= ===================================================================== ===========
 
 In versions prior to v1.13.1, JSON was a standalone extraction method. Since we have added the DICT extraction, JSON output is now created from it, using the **json** module contained in Python for serialization. We believe, DICT output is more handy for the programmer's purpose, because all of its information is directly usable -- including images. Previously, for JSON, you had to bsae64-decode images before you could use them. We also have replaced the old "imgtype" dictionary key (an integer bit code) with the key "ext", which contains the appropriate extension string for the image.
 

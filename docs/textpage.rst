@@ -185,4 +185,3 @@ bbox            character rectangle, formatted as ``list(fitz.Rect)``
 c               the character (unicode)
 origin          *tuple* coordinates of the bottom left point
 =============== =====================================================
-

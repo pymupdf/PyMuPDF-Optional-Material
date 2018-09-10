@@ -1,6 +1,13 @@
 Change Logs
 ===============
 
+Changes in Version 1.13.20
+---------------------------
+* **Extended** e-book support with two new methods: :meth:`Document.makeBookmark` creates bookmark for a given page number, and :meth:`Document.findBookmark` returns the page's new number after a :meth:`Document.layout` has been executed. As part of this change, opening and layouting a document now also accepts the desired new page width and height as an alternative to specifying the new page rectangle.
+* **Added** new parameters "width" and "height" to :meth:`Document.layout` and :meth:`Document.__init__` (i.e. "open") to provide an alternative for re-layouting reflowable documents.
+* **Fixed** interpreter crash when not letting default filename, ufilename or desc arguments in :meth:`Page.addFileAnnot`.
+
+
 Changes in Version 1.13.19
 ---------------------------
 This version contains some technical / performance improvements and bug fixes.
