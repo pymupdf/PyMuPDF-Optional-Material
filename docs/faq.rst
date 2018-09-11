@@ -561,4 +561,61 @@ PyMuPDF supports this in the following way:
         In [11]: doc.findBookmark(bm2)            # new number for last page
         Out[11]: 132
 
-.. note:: The term "bookmark" in this context has nothing to do with :attr:`Document.outline` or entries in the table of contents list, which are sometimes also called bookmarks. Layout bookmarks are internally calculated integers (*long* in Python 2), which must not be changed in any way.
+.. note:: The term "bookmark" in this context has nothing to do with :attr:`Document.outline` or entries in the table of contents list, which are sometimes also called bookmarks. Layout bookmarks are short-lived, internally calculated integers (*long* in Python 2), which must not be changed in any way.
+
+----------
+
+.. index::
+   pair: widget;form fields
+
+How To Deal with PDF Form Fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PDFs can be used as fillable forms: certain fields ("form fields", or "widgets") can be made editable while the rest of the document remains change-protected (technically, form fields are a special type of :ref:`Annot`). PyMuPDF supports this feature in the following way:
+
+* one can detect whether a PDF contains any widgets: :attr:`Document.isFormPDF`
+* existing widgets can be changed (:meth:`Annot.updateWidget`) in almost every aspect like colors, text font, location on page, boundary, value, etc.
+* widgets can be deleted (:meth:`Page.deleteAnnot`)
+* widgets can added via :meth:`Page.addWidget`
+
+Form fields have **many** properties, and they also come in handful of different sub types. We have therefore decided to use a new class :ref:`Widget` as a parameter for creating and updating widgets (as opposed to bloating these methods with dozens of arguments). This `script <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/form-fields.py>`_ creates a new PDF with a number of form fields. All of them are also given initial values. The result looks like this:
+
+.. image:: img-form-fields.jpg
+   :align: center
+   :scale: 60
+
+Now let's change the value of one of these fields:
+
+>>> import fitz
+>>> doc = fitz.open("widgettest.pdf")
+>>> page = doc[0]                         # the page containing the field
+>>> annot = page.firstAnnot               # the annot representing the field
+>>> widget = annot.widget                 # object containing all field properties
+>>> widget.field_value                    # look at current value
+'Times-Roman-Bold, max. 40 chars'
+>>> widget.field_value = "this is some new value"  # change the value
+>>> annot.updateWidget(widget)            # update the field
+>>> doc.saveIncr()                        # save PDF incrementally
+
+Checking the result:
+
+.. image:: img-form-fields-changed.jpg
+   :align: center
+   :scale: 60
+
+.. note:: To locate the right form field (the above situation in lines 3 and 4 is somewhat idealistic), you can use :attr:`Widget.field_name` -- which is not necessarily unique however. Annotations on a page are a forward linked chain: each annotation has a :attr:`Annot.next` property which is either ``None`` or points to the next annotation. So if you know the page number and the field name, you could do this:
+
+>>> import fitz
+>>> doc = fitz.open("widgettest.pdf")
+>>> page = doc[n]                         # locate the page
+>>> annot = page.firstAnnot               # scan through its annots
+>>> widget = None                         # prepare for not-found
+>>> while annot:
+        widget = annot.widget             # None if not a field
+        if widget and widget.field_name == "textfield-1":
+            break                         # found it!
+        annot = annot.next                # try next one
+>>> # check if we found the field
+>>> if not widget or widget.field_name != "textfield-1":
+        raise ValueError("field not found")
+>>> # work with the widget
+

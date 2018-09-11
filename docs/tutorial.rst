@@ -73,7 +73,7 @@ subject        subject
 
 Working with Outlines
 =========================
-The easiest way to get all outlines (also called "bookmarks") of a document, is by creating a *table of contents*:
+The easiest way to get all outlines (also called "bookmarks" [#f4]_) of a document, is by creating a *table of contents*:
 
 >>> toc = doc.getToC()
 
@@ -307,3 +307,5 @@ This document also contains a :ref:`FAQ`. This chapter has close connection to t
 .. [#f2] :meth:`Page.getText` is a convenience wrapper for several methods of another PyMuPDF class, :ref:`TextPage`. The names of these methods correspond to the argument string passed to :meth:`Page.getText` \:  ``Page.getText("dict")`` is equivalent to ``TextPage.extractDICT()`` \.
 
 .. [#f3] "Sequences" are Python objects conforming to the sequence protocol. These objects implement a method named ``__getitem__()``. Best known examples are Python tuples and lists. But ``array.array``, ``numpy.array`` and PyMuPDF's "geometry" objects (:ref:`Algebra`) are sequences, too. Refer to :ref:`SequenceTypes` for details.
+
+.. [#f4] The term *"bookmark"* has two completely different meanings, unfortunately: (1) it is used as a synonym for outline entries as they occur in a document's **Table of Contents**, and (2) it is used as a page marker to help trace down page number changes when the document's layout changes (see methods :meth:`Document.layout`, :meth:`Document.makeBookmark`, and :meth:`Document.findBookmark`).
