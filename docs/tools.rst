@@ -3,14 +3,14 @@
 Tools
 ================
 
-This class is a collection of low-level MuPDF utility methods and attributes, mainly around memory management.
+This class is a collection of low-level MuPDF utility methods and attributes, mainly around memory management. To simplify and speed up its use, it is automatically instantiated under the name ``TOOLS`` when PyMuPDF is imported.
 
 ================================ =================================================
 **Method / Attribute**             **Description**
 ================================ =================================================
 :meth:`Tools.gen_id`             generate a unique identifyer
 :meth:`Tools.store_shrink`       shrink the storables cache [#f1]_
-:attr:`Tools.fitz_config`        configuration of PyMuPDF
+:attr:`Tools.fitz_config`        configuration settings of PyMuPDF
 :attr:`Tools.store_maxsize`      maximum storables cache size
 :attr:`Tools.store_size`         current storables cache size
 ================================ =================================================
@@ -21,9 +21,12 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
 
    .. method:: gen_id()
 
-      A convenience method returning a unique positive integer which will increase by 1 with every invocation. The numbers generated are guarantied to be unique within this execution of PyMuPDF (its implementation is also threadsafe should this ever be become relevant for PyMuPDF). Example usages include using it as a unique key in a database - its creation should be faster than using timestamps by an order of magnitude.
+      A convenience method returning a unique positive integer which will increase by 1 with every invocation. Example usages include creating unique keys in databases - its creation should be faster than using timestamps by an order of magnitude.
 
-      .. note:: Because it is implemented as an ordinary 4-bytes signed integer, wraparounds may theoretically indeed occur though after over 2.147e+9 executions.
+      .. note:: MuPDF has dropped support for this in v1.14.0, so we have re-implemented a similar function with the following differences:
+      
+            * It is not part of MuPDF's global context and not threadsafe (because we do not support threads in PyMuPDF yet).
+            * It is implemented as a ``long int``. This means that the maximum number is 2\ :sup:`63` - 1 (about 9.223372e+18) on most machines. Should this number be exceeded, the counter is reset to 1.
 
       :rtype: int
       :returns: a unique positive integer.
@@ -53,7 +56,6 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
       svg               SVG documents
       cbz               CBZ documents
       img               IMG documents
-      tiff              TIFF documents
       html              HTML documents
       epub              EPUB documents
       gprf              Ghostscript proofing documents
@@ -75,9 +77,8 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
       For an explanation of the term "TOFU" see `this Wikipedia article <https://en.wikipedia.org/wiki/Noto_fonts>`_.::
 
        In [1]: import fitz
-       In [2]: tools = fitz.Tools()
-       In [3]: tools.fitz_config
-       Out[3]: 
+       In [2]: TOOLS.fitz_config
+       Out[2]: 
        {'plotter-g': True,
         'plotter-rgb': True,
         'plotter-cmyk': True,
@@ -87,7 +88,6 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
         'svg': True,
         'cbz': True,
         'img': True,
-        'tiff': True,
         'html': True,
         'epub': True,
         'gprf': False,
@@ -117,33 +117,32 @@ Example Session
 ----------------
 
 >>> import fitz
->>> tools = fitz.Tools()
 # print the maximum and current cache sizes
->>> tools.store_maxsize
+>>> fitz.TOOLS.store_maxsize
 268435456
->>> tools.store_size
+>>> fitz.TOOLS.store_size
 0
 >>> doc = fitz.open("demo1.pdf")
 # pixmap creation puts lots of object in cache (text, images, fonts),
 # apart from the pixmap itself
 >>> pix = doc[0].getPixmap(alpha=False)
->>> tools.store_size
+>>> fitz.TOOLS.store_size
 454519
 # release (at least) 50% of the storage
->>> tools.store_shrink(50)
+>>> fitz.TOOLS.store_shrink(50)
 13471
->>> tools.store_size
+>>> fitz.TOOLS.store_size
 13471
 # get a few unique numbers
->>> tools.gen_id()
+>>> fitz.TOOLS.gen_id()
 1
->>> tools.gen_id()
+>>> fitz.TOOLS.gen_id()
 2
->>> tools.gen_id()
+>>> fitz.TOOLS.gen_id()
 3
 # close document and see how much cache is still in use
 >>> doc.close()
->>> tools.store_size
+>>> fitz.TOOLS.store_size
 0
 >>> 
 

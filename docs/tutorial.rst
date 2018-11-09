@@ -1,3 +1,4 @@
+.. _Tutorial:
 
 =========
 Tutorial
@@ -73,7 +74,7 @@ subject        subject
 
 Working with Outlines
 =========================
-The easiest way to get all outlines (also called "bookmarks" [#f4]_) of a document, is by creating a *table of contents*:
+The easiest way to get all outlines (also called "bookmarks") of a document, is by creating a *table of contents*:
 
 >>> toc = doc.getToC()
 
@@ -148,7 +149,7 @@ If your Python contains the **Tk 8.6** version, PNG files and image data are dir
 >>> pngdata = pix.getPNGData()
 >>> tkimg = tkinter.PhotoImage(data = pngdata)
 
-If you are looking for a complete Tkinter script paging through a document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_. You need the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package (version > 2.9.0).
+If you are looking for a complete Tkinter script paging through a document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_. You need the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
 
 PyQt4, PyQt5, PySide
 ~~~~~~~~~~~~~~~~~~~~~
@@ -202,9 +203,9 @@ Apart from changes made by you, there are less obvious ways how a PDF may become
 
 * During open, integrity checks are used to determine the health of the PDF structure. If errors are encountered, the base library goes a long way to correct them and present a readable document. If this is the case, the document is regarded as being modified.
 
-* After a document has been decrypted, the document in memory has changed and also counts as being modified.
+* After a document has been decrypted, the document in memory has also changed and hence also counts as being modified.
 
-In these two cases, :meth:`Document.save` will store a **repaired**, resp. **decrypted** version, and you must specify **a new file**. Otherwise, you have the option to save your changes as update appendices to the original file ("incremental saves" below), which is very much faster in most cases.
+In these two cases, :meth:`Document.save` will store a **repaired**, and (optionally) **decrypted** version [#f4]_, and you must specify **a new file**. Otherwise, you have the option to save your changes as update appendices to the original file ("incremental saves" below), which is very much faster in most cases.
 
 The following describes ways how you can manipulate PDF documents. This description is by no means complete: much more can be found in the following chapters.
 
@@ -270,20 +271,21 @@ You can write changes back to the **original PDF** by specifying ``incremental =
 :meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table.
 
 =================== =========== ==================================================
-**Option**          **mutool**  **Effect**
+**Save Option**     **mutool**  **Effect**
 =================== =========== ==================================================
-garbage = 1         g           garbage collect unused objects
-garbage = 2         gg          in addition to 1, compact xref tables
-garbage = 3         ggg         in addition to 2, merge duplicate objects
-garbage = 4         gggg        in addition to 3, skip duplicate streams
-clean = 1           c           clean content streams
-deflate = 1         z           deflate uncompressed streams
-ascii = 1           a           convert binary data to ASCII format
-linear = 1          l           create a linearized version
-expand = 1          i           decompress images
-expand = 2          f           decompress fonts
-expand = 255        d           decompress all
-incremental = 1     n/a         append changes to the original
+garbage=1           g           garbage collect unused objects
+garbage=2           gg          in addition to 1, compact xref tables
+garbage=3           ggg         in addition to 2, merge duplicate objects
+garbage=4           gggg        in addition to 3, skip duplicate streams
+clean=1             c           clean content streams
+deflate=1           z           deflate uncompressed streams
+ascii=1             a           convert binary data to ASCII format
+linear=1            l           create a linearized version
+expand=1            i           decompress images
+expand=2            f           decompress fonts
+expand=255          d           decompress all
+incremental=1       n/a         append changes to the original
+decrypt=1           n/a         remove passwords
 =================== =========== ==================================================
 
 For example, ``mutool clean -ggggz file.pdf`` yields excellent compression results. It corresponds to ``doc.save(filename, garbage=4, deflate=1)``.
@@ -308,4 +310,4 @@ This document also contains a :ref:`FAQ`. This chapter has close connection to t
 
 .. [#f3] "Sequences" are Python objects conforming to the sequence protocol. These objects implement a method named ``__getitem__()``. Best known examples are Python tuples and lists. But ``array.array``, ``numpy.array`` and PyMuPDF's "geometry" objects (:ref:`Algebra`) are sequences, too. Refer to :ref:`SequenceTypes` for details.
 
-.. [#f4] The term *"bookmark"* has two completely different meanings, unfortunately: (1) it is used as a synonym for outline entries as they occur in a document's **Table of Contents**, and (2) it is used as a page marker to help trace down page number changes when the document's layout changes (see methods :meth:`Document.layout`, :meth:`Document.makeBookmark`, and :meth:`Document.findBookmark`).
+.. [#f4] If the PDF is encrypted, using ``doc.save(..., decrypt=False)`` will again create an encrypted PDF with the same passwords as the original.

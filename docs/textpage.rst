@@ -68,14 +68,19 @@ This class represents text and images shown on a document page. All MuPDF docume
 
       :rtype: dict
 
-   .. method:: search(string, hit_max = 16)
+   .. method:: search(string, hit_max = 16, quads = False)
 
-      Search for ``string``.
+      Search for ``string`` and return a list of found locations.
 
-      :arg str string: The string to search for.
-      :arg int hit_max: Maximum number of expected hits (default 16).
+      :arg str string: the string to search for.
+      :arg int hit_max: maximum number of accepted hits (default 16).
+      :arg bool quads: return quadrilaterals instead of rectangles.
       :rtype: list
-      :returns: a list of :ref:`Rect` objects (without transformation), each surrounding a found ``string`` occurrence.
+      :returns: a list of :ref:`Rect` or :ref:`Quad` objects, each surrounding a found ``string`` occurrence.
+
+      Example: If the search for string "pymupdf" contains a hit like shown, then the corresponding entry will either be the blue rectangle, or, if ``quads`` was specified, ``Quad(ul, ur, ll, lr)``.
+
+      .. image:: img-quads.jpg
 
    .. note:: All of the above can be achieved by using the appropriate :meth:`Page.getText` and :meth:`Page.searchFor` methods. Also see further down and in the :ref:`Page` chapter for examples on how to create a valid file format by adding respective headers and trailers.
 
@@ -185,3 +190,4 @@ bbox            character rectangle, formatted as ``list(fitz.Rect)``
 c               the character (unicode)
 origin          *tuple* coordinates of the bottom left point
 =============== =====================================================
+

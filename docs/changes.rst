@@ -1,11 +1,24 @@
 Change Logs
 ===============
 
-Changes in Version 1.13.20
+Changes in Version 1.14.0
 ---------------------------
-* **Extended** e-book support with two new methods: :meth:`Document.makeBookmark` creates bookmark for a given page number, and :meth:`Document.findBookmark` returns the page's new number after a :meth:`Document.layout` has been executed. As part of this change, opening and layouting a document now also accepts the desired new page width and height as an alternative to specifying the new page rectangle.
-* **Added** new parameters "width" and "height" to :meth:`Document.layout` and :meth:`Document.__init__` (i.e. "open") to provide an alternative for re-layouting reflowable documents.
-* **Fixed** interpreter crash when not letting default filename, ufilename or desc arguments in :meth:`Page.addFileAnnot`.
+MuPDF v1.14.0 required massive changes in PyMuPDF. There are also quite a lot of interesting new features now supported. Based on MuPDF v1.14.0, PyMuPDF contains the following changes:
+
+* **Added** "ink" annotation.
+* **Added** "rubber stamp" annotation.
+* **Added** "squiggly" text marker annotation.
+* **Added** new class :ref:`Quad` (quadrilateral or tetragon) -- which represents a general four-sided shape in the plane. Its sides need not be parallel to the coordinate axes. The special subtype of rectangular, non-empty tetragons is used in text marker annotations and as returned objects in text search methods.
+* **Added** a new option "decrypt" to :meth:`Document.save` / :meth:`Document.write`. Now you can **keep encryption** when saving a password protected PDF.
+* **Changed** changes to annotations now **always require** :meth:`Annot.update` to become effective.
+* **Changed** free text annotations to support the full Latin character set and range of appearance options.
+* **Changed** text searching, :meth:`Page.searchFor`, to optionally return :ref:`Quad` instead :ref:`Rect` objects surrounding each search hit.
+* **Changed** plain text output: we now add a ``\n`` to each line if it does not itself end with this character.
+* **Fixed** issue 211 ("Something wrong in the doc").
+* **Fixed** issue 213 ("Rewritten outline is displayed only by mupdf-based applications").
+* **Fixed** issue 214 ("PDF decryption GONE!").
+* **Fixed** issue 215 ("Formatting of links added with pyMuPDF").
+* **Fixed** issue 217 ("extraction through json is failing for my pdf").
 
 
 Changes in Version 1.13.19

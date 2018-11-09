@@ -13,6 +13,26 @@ Images
 
 ----------
 
+How to Make Images from Document Pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This little script will take a document filename and generate a PNG file from each of its pages.
+
+The document can be any supported type like PDF, XPS, etc.
+
+The script works as a command line tool which expects the filename being supplied as a parameter. The generated image files (1 per page) are stored in the directory of the script::
+
+    import sys, fitz                            # import the binding
+    fname = sys.argv[1]                         # get filename from command line
+    doc = fitz.open(fname)                      # open document
+    for page in doc:                            # iterate through the pages
+        pix = page.getPixmap(alpha = False)     # render page to an image
+        pix.writePNG("page-%i.png" % page.number)    # store image as a PNG
+
+The script directory will now contain PNG image files named ``page-0.png``, ``page-1.png``, etc. Pictures have the dimension of their pages, e.g. 596 x 842 pixels for an A4 portrait sized page. They will have a resolution of 96 dpi in x and y dimension and have no transparency. You can change all that -- for how to do do this, read the next sections.
+
+----------
+
 How to Increase :index:`Image Resolution <pair: image; resolution>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -24,20 +44,20 @@ This method has many options for influencing the result. The most important amon
 
 In the following, we apply a :index:`zoom factor <pair: resolution;zoom>` of 2 to each dimension, which will generate an image with a four times better resolution for us.
 
->>> zoom_x = 2.0                       # horizontal zoom: 200%
->>> zoom_y = 2.0                       # vertical zoom: 200%
->>> mat = fitz.Matrix(zoom_x, zoom_y)  # zoom factor 2 in each dimension
+>>> zoom_x = 2.0                       # horizontal zoom
+>>> zomm_y = 2.0                       # vertical zoom
+>>> mat = fitz.Matrix(zoom_x, zomm_y)  # zoom factor 2 in each dimension
 >>> pix = page.getPixmap(matrix = mat) # use 'mat' instead of the identity matrix
 
-The resulting pixmap will be 4 times bigger than normal. Zoom factors can be any positive float.
+The resulting pixmap will be 4 times bigger than normal.
 
 ----------
 
 How to Create :index:`Partial Pixmaps` (Clips)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You do not always need the full image of a page. This may be the case e.g. when you display the image in a GUI and would like to show an enlarged part.
+You do not always need the full image of a page. This may be the case e.g. when you display the image in a GUI and would like to zoom into a part of the page.
 
-Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of it, thus using a four times higher resolution.
+Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of your page, thus using a four times better resolution.
 
 .. image:: img-clip.jpg
    :align: center
@@ -51,13 +71,11 @@ Let's assume your GUI window has room to display a full document page, but you n
 
 In the above we construct ``clip`` by specifying two diagonally opposite points: the middle point ``mp`` of the page rectangle, and its bottom right, ``rect.br``.
 
-Also have a look at `this <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ script, which has an integrated zooming feature.
-
 ----------
 
 How to :index:`Suppress <pair: suppress; annotation>` Annotation Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Normally, the pixmap of a page also includes the images of any annotations. There currently is no direct way to suppress this.
+Normally, the pixmap of a page also includes the images of any annotations. There currently is now direct way to suppress this.
 
 But it can be achieved using a little circumvention like in `this <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/show-no-annots.py>`_ script.
 
@@ -70,15 +88,15 @@ But it can be achieved using a little circumvention like in `this <https://githu
 How to Extract Images: Non-PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can extract images from **any document** in one of the following two ways.
+You have basically two options:
 
-1. Convert your document to a PDF, and then use any of the PDF-only extraction methods. This snippet will convert a document to a memory-resident, temporary PDF, which you can use for this:
+1. Convert your document to a PDF, and then use any of the PDF-only extraction methods. This snippet will convert a document to PDF:
 
     >>> pdfbytes = doc.convertToPDF()
     >>> pdf = fitz.open("pdf", pdfbytes)
     >>> # now use 'pdf' like any PDF document
 
-2. Use :meth:`Page.getText` with the "dict" parameter. This will extract all text and images shown on the page, formatted as a Python dictionary. Every image will occur in an image block, containing meta information and the binary image data. For details of the dictionary's structure, see :ref:`TextPage`. This snippet creates a list of all images shown on a page:
+2. Use :meth:`Page.getText` with the "dict" parameter. This will extract all text and images shown on the page, formatted as a Python dictionary. Every image will occur in an image block, containing meta information and the binary image data. For details of the dictionary's structure, see :ref:`TextPage`. This creates a list of all images shown on a page:
 
     >>> d = page.getText("dict")
     >>> blocks = d["blocks"]
@@ -95,16 +113,16 @@ You can extract images from **any document** in one of the following two ways.
 How to Extract Images: PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Like any other "object" in a PDF, embedded images are identified by a cross reference number (xref, a positive integer). If you know this number, you have two ways to access the image's data. The following assumes you have opened a PDF under the name "doc":
+Like any other "object" in a PDF, embedded images are identified by a cross reference number (xref, an integer). If you know this number, you have two ways to access the image's data. The following assumes you have opened a PDF under the name "doc":
 
 1. Create a :ref:`Pixmap` of the image with instruction ``pix = fitz.Pixmap(doc, xref)``. This method is **very** fast (single digit micro-seconds). The pixmap's properties (width, height, ...) will reflect the ones of the image. As usual, you can save it as a PNG via method :meth:`Pixmap.writePNG` (or get the corresponding binary data :meth:`Pixmap.getPNGData`). There is no way to tell which image format the embedded original has.
 
-2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided - mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data is identical). For other image types, :meth:`Document.extractImage` is **many thousands of times faster** than the pixmap-based method , and in most cases its **image data is much smaller**, too.
+2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided - mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data is identical). Otherwise, this method is **thousands of times faster**, and in most cases the **image data is much smaller**, too.
 
 The question remains: **"How do I know those cross reference numbers 'xref' of images?"**. There are two answers to this:
 
 a. **"Inspect the page objects"** Loop through the document's page number list and execute :meth:`Document.getPageImageList` for each page number. The result is a list of list, and its items look like ``[xref, smask, ...]``, containing the xref of an image shown on that page. This xref can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
-b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each xref. If the returned dictionary is empty, then continue -- this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
+b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue - this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
 
 For both extraction approaches, there exist ready-to-use general purpose scripts:
 
@@ -154,7 +172,7 @@ The scripts `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blo
    triple: picture;embed;PDF
    single: showPDFpage;insertImage;embeddedFileAdd
 
-How to Make a PDF of All your Pictures
+How to Make one PDF of all your Pictures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 We show here **three scripts** that take a list of (image and other) files and put them all in one PDF.
 
@@ -261,12 +279,73 @@ Text
 
 ----------
 
+How to Extract all Document Text
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This script will take a document filename and generate a text file from all of its text.
+
+The document can be any supported type like PDF, XPS, etc.
+
+The script works as a command line tool which expects the document filename supplied as a parameter. It generates one text file named "filename.txt" in the script directory. Text of pages is separated by a line "-----"::
+
+    import sys, fitz                            # import the bindings
+    fname = sys.argv[1]                         # get document filename
+    doc = fitz.open(fname)                      # open document
+    out = open(fname + ".txt", "wb")            # open text output
+    for page in doc:                            # iterate the document pages
+        text = page.getText().encode("utf8")    # get plain text (is in UTF-8)
+        out.write(text)                         # write text of page
+        out.write(b"\n-----\n")                 # write page delimiter
+    out.close()
+
+The output will be plain text as it is coded in the document. No effort is made to prettify in any way. Specifally for PDF, this may mean output not in usual reading order, unexpected line breaks and so forth.
+
+You have many options to cure this - see chapter :ref:`Appendix2`. Among them are:
+
+1. Extract text in HTML format and store it as a HTML document, so it can be viewed in any browser.
+2. Extract text as a list of text blocks via :meth:`Page.getTextBlocks`. Each item of this list contains position information for its text, which can be used to establish a convenient reading order.
+3. Extract a list of single words via :meth:`Page.getTextWords`. Its items are words with position information. Use it to determine text contained in a given rectangle - see next section.
+
+
 .. index::
    triple: extract;text;rectangle
 
 How to Extract Text from within a Rectangle
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Please refer to this `Wiki page <https://github.com/rk700/PyMuPDF/wiki/How-to-extract-text-from-a-rectangle>`_ of the repository.
+Please refer to the script `textboxtract.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/textboxtract.py>`_.
+
+It demonstrates ways to extract text contained in the following red rectangle,
+
+.. image:: img-textboxtract.png
+   :align: center
+   :scale: 75
+
+by using more or less restrictive conditions to find the relevant words::
+
+    Select the words strictly contained in rectangle
+    ------------------------------------------------
+    Die Altersübereinstimmung deutete darauf hin,
+    engen, nur 50 Millionen Jahre großen
+    Gesteinshagel auf den Mond traf und dabei
+    hinterließ – einige größer als Frankreich.
+    es sich um eine letzte, infernalische Welle
+    Geburt des Sonnensystems. Daher tauften die
+    das Ereignis »lunare Katastrophe«. Später
+    die Bezeichnung Großes Bombardement durch.
+
+Or, more forgiving, respectively::
+
+    Select the words intersecting the rectangle
+    -------------------------------------------
+    Die Altersübereinstimmung deutete darauf hin, dass
+    einem engen, nur 50 Millionen Jahre großen Zeitfenster
+    ein Gesteinshagel auf den Mond traf und dabei unzählige
+    Krater hinterließ – einige größer als Frankreich. Offenbar
+    handelte es sich um eine letzte, infernalische Welle nach
+    der Geburt des Sonnensystems. Daher tauften die Caltech-
+    Forscher das Ereignis »lunare Katastrophe«. Später setzte
+    sich die Bezeichnung Großes Bombardement durch.
+
 
 ----------
 
@@ -304,10 +383,11 @@ This method has advantages and drawbacks. Pros are
 
 * the search string can contain blanks and wrap across lines
 * upper or lower cases are treated equal
+* return may also be a list of :ref:`Quad` objects to precisely locate text that is **not parallel** to either axis.
 
 Disadvantages:
 
-* you cannot determine the number of found items beforehand: if ``hit_max`` rectangles are returned you do not know if and how many more you may have missed.
+* you cannot determine the number of found items beforehand: if ``hit_max`` items are returned you do not know whether you have missed any.
 
 But you have other options::
 
@@ -350,13 +430,249 @@ This script uses :meth:`Page.getTextWords` to look for a string, handed in via c
 * As shown here, upper / lower cases are **respected**. But this can be changed by using the string method ``lower()`` (or even regular expressions) in function ``mark_word``.
 * There is **no upper limit**: all occurrences will be detected.
 * You can use **anything** to mark the word: 'Underline', 'Highlight', 'StrikeThrough' or 'Square' annotations, etc.
-* Here is an example snippet of a page of this manual, where "MuPDF" has been used as the search string. Note that all string **containing "MuPDF"** have been underlined.
+* Here is an example snippet of a page of this manual, where "MuPDF" has been used as the search string. Note that all strings **containing "MuPDF"** have been completely underlined (not just the search string).
 
 .. image:: img-markedpdf.jpg
    :align: center
    :scale: 60
 
-----------
+
+-----------------------
+
+Annotations
+-----------
+In v1.14.0, annotation handling has been considerably extended:
+
+* New annotation type support for 'Ink', 'Rubber Stamp' and 'Squiggly' annotations. Ink annots simulate handwritings by combining one or more lists of interconnected points. Stamps are intended to visuably inform about a document's status or intended usage (like "draft", "confidential", etc.). 'Squiggly' is a text marker annot, which underlines selected text with a zigzagged line.
+
+* Extended 'FreeText' support:
+    1. all characters from the ``Latin`` character set are now available,
+    2. colors of text, rectangle background and rectangle border can be independently set
+    3. text in rectangle can be rotated by either +90 or -90 degrees
+    4. text is automatically wrapped (made multi-line) in available rectangle
+    5. all Base-14 fonts are now available (*normal* variants only, i.e. no bold, no italic).
+* MuPDF now supports line end icons for 'Line' annots (only). PyMuPDF supported that in v1.13.x already -- and for (almost) the full range of applicable types. So we adjusted the appearance of 'Polygon' and 'PolyLine' annots to closely resemble the one of MuPDF for 'Line'.
+* MuPDF now provides its own annotation icons where relevant. PyMuPDF switched to using them (for 'FileAttachment' and 'Text' ["sticky note"] so far).
+* MuPDF now also supports 'Caret', 'Movie', 'Sound' and 'Signature' annotations, which we may include in PyMuPDF at some later time.
+
+How to Add and Modify Annotations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In PyMuPDF, new annotations are added via :ref:`Page` methods. To keep code duplication effort small, we only offer a minimal set of options here. For example, to add a 'Circle' annotation, only the containing rectangle can be specified. The result is a circle (or ellipsis) with white interior, black border and a line width of 1, exactly fitting into the rectangle. To adjust the annot's appearance, :ref:`Annot` methods must then be used. After having made all required changes, the annot's :meth:`Annot.update` methods must be invoked to finalize all your changes.
+
+As an overview for these capabilities, look at the following script that fills a PDF page with most of the available annotations. Look in the next sections for more special situations::
+
+    # -*- coding: utf-8 -*-
+    from __future__ import print_function
+    import sys
+    print("Python", sys.version, "on", sys.platform, "\n")
+    import fitz
+    print(fitz.__doc__, "\n")
+    
+    text = "text in line\ntext in line\ntext in line\ntext in line"
+    red    = (1, 0, 0)
+    blue   = (0, 0, 1)
+    gold   = (1, 1, 0)
+    colors = {"stroke": blue, "fill": gold}
+    colors2 = {"fill": blue, "stroke": gold}
+    border = {"width": 0.3, "dashes": [2]}
+    displ = fitz.Rect(0, 50, 0, 50)
+    r = fitz.Rect(50, 100, 220, 135)
+    t1 = u"têxt üsès Lätiñ charß,\nEUR: €, mu: µ, super scripts: ²³!"
+    
+    def print_descr(rect, annot):
+        """Print a short description to the right of an annot rect."""
+        annot.parent.insertText(rect.br + (10, 0),
+                        "'%s' annotation" % annot.type[1], color = red)
+    
+    def rect_from_quad(q):
+        """Create a rect envelopping a quad (= rotated rect)."""
+        return fitz.Rect(q[0], q[1]) | q[2] | q[3]
+    
+    doc = fitz.open()
+    page = doc.newPage()
+    annot = page.addFreetextAnnot(r, t1, rotate = 90)
+    annot.setBorder(border)
+    annot.update(fontsize = 10, border_color=red, fill_color=gold, text_color=blue)
+    
+    print_descr(annot.rect, annot)
+    r = annot.rect + displ
+    print("added 'FreeText'")
+    
+    annot = page.addTextAnnot(r.tl, t1)
+    annot.setColors(colors2)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'Sticky Note'")
+    
+    pos = annot.rect.tl + displ.tl
+    
+    # first insert 4 text lines, rotated clockwise by 15 degrees
+    page.insertText(pos, text, fontsize=11, morph = (pos, fitz.Matrix(-15)))
+    # now search text to get the quads
+    rl = page.searchFor("text in line", quads = True)
+    r0 = rl[0]
+    r1 = rl[1]
+    r2 = rl[2]
+    r3 = rl[3]
+    annot = page.addHighlightAnnot(r0)
+    # need to convert quad to rect for descriptive text ...
+    print_descr(rect_from_quad(r0), annot)
+    print("added 'HighLight'")
+    
+    annot = page.addStrikeoutAnnot(r1)
+    print_descr(rect_from_quad(r1), annot)
+    print("added 'StrikeOut'")
+    
+    annot = page.addUnderlineAnnot(r2)
+    print_descr(rect_from_quad(r2), annot)
+    print("added 'Underline'")
+    
+    annot = page.addSquigglyAnnot(r3)
+    print_descr(rect_from_quad(r3), annot)
+    print("added 'Squiggly'")
+    
+    r = rect_from_quad(r3) + displ
+    annot = page.addPolylineAnnot([r.bl, r.tr, r.br, r.tl])
+    annot.setBorder(border)
+    annot.setColors(colors)
+    annot.setLineEnds(fitz.ANNOT_LE_Diamond, fitz.ANNOT_LE_Circle)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'PolyLine'")
+    
+    r+= displ
+    annot = page.addPolygonAnnot([r.bl, r.tr, r.br, r.tl])
+    annot.setBorder(border)
+    annot.setColors(colors)
+    annot.setLineEnds(fitz.ANNOT_LE_Diamond, fitz.ANNOT_LE_Circle)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'Polygon'")
+    
+    r+= displ
+    annot = page.addLineAnnot(r.tr, r.bl)
+    annot.setBorder(border)
+    annot.setColors(colors)
+    annot.setLineEnds(fitz.ANNOT_LE_Diamond, fitz.ANNOT_LE_Circle)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'Line'")
+    
+    r+= displ
+    annot = page.addRectAnnot(r)
+    annot.setBorder(border)
+    annot.setColors(colors)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'Square'")
+    
+    r+= displ
+    annot = page.addCircleAnnot(r)
+    annot.setBorder(border)
+    annot.setColors(colors)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'Circle'")
+    
+    r+= displ
+    annot = page.addFileAnnot(r.tl, b"just anything for testing", "testdata.txt")
+    annot.setColors(colors2)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'FileAttachment'")
+    
+    r+= displ
+    annot = page.addStampAnnot(r, stamp = 0)
+    annot.setColors(colors)
+    annot.setOpacity(0.5)
+    annot.update()
+    print_descr(annot.rect, annot)
+    print("added 'Stamp'")
+    
+    doc.save("new-annots.pdf", expand=255)
+
+This script should lead to the following output:
+
+.. image:: img-annots.jpg
+   :align: center
+   :scale: 80
+
+How to Mark Text
+~~~~~~~~~~~~~~~~~~~~~
+This script searches for text and marks it::
+
+    # -*- coding: utf-8 -*-
+    import fitz
+    
+    # the document to annotate
+    doc = fitz.open("tilted-text.pdf")
+    
+    # the text to be marked
+    t = "¡La práctica hace el campeón!"
+    
+    # work with first page only
+    page = doc[0]
+    
+    # get list of text locations
+    # we use "quads", not rectangles because text may be tilted!
+    rl = page.searchFor(t, quads = True)
+    
+    # loop through the found locations to add a marker
+    for r in rl:
+        page.addSquigglyAnnot(r)
+    
+    # save to a new PDF
+    doc.save("a-squiggly.pdf")
+
+The result looks like this:
+
+.. image:: img-textmarker.jpg
+   :align: center
+   :scale: 80
+
+How to Use FreeText
+~~~~~~~~~~~~~~~~~~~~~
+This script shows a couple of possibilities for 'FreeText' annotations::
+
+    # -*- coding: utf-8 -*-
+    import fitz
+    
+    # some colors
+    blue  = (0,0,1)
+    green = (0,1,0)
+    red   = (1,0,0)
+    gold  = (1,1,0)
+    
+    # a new PDF with 1 page
+    doc = fitz.open()
+    page = doc.newPage()
+    
+    # 3 rectangles, same size, abvove each other
+    r1 = fitz.Rect(100,100,200,150)
+    r2 = r1 + (0,75,0,75)
+    r3 = r2 + (0,75,0,75)
+    
+    # the text, Latin alphabet
+    t = "¡Un pequeño texto para practicar!"
+    
+    # add 3 annots, modify the last one somewhat
+    a1 = page.addFreetextAnnot(r1, t, color=red)
+    a2 = page.addFreetextAnnot(r2, t, fontname="Ti", color=blue)
+    a3 = page.addFreetextAnnot(r3, t, fontname="Co", color=blue, rotate=90)
+    a3.setBorder({"width":0.0})
+    a3.update(fontsize=8, fill_color=gold)
+    
+    # save the PDF
+    doc.save("a-freetext.pdf")
+
+The result looks like this:
+
+.. image:: img-freetext.jpg
+   :align: center
+   :scale: 80
+
+--------------------------
 
 General
 --------
@@ -369,7 +685,7 @@ Assume that "some.file" is actually an XPS. Open it like so:
 
 >>> doc = fitz.open("some.file", filetype = "xps")
 
-.. note:: MuPDF itself does not try to determine the file type from the file data. You are responsible for supplying it in some way - either implicitely via the file extension, or explicitely as shown. Also consult the :ref:`Document` chapter for a full description.
+.. note:: MuPDF itself does not try to determine the file type from the file data themselves. **You** are responsible for supplying the filetype info in some way - either implicitely via the file extension, or explicitely as shown. Also consult the :ref:`Document` chapter for a full description.
 
 ----------
 
@@ -397,7 +713,7 @@ How to Delete and Re-Arrange Pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 With PyMuPDF you have all options to copy, move, delete or re-arrange the pages of a PDF. Intuitive methods exist that allow you to do this on a page-by-page level, like the :meth:`Document.copyPage` method.
 
-Or you alternatively prepare a complete new page layout in form of a Python sequence, that contains the page numbers you want, in the sequence you want, and as many times as you want each page. The following illustrates what can be done with :meth:`Document.select`:
+Or you alternatively prepare a complete new page layout in form of a Python sequence, that contains the page numbers you want, in the sequence you want, and as many times as you want each page. The following may illustrate what can be done with :meth:`Document.select`:
 
 ``doc.select([1, 1, 1, 5, 4, 9, 9, 9, 0, 2, 2, 2])``
 
@@ -414,7 +730,7 @@ This snippet creates the respective sub documents which can then be used to prin
 >>> doc.save("even.pdf")  # save the "even" PDF
 >>> doc.close()           # recycle the file
 >>> doc = fitz.open(doc.name) # re-open
->>> doc.save(p_odd)       # and do the same with the odd pages
+>>> doc.select(p_odd)     # and do the same with the odd pages
 >>> doc.save("odd.pdf")
 
 For more information also have a look at this Wiki `article <https://github.com/rk700/PyMuPDF/wiki/Rearranging-Pages-of-a-PDF>`_.
@@ -487,7 +803,7 @@ How To Dynamically Clean Up Corrupt PDFs
 
 This shows a potential use of PyMuPDF with another Python PDF library (the excellent pure Python package `pdfrw <https://pypi.python.org/pypi/pdfrw>`_ is used here as an example).
 
-If a clean, non-corrupt / decompressed / decrypted PDF is needed, one could dynamically invoke PyMuPDF to recover from many problems like so::
+If a clean, non-corrupt / decompressed PDF is needed, one could dynamically invoke PyMuPDF to recover from many problems like so::
 
  import sys
  from io import BytesIO
@@ -507,11 +823,13 @@ If a clean, non-corrupt / decompressed / decrypted PDF is needed, one could dyna
              pass
      del ibuffer                             # free some storage
      # either we need a password or it is a problem-PDF
-     # create a repaired / decrypted version
+     # create a repaired / decompressed / decrypted version
      doc = fitz.open("pdf", idata)
      if password is not None:                # decrypt if password provided
-         doc.authenticate(password)
-     c = doc.write(garbage=4)
+         rc = doc.authenticate(password)
+         if not rc > 0:
+             raise ValueError("wrong password")
+     c = doc.write(garbage=3, deflate=True)
      del doc                                 # close & delete doc
      return PdfReader(BytesIO(c))            # let pdfrw retry
  #---------------------------------------
@@ -523,99 +841,134 @@ If a clean, non-corrupt / decompressed / decrypted PDF is needed, one could dyna
 
 With the command line utility ``pdftk`` (`available <https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/>`_ for Windows only, but reported to also run under `Wine <https://www.winehq.org/>`_) a similar result can be achieved, see `here <http://www.overthere.co.uk/2013/07/22/improving-pypdf2-with-pdftk/>`_. However, you must invoke it as a separate process via ``subprocess.Popen``, using stdin and stdout as communication vehicles.
 
-----------
+How to Split Single Pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. index::
-   pair: reflowable;document
-   pair: reflowable;bookmark
+This deals with splitting up pages of a PDF in arbitrary pieces. For example, you may have a PDF with *Letter* format pages which you want to print with a magnification factor of four: each page is split up in 4 pieces which each go to a separate PDF page in *Letter* format again::
 
-How To Deal with Reflowable Documents
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Some document types have no fixed layout. People using an e-book reader will know this, but every internet browser is also capable of re-layouting a web site (changing app window, font size changes, ...). Such documents are called "reflowable".
+    '''
+    Create a PDF copy with split-up pages (posterize)
+    ---------------------------------------------------
+    License: GNU GPL V3
+    (c) 2018 Jorj X. McKie
+    
+    Usage
+    ------
+    python posterize.py input.pdf
+    
+    Result
+    -------
+    A file "poster-input.pdf" with 4 output pages for every input page.
+    
+    Notes
+    -----
+    (1) Output file is chosen to have page dimensions of 1/4 of input.
+    
+    (2) Easily adapt the example to make n pages per input, or decide per each
+        input page or whatever.
+    
+    Dependencies
+    ------------
+    PyMuPDF 1.12.2 or later
+    '''
+    from __future__ import print_function
+    import fitz, sys
+    infile = sys.argv[1]                        # input file name
+    src = fitz.open(infile)
+    doc = fitz.open()                           # empty output PDF
+    
+    for spage in src:                           # for each page in input
+        xref = 0                                # force initial page copy to output
+        r = spage.rect                          # input page rectangle
+        d = fitz.Rect(spage.CropBoxPosition,    # CropBox displacement if not
+                      spage.CropBoxPosition)    # starting at (0, 0)
+        #--------------------------------------------------------------------------                  
+        # example: cut input page into 2 x 2 parts
+        #--------------------------------------------------------------------------
+        r1 = r * 0.5                            # top left rect
+        r2 = r1 + (r1.width, 0, r1.width, 0)    # top right rect
+        r3 = r1 + (0, r1.height, 0, r1.height)  # bottom left rect
+        r4 = fitz.Rect(r1.br, r.br)             # bottom right rect
+        rect_list = [r1, r2, r3, r4]            # put them in a list
+        
+        for rx in rect_list:                    # run thru rect list
+            rx += d                             # add the CropBox displacement
+            page = doc.newPage(-1,              # new output page with rx dimensions
+                               width = rx.width,
+                               height = rx.height)
+            xref = page.showPDFpage(page.rect,  # fill all new page with the image
+                                    src,        # input document
+                                    spage.number, # input page number
+                                    subrect = rx, # which part to use of input page
+                                    reuse_xref = xref) # copy input page once only
+                                    
+    # that's it, save output file
+    doc.save("poster-" + src.name,
+             garbage = 3,                       # eliminate duplicate objects
+             deflate = True)                    # compress stuff where possible
 
-PyMuPDF supports this in the following way:
+--------------------------
 
-1. A reflowable document's layout can be set when opening it -- via parameters ``"rect"``, ``"width"``, ``"height"`` and ``"fontsize"``.
+How to Combine Single Pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2. Any time later, the document can be re-layouted using :meth:`Document.layout`. Page numbers can be tracked across this process.
+This deals with joining PDF pages to form a new PDF with pages each combining two or four original ones (also called "2-up", "4-up", etc.). This could be used to create booklets or thumbnail-like overviews::
 
-    * ``bm = doc.makeBookmark(pno)`` creates a "bookmark" for any current page number ``pno``.
+    '''
+    Copy an input PDF to output combining every 4 pages
+    ---------------------------------------------------
+    License: GNU GPL V3
+    (c) 2018 Jorj X. McKie
 
-    * after re-layouting, :meth:`Document.findBookmark` returns its new number::
+    Usage
+    ------
+    python 4up.py input.pdf
 
-        In [1]: import fitz
-        In [2]: doc = fitz.open("some.epub")      # a reflowable document
-        In [3]: len(doc)                          # current number of pages
-        Out[3]: 251
-        In [4]: doc[0].rect                       # check old size of some page
-        Out[4]: fitz.Rect(0.0, 0.0, 450.0, 600.0)
-        In [5]: bm1 = doc.makeBookmark(150)       # bookmark page 150
-        In [6]: bm2 = doc.makeBookmark(-1)        # bookmark last page
-        In [7]: doc.layout(width=600, height=800) # change the layout
-        In [8]: len(doc)                          # new number of pages
-        Out[8]: 133
-        In [9]: doc[0].rect                       # check page size again
-        Out[9]: fitz.Rect(0.0, 0.0, 600.0, 800.0)
-        In [10]: doc.findBookmark(bm1)            # new number for page 150
-        Out[10]: 78
-        In [11]: doc.findBookmark(bm2)            # new number for last page
-        Out[11]: 132
+    Result
+    -------
+    A file "4up-input.pdf" with 1 output page for every 4 input pages.
 
-.. note:: The term "bookmark" in this context has nothing to do with :attr:`Document.outline` or entries in the table of contents list, which are sometimes also called bookmarks. Layout bookmarks are short-lived, internally calculated integers (*long* in Python 2), which must not be changed in any way.
+    Notes
+    -----
+    (1) Output file is chosen to have A4 portrait pages. Input pages are scaled
+        maintaining side proportions. Both can be changed, e.g. based on input
+        page size. However, note that not all pages need to have the same size, etc.
 
-----------
+    (2) Easily adapt the example to combine just 2 pages (like for a booklet) or
+        make the output page dimension dependent on input, or whatever.
 
-.. index::
-   pair: widget;form fields
-
-How To Deal with PDF Form Fields
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-PDFs can be used as fillable forms: certain fields ("form fields", or "widgets") can be made editable while the rest of the document remains change-protected (technically, form fields are a special type of :ref:`Annot`). PyMuPDF supports this feature in the following way:
-
-* one can detect whether a PDF contains any widgets: :attr:`Document.isFormPDF`
-* existing widgets can be changed (:meth:`Annot.updateWidget`) in almost every aspect like colors, text font, location on page, boundary, value, etc.
-* widgets can be deleted (:meth:`Page.deleteAnnot`)
-* widgets can added via :meth:`Page.addWidget`
-
-Form fields have **many** properties, and they also come in handful of different sub types. We have therefore decided to use a new class :ref:`Widget` as a parameter for creating and updating widgets (as opposed to bloating these methods with dozens of arguments). This `script <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/form-fields.py>`_ creates a new PDF with a number of form fields. All of them are also given initial values. The result looks like this:
-
-.. image:: img-form-fields.jpg
-   :align: center
-   :scale: 60
-
-Now let's change the value of one of these fields:
-
->>> import fitz
->>> doc = fitz.open("widgettest.pdf")
->>> page = doc[0]                         # the page containing the field
->>> annot = page.firstAnnot               # the annot representing the field
->>> widget = annot.widget                 # object containing all field properties
->>> widget.field_value                    # look at current value
-'Times-Roman-Bold, max. 40 chars'
->>> widget.field_value = "this is some new value"  # change the value
->>> annot.updateWidget(widget)            # update the field
->>> doc.saveIncr()                        # save PDF incrementally
-
-Checking the result:
-
-.. image:: img-form-fields-changed.jpg
-   :align: center
-   :scale: 60
-
-.. note:: To locate the right form field (the above situation in lines 3 and 4 is somewhat idealistic), you can use :attr:`Widget.field_name` -- which is not necessarily unique however. Annotations on a page are a forward linked chain: each annotation has a :attr:`Annot.next` property which is either ``None`` or points to the next annotation. So if you know the page number and the field name, you could do this:
-
->>> import fitz
->>> doc = fitz.open("widgettest.pdf")
->>> page = doc[n]                         # locate the page
->>> annot = page.firstAnnot               # scan through its annots
->>> widget = None                         # prepare for not-found
->>> while annot:
-        widget = annot.widget             # None if not a field
-        if widget and widget.field_name == "textfield-1":
-            break                         # found it!
-        annot = annot.next                # try next one
->>> # check if we found the field
->>> if not widget or widget.field_name != "textfield-1":
-        raise ValueError("field not found")
->>> # work with the widget
-
+    Dependencies
+    -------------
+    PyMuPDF 1.12.1 or later
+    '''
+    from __future__ import print_function
+    import fitz, sys
+    infile = sys.argv[1]
+    src = fitz.open(infile)
+    doc = fitz.open()                      # empty output PDF
+    
+    width, height = fitz.PaperSize("a4")   # A4 portrait output page format
+    r = fitz.Rect(0, 0, width, height)
+    
+    # define the 4 rectangles per page
+    r1 = r * 0.5                           # top left rect
+    r2 = r1 + (r1.width, 0, r1.width, 0)   # top right
+    r3 = r1 + (0, r1.height, 0, r1.height) # bottom left
+    r4 = fitz.Rect(r1.br, r.br)            # bottom right
+    
+    # put them in a list
+    r_tab = [r1, r2, r3, r4]
+    
+    # now copy input pages to output
+    for spage in src:
+        if spage.number % 4 == 0:           # create new output page
+            page = doc.newPage(-1,
+                          width = width,
+                          height = height)
+        # insert input page into the correct rectangle
+        page.showPDFpage(r_tab[spage.number % 4],    # select output rect
+                         src,               # input document
+                         spage.number)      # input page number
+    
+    # by all means, save new file using garbage collection and compression
+    doc.save("4up-" + infile, garbage = 3, deflate = True)

@@ -14,13 +14,13 @@ Adding Page Content
 -------------------
 This is available for PDF documents only. There are basically two groups of methods:
 
-1. Methods making permanent changes. This group contains ``insertText()``, ``insertTextbox()`` and all ``draw*()`` methods. They provide "stand-alone", shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter. Some remarks on the relationship between the :ref:`Page` and :ref:`Shape` methods:
+1. Methods making **permanent** changes. This group contains ``insertText()``, ``insertTextbox()`` and all ``draw*()`` methods. They provide "stand-alone", shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter. Some remarks on the relationship between the :ref:`Page` and :ref:`Shape` methods:
 
   * In contrast to :ref:`Shape`, the results of page methods are not interconnected: they do not share properties like colors, line width / dashing, morphing, etc.
   * Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
   * Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
 
-2. Methods for maintaining annotations. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that manipulating them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
+2. Methods adding **annotations**. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that manipulating them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
 
 ================================ =========================================
 **Method / Attribute**           **Short Description**
@@ -29,10 +29,13 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.addFileAnnot`        PDF only: add a file attachment annotation
 :meth:`Page.addFreetextAnnot`    PDF only: add a text annotation
 :meth:`Page.addHighlightAnnot`   PDF only: add a "highlight" annotation
+:meth:`Page.addInkAnnot`         PDF only: add an ink annotation
 :meth:`Page.addLineAnnot`        PDF only: add a line annotation
 :meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
 :meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
 :meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
+:meth:`Page.addStampAnnot`       PDF only: add a "rubber stamp" annotation
+:meth:`Page.addSquigglyAnnot`    PDF only: add a "squiggly" annotation
 :meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
 :meth:`Page.addTextAnnot`        PDF only: add comment and a note icon
 :meth:`Page.addUnderlineAnnot`   PDF only: add an "underline" annotation
@@ -77,6 +80,7 @@ This is available for PDF documents only. There are basically two groups of meth
 :attr:`Page.parent`              owning document object
 :attr:`Page.rect`                rectangle (mediabox) of the page
 :attr:`Page.rotation`            PDF only: page rotation
+:attr:`Page.xref`                PDF cross reference number
 ================================ =========================================
 
 **Class API**
@@ -91,41 +95,37 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: addTextAnnot(point, text)
 
-      PDF only: Add a comment icon with accompanying text ("sticky note").
+      PDF only: Add a comment icon ("sticky note") with accompanying text.
 
-      .. image:: img-sticky-note.png
-
-      :arg point: the top left point of a 25 x 25 rectangle containing the "note" icon.
+      :arg point: the top left point of a 18 x 18 rectangle containing the MuPDF-provided "note" icon.
       :type point: :ref:`Point`
 
-      :arg str text: the commentary text. This will be shown on double clicking the icon. This text may contain any unicode (in contrast to :meth:`addFreetextAnnot`).
+      :arg str text: the commentary text. This will be shown on double clicking or hovering over the icon. May contain any Latin characters.
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
-   .. method:: addFreetextAnnot(point, text, fontsize = 11, color = (0, 0, 0))
+   .. method:: addFreetextAnnot(rect, text, fontsize = 12, fontname = "Helvetica", color = (0,0,0), rotate = 0)
 
-      PDF only: Add text of a given fontsize and color. The font is fixed to "Helvetica" (see :ref:`Base-14-Fonts`).
+      PDF only: Add text in a given rectangle.
 
-      :arg point: the starting point of the text.
-      :type point: :ref:`Point`
+      :arg rect: the rectangle into which the text should be inserted.
+      :type rect: :ref:`Rect`
 
-      :arg str text: the text. Only ASCII characters are currently supported (a restriction eventually lifted in a future MuPDF release). Characters outside this range will be replaced by (one or more) "?". 
-
-      :arg float fontsize: fontsize.
-
-      :arg sequ color: RGB float color triple for text color. Default is black.
+      :arg str text: the text. May contain any Latin characters.
+      :arg float fontsize: the font size. Default is 12.
+      :arg str fontname: the font name. Default is "Helvetica". Accepted alternatives are "Courier", "Times-Roman", "ZapfDingbats" and "Symbol". The name may be abbreviated to the first two characters, "Co" for "Courier". Lower case is also accepted.
+      :arg sequence color: the text and rectangle border color. Default is black. Text is automatically wrapped to a new line at box width. Lines not fitting to the box will be invisible.
+      :arg int rotate: the text orientation. Accepted values are 0, 90, 270, else zero is used.
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
+      :returns: the created annotation. The text and rectangle border will be drawn in the same specified color. Rectangle background is white. These properties can only be changed using special parameters of :meth:`Annot.update`. Changeable properties are text color, box interior and border color and text font size.
 
    .. method:: addFileAnnot(pos, buffer, filename, ufilename = None, desc = None)
 
       PDF only: Add a file attachment annotation with a "PushPin" icon at the specified location.
 
-      .. image:: img-pushpin.png
-
-      :arg pos: the top-left point of a 20 x 30 rectangle containing the "PushPin" icon.
+      :arg pos: the top-left point of a 18 x 18 rectangle containing the MuPDF-provided "PushPin" icon.
       :type pos: :ref:`Point`
 
       :arg bytes/bytearray buffer: the data to be stored (actual file content, calculated data, etc.).
@@ -135,6 +135,15 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
+
+   .. method:: addInkAnnot(list)
+
+      PDF only: Add a "freehand" scribble annotation.
+
+      :arg sequence list: a list of one or more lists, each containing point-like items. Each point-like in a sublist is interpreted as a :ref:`Point` through which a connecting line is drawn. Separate sublists thus represent separate drawing lines.
+
+      :rtype: :ref:`Annot`
+      :returns: the created annotation in default appearance (black line of width 1).
 
    .. method:: addLineAnnot(p1, p2)
 
@@ -178,17 +187,30 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: addStrikeoutAnnot(rect)
 
+   .. method:: addSquigglyAnnot(rect)
+
    .. method:: addHighlightAnnot(rect)
 
-      PDF only: These annotations are used for marking some text that has previously been located via :meth:`searchFor`. Colors are automatically chosen: yellowish for highlighting, red for strike out and blue for underlining.
+      PDF only: These annotations are used for marking some text that has previously been located via :meth:`searchFor`. Colors are automatically chosen: yellowish for highlighting, red for strike out and blue for underlining. Note that :meth:`searchFor` now supports quadrilaterals as an output option. Correspondingly, the ``rect`` parameter for these annotations may either be rectangles or quadrilaterals.
 
       .. image:: img-markers.png
 
-      :arg rect: the rectangle containing the text.
-      :type rect: :ref:`Rect`
+      :arg rectangle/quadrilateral rect: the rectangle or quad containing the text.
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
+      :returns: the created annotation. Per annot type, certain color decisions are being made (e.g. "red" for 'StrikeOut', "yellow" for 'Highlight'). To change them, set the "stroke" color accordingly (:meth:`Annot.setColors`) and then perform an :meth:`Annot.update`.
+
+   .. method:: addStampAnnot(rect, stamp = 0)
+
+      PDF only: Add a "rubber stamp" like annotation to e.g. indicate the document's intended use ("DRAFT", "CONFIDENTIAL", etc.).
+
+      :arg rect: rectangle where to place the annotation.
+      :type rect: :ref:`Rect`
+
+      :arg int stamp: id number of the stamp text. For available stamps see :ref:`StampIcons`.
+
+      .. note::  The stamp's text (e.g. "APPROVED") and its border line will automatically be sized and put centered in the given rectangle. The property :attr:`Annot.rect` is automatically calculated to fit and will usually be smaller than this parameter. The appearance can be changed using :meth:`Annot.setOpacity` and by setting the "stroke" color (no "fill" color supported).
+
 
    .. method:: addWidget(widget)
 
@@ -460,7 +482,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg str output: A string indicating the requested format, one of ``"text"`` (default), ``"html"``, ``"dict"``, ``"xml"``, ``"xhtml"`` or ``"json"``.
 
       :rtype: (*str* or *dict*)
-      :returns: The page's content as one string or as a dictionary. The information level of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use ``"dict"``, it is more convenient and faster.
+      :returns: The page's content as one string or as a dictionary. The information levels of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use ``"dict"``, it is more convenient and faster.
 
       .. note:: You can use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML or XHTML documents works in exactly the same way. For XML you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
 
@@ -590,17 +612,18 @@ This is available for PDF documents only. There are basically two groups of meth
    .. index::
       pair: hit_max; Page.searchFor args
 
-   .. method:: searchFor(text, hit_max = 16)
+   .. method:: searchFor(text, hit_max = 16, quads = False)
 
       Searches for ``text`` on a page. Identical to :meth:`TextPage.search`.
 
       :arg str text: Text to search for. Upper / lower case is ignored. The string may contain spaces.
 
       :arg int hit_max: Maximum number of occurrences accepted.
+      :arg bool quads: Return :ref:`Quad` instead of :ref:`Rect` objects.
 
       :rtype: list
 
-      :returns: A list of :ref:`Rect` rectangles each of which surrounds one occurrence of ``text``.
+      :returns: A list of rectangles (quadrilaterals resp.) each of which surrounds one occurrence of ``text``.
 
    .. method:: setCropBox(r)
 
@@ -693,6 +716,12 @@ This is available for PDF documents only. There are basically two groups of meth
    .. attribute:: rect
 
       Contains the rectangle of the page. Same as result of :meth:`Page.bound()`.
+
+      :type: :ref:`Rect`
+
+   .. attribute:: xref
+
+      The page's PDF cross reference number. Zero if not a PDF.
 
       :type: :ref:`Rect`
 

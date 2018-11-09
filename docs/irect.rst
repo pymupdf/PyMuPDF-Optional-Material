@@ -24,6 +24,7 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 :attr:`IRect.rect`             equals result of method ``getRect()``
 :attr:`IRect.top_left`         top left point, synonym ``tl``
 :attr:`IRect.top_right`        top_right point, synonym ``tr``
+:attr:`IRect.quad`             :ref:`Quad` made from rectangle corners
 :attr:`IRect.width`            width of the rectangle
 :attr:`IRect.x0`               X-coordinate of the top left corner
 :attr:`IRect.x1`               X-coordinate of the bottom right corner
@@ -128,15 +129,21 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
       :type: :ref:`Point`
 
+   .. attribute:: quad
+
+      The quadrilateral ``Quad(irect.tl, irect.tr, irect.bl, irect.br)``.
+
+      :type: :ref:`Quad`
+
    .. attribute:: width
 
-      Contains the width of the bounding box. Equals ``x1 - x0``.
+      Contains the width of the bounding box. Equals ``abs(x1 - x0)``.
 
       :type: int
 
    .. attribute:: height
 
-      Contains the height of the bounding box. Equals ``y1 - y0``.
+      Contains the height of the bounding box. Equals ``abs(y1 - y0)``.
 
       :type: int
 

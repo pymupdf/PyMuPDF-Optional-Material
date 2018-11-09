@@ -33,6 +33,7 @@ Please note:
 :attr:`Matrix.d`                 zoom factor Y direction
 :attr:`Matrix.e`                 horizontal shift
 :attr:`Matrix.f`                 vertical shift
+:attr:`Matrix.isRectilinear`     true if rect corners will remain rect corners
 ================================ ==============================================
 
 **Class API**
@@ -55,15 +56,15 @@ Please note:
 
       Overloaded constructors.
       
-      Without parameters, ``Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)`` will be created.
+      Without parameters, the zero matrix ``Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)`` will be created.
       
       ``zoom-*`` and ``shear-*`` specify zoom or shear values (float) and create a zoom or shear matrix, respectively.
 
-      For "matrix" a **new copy** will be made.
+      For "matrix" a **new copy** of another matrix will be made.
       
       Float value "degree" specifies the creation of a rotation matrix which rotates anit-clockwise.
 
-      A "sequence" must be a Python sequence object with 6 float entries (see :ref:`SequenceTypes`).
+      A "sequence" must be any Python sequence object with exactly 6 float entries (see :ref:`SequenceTypes`).
       
       ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0)`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
 
@@ -109,11 +110,11 @@ Please note:
       :arg m2: Second (right) matrix.
       :type m2: :ref:`Matrix`
 
-   .. method:: invert(m)
+   .. method:: invert(m = None)
 
       Calculate the matrix inverse of ``m`` and store the result in the current matrix. Returns ``1`` if ``m`` is not invertible ("degenerate"). In this case the current matrix **will not change**. Returns ``0`` if ``m`` is invertible, and the current matrix is replaced with the inverted ``m``.
 
-      :arg m: Matrix to be inverted.
+      :arg m: Matrix to be inverted. If not provided, the current matrix will be used.
       :type m: :ref:`Matrix`
 
       :rtype: int
@@ -154,15 +155,21 @@ Please note:
 
       :type: float
 
+   .. attribute:: isRectilinear
+
+      Rectilinear means that no shearing is present and that any rotations are integer multiples of 90 degrees. Usually this is used to confirm that (axis-aligned) rectangles before the transformation are still axis-aligned rectangles afterwards.
+
+      :type: bool
+
 Remarks 1
 ---------
-This class adheres to the sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
+This class adheres to the sequence protocol, so components can be maintained via their index, too. Also refer to :ref:`SequenceTypes`.
 
 Remarks 2
 ---------
 Changes of matrix properties and execution of matrix methods can be executed consecutively. This is the same as multiplying the respective matrices.
 
-Matrix multiplications are **not commutative** -- changing the execution sequence in general changes the result. So it can quickly become unclear which result a transformation will yield.
+Matrix multiplication is **not commutative** -- changing the execution sequence in general changes the result. So it can quickly become unclear which result a transformation will yield.
 
 To keep results foreseeable for a series of transformations, Adobe recommends the following approach (:ref:`AdobeManual`, page 206):
 

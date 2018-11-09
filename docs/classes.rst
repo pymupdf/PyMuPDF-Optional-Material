@@ -17,6 +17,7 @@ Classes
    irect.rst
    rect.rst
    point.rst
+   quad.rst
    shape.rst
    annot.rst
    widget.rst

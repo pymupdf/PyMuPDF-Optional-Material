@@ -14,7 +14,7 @@ The following remarks are also valid for :ref:`IRect` objects:
 
 Hence some useful classification:
 
-* A rectangle is called **finite** if ``x0 <= x1`` and ``y0 <= y1`` (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, only one is finite (disregarding degenerate cases).
+* A rectangle is called **finite** if ``x0 <= x1`` and ``y0 <= y1`` (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, **only one** is finite (disregarding degenerate cases).
 
 * A rectangle is called **empty** if ``x0 = x1`` or ``y0 = y1``, i.e. if its area is zero.
 
@@ -41,6 +41,7 @@ Hence some useful classification:
 :attr:`Rect.isInfinite`       whether rectangle is infinite
 :attr:`Rect.top_left`         top left point, synonym ``tl``
 :attr:`Rect.top_right`        top_right point, synonym ``tr``
+:attr:`Rect.quad`             :ref:`Quad` made from rectangle corners
 :attr:`Rect.width`            rectangle width
 :attr:`Rect.x0`               top left corner's X-coordinate
 :attr:`Rect.x1`               bottom right corner's X-coordinate
@@ -190,15 +191,21 @@ Hence some useful classification:
 
       :type: :ref:`Point`
 
+   .. attribute:: quad
+
+      The quadrilateral ``Quad(rect.tl, rect.tr, rect.bl, rect.br)``.
+
+      :type: :ref:`Quad`
+
    .. attribute:: width
 
-      Contains the width of the rectangle. Equals ``x1 - x0``.
+      Width of the rectangle. Equals ``abs(x1 - x0)``.
 
       :rtype: float
 
    .. attribute:: height
 
-      Contains the height of the rectangle. Equals ``y1 - y0``.
+      Height of the rectangle. Equals ``abs(y1 - y0)``.
 
       :rtype: float
 

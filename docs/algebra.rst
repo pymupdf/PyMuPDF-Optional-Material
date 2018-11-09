@@ -29,21 +29,21 @@ General Remarks
 Unary Operations
 ------------------
 
-+---------------+---------------------------------------------------------------+
-| **Operation** | **Result**                                                    |
-+===============+===============================================================+
-| bool(O)       | is false exactly if all components of "O" are zero.           |
-+---------------+---------------------------------------------------------------+
-| abs(O)        | Euclidean norm (square root of the sum of component           |
-|               | squares), if "O" is a :ref:`Point` or a :ref:`Matrix`.        |
-|               | For rectangles, the area is returned.                         |
-+---------------+---------------------------------------------------------------+
-| +O            | copy of "O".                                                  |
-+---------------+---------------------------------------------------------------+
-| -O            | copy of "O" with negated components.                          |
-+---------------+---------------------------------------------------------------+
-| ~m            | inverse of :ref:`Matrix` "m".                                 |
-+---------------+---------------------------------------------------------------+
++---------+---------------------------------------------------------------+
+|         | **Result**                                                    |
++=========+===============================================================+
+| bool(O) | is false exactly if all components of "O" are zero.           |
++---------+---------------------------------------------------------------+
+| abs(O)  | Euclidean norm (square root of the sum of component           |
+|         | squares), if "O" is a :ref:`Point` or a :ref:`Matrix`.        |
+|         | For rectangles, the area is returned.                         |
++---------+---------------------------------------------------------------+
+| +O      | copy of "O".                                                  |
++---------+---------------------------------------------------------------+
+| -O      | copy of "O" with negated components.                          |
++---------+---------------------------------------------------------------+
+| ~m      | inverse of :ref:`Matrix` "m".                                 |
++---------+---------------------------------------------------------------+
 
 
 
@@ -51,31 +51,29 @@ Binary Operations
 ------------------
 For the operators ``+, -, *, /``, the **second operand** may be a number, which will be applied to each component. Otherwise:
 
-+---------------+---------------------------------------------------------------+
-| **Operation** | **Result**                                                    |
-+===============+===============================================================+
-|         a + b |                                                               |
-|               | component-wise execution, "b" must be "a"-like.               |
-|         a - b |                                                               |
-+---------------+---------------------------------------------------------------+
-|         a * m | "a" can be any geometry object and "m" must be matrix-like.   |
-|               | If "a" is a **point** or a **rectangle**, then                |
-|         a / m | ``"a.transform(m)"``, resp. ``"a.transform(~m)"`` is          |
-|               | executed. If "a" is a **matrix**, then ``"a * m"``,           |
-|               | resp. ``"a * ~m"`` is executed.                               |
-+---------------+---------------------------------------------------------------+
-|         a & b | **intersection rectangle:** "a" must be a rectangle and       |
-|               | "b" rect-like. Delivers the **largest rectangle**             |
-|               | contained in both operands.                                   |
-+---------------+---------------------------------------------------------------+
-|         a | b | **union rectangle:** "a" must be a rectangle, and "b"         |
-|               | can be point-like or rect-like.                               |
-|               | Delivers the **smallest rectangle** containing both operands. |
-+---------------+---------------------------------------------------------------+
-|        b in a | if "b" is a number, then ``"b in tuple(a)"`` is returned.     |
-|               | If "b" is point-like or rect-like, then "a" must be a         |
-|               | rectangle, and ``"a.contains(b)"`` is returned.               |
-+---------------+---------------------------------------------------------------+
-|        a == b | is true if ``"abs(a - b) == 0"`` and ``"type(a) == type(b)"`` |
-|               | (but maybe there is ``"id(a) != id(b)"``).                    |
-+---------------+---------------------------------------------------------------+
++--------+---------------------------------------------------------------+
+|        | **Result**                                                    |
++========+===============================================================+
+| a+b,   | component-wise execution, "b" must be "a"-like.               |
+| a-b    |                                                               |
++--------+---------------------------------------------------------------+
+| a*m,   | "a" can be any geometry object and "m" must be matrix-like.   |
+| a/m    | ``"a/m"`` is always treated as ``"a*~m"``.                    |
+|        | If "a" is a **point** or a **rectangle**, then                |
+|        | ``"a.transform(m)"`` is executed. If "a" is a matrix, then    |
+|        | matrix concatenation takes place.                             |
++--------+---------------------------------------------------------------+
+| a&b    | **intersection rectangle:** "a" must be a rectangle and       |
+|        | "b" rect-like. Delivers the **largest rectangle**             |
+|        | contained in both operands.                                   |
++--------+---------------------------------------------------------------+
+| a|b    | **union rectangle:** "a" must be a rectangle, and "b"         |
+|        | may be point-like or rect-like.                               |
+|        | Delivers the **smallest rectangle** containing both operands. |
++--------+---------------------------------------------------------------+
+| b in a | if "b" is a number, then ``"b in tuple(a)"`` is returned.     |
+|        | If "b" is point-like or rect-like, then "a" must be a         |
+|        | rectangle, and ``"a.contains(b)"`` is returned.               |
++--------+---------------------------------------------------------------+
+| a==b   | ``True`` if ``bool(a-b)`` is ``False`` ("b" may be "a"-like). |
++--------+---------------------------------------------------------------+

@@ -403,6 +403,69 @@ Possible mask values for PDF annotation flags.
 
     512 -- If set, do not allow the contents of the annotation to be modified by the user. This flag does not restrict deletion of the annotation or changes to other annotation properties, such as position and size.
 
+.. _StampIcons:
+
+Stamp Annotation Icons
+----------------------------
+MuPDF has defined the following icons for rubber stamp annotations.
+
+.. py:data:: STAMP_Approved
+
+    0 APPROVED
+
+.. py:data:: STAMP_AsIs
+
+    1 AS IS
+
+.. py:data:: STAMP_Confidential
+
+    2 CONFIDENTIAL
+
+.. py:data:: STAMP_Departmental
+
+    3 DEPARTMENTAL
+
+.. py:data:: STAMP_Experimental
+
+    4 EXPERIMENTAL
+
+.. py:data:: STAMP_Expired
+
+    5 EXPIRED
+
+.. py:data:: STAMP_Final
+
+    6 FINAL
+
+.. py:data:: STAMP_ForComment
+
+    7 FOR COMMENT
+
+.. py:data:: STAMP_ForPublicRelease
+
+    8 FOR PUBLIC RELEASE
+
+.. py:data:: STAMP_NotApproved 
+
+	9 NOT APPROVED
+
+.. py:data:: STAMP_NotForPublicRelease
+
+    10 NOT FOR PUBLIC RELEASE
+
+.. py:data:: STAMP_Sold
+
+    11 SOLD
+
+.. py:data:: STAMP_TopSecret
+
+    12 TOP SECRET
+
+.. py:data:: STAMP_Draft
+
+    13 DRAFT
+
+
 .. _Annotation Line Ends:
 
 Annotation Line End Styles

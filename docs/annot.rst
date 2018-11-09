@@ -14,19 +14,19 @@ There is a parent-child relationship between an annotation and its page. If the 
 ============================ ==============================================================
 **Attribute**                **Short Description**
 ============================ ==============================================================
+:meth:`Annot.fileGet`        PDF only: returns attached file content
+:meth:`Annot.fileInfo`       PDF only: returns attached file information
+:meth:`Annot.fileUpd`        PDF only: sets attached file new content
 :meth:`Annot.getPixmap`      image of the annotation as a pixmap
-:meth:`Annot.setInfo`        PDF only: change metadata of an annotation
 :meth:`Annot.setBorder`      PDF only: changes the border of an annotation
-:meth:`Annot.setFlags`       PDF only: changes the flags of an annotation
-:meth:`Annot.setRect`        PDF only: changes the rectangle of an annotation
 :meth:`Annot.setColors`      PDF only: changes the colors of an annotation
+:meth:`Annot.setFlags`       PDF only: changes the flags of an annotation
+:meth:`Annot.setInfo`        PDF only: change metadata of an annotation
 :meth:`Annot.setLineEnds`    PDF only: sets the line ending styles
 :meth:`Annot.setOpacity`     PDF only: changes the annot's transparency
-:meth:`Annot.updateImage`    PDF only: applies border and color values to shown image
-:meth:`Annot.updateWidget`   PDF only: change an exsiting form field
-:meth:`Annot.fileInfo`       PDF only: returns attached file information
-:meth:`Annot.fileGet`        PDF only: returns attached file content
-:meth:`Annot.fileUpd`        PDF only: sets attached file new content
+:meth:`Annot.setRect`        PDF only: changes the rectangle of an annotation
+:meth:`Annot.update`         PDF only: applies accumulated annot changes
+:meth:`Annot.updateWidget`   PDF only: change an existing form field
 :attr:`Annot.border`         PDF only: border details
 :attr:`Annot.colors`         PDF only: border / background and fill colors
 :attr:`Annot.flags`          PDF only: annotation flags
@@ -38,10 +38,12 @@ There is a parent-child relationship between an annotation and its page. If the 
 :attr:`Annot.rect`           rectangle containing the annotation
 :attr:`Annot.type`           PDF only: type of the annotation
 :attr:`Annot.vertices`       PDF only: point coordinates of Polygons, PolyLines, etc.
-:attr:`Annot.widget_name`    PDF only: "Widget" field name
-:attr:`Annot.widget_value`   PDF only: "Widget" field value
+:attr:`Annot.widget`         PDF only: :ref:`Widget` object for form fields
 :attr:`Annot.widget_choices` PDF only: possible values for "Widget" list / combo boxes
+:attr:`Annot.widget_name`    PDF only: "Widget" field name
 :attr:`Annot.widget_type`    PDF only: "Widget" field type
+:attr:`Annot.widget_value`   PDF only: "Widget" field value
+:attr:`Annot.xref`           the PDF XREF number
 ============================ ==============================================================
 
 **Class API**
@@ -82,7 +84,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. method:: setOpacity(value)
 
-      PDF only: Change an annotation's transparency. A visible effect only occurs for annotation types 'Circle', 'Square', 'Line', 'PolyLine' and 'Polygon'. Other cases result in a no-op.
+      PDF only: Change an annotation's transparency.
 
       :arg float value: a float in range ``[0, 1]``. Any value outside is assumed to be 1. E.g. a value of 0.5 sets the transparency to 50%.
 
@@ -98,19 +100,11 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :type rect: :ref:`Rect`
 
-      .. note:: Rectangles of *line-type annotations* (i.e. 'Line', 'PolyLine' and 'Polygon') have originally been created automatically. For them, the method re-executes that process:
-
-          1. Calculate a transformation matrix M, that transforms the old rectangle to the target one.
-          2. Apply M to the annotation points.
-          3. Re-calculate the final target rectangle as the smallest one that contains the points, each one surrounded by a little circle of radius 3 * line width. The extra space for the circles ensures that any line end symbols also are inside. So the actual resulting rectangle may not exactly equal the given ``rect`` parameter.
-
    .. method:: setBorder(border)
 
       PDF only: Change border width and dashing properties.
 
-      :arg dict border: a dictionary with keys ``width`` (*float*), ``style`` (*str*) and ``dashes`` (*list*). Omitted values will leave the resp. property unchanged. To remove dashing and get a contiguous line, specify ``"dashes": []``.
-
-      .. note:: For *line-type annotations* (see above) this method may lead to a changed rectangle if the line ``width`` is changing. This is because the rectangle in these cases is **calculated** and not provided via annotation construction.
+      :arg dict border: a dictionary with keys ``"width"`` (*float*), ``"style"`` (*str*) and ``"dashes"`` (*sequence*). Omitted keys will leave the resp. property unchanged. To e.g. remove dashing use: ``"dashes": []``. If dashes is not an empty sequence, "style" will automatically set to "D" (dashed).
 
    .. method:: setFlags(flags)
 
@@ -124,27 +118,38 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :arg dict d: a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the ``colors`` property and then modify this dictionary as required.
 
-      .. note:: This method **does not work** for widget annotations, and results in a no-op with a warning message. Use :meth:`updateWidget` instead. Certain annotation types have no fill colors. In these cases this value is ignored and a warning is issued.
+      .. note:: This method **does not work** for widget annotations, and results in a no-op with a warning message. Use :meth:`updateWidget` instead. Certain annotation types have no fill colors. In these cases this value is ignored and a warning is issued. FreeText annotations also require a special handling -- see :meth:`update`.
 
-   .. method:: updateImage()
+   .. method:: update(fontsize = 0, text_color = None, border_color = None, fill_color = None, rotate = -1)
 
-      Modify the displayed image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and ``dashes`` properties. This is a no-op for annotation types ANNOT_LINE, ANNOT_POLYLINE, ANNOT_POLYGON, ANNOT_CIRCLE, and ANNOT_SQUARE, because their appearance is always completely rebuilt with any change.
+      PDF only: Modify the displayed annotation image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and other properties, after they have been modified the respective methods (like. :meth:`setBorder`, :meth:`setColors`, etc.).
+
+      It is ignored for widget annotations (use :meth:`updateWidget` instead).
+
+      Without invoking this method, changes to any of these will be lost. All arguments are optional and **only work for FreeText** annotations -- because of the peculiarities of how this annotation type is implemented by MuPDF. For other types they are ignored. Color specifications may be made in the usual format used in PuMuPDF as sequences of floats ranging from 0.0 to 1.0 (including both). The sequence length must be 1, 3 or 4 (supporting GRAY, RGB and CMYK colorspaces respectively).
+
+      :arg float fontsize: change font size of the text.
+      :arg sequence text_color: change the text color.
+      :arg sequence border_color: change the border color.
+      :arg sequence fill_color: the fill color.
+      :arg int rotate: new rotation value. Default (-1) means no change.
+
+      :rtype: bool
+      :returns: ``True`` on success, else ``False`` (or ``None`` for non-PDFs).
 
    .. method:: updateWidget(widget)
 
       Modifies an existing form field. The existing and the changed widget attributes must all be provided by way of a :ref:`Widget` object. This is because the method will update the field with **all properties** of the :ref:`Widget` object.
 
-      :arg widget: a widget object containing the **complete** (old and new) properties of the widget. Create the object via :attr:`widget` and apply your changes before passing it to this method.
+      :arg widget: a widget object containing the **complete** (old and new) properties of the widget. Create this object by copying the :attr:`Annot.widget` attribute and applying your changes to it and then passing it to this method.
       :type widget: :ref:`Widget`
-
-      .. note:: As with :meth:`Page.addWidget`, make sure to use option ``clean = True`` when saving the file. This will cause an update of the annotation's appearance.
 
    .. method:: fileInfo()
 
-      Basic information of the attached file.
+      Basic information of the annot's attached file.
 
       :rtype: dict
-      :returns: a dictionary with keys ``filename``, ``ufilename``, ``desc`` (description), ``size`` (uncompressed file size), ``length`` (compressed length).
+      :returns: a dictionary with keys ``filename``, ``ufilename``, ``desc`` (description), ``size`` (uncompressed file size), ``length`` (compressed length) for FileAttachment annot types, else ``None``.
 
    .. method:: fileGet()
 
@@ -184,7 +189,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: rect
 
-      The rectangle containing the annotation in untransformed coordinates.
+      The rectangle containing the annotation.
 
       :rtype: :ref:`Rect`
 
@@ -204,9 +209,9 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Meaningful for PDF only: A dictionary containing various information. All fields are (unicode) strings.
 
-      * ``name`` -- e.g. for ``[12, 'Stamp']`` type annotations it will contain the stamp text like ``Sold`` or ``Experimental``.
+      * ``name`` -- e.g. for 'Stamp' annotations it will contain the stamp text like "Sold" or "Experimental", for other annot types you will see the name of the annot's icon here ("PushPin" for FileAttachment).
 
-      * ``content`` -- a string containing the text for type ``Text`` and ``FreeText`` annotations. Commonly used for filling the text field of annotation pop-up windows. For ``FileAttachment`` it should be used as description for the attached file. Initially just contains the filename.
+      * ``content`` -- a string containing the text for type ``Text`` and ``FreeText`` annotations. Commonly used for filling the text field of annotation pop-up windows.
 
       * ``title`` -- a string containing the title of the annotation pop-up window. By convention, this is used for the annotation author.
 
@@ -227,13 +232,13 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: lineEnds
 
-      Meaningful for PDF only: A tuple of two integers specifying the starting and the ending appearance of annotations of types 'FreeText', 'Line', 'PolyLine', and 'Polygon'. ``None`` if not specified or not applicable. For possible values and descriptions in this list, see :ref:`Annotation Line Ends` and the :ref:`AdobeManual`, table 8.27 on page 630.
+      Meaningful for PDF only: A pair of integers specifying start and end symbol of annotations types 'FreeText', 'Line', 'PolyLine', and 'Polygon'. ``None`` if not applicable. For possible values and descriptions in this list, see :ref:`Annotation Line Ends` and the :ref:`AdobeManual`, table 8.27 on page 630.
 
-      :rtype: dict
+      :rtype: tuple
 
    .. attribute:: vertices
 
-      PDF only: A list containing point ("vertices") coordinates (each given by a pair of floats) for various types of annotations:
+      PDF only: A list containing a variable number of point ("vertices") coordinates (each given by a pair of floats) for various types of annotations:
       
       * ``Line`` -- the starting and ending coordinates (2 float pairs).
       * ``[2, 'FreeText', 'FreeTextCallout']`` -- 2 or 3 float pairs designating the starting, the (optional) knee point, and the ending coordinates.
@@ -277,22 +282,28 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: colors
 
-      Meaningful for PDF only: A dictionary of two lists of floats in range ``0 <= float <= 1`` specifying the ``stroke`` and the interior (``fill``) colors. The stroke color is used for borders and everything that is actively painted or written ("stroked"). The fill color is used for the interior of objects like line ends, circles and squares. The lengths of these lists implicitely determine the colorspaces used: 1 = GRAY, 3 = RGB, 4 = CMYK. So ``[1.0, 0.0, 0.0]`` stands for RGB color red. Both lists can be ``[]`` if not specified. The dictionary will be empty ``{}`` if no PDF. The value of each float ``f`` is mapped to the integer value ``i`` in range 0 to 255 via the computation ``f = i / 255``.
+      Meaningful for PDF only: A dictionary of two lists of floats in range ``0 <= float <= 1`` specifying the ``stroke`` and the interior (``fill``) colors. If not a PDF, ``None`` is returned. The stroke color is used for borders and everything that is actively painted or written ("stroked"). The fill color is used for the interior of objects like line ends, circles and squares. The lengths of these lists implicitely determine the colorspaces used: 1 = GRAY, 3 = RGB, 4 = CMYK. So ``[1.0, 0.0, 0.0]`` stands for RGB color red. Both lists can be ``[]`` if no color is specified. The value of each float ``f`` is mapped to the integer value ``i`` in range 0 to 255 via the computation ``f = i / 255``.
 
       :rtype: dict
+
+   .. attribute:: xref
+
+      The PDF cross reference number. Zero if not a PDF.
+
+      :rtype: int
 
    .. attribute:: border
 
       Meaningful for PDF only: A dictionary containing border characteristics. It will be ``None`` for non-PDFs and an empty dictionary if no border information exists. The following keys can occur:
 
-      * ``width`` -- a float indicating the border thickness in points.
+      * ``width`` -- a float indicating the border thickness in points. The value is -1.0 if no width is specified.
 
-      * ``dashes`` -- a list of integers (arbitrarily limited to 10) specifying a line dash pattern in user units (usually points). ``[]`` means no dashes, ``[n]`` means equal on-off lengths of ``n`` points, longer lists will be interpreted as specifying alternating on-off length values. See the :ref:`AdobeManual` page 217 for more details.
+      * ``dashes`` -- a sequence of integers specifying a line dash pattern. ``[]`` means no dashes, ``[n]`` means equal on-off lengths of ``n`` points, longer lists will be interpreted as specifying alternating on-off length values. See the :ref:`AdobeManual` page 217 for more details.
 
       * ``style`` -- 1-byte border style: ``S`` (Solid) = solid rectangle surrounding the annotation, ``D`` (Dashed) = dashed rectangle surrounding the annotation, the dash pattern is specified by the ``dashes`` entry, ``B`` (Beveled) = a simulated embossed rectangle that appears to be raised above the surface of the page, ``I`` (Inset) = a simulated engraved rectangle that appears to be recessed below the surface of the page, ``U`` (Underline) = a single line along the bottom of the annotation rectangle.
 
       :rtype: dict
-      
+
 Example
 --------
 Change the graphical image of an annotation. Also update the "author" and the text to be shown in the popup window::
@@ -315,7 +326,8 @@ Change the graphical image of an annotation. Also update the "author" and the te
  r.x1 = r.x0 + r.width  * 1.2           # new location has same top-left
  r.y1 = r.y0 + r.height * 1.2           # but 20% longer sides
  annot.setRect(r)                       # update rectangle
- doc.save("circle-out.pdf", garbage=4)  # save
+ annot.update()                         # update the annot's appearance
+ doc.save("circle-out.pdf")             # save
 
 This is how the circle annotation looks like before and after the change (pop-up windows displayed using Nitro PDF viewer):
 

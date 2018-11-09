@@ -15,17 +15,16 @@ For addional details on **embedded files** refer to Appendix 3.
 ===================================== ==========================================================
 :meth:`Document.authenticate`         decrypt the document
 :meth:`Document.close`                close the document
-:meth:`Document.convertToPDF`         write a PDF version to memory
 :meth:`Document.copyPage`             PDF only: copy a page to another location
+:meth:`Document.convertToPDF`         write a PDF version to memory
 :meth:`Document.deletePage`           PDF only: delete a page by its number
 :meth:`Document.deletePageRange`      PDF only: delete a range of pages
 :meth:`Document.embeddedFileAdd`      PDF only: add a new embedded file from buffer
 :meth:`Document.embeddedFileDel`      PDF only: delete an embedded file entry
 :meth:`Document.embeddedFileGet`      PDF only: extract an embedded file buffer
 :meth:`Document.embeddedFileInfo`     PDF only: metadata of an embedded file
-:meth:`Document.embeddedFileSetInfo`  PDF only: change metadata of an embedded file
 :meth:`Document.embeddedFileUpd`      PDF only: change an embedded file
-:meth:`Document.findBookmark`         get page number after :meth:`layout`
+:meth:`Document.embeddedFileSetInfo`  PDF only: change metadata of an embedded file
 :meth:`Document.getPageFontList`      PDF only: make a list of fonts on a page
 :meth:`Document.getPageImageList`     PDF only: make a list of images on a page
 :meth:`Document.getPagePixmap`        create a pixmap of a page by page number
@@ -33,9 +32,8 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.getToC`               create a table of contents
 :meth:`Document.insertPage`           PDF only: insert a new page
 :meth:`Document.insertPDF`            PDF only: insert pages from another PDF
-:meth:`Document.layout`               re-paginate reflowable document
+:meth:`Document.layout`               re-paginate the document (if supported)
 :meth:`Document.loadPage`             read a page
-:meth:`Document.makeBookmark`         bookmark a page before a :meth:`layout`
 :meth:`Document.movePage`             PDF only: move a page to another location
 :meth:`Document.newPage`              PDF only: insert a new empty page
 :meth:`Document.save`                 PDF only: save the document
@@ -79,7 +77,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: rect; Document args
        pair: fontsize; Document args
 
-    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, width = 0, height = 0, fontsize = 11)
+    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, fontsize = 11)
 
       Creates a ``Document`` object.
 
@@ -93,14 +91,10 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. Must be non-empty and finite if specified.
+      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
       :type rect: :ref:`Rect`
 
-      :arg float width: desired page width for a reflowable document. Ignored if ``rect`` is given.
-      :arg float height: desired page height for a reflowable document. Ignored if ``rect`` is given.
-      :arg float fontsize: the default fontsize for a reflowable document. Ignored if no new page dimension is provided.
-
-      .. note:: ``rect``, ``width``, ``height`` and ``fontsize`` are used to calculate the layout of a reflowable document, otherwise ignored. Also refer to :meth:`layout`.
+      :arg float fontsize: the default fontsize for reflowable document types. This parameter is ignored if parameter ``rect`` is not specified. Together with ``rect`` the page layout is recalculated.
 
       Overview of possible forms (using the ``open`` synonym of ``Document``):
 
@@ -123,8 +117,8 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg str password: The password to be used.
 
-      :rtype: bool
-      :returns: ``True`` if decryption with ``password`` was successful, ``False`` otherwise. If successful, indicator ``isEncrypted`` is set to ``False``.
+      :rtype: int
+      :returns: positive value if decryption was successful, zero otherwise. If successful, indicator ``isEncrypted`` is set to ``False``.
 
     .. method:: loadPage(pno = 0)
 
@@ -276,47 +270,21 @@ For addional details on **embedded files** refer to Appendix 3.
     .. index::
        pair: fontsize; Document.layout args
        pair: rect; Document.layout args
-       pair: width; Document.layout args
-       pair: height; Document.layout args
-       pair: bookmark; layout
-       pair: reflowable; layout
 
-    .. method:: layout(rect = None, width = 0, height = 0, fontsize = 11)
+    .. method:: layout(rect, fontsize = 11)
 
-      Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types, like e-books and HTML, and is ignored otherwise. Supported documents have ``True`` in property :attr:`isReflowable`.
+      Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
 
-      :arg rect: desired page size. Must be finite and not empty. If not provided, width and height must both be positive.
+      :arg rect: desired page size. Must be finite, not empty and start at point (0, 0).
       :type rect: :ref:`Rect`
 
-      :arg float width: the desired page width. Ignored if ``rect`` is given.
-      :arg float height: the desired page height. Ignored if ``rect`` is given.
       :arg float fontsize: the desired default fontsize.
-
-      .. note:: This method is intended for applications displaying e-books. After execution, the document's number of pages probably have changed and any existing :ref:`Page` objects have been invalidated. You can however track, which new number a page is receiving after execution -- see :meth:`makeBookmark` and :meth:`findBookmark`.
-
-    .. method:: makeBookmark(pno)
-
-       Create a "bookmark" for a page number. Use it to find the page's new number after :meth:`layout`.
-
-       :arg int pno: page number, 0-based, ``< len(doc)``.
-
-       :rtype: long
-       :returns: a *long* (Python 2, else just *int*) integer containing the internal position of the page. Use this number as argument for :meth:`findBookmark` to get the page's new number after :meth:`layout`. For any invalid page number 0 is returned. If the document is not reflowable, ``None`` is returned.
-
-    .. method:: findBookmark(bookmark)
-
-       Find the page number for a previously created "bookmark" after :meth:`layout`.
-
-       :arg long bookmark: the bookmark.
-
-       :rtype: int
-       :returns: the new page number for a bookmarked page, after :meth:`layout`. For any invalid argument or unsupported documents -1 is returned.
 
     .. method:: select(s)
 
-      PDF only: Keeps only those pages in the document whose numbers occur in the list and deletes all others. Empty sequences or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
+      PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty sequences or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
 
-      :arg sequence s: A sequence (see :ref:`SequenceTypes`) of page numbers (zero-based) to be included. Pages not in the sequence will be deleted (from memory) and become unavailable until the document is reopened. Selected page numbers can **occur multiple times and in any order:** the resulting document will reflect the sequence exactly as specified.
+      :arg sequence s: A sequence (see :ref:`SequenceTypes`) of page numbers (zero-based) to be included. Pages not in the sequence will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the sequence exactly as specified.
 
     .. method:: setMetadata(m)
 
@@ -351,11 +319,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
       .. note:: We currently always set the :ref:`Outline` attribute ``is_open`` to ``False``. This shows all entries below level 1 as collapsed.
 
-    .. method:: save(outfile, garbage=0, clean=False, deflate=False, incremental=False, ascii=False, expand=0, linear=False, pretty=False)
+    .. method:: save(outfile, garbage=0, clean=False, deflate=False, incremental=False, ascii=False, expand=0, linear=False, pretty=False, decrypt=True)
 
-      PDF only: Saves the document in its **current state** under the name ``outfile``. A document may have changed for a number of reasons: e.g. after a successful ``authenticate``, a decrypted copy will be saved, and, in addition (even without optional parameters), some basic cleaning may also have occurred, e.g. broken xref tables may have been repaired and earlier incremental changes may have been resolved. If you executed any modifying methods, their results will also be reflected in the saved version.
+      PDF only: Saves the document in its **current state** under the name ``outfile``.
 
-      :arg str outfile: The file name to save to. Must be different from the original value if ``incremental = False``. When saving incrementally, ``garbage`` and ``linear`` **must be** ``False`` and ``outfile`` **must equal** the original filename (for convenience use ``doc.name``).
+      :arg str outfile: The file name to save to. Must be different from the original value if "incremental" is false or zero. When saving incrementally, "garbage" and "linear" **must be** false or zero and this parameter **must equal** the original filename (for convenience use ``doc.name``).
 
       :arg int garbage: Do garbage collection. Positive values exclude ``incremental``.
 
@@ -363,13 +331,13 @@ For addional details on **embedded files** refer to Appendix 3.
        * 1 = remove unused objects
        * 2 = in addition to 1, compact xref table
        * 3 = in addition to 2, merge duplicate objects
-       * 4 = in addition to 3, check streams for duplication
+       * 4 = in addition to 3, check object streams for duplication (may be slow)
 
       :arg bool clean: Clean content streams [#f1]_.
 
       :arg bool deflate: Deflate (compress) uncompressed streams.
 
-      :arg bool incremental: Only save changed objects. Excludes ``garbage`` and ``linear``. Cannot be used for decrypted files and for files opened in repair mode (``openErrCode > 0``). In these cases saving to a new file is required.
+      :arg bool incremental: Only save changed objects. Excludes "garbage" and "linear". Cannot be used for decrypted files and for repaired files (``openErrCode > 0``). In these cases saving to a new file is required.
 
       :arg bool ascii: Where possible convert binary data to ASCII.
 
@@ -380,23 +348,25 @@ For addional details on **embedded files** refer to Appendix 3.
        * 2 = fonts
        * 255 = all
 
-      :arg bool linear: Save a linearised version of the document. This option creates a file format for improved performance when read via internet connections. Excludes ``incremental``.
+      :arg bool linear: Save a linearised version of the document. This option creates a file format for improved performance when read via internet connections. Excludes "incremental".
 
       :arg bool pretty: Prettify the document source for better readability.
+
+      :arg bool decrypt: Save a decrypted copy (the default). If false, the resulting PDF will be encrypted with the same password as the original. Will be ignored for non-encrypted files.
 
     .. method:: saveIncr()
 
       PDF only: saves the document incrementally. This is a convenience abbreviation for ``doc.save(doc.name, incremental = True)``.
 
-    .. caution:: A PDF may not be encrypted, but still be password protected against changes -- see the ``permissions`` property. Performing incremental saves if ``permissions["edit"] == False`` can lead to unpredictable results. Save to a new file in such a case. We also consider raising an exception under this condition.
+    .. caution:: A PDF may not be encrypted, but still be password protected against changes -- see the ``permissions`` property. Performing incremental saves while ``permissions["edit"] == False`` can lead to unpredictable results. Save to a new file in such a case. We also consider raising an exception under this condition.
 
-    .. method:: searchPageFor(pno, text, hit_max = 16)
+    .. method:: searchPageFor(pno, text, hit_max = 16, quads = False)
 
        Search for ``text`` on page number ``pno``. Works exactly like the corresponding :meth:`Page.searchFor`. Any integer ``pno < len(doc)`` is acceptable.
 
-    .. method:: write(garbage=0, clean=False, deflate=False, ascii=False, expand=0, linear=False, pretty=False)
+    .. method:: write(garbage=0, clean=False, deflate=False, ascii=False, expand=0, linear=False, pretty=False, decrypt=True)
 
-      PDF only: Writes the **current content of the document** to a bytes object instead of to a file like ``save()``. Obviously, you should be wary about memory requirements. The meanings of the parameters exactly equal those in :meth:`Document.save`. The tutorial contains an example for using this method as a pre-processor to `pdfrw <https://pypi.python.org/pypi/pdfrw/0.3>`_.
+      PDF only: Writes the **current content of the document** to a bytes object instead of to a file like ``save()``. Obviously, you should be wary about memory requirements. The meanings of the parameters exactly equal those in :meth:`save`. Cpater :ref:`FAQ` contains an example for using this method as a pre-processor to `pdfrw <https://pypi.python.org/pypi/pdfrw/0.3>`_.
 
       :rtype: bytes
       :returns: a bytes object containing the complete document data.
