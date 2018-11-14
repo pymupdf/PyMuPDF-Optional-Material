@@ -598,6 +598,8 @@ This script should lead to the following output:
    :align: center
    :scale: 80
 
+------------------------------
+
 How to Mark Text
 ~~~~~~~~~~~~~~~~~~~~~
 This script searches for text and marks it::
@@ -630,6 +632,8 @@ The result looks like this:
 .. image:: img-textmarker.jpg
    :align: center
    :scale: 80
+
+------------------------------
 
 How to Use FreeText
 ~~~~~~~~~~~~~~~~~~~~~
@@ -673,6 +677,63 @@ The result looks like this:
    :scale: 80
 
 --------------------------
+
+How to Use Ink Annotations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ink annotations are used to contain freehand scribbling. Technically an ink annotation is implemented as a list of list of points. Each list of points is regarded as a continuous line connecting them. Different point lists represent disconnected line segments of the scribbling.
+
+The following script creates two line segments and puts them in a given rectangle. The lines themselves are arbitrarily chosen to be the sine and the cosine function graphs::
+
+    import math
+    import fitz
+    
+    #------------------------------------------------------------------------------
+    # preliminary stuff
+    #------------------------------------------------------------------------------
+    w360 = math.pi * 2                          # go through full circle
+    deg = w360 / 360                            # 1 degree as radiants
+    rect = fitz.Rect(100,200, 300, 300)         # use this rectangle
+    first_x = rect.x0                           # x starts from left
+    first_y = rect.y0 + rect.height / 2.        # rect middle means y = 0
+    x_step = rect.width / 360                   # rect width means 360 degrees
+    y_scale = rect.height / 2.                  # rect height means 2
+    sin_points = []                             # sine values go here
+    cos_points = []                             # cosine values here
+    for x in range(362):                        # now fill in the values
+        x_coord = x * x_step + first_x          # current x coordinate
+        y = -math.sin(x * deg)                  # sine
+        p = (x_coord, y * y_scale + first_y)    # corresponding point
+        sin_points.append(p)                    # append
+        y = -math.cos(x * deg)                  # cosine
+        p = (x_coord, y * y_scale + first_y)    # corresponding point
+        cos_points.append(p)                    # append
+    
+    #------------------------------------------------------------------------------
+    # create the document with one page
+    #------------------------------------------------------------------------------
+    doc = fitz.open()                           # make new PDF
+    page = doc.newPage()                        # give it a page
+    
+    #------------------------------------------------------------------------------
+    # add the Ink annotation, consisting of 2 segments
+    #------------------------------------------------------------------------------
+    annot = page.addInkAnnot((sin_points, cos_points))
+    # let it look a little nicer
+    annot.setBorder({"width":0.3, "dashes":[1]})# line thickness, some dashing
+    annot.setColors({"stroke":(0,0,1)})         # make the lines blue
+    annot.update()                              # update the appearance
+    
+    # expendable, only shows that we actually hit the rectangle
+    page.drawRect(rect, width = 0.3)            # only to demonstrate we did OK
+    
+    doc.save("a-inktest.pdf")
+
+This is the result:
+
+.. image:: img-inkannot.jpg
+    :scale: 50
+
+------------------------------
 
 General
 --------

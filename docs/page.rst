@@ -125,7 +125,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add a file attachment annotation with a "PushPin" icon at the specified location.
 
-      :arg pos: the top-left point of a 18 x 18 rectangle containing the MuPDF-provided "PushPin" icon.
+      :arg pos: the top-left point of a 18x18 rectangle containing the MuPDF-provided "PushPin" icon.
       :type pos: :ref:`Point`
 
       :arg bytes/bytearray buffer: the data to be stored (actual file content, calculated data, etc.).
@@ -136,14 +136,17 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Annot`
       :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
+      .. image:: img-fileattach.jpg
+         :scale: 70
+
    .. method:: addInkAnnot(list)
 
       PDF only: Add a "freehand" scribble annotation.
 
-      :arg sequence list: a list of one or more lists, each containing point-like items. Each point-like in a sublist is interpreted as a :ref:`Point` through which a connecting line is drawn. Separate sublists thus represent separate drawing lines.
+      :arg sequence list: a list of one or more lists, each containing point-like items. Each item in these sublists is interpreted as a :ref:`Point` through which a connecting line is drawn. Separate sublists thus represent separate drawing lines.
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation in default appearance (black line of width 1).
+      :returns: the created annotation in default appearance (black line of width 1). Use annotation methods with a subsequent :meth:`Annot.update` to modify.
 
    .. method:: addLineAnnot(p1, p2)
 
@@ -193,12 +196,14 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: These annotations are used for marking some text that has previously been located via :meth:`searchFor`. Colors are automatically chosen: yellowish for highlighting, red for strike out and blue for underlining. Note that :meth:`searchFor` now supports quadrilaterals as an output option. Correspondingly, the ``rect`` parameter for these annotations may either be rectangles or quadrilaterals.
 
-      .. image:: img-markers.png
-
-      :arg rectangle/quadrilateral rect: the rectangle or quad containing the text.
+      :arg rect: the rectangle or quad containing the to-be-marked text.
+      :type rect: :ref:`Rect`/:ref:`Quad`
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. Per annot type, certain color decisions are being made (e.g. "red" for 'StrikeOut', "yellow" for 'Highlight'). To change them, set the "stroke" color accordingly (:meth:`Annot.setColors`) and then perform an :meth:`Annot.update`.
+
+      .. image:: img-markers.png
+         :scale: 80
 
    .. method:: addStampAnnot(rect, stamp = 0)
 
@@ -211,6 +216,8 @@ This is available for PDF documents only. There are basically two groups of meth
 
       .. note::  The stamp's text (e.g. "APPROVED") and its border line will automatically be sized and put centered in the given rectangle. The property :attr:`Annot.rect` is automatically calculated to fit and will usually be smaller than this parameter. The appearance can be changed using :meth:`Annot.setOpacity` and by setting the "stroke" color (no "fill" color supported).
 
+      .. image :: img-stampannot.jpg
+         :scale: 80
 
    .. method:: addWidget(widget)
 
@@ -428,7 +435,10 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Draw a rectangle.
 
-      .. note:: An efficient way to background-color a PDF page with the old Python paper color is ``page.drawRect(page.rect, color = py_color, fill = py_color, overlay = False)``, where ``py_color = getColor("py_color")``.
+      .. note:: An efficient way to background-color a PDF page with the old Python paper color is
+
+          >>> col = fitz.utils.getColor("py_color")
+          >>> page.drawRect(page.rect, color=col, fill=col, overlay=False)
 
    .. index::
       pair: overlay; Page.insertImage args
