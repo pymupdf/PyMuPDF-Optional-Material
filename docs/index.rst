@@ -18,4 +18,3 @@
    app3.rst
    app4.rst
    changes.rst
-   errors.rst

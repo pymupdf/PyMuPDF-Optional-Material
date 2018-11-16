@@ -3,14 +3,16 @@
 Tools
 ================
 
-This class is a collection of low-level MuPDF utility methods and attributes, mainly around memory management. To simplify and speed up its use, it is automatically instantiated under the name ``TOOLS`` when PyMuPDF is imported.
+This class is a collection of utility methods and attributes, mainly around memory management. To simplify and speed up its use, it is automatically instantiated under the name ``TOOLS`` when PyMuPDF is imported.
 
 ================================ =================================================
 **Method / Attribute**             **Description**
 ================================ =================================================
 :meth:`Tools.gen_id`             generate a unique identifyer
 :meth:`Tools.store_shrink`       shrink the storables cache [#f1]_
+:meth:`Tools.fitz_stderr_reset`  empty the store of accumulated MuPDF messages
 :attr:`Tools.fitz_config`        configuration settings of PyMuPDF
+:attr:`Tools.fitz_stderr`        warnings and errors sent by MuPDF
 :attr:`Tools.store_maxsize`      maximum storables cache size
 :attr:`Tools.store_size`         current storables cache size
 ================================ =================================================
@@ -26,7 +28,7 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
       .. note:: MuPDF has dropped support for this in v1.14.0, so we have re-implemented a similar function with the following differences:
       
             * It is not part of MuPDF's global context and not threadsafe (because we do not support threads in PyMuPDF yet).
-            * It is implemented as a ``long int``. This means that the maximum number is 2\ :sup:`63` - 1 (about 9.223372e+18) on most machines. Should this number be exceeded, the counter is reset to 1.
+            * It is implemented as ``int``. This means that the maximum number is 2\ :sup:`63` - 1 (about 9.223372e+18) on most machines. Should this number ever be exceeded, the counter is reset to 1.
 
       :rtype: int
       :returns: a unique positive integer.
@@ -39,6 +41,10 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
 
       :rtype: int
       :returns: the new current store size. Depending on the situation, the size reduction may be larger than the requested percentage.
+
+   .. method:: fitz_stderr_reset()
+
+      Empty the store of messages issued by MuPDF.
 
    .. attribute:: fitz_config
 
@@ -104,14 +110,26 @@ This class is a collection of low-level MuPDF utility methods and attributes, ma
         'icc': False,
         'py-memory': True, # (False if Python 2)
         'base14': True}
+      
+      :rtype: dict
+
+   .. attribute:: fitz_stderr
+
+      Contains all warnings and error messages issued by the underlying C-library MuPDF. Use it as a reference e.g. for diagnostics purposes. More often than not they can safely be ignored.
+
+      :rtype: unicode
 
    .. attribute:: store_maxsize
 
       Maximum storables cache size in bytes. PyMuPDF is generated with a value of 268'435'456 (256 MB, the default value), which you should therefore always see here. If this value is zero, then an "unlimited" growth is permitted.
 
+      :rtype: int
+
    .. attribute:: store_size
 
       Current storables cache size in bytes. This value may change (and will usually increase) with every use of a PyMuPDF function. It will (automatically) decrease only when :attr:`Tools.store_maxize` is going to be exceeded: in this case, MuPDF will evict low-usage objects until the value is again in range.
+
+      :rtype: int
 
 Example Session
 ----------------

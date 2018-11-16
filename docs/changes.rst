@@ -3,13 +3,14 @@ Change Logs
 
 Changes in Version 1.14.0
 ---------------------------
-MuPDF v1.14.0 required massive changes in PyMuPDF. There are also quite a lot of interesting new features now supported. Based on MuPDF v1.14.0, PyMuPDF contains the following changes:
+To support MuPDF v1.14.0 massive changes were required in PyMuPDF -- most of them purely technical, with little visibility to the developers. But there are also quite a lot of interesting new and improved features. Following are the details:
 
 * **Added** "ink" annotation.
 * **Added** "rubber stamp" annotation.
 * **Added** "squiggly" text marker annotation.
 * **Added** new class :ref:`Quad` (quadrilateral or tetragon) -- which represents a general four-sided shape in the plane. The special subtype of rectangular, non-empty tetragons is used in text marker annotations and as returned objects in text search methods.
 * **Added** a new option "decrypt" to :meth:`Document.save` and :meth:`Document.write`. Now you can **keep encryption** when saving a password protected PDF.
+* **Added** suppression and redirection of unsolicited messages issued by the underlying C-library MuPDF. Consult :ref:`RedirectMessages` for details.
 * **Changed:** Changes to annotations now **always require** :meth:`Annot.update` to become effective.
 * **Changed** free text annotations to support the full Latin character set and range of appearance options.
 * **Changed** text searching, :meth:`Page.searchFor`, to optionally return :ref:`Quad` instead :ref:`Rect` objects surrounding each search hit.
@@ -19,6 +20,8 @@ MuPDF v1.14.0 required massive changes in PyMuPDF. There are also quite a lot of
 * **Fixed** issue 214 ("PDF decryption GONE!").
 * **Fixed** issue 215 ("Formatting of links added with pyMuPDF").
 * **Fixed** issue 217 ("extraction through json is failing for my pdf").
+
+We also invested considerable effort to further extend and improve the :ref:`FAQ` chapter.
 
 
 Changes in Version 1.13.19

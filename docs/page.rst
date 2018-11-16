@@ -105,6 +105,9 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Annot`
       :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
+      .. image:: img-sticky-note.png
+         :scale: 70
+
    .. method:: addFreetextAnnot(rect, text, fontsize = 12, fontname = "Helvetica", color = (0,0,0), rotate = 0)
 
       PDF only: Add text in a given rectangle.

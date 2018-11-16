@@ -1,3 +1,4 @@
+.. _Appendix 4:
 
 ================================================
 Appendix 4: Assorted Technical Information
@@ -204,9 +205,22 @@ Observe the following guideline for optimum results:
 
 The second XObject is small (just about 270 bytes), specific to the containing rectangle, and therefore different each time.
 
-If no precautions are taken, process **step 1** leads to another XObject on every invocation -- even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time and memory usage.
+If no precautions are taken, process **step 1** leads to another XObject on every invocation -- even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time, memory and disk usage.
 
-If you forget to use ``reuse_xref``, garbage collection (``mutool clean -gggg`` or save option ``garbage = 4``) can still take care of any duplicates.
+If you forget to use ``reuse_xref``, garbage collection (``mutool clean -ggg`` or save option ``garbage = 3``) can still take care of any duplicates.
+
+.. _RedirectMessages:
+
+Redirecting Error and Warning Messages
+--------------------------------------------
+In the past, MuPDF error and warning messages unavoidably were sent to the Operating System's files STDOUT or STDERR. Especially for interactive Python sessions, this was annoying, because important diagnostic information could remain unseen.
+
+Another issue -- frequently admonished by our users -- was the occasionally large amount of warning messages spilled out -- partly obscure to the developer, without apparent corrective action being possible or even required. Some examples are ``"warning: freetype getting character advance: invalid glyph index"``, or ``"warning: push viewport: 0 0 181 115"`` -- the only possible comment to these was "so what?". 
+
+Since v1.14.0 we are capturing (hopefully) all warning and many error messages and store them away internally. A differentiation between warnings and errors is not possible, because MuPDF outputs both categories to ``stderr``.
+
+You can always empty or check this store of messages. It is kept as a unicode string which can be saved or printed. Look at chapter :ref:`FAQ` for an example.
+
 
 .. rubric:: Footnotes
 

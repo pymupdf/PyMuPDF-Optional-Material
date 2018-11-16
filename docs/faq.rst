@@ -1033,3 +1033,120 @@ This deals with joining PDF pages to form a new PDF with pages each combining tw
     
     # by all means, save new file using garbage collection and compression
     doc.save("4up-" + infile, garbage = 3, deflate = True)
+
+--------------------------
+
+How to Convert Any Document to PDF
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is a script that converts any PyMuPDF supported document to a PDF. These include XPS, EPUB, FB2, CBZ and all image formats, including multi-page TIFF images.
+
+It features maintaining any metadata, table of contents and links contained in the source document::
+
+    from __future__ import print_function
+    """
+    Demo script: Convert input file to a PDF
+    -----------------------------------------
+    Intended for multi-page input files like XPS, EPUB etc.
+    
+    Features:
+    ---------
+    Recovery of table of contents and links of input file.
+    While this works well for bookmarks (outlines, table of contents),
+    links will only work if they are not of type "LINK_NAMED".
+    This link type is skipped by the script.
+    
+    For XPS and EPUB input, internal links however **are** of type "LINK_NAMED".
+    Base library MuPDF does not resolve them to page numbers.
+    
+    So, for anyone expert enough to know the internal structure of these
+    document types, can further interpret and resolve these link types.
+    
+    Dependencies
+    --------------
+    PyMuPDF v1.14.0+
+    """
+    import sys
+    import fitz
+    if not (list(map(int, fitz.VersionBind.split("."))) >= [1,14,0]):
+        raise SystemExit("need PyMuPDF v1.14.0+")
+    fn = sys.argv[1]
+
+    print("Converting '%s' to '%s.pdf'" % (fn, fn))
+    
+    doc = fitz.open(fn)
+    
+    b = doc.convertToPDF()                      # convert to pdf
+    pdf = fitz.open("pdf", b)                   # open as pdf
+
+    toc= doc.getToC()                           # table of contents of input
+    pdf.setToC(toc)                             # simply set it for output
+    meta = doc.metadata                         # read and set metadata
+    if not meta["producer"]:
+        meta["producer"] = "PyMuPDF v" + fitz.VersionBind
+
+    if not meta["creator"]:
+        meta["creator"] = "PyMuPDF PDF converter"
+    meta["modDate"] = fitz.getPDFnow()
+    meta["creationDate"] = meta["modDate"]
+    pdf.setMetadata(meta)
+    
+    # now process the links
+    link_cnti = 0
+    link_skip = 0
+    for pinput in doc:                # iterate through input pages
+        links = pinput.getLinks()     # get list of links
+        link_cnti += len(links)       # count how many
+        pout = pdf[pinput.number]     # read corresp. output page
+        for l in links:               # iterate though the links
+            if l["kind"] == fitz.LINK_NAMED:    # we do not handle named links
+                print("named link page", pinput.number, l)
+                link_skip += 1        # count them
+                continue
+            pout.insertLink(l)        # simply output the others
+    
+    # save the conversion result
+    pdf.save(fn + ".pdf", garbage=4, deflate=True)
+    # say how many named links we skipped
+    if link_cnti > 0:
+        print("Skipped %i named links of a total of %i in input." % (link_skip, link_cnti))
+    
+    # now print any MuPDF warnings or errors:
+    errors = fitz.TOOLS.fitz_stderr
+    if errors:                        # any issues?
+        print(errors)
+        fitz.TOOLS.fitz_stderr_reset() # empty the message store
+
+--------------------------
+
+How to Access Messages Issued by MuPDF
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For motivation and some theory background see :ref:`RedirectMessages`. Since v1.14.0 we intercept warning and error messages by MuPDF so they no longer appear on the operating system's standard output devices STDOUT, STDERR.
+
+These messages can be safely ignored in many cases, but occasionally do serve diagnostic purposes, e.g. when a corrputed document has been opened.
+
+The messages are not necessarily pertaining to any specific document, so we keep them in an independent store as a string object, accessable via the :ref:`Tools` class. Every new message is appended to any existing ones, separated by a newline character.
+
+Here is an interactive session making use of this message store::
+
+ >>> import fitz
+ >>> doc = fitz.open("acronis.xps") # some XPS document
+ >>> fitz.TOOLS.fitz_stderr         # message store is still empty
+ u''
+ >>> pdfbytes = doc.convertToPDF()  # convert XPS to PDF
+ >>> fitz.TOOLS.fitz_stderr         # and look at the message store:
+ u'warning: freetype getting character advance: invalid glyph index\n'
+ >>> fitz.TOOLS.fitz_stderr_reset() # empty the message store
+ >>> fitz.TOOLS.fitz_stderr         # and show it worked
+ u''
+ >>> doc.close()                    # try another document: SVG this time
+ >>> doc = fitz.open("acronis.svg")
+ >>> fitz.TOOLS.fitz_stderr         # still no complaints?
+ u''
+ >>> pdfbytes = doc.convertToPDF()  # convert that one too
+ >>> fitz.TOOLS.fitz_stderr         # and see what would have gone to system STDERR
+ u'warning: ... repeated 3 times ...\nwarning: push viewport: 0 0 594.75 841.5\nwarning: push viewbox: 0 0 594.75 841.5\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 980 71\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2512 times ...\nwarning: push viewport: 0 0 112 33\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 120\nwarning: push viewport: 0 0 94 54\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 130 88\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 115\nwarning: push viewport: 0 0 594.75 841.5\n'
+ >>> 
+
+--------------------------

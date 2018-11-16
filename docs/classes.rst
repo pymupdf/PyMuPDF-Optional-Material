@@ -21,3 +21,4 @@ Classes
    shape.rst
    annot.rst
    widget.rst
+   tools.rst
