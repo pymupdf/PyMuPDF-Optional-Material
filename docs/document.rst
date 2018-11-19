@@ -77,7 +77,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: rect; Document args
        pair: fontsize; Document args
 
-    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, fontsize = 11)
+    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, width = 0, height = 0, fontsize = 11)
 
       Creates a ``Document`` object.
 
@@ -85,23 +85,26 @@ For addional details on **embedded files** refer to Appendix 3.
       * If ``stream`` is given, then the document is created from memory and either ``filename`` or ``filetype`` must indicate its type.
       * If ``stream`` is ``None``, then a document is created from a file given by ``filename``. Its type is inferred from the extension, which can be overruled by specifying ``filetype``.
 
-      :arg str filename: A UTF-8 string containing a file path or a file type, see below.
+      :arg str/pathlib filename: A UTF-8 string or ``pathlib`` object containing a file path (or a file type, see below).
 
       :arg bytes/bytearray stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
 
       :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      :arg rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
 
-      :arg float fontsize: the default fontsize for reflowable document types. This parameter is ignored if parameter ``rect`` is not specified. Together with ``rect`` the page layout is recalculated.
+      :arg float width: may used together with ``height`` as an alternative to ``rect`` to specify layout information.
+
+      :arg float height: may used together with ``width`` as an alternative to ``rect`` to specify layout information.
+
+      :arg float fontsize: the default fontsize for reflowable document types. This parameter is ignored if none of the parameters ``rect`` or ``width`` and ``height`` are specified. Will be used to calculate the page layout.
 
       Overview of possible forms (using the ``open`` synonym of ``Document``):
 
       >>> # from a file
       >>> doc = fitz.open("some.pdf")
-      >>> doc = fitz.open("some.file", None, "pdf")
-      >>> doc = fitz.open("some.file", filetype = "pdf")
+      >>> doc = fitz.open("some.file", None, "pdf")      # copes with wrong extension
+      >>> doc = fitz.open("some.file", filetype = "pdf") # copes with wrong extension
 
       >>> # from memory
       >>> doc = fitz.open("pdf", mem_area)

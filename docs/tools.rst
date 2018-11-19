@@ -10,9 +10,11 @@ This class is a collection of utility methods and attributes, mainly around memo
 ================================ =================================================
 :meth:`Tools.gen_id`             generate a unique identifyer
 :meth:`Tools.store_shrink`       shrink the storables cache [#f1]_
-:meth:`Tools.fitz_stderr_reset`  empty the store of accumulated MuPDF messages
+:meth:`Tools.fitz_stderr_reset`  empty MuPDF messages on STDERR
+:meth:`Tools.fitz_stdout_reset`  empty MuPDF messages on STDOUT
 :attr:`Tools.fitz_config`        configuration settings of PyMuPDF
-:attr:`Tools.fitz_stderr`        warnings and errors sent by MuPDF
+:attr:`Tools.fitz_stderr`        sent to STDERR by MuPDF
+:attr:`Tools.fitz_stdout`        sent to STDOUT by MuPDF
 :attr:`Tools.store_maxsize`      maximum storables cache size
 :attr:`Tools.store_size`         current storables cache size
 ================================ =================================================
@@ -44,7 +46,11 @@ This class is a collection of utility methods and attributes, mainly around memo
 
    .. method:: fitz_stderr_reset()
 
-      Empty the store of messages issued by MuPDF.
+      Empty MuPDF messages on STDERR.
+
+   .. method:: fitz_stdout_reset()
+
+      Empty MuPDF messages on STDOUT.
 
    .. attribute:: fitz_config
 
@@ -116,6 +122,12 @@ This class is a collection of utility methods and attributes, mainly around memo
    .. attribute:: fitz_stderr
 
       Contains all warnings and error messages issued by the underlying C-library MuPDF. Use it as a reference e.g. for diagnostics purposes. More often than not they can safely be ignored.
+
+      :rtype: unicode
+
+   .. attribute:: fitz_stdout
+
+      Contains MuPDF output sent to STDOUT.
 
       :rtype: unicode
 

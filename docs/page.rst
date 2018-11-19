@@ -97,8 +97,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add a comment icon ("sticky note") with accompanying text.
 
-      :arg point: the top left point of a 18 x 18 rectangle containing the MuPDF-provided "note" icon.
-      :type point: :ref:`Point`
+      :arg point-like point: the top left point of a 18 x 18 rectangle containing the MuPDF-provided "note" icon.
 
       :arg str text: the commentary text. This will be shown on double clicking or hovering over the icon. May contain any Latin characters.
 
@@ -112,8 +111,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add text in a given rectangle.
 
-      :arg rect: the rectangle into which the text should be inserted.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: the rectangle into which the text should be inserted.
 
       :arg str text: the text. May contain any Latin characters.
       :arg float fontsize: the font size. Default is 12.
@@ -128,8 +126,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add a file attachment annotation with a "PushPin" icon at the specified location.
 
-      :arg pos: the top-left point of a 18x18 rectangle containing the MuPDF-provided "PushPin" icon.
-      :type pos: :ref:`Point`
+      :arg point-like pos: the top-left point of a 18x18 rectangle containing the MuPDF-provided "PushPin" icon.
 
       :arg bytes/bytearray buffer: the data to be stored (actual file content, calculated data, etc.).
       :arg str filename: the filename.
@@ -155,11 +152,9 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add a line annotation.
 
-      :arg p1: the starting point of the line.
-      :type p1: :ref:`Point`
+      :arg point-like p1: the starting point of the line.
 
-      :arg p2: the end point of the line.
-      :type p2: :ref:`Point`
+      :arg point-like p2: the end point of the line.
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. It is drawn with line color black and line width 1. To change, or attach other information (like author, creation date, line properties, colors, line ends, etc.) use methods of :ref:`Annot`. The **rectangle** is automatically created to contain both points, each one surrounded by a circle of radius 3 (= 3 * line width) to make room for any line end symbols. Use methods of :ref:`Annot` to make any changes.
@@ -170,8 +165,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add a rectangle, resp. circle annotation.
 
-      :arg rect: the rectangle in which the circle or rectangle is drawn, must be finite and not empty. If the rectangle is not equal-sided, an ellipse is drawn.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: the rectangle in which the circle or rectangle is drawn, must be finite and not empty. If the rectangle is not equal-sided, an ellipse is drawn.
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes.
@@ -184,7 +178,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       .. image:: img-polyline.png
 
-      :arg list points: a list of :ref:`Point` objects.
+      :arg list points: a list of :ref:`Point` \-like objects.
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes.
@@ -199,8 +193,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: These annotations are used for marking some text that has previously been located via :meth:`searchFor`. Colors are automatically chosen: yellowish for highlighting, red for strike out and blue for underlining. Note that :meth:`searchFor` now supports quadrilaterals as an output option. Correspondingly, the ``rect`` parameter for these annotations may either be rectangles or quadrilaterals.
 
-      :arg rect: the rectangle or quad containing the to-be-marked text.
-      :type rect: :ref:`Rect`/:ref:`Quad`
+      :arg rect-like/quad-like rect: the rectangle or quad containing the to-be-marked text.
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. Per annot type, certain color decisions are being made (e.g. "red" for 'StrikeOut', "yellow" for 'Highlight'). To change them, set the "stroke" color accordingly (:meth:`Annot.setColors`) and then perform an :meth:`Annot.update`.
@@ -212,8 +205,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add a "rubber stamp" like annotation to e.g. indicate the document's intended use ("DRAFT", "CONFIDENTIAL", etc.).
 
-      :arg rect: rectangle where to place the annotation.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: rectangle where to place the annotation.
 
       :arg int stamp: id number of the stamp text. For available stamps see :ref:`StampIcons`.
 
@@ -279,7 +271,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: insertText(point, text = text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
 
-      PDF only: Insert text.
+      PDF only: Insert text starting at point-like ``point``.
 
    .. index::
       pair: overlay; Page.insertTextbox args
@@ -294,7 +286,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
 
-      PDF only: Insert text into the specified rectangle.
+      PDF only: Insert text into the specified rect-like object.
 
    .. index::
       pair: overlay; Page.drawLine args
@@ -308,7 +300,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawLine(p1, p2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a line from :ref:`Point` objects ``p1`` to ``p2``.
+      PDF only: Draw a line from :ref:`Point` \-like objects ``p1`` to ``p2``.
 
    .. index::
       pair: overlay; Page.drawZigzag args
@@ -322,7 +314,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawZigzag(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a zigzag line from :ref:`Point` objects ``p1`` to ``p2``.
+      PDF only: Draw a zigzag line from :ref:`Point` \-like objects ``p1`` to ``p2``.
 
    .. index::
       pair: overlay; Page.drawSquiggle args
@@ -336,7 +328,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawSquiggle(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a squiggly (wavy, undulated) line from :ref:`Point` objects ``p1`` to ``p2``.
+      PDF only: Draw a squiggly (wavy, undulated) line from :ref:`Point` \-like objects ``p1`` to ``p2``.
 
    .. index::
       pair: overlay; Page.drawCircle args
@@ -350,7 +342,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawCircle(center, radius, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a circle around ``center`` with a radius of ``radius``.
+      PDF only: Draw a circle around ``center`` (point-like) with a radius of ``radius``.
 
    .. index::
       pair: overlay; Page.drawOval args
@@ -364,7 +356,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawOval(rect, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw an oval (ellipse) within the given rectangle.
+      PDF only: Draw an oval (ellipse) within the given rectangle (rect-like).
 
    .. index::
       pair: overlay; Page.drawSector args
@@ -393,7 +385,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawPolyline(points, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
 
-      PDF only: Draw several connected lines defined by a sequence of points.
+      PDF only: Draw several connected lines defined by a sequence of point-likes.
 
 
    .. index::
@@ -451,10 +443,9 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: insertImage(rect, filename = None, pixmap = None, stream = None, overlay = True)
 
-      PDF only: Fill the given rectangle with an image. The image's width-height-proportion will be adjusted to fit. Specify the rectangle appropriately if you want to avoid this. The image is taken from a pixmap, a file or a memory area - of these parameters **exactly one** must be specified.
+      PDF only: Fill the given rectangle (rect-like) with an image. The image's width-height-proportion will be **adjusted to fit** -- so it may appear distorted. Specify the rectangle appropriately if you want to avoid this. The image is taken from a pixmap, a file or a memory area - of these parameters **exactly one** must be specified.
 
-      :arg rect: where to put the image on the page. ``rect`` must be finite and not empty.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: where to put the image on the page. ``rect`` must be finite and not empty.
 
       :arg str filename: name of an image file (all MuPDF supported formats - see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
 
@@ -521,8 +512,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       Create an SVG image from the page. Only full page images are currently supported.
 
-     :arg matrix: a :ref:`Matrix`, default is :ref:`Identity`.
-     :type matrix: :ref:`Matrix`
+     :arg matrix-like matrix: a matrix, default is :ref:`Identity`.
 
      :returns: a UTF-8 encoded string that contains the image. Because SVG has XML syntax it can be saved in a text file with extension ``.svg``.
 
@@ -536,14 +526,12 @@ This is available for PDF documents only. There are basically two groups of meth
 
      Create a pixmap from the page. This is probably the most often used method to create pixmaps.
 
-     :arg matrix: a :ref:`Matrix`, default is :ref:`Identity`.
-     :type matrix: :ref:`Matrix`
+     :arg matrix-like matrix: a matrix-like object, default is :ref:`Identity`.
 
      :arg colorspace: Defines the required colorspace, one of ``GRAY``, ``RGB`` or ``CMYK`` (case insensitive). Or specify a :ref:`Colorspace`, e.g. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
      :type colorspace: string, :ref:`Colorspace`
 
-     :arg clip: restrict rendering to this area.
-     :type clip: :ref:`IRect`
+     :arg irect-like clip: restrict rendering to this area.
 
      :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the image will appear:
 
@@ -585,8 +573,7 @@ This is available for PDF documents only. There are basically two groups of meth
       * create "posterized" PDF files, i.e. every input page is split up in parts which each create a separate output page (see `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_),
       * include PDF-based vector images like company logos, watermarks, etc., see `svg-logo.py <https://github.com/rk700/PyMuPDF/blob/master/examples/svg-logo.py>`_, which puts an SVG-based logo on each page (requires additional packages to deal with SVG-to-PDF conversions).
 
-      :arg rect: where to place the image.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: where to place the image.
 
       :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file.
       :type docsrc: :ref:`Document`
@@ -599,8 +586,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of its first inclusion. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
 
-      :arg clip: choose which part of the source page to show. Default is its ``/CropBox``.
-      :type clip: :ref:`Rect`
+      :arg rect-like clip: choose which part of the source page to show. Default is its ``/CropBox``.
 
       :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
 
@@ -642,8 +628,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: change the visible part of the page.
 
-      :arg r: the new visible area of the page.
-      :type r: :ref:`Rect`
+      :arg rect-like r: the new visible area of the page.
 
       After execution, :attr:`Page.rect` will equal this rectangle, shifted to the top-left position (0, 0). Example session:
 

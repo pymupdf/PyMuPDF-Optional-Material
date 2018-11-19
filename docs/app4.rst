@@ -63,7 +63,7 @@ will make it usable in the following example expressions:
 
 Similarly with all geometry objects :ref:`Rect`, :ref:`IRect`, :ref:`Matrix` and :ref:`Point`.
 
-Because all PyMuPDF geometry classes themselves are special cases of sequences, they can be freely used where numerical sequences can be used, e.g. as arguments for functions like ``list()``, ``tuple()``, ``array.array()`` or ``numpy.array()``. Look at the following snippet to see this work.
+Because all PyMuPDF geometry classes themselves are special cases of sequences, they (with the exception of :ref:`Quad` -- see below) can be freely used where numerical sequences can be used, e.g. as arguments for functions like ``list()``, ``tuple()``, ``array.array()`` or ``numpy.array()``. Look at the following snippet to see this work.
 
 >>> import fitz, array, numpy as np
 >>> m = fitz.Matrix(1, 2, 3, 4, 5, 6)
@@ -79,6 +79,8 @@ array('f', [1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
 >>>
 >>> np.array(m)
 array([1., 2., 3., 4., 5., 6.])
+
+.. note:: :ref:`Quad` is a Python sequence object as well and has a length of 4. Its items however are point-like -- not numbers. Therefore, the above remarks do not apply.
 
 ------------
 

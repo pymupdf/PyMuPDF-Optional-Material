@@ -1,6 +1,13 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.1
+---------------------------
+This patch version contains minor performance improvements.
+
+* **Added** support for :ref:`Document` filenames given as ``pathlib`` object by using the Python ``str()`` function.
+
+
 Changes in Version 1.14.0
 ---------------------------
 To support MuPDF v1.14.0 massive changes were required in PyMuPDF -- most of them purely technical, with little visibility to the developers. But there are also quite a lot of interesting new and improved features. Following are the details:
