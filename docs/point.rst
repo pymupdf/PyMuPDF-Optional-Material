@@ -64,7 +64,9 @@ Point
 
    .. attribute:: unit
 
-      Result of dividing the coordinates by ``abs(point)``. This results in a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
+      Result of dividing each coordinate by ``abs(point)``, which is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
+
+      .. image:: img-point-unit.jpg
 
       :type: :ref:`Point`
 

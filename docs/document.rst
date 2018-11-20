@@ -274,13 +274,13 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: fontsize; Document.layout args
        pair: rect; Document.layout args
 
-    .. method:: layout(rect, fontsize = 11)
+    .. method:: layout(rect=None, width=0, height=0, fontsize = 11)
 
       Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
 
-      :arg rect: desired page size. Must be finite, not empty and start at point (0, 0).
-      :type rect: :ref:`Rect`
-
+      :arg rect-like rect: desired page size. Must be finite, not empty and start at point (0, 0).
+      :arg float width: use it together with ``height`` as alternative to ``rect``.
+      :arg float height: use it together with ``width`` as alternative to ``rect``.
       :arg float fontsize: the desired default fontsize.
 
     .. method:: select(s)

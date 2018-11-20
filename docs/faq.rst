@@ -1150,3 +1150,68 @@ Here is an interactive session making use of this message store::
  >>> 
 
 --------------------------
+
+Low-Level Interfaces
+---------------------
+Numerous methods are available to access and manipulate PDF files on a fairly low level. Admittedly, a clear distinction between "low level" and "normal" functionality is not always possible or subject to personal taste.
+
+It also may happen, that functionality previously deemed low-level is lateron assessed as being part of the normal interface. This has happened in v1.14.0 for the class :ref:`Tools` -- you now find it as an item in the Classes chapter.
+
+Anyway - it is a matter of documentation only: in which chapter of the documentation do you find what. Everything is available always and always via the same interface.
+
+How to Iterate through the XREF 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A PDF's XREF table is a list of all objects defined in the file. This table may easily contain several thousand entries. Table entry "0" is reserved and must not be touched.
+The following script loops through the XREF and prints each object's definition::
+
+    >>> xreflen = doc._getXrefLength() # number of objects in file
+    >>> for xref in range(1, xreflen): # do not touch item 0!
+            print("object %i:" % xref, doc._getXrefString(xref))
+
+A PDF object definition is an ordinary ASCII string.
+
+How to Handle Object Streams
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Some object types contain additional data apart from their object definition. Examples are images, fonts, embedded files or commands describing the appearance of a page.
+
+Objects of these types are called "stream objects". PyMuPDF allows reading an object's stream via method :meth:`Document._getXrefStream` with the object's XREF as an argument. And it is also possible to write back a modified version of a stream using :meth:`Document._updateStream`.
+
+Assume that the following snippet wants to read all streams of a PDF for whatever reason::
+
+    >>> xreflen = doc._getXrefLength() # number of objects in file
+    >>> for xref in range(1, xreflen): # do not touch item 0!
+            stream = doc._getXrefStream(xref)
+            # do something with it (it is a bytes object or None)
+            # e.g. just write it back compressed:
+            if stream:
+                doc._updateStream(xref, stream)
+
+:meth:`Document._getXrefStream` automatically returns a stream decompressed -- and :meth:`Document._updateStream` automatically compresses it (where beneficial).
+
+How to Handle Page Contents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Every page has one or more ``/Contents`` objects. These are stream objects describing what appears where on a page (like text and images). They are written in a special mini-language desribed e.g. in chapter "APPENDIX A - Operator Summary" on page 985 of the :ref:`AdobeManual`.
+
+Every PDF reader application must be able to interpret the contents syntax to reproduce the intended appearance of the page.
+
+If multiple ``/Contents`` objects are provided, they must be read and interpreted in the specified sequence, i.e. in a way as if these streams were provided as a concatenation of the several.
+
+There are good technical arguments for having several ``/Contents`` objects: it may make constructing or modifying a PDF a lot easier or faster to just add a new small ``/Contents`` object instead of reading, decompressing, modifying, recompressing, rewriting a single big one.
+
+There are also situations when a single ``/Contents`` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
+
+There are two ways of combining multiple contents of a page::
+
+    >>> # method 1: use the clean function
+    >>> for i in range(len(doc)):
+            doc[i]._cleanContents() # combines and cleans multiple Contents
+            page = doc[i]           # re-read the page - no has only 1 contents
+            cont = page._getContents()[0]
+            # do something with the cleaned, combined contents
+
+    >>> # method 2: concatenate multiple contents streams
+    >>> for page in doc:
+            cont = b""              # initialize contents
+            for xref in page._getContents(): # loop through content xrefs
+                cont += doc._getXrefStream(xref)
+            # do something with the combined contents
