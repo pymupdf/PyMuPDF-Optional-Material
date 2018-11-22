@@ -15,115 +15,121 @@ Download this repository and unzip / decompress it. This will give you a folder,
 
 Step 2: Download and Generate MuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Download ``mupdf-x.xx-source.tar.gz`` from http://mupdf.com/downloads and unzip / decompress it. Call the resulting folder ``mupdf``. The latest MuPDF **development sources** are available on https://github.com/ArtifexSoftware/mupdf -- this is **not** what you want here.
+Download ``mupdf-x.xx-source.tar.gz`` from https://mupdf.com/downloads/archive and unzip / decompress it. Call the resulting folder ``mupdf``. The latest MuPDF **development sources** are available on https://github.com/ArtifexSoftware/mupdf -- this is **not** what you want here.
 
 Make sure you download the (sub-) version for which PyMuPDF has stated its compatibility. The various Linux flavors usually have their own specific ways to support download of packages which we cannot cover here. Do not hesitate posting issues to our web site or sending an e-mail to the authors for getting support.
 
 Put it inside ``PyFitz`` as a subdirectory for keeping everything in one place.
 
+**Applying any Changes or Hot Fixes to MuPDF**
+
+On occasion, vital hot fixes or functional enhancements must be applied to MuPDF source before MuPDF should be generated.
+
+Any such files are contained in the ``fitz`` directory of the PyMuPDF download -- their names all start with an underscore ``"_"``. Currently (v1.14.0), these files and their copy destination are the following:
+
+* ``_mupdf_config.h`` -- PyMuPDF's configuration to control the binary file size and the inclusion of MuPDF features, see next section. This file must renamed and replace MuPDF file ``/include/mupdf/fitz/config.h``.
+* ``_error.c`` -- replaces MuPDF's error module ``/source/fitz/error.c``. Our version redirects MuPDF's warnings and errors to devices which PyMuPDF can intercept, so these messages no longer appear on standard output devices of the operating system (STDOUT and STDERR).
+* ``_pdf_device.c`` -- replaces MuPDF file ``/source/pdf/pdf_device.c``. The original contains a typo which will bring down the Python interpreter when :meth:`Document.convertToPDF` is used.
+
 **Controlling the Binary File Size:**
 
-Since version 1.9, MuPDF includes support for many dozens of additional, so-called NOTO ("no TOFU") fonts for all sorts of alphabets from all over the world like Chinese, Japanese, Corean, Kyrillic, Indonesian, Chinese etc. If you accept MuPDF's standard here, the resulting binary for PyMuPDF will be very big and easily approach or exceed 20 MB. The features actually needed by PyMuPDF in contrast only represent a fraction of this size: no more than 5 MB currently.
+Since version 1.9, MuPDF includes support for many dozens of additional, so-called NOTO ("no TOFU") fonts for all sorts of alphabets from all over the world like Chinese, Japanese, Corean, Kyrillic, Indonesian, Chinese etc. If you accept MuPDF's standard here, the resulting binary for PyMuPDF will be very big and easily approach 30 MB. The features actually needed by PyMuPDF in contrast only represent a fraction of this size: about 8-10 MB currently.
 
-To cut off unneeded stuff from your MuPDF version, modify file ``/include/mupdf/config.h`` as follows::
+To cut off unneeded stuff from your MuPDF version, our suggested version has the following content::
 
- #ifndef FZ_CONFIG_H
- 
- #define FZ_CONFIG_H
- 
- /*
- Enable the following for spot (and hence overprint/overprint
- simulation) capable rendering. This forces FZ_PLOTTERS_N on.
- */
- #define FZ_ENABLE_SPOT_RENDERING
- 
- /*
- Choose which plotters we need.
- By default we build all the plotters in. To avoid building
- plotters in that aren't needed, define the unwanted
- FZ_PLOTTERS_... define to 0.
- */
- /* #define FZ_PLOTTERS_G 1 */
- /* #define FZ_PLOTTERS_RGB 1 */
- /* #define FZ_PLOTTERS_CMYK 1 */
- /* #define FZ_PLOTTERS_N 1 */
- 
- /*
- Choose which document agents to include.
- By default all but GPRF are enabled. To avoid building unwanted
- ones, define FZ_ENABLE_... to 0.
- */
- /* #define FZ_ENABLE_PDF 1 */
- /* #define FZ_ENABLE_XPS 1 */
- /* #define FZ_ENABLE_SVG 1 */
- /* #define FZ_ENABLE_CBZ 1 */
- /* #define FZ_ENABLE_IMG 1 */
- /* #define FZ_ENABLE_TIFF 1 */
- /* #define FZ_ENABLE_HTML 1 */
- /* #define FZ_ENABLE_EPUB 1 */
- /* #define FZ_ENABLE_GPRF 1 */
- 
- /*
- Choose whether to enable JPEG2000 decoding.
- By default, it is enabled, but due to frequent security
- issues with the third party libraries we support disabling
- it with this flag.
- */
- /* #define FZ_ENABLE_JPX 1 */
- 
- /*
- Choose whether to enable JavaScript.
- By default JavaScript is enabled both for mutool and PDF interactivity.
- */
- /* #define FZ_ENABLE_JS 1 */
- 
- /*
- Choose which fonts to include.
- By default we include the base 14 PDF fonts,
- DroidSansFallback from Android for CJK, and
- Charis SIL from SIL for epub/html.
- Enable the following defines to AVOID including
- unwanted fonts.
- */
- /* To avoid all noto fonts except CJK, enable: */
- #define TOFU // PyMuPDF
- 
- /* To skip the CJK font, enable: (this implicitly enables TOFU_CJK_EXT and TOFU_CJK_LANG) */
- //#define TOFU_CJK // PyMuPDF
- 
- /* To skip CJK Extension A, enable: (this implicitly enables TOFU_CJK_LANG) */
- #define TOFU_CJK_EXT // PyMuPDF
- 
- /* To skip CJK language specific fonts, enable: */
- #define TOFU_CJK_LANG // PyMuPDF
- 
- /* To skip the Emoji font, enable: */
- #define TOFU_EMOJI // PyMuPDF
- 
- /* To skip the ancient/historic scripts, enable: */
- #define TOFU_HISTORIC // PyMuPDF
- 
- /* To skip the symbol font, enable: */
- #define TOFU_SYMBOL // PyMuPDF
- 
- /* To skip the SIL fonts, enable: */
- #define TOFU_SIL // PyMuPDF
- 
- /* To skip the ICC profiles, enable: */
- // #define NO_ICC
- 
- /* To skip the Base14 fonts, enable: */
- /* #define TOFU_BASE14 */
- /* (You probably really don't want to do that except for measurement purposes!) */
- 
- /* ---------- DO NOT EDIT ANYTHING UNDER THIS LINE ---------- */
- 
- ... ... ...
- 
- #endif /* FZ_CONFIG_H */
+    #ifndef FZ_CONFIG_H
+    
+    #define FZ_CONFIG_H
+    
+    /*
+    	Enable the following for spot (and hence overprint/overprint
+    	simulation) capable rendering. This forces FZ_PLOTTERS_N on.
+    */
+    #define FZ_ENABLE_SPOT_RENDERING 1
+    
+    /*
+    	Choose which plotters we need.
+    	By default we build all the plotters in. To avoid building
+    	plotters in that aren't needed, define the unwanted
+    	FZ_PLOTTERS_... define to 0.
+    */
+    /* #define FZ_PLOTTERS_G 1 */
+    /* #define FZ_PLOTTERS_RGB 1 */
+    /* #define FZ_PLOTTERS_CMYK 1 */
+    /* #define FZ_PLOTTERS_N 1 */
+    
+    /*
+    	Choose which document agents to include.
+    	By default all but GPRF are enabled. To avoid building unwanted
+    	ones, define FZ_ENABLE_... to 0.
+    */
+    /* #define FZ_ENABLE_PDF 1 */
+    /* #define FZ_ENABLE_XPS 1 */
+    /* #define FZ_ENABLE_SVG 1 */
+    /* #define FZ_ENABLE_CBZ 1 */
+    /* #define FZ_ENABLE_IMG 1 */
+    /* #define FZ_ENABLE_HTML 1 */
+    /* #define FZ_ENABLE_EPUB 1 */
+    /* #define FZ_ENABLE_GPRF 1 */
+    
+    /*
+    	Choose whether to enable JPEG2000 decoding.
+    	By default, it is enabled, but due to frequent security
+    	issues with the third party libraries we support disabling
+    	it with this flag.
+    */
+    /* #define FZ_ENABLE_JPX 1 */
+    
+    /*
+    	Choose whether to enable JavaScript.
+    	By default JavaScript is enabled both for mutool and PDF interactivity.
+    */
+    /* #define FZ_ENABLE_JS 1 */
+    
+    /*
+    	Choose which fonts to include.
+    	By default we include the base 14 PDF fonts,
+    	DroidSansFallback from Android for CJK, and
+    	Charis SIL from SIL for epub/html.
+    	Enable the following defines to AVOID including
+    	unwanted fonts.
+    */
+    /* To avoid all noto fonts except CJK, enable: */
+    #define TOFU // <=== PyMuPDF
+    
+    /* To skip the CJK font, enable: (this implicitly enables TOFU_CJK_EXT and TOFU_CJK_LANG) */
+    // #define TOFU_CJK
+    
+    /* To skip CJK Extension A, enable: (this implicitly enables TOFU_CJK_LANG) */
+    #define TOFU_CJK_EXT // <=== PyMuPDF
+    
+    /* To skip CJK language specific fonts, enable: */
+    #define TOFU_CJK_LANG // <=== PyMuPDF
+    
+    /* To skip the Emoji font, enable: */
+    #define TOFU_EMOJI // <=== PyMuPDF
+    
+    /* To skip the ancient/historic scripts, enable: */
+    #define TOFU_HISTORIC // <=== PyMuPDF
+    
+    /* To skip the symbol font, enable: */
+    #define TOFU_SYMBOL // <=== PyMuPDF
+    
+    /* To skip the SIL fonts, enable: */
+    #define TOFU_SIL // <=== PyMuPDF
+    
+    /* To skip the ICC profiles, enable: */
+    #define NO_ICC // <=== PyMuPDF
+    
+    /* To skip the Base14 fonts, enable: */
+    /* #define TOFU_BASE14 */
+    /* (You probably really don't want to do that except for measurement purposes!) */
+    
+    /* ---------- DO NOT EDIT ANYTHING UNDER THIS LINE ---------- */
+    
+    ... omitted lines ...
+    #endif /* FZ_CONFIG_H */
 
-
-The above choice should bring down your binary file size to around 8 to 10 MB.
 
 **Generate MuPDF now**.
 

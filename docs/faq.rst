@@ -60,7 +60,6 @@ You do not always need the full image of a page. This may be the case e.g. when 
 Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of your page, thus using a four times better resolution.
 
 .. image:: img-clip.jpg
-   :align: center
    :scale: 80
 
 >>> mat = fitz.Matrix(2, 2)                  # zoom factor 2 in each direction
@@ -90,19 +89,17 @@ How to Extract Images: Non-PDF Documents
 
 You have basically two options:
 
-1. Convert your document to a PDF, and then use any of the PDF-only extraction methods. This snippet will convert a document to PDF:
+1. Convert your document to a PDF, and then use any of the PDF-only extraction methods. This snippet will convert a document to PDF::
 
     >>> pdfbytes = doc.convertToPDF()
     >>> pdf = fitz.open("pdf", pdfbytes)
     >>> # now use 'pdf' like any PDF document
 
-2. Use :meth:`Page.getText` with the "dict" parameter. This will extract all text and images shown on the page, formatted as a Python dictionary. Every image will occur in an image block, containing meta information and the binary image data. For details of the dictionary's structure, see :ref:`TextPage`. This creates a list of all images shown on a page:
+2. Use :meth:`Page.getText` with the "dict" parameter. This will extract all text and images shown on the page, formatted as a Python dictionary. Every image will occur in an image block, containing meta information and the binary image data. For details of the dictionary's structure, see :ref:`TextPage`. The method works equally well for PDF files. This creates a list of all images shown on a page::
 
     >>> d = page.getText("dict")
     >>> blocks = d["blocks"]
     >>> imgblocks = [b for b in blocks if b["type"] == 1]
-
-    .. note:: Of course you can use this method for PDFs, too!
 
 ----------
 
@@ -117,25 +114,23 @@ Like any other "object" in a PDF, embedded images are identified by a cross refe
 
 1. Create a :ref:`Pixmap` of the image with instruction ``pix = fitz.Pixmap(doc, xref)``. This method is **very** fast (single digit micro-seconds). The pixmap's properties (width, height, ...) will reflect the ones of the image. As usual, you can save it as a PNG via method :meth:`Pixmap.writePNG` (or get the corresponding binary data :meth:`Pixmap.getPNGData`). There is no way to tell which image format the embedded original has.
 
-2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided - mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data is identical). Otherwise, this method is **thousands of times faster**, and in most cases the **image data is much smaller**, too.
+2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided -- mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data are identical). Otherwise, this method is **thousands of times faster**, and the **image data is much smaller**.
 
 The question remains: **"How do I know those cross reference numbers 'xref' of images?"**. There are two answers to this:
 
 a. **"Inspect the page objects"** Loop through the document's page number list and execute :meth:`Document.getPageImageList` for each page number. The result is a list of list, and its items look like ``[xref, smask, ...]``, containing the xref of an image shown on that page. This xref can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
-b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue - this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
+b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue -- this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
 
 For both extraction approaches, there exist ready-to-use general purpose scripts:
 
 `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imga.py>`_ extracts images by page:
 
 .. image:: img-extract-imga.jpg
-   :align: center
    :scale: 80
 
 and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imgb.py>`_ extracts images by cross reference number:
 
 .. image:: img-extract-imgb.jpg
-   :align: center
    :scale: 80
 
 ----------
@@ -154,7 +149,6 @@ If ``smask == 0`` then the image encountered via xref can be processed as it is.
 To recover the original image using PyMuPDF, the procedure depicted as follows must be executed:
 
 .. image:: img-stencil.jpg
-   :align: center
    :scale: 60
 
 >>> pix1 = fitz.Pixmap(doc, xref)    # (1) pixmap of image w/o alpha
@@ -206,7 +200,6 @@ This will generate a PDF only marginally larger than the combined pictures' size
 The above script needed about 1 minute on my machine for 149 pictures with a total size of 514 MB (and about the same resulting PDF size).
 
 .. image:: img-import-progress.jpg
-   :align: center
    :scale: 80
 
 Look `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-inserted.py>`_ for a more complete source code: it offers a directory selection dialog and skips unsupported files and non-file entries.
@@ -238,7 +231,6 @@ The second script **embeds** the (image) files. You would need a suitable PDF vi
  doc.save("all-my-pics-embedded.pdf")
 
 .. image:: img-embed-progress.jpg
-   :align: center
    :scale: 80
 
 This is by far the fastest method, and it also produces the smallest possible output file size. The above pictures needed 20 seonds on my machine and yielded a PDF size of 510 MB. Look `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-embedded.py>`_ for a more complete source code: it offers a direcory selection dialog and skips non-file entries.
@@ -250,9 +242,8 @@ A third way to achieve this task is **attaching files** via page annotations see
 This has a similar performance as the previous script and it also produces a similar file size. In this example, we have chosen a small page size to demonstrate the automatic generation of "protocol" pages as necessary. Here is the first page:
 
 .. image:: img-attach-result.jpg
-   :align: center
 
-.. note:: Both, the **embed** and the **attach** methods can be used for **arbitrary files** - not just images.
+.. note:: Both, the **embed** and the **attach** methods can be used for **arbitrary files** -- not just images.
 
 .. note:: We strongly recommend using the awesome package `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ to display a progress meter for tasks that may run for an extended time span. It's pure Python, uses Tkinter (no additional GUI package) and requires just one more line of code!
 
@@ -268,7 +259,7 @@ How to Create Vector Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The usual way to create an image from a document page is :meth:`Page.getPixmap`. A pixmap represents a raster image, so you must decide on its quality (i.e. resolution) at creation time. It cannot be increased later.
 
-PyMuPDF also offers a way to create a **vector image** of a page in SVG format (scalable vector graphics, defined in XML syntax). SVG images remain precise across zooming levels - of course with the exception of any embedded raster graphic elements.
+PyMuPDF also offers a way to create a **vector image** of a page in SVG format (scalable vector graphics, defined in XML syntax). SVG images remain precise across zooming levels -- of course with the exception of any embedded raster graphic elements.
 
 Instruction ``svg = page.getSVGimage(matrix = fitz.Identity)`` delivers a UTF-8 string ``svg`` which can be stored with extension ".svg".
 
@@ -300,11 +291,11 @@ The script works as a command line tool which expects the document filename supp
 
 The output will be plain text as it is coded in the document. No effort is made to prettify in any way. Specifally for PDF, this may mean output not in usual reading order, unexpected line breaks and so forth.
 
-You have many options to cure this - see chapter :ref:`Appendix2`. Among them are:
+You have many options to cure this -- see chapter :ref:`Appendix2`. Among them are:
 
 1. Extract text in HTML format and store it as a HTML document, so it can be viewed in any browser.
 2. Extract text as a list of text blocks via :meth:`Page.getTextBlocks`. Each item of this list contains position information for its text, which can be used to establish a convenient reading order.
-3. Extract a list of single words via :meth:`Page.getTextWords`. Its items are words with position information. Use it to determine text contained in a given rectangle - see next section.
+3. Extract a list of single words via :meth:`Page.getTextWords`. Its items are words with position information. Use it to determine text contained in a given rectangle -- see next section.
 
 
 .. index::
@@ -317,7 +308,6 @@ Please refer to the script `textboxtract.py <https://github.com/JorjMcKie/PyMuPD
 It demonstrates ways to extract text contained in the following red rectangle,
 
 .. image:: img-textboxtract.png
-   :align: center
    :scale: 75
 
 by using more or less restrictive conditions to find the relevant words::
@@ -357,7 +347,7 @@ How to Extract Text in Natural Reading Order
 
 One of the common issues with PDF text extraction is, that text may not appear in any particular reading order.
 
-Responsible for this effect is the PDF creator (software or human). For example, page headers may have been inserted in a separate step - after the document had been produced. In such a case, the header text will appear at the end of a page text extraction (allthough it will be correctly shown by PDF viewer software).
+Responsible for this effect is the PDF creator (software or human). For example, page headers may have been inserted in a separate step -- after the document had been produced. In such a case, the header text will appear at the end of a page text extraction (allthough it will be correctly shown by PDF viewer software).
 
 PyMuPDF has several means to re-establish some reading sequence or even to re-generate a layout close to the original.
 
@@ -433,7 +423,6 @@ This script uses :meth:`Page.getTextWords` to look for a string, handed in via c
 * Here is an example snippet of a page of this manual, where "MuPDF" has been used as the search string. Note that all strings **containing "MuPDF"** have been completely underlined (not just the search string).
 
 .. image:: img-markedpdf.jpg
-   :align: center
    :scale: 60
 
 
@@ -595,7 +584,6 @@ As an overview for these capabilities, look at the following script that fills a
 This script should lead to the following output:
 
 .. image:: img-annots.jpg
-   :align: center
    :scale: 80
 
 ------------------------------
@@ -630,7 +618,6 @@ This script searches for text and marks it::
 The result looks like this:
 
 .. image:: img-textmarker.jpg
-   :align: center
    :scale: 80
 
 ------------------------------
@@ -673,7 +660,6 @@ This script shows a couple of possibilities for 'FreeText' annotations::
 The result looks like this:
 
 .. image:: img-freetext.jpg
-   :align: center
    :scale: 80
 
 --------------------------
@@ -746,7 +732,7 @@ Assume that "some.file" is actually an XPS. Open it like so:
 
 >>> doc = fitz.open("some.file", filetype = "xps")
 
-.. note:: MuPDF itself does not try to determine the file type from the file data themselves. **You** are responsible for supplying the filetype info in some way - either implicitely via the file extension, or explicitely as shown. Also consult the :ref:`Document` chapter for a full description.
+.. note:: MuPDF itself does not try to determine the file type from the file contents. **You** are responsible for supplying the filetype info in some way -- either implicitely via the file extension, or explicitely as shown. Also consult the :ref:`Document` chapter for a full description.
 
 ----------
 
@@ -806,7 +792,6 @@ The GUI script `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examp
 
 .. image:: img-pdfjoiner.jpg
    :scale: 60
-   :align: center
 
 ----------
 
@@ -1133,20 +1118,20 @@ Here is an interactive session making use of this message store::
  >>> import fitz
  >>> doc = fitz.open("acronis.xps") # some XPS document
  >>> fitz.TOOLS.fitz_stderr         # message store is still empty
- u''
+ ''
  >>> pdfbytes = doc.convertToPDF()  # convert XPS to PDF
  >>> fitz.TOOLS.fitz_stderr         # and look at the message store:
  u'warning: freetype getting character advance: invalid glyph index\n'
  >>> fitz.TOOLS.fitz_stderr_reset() # empty the message store
  >>> fitz.TOOLS.fitz_stderr         # and show it worked
- u''
+ ''
  >>> doc.close()                    # try another document: SVG this time
  >>> doc = fitz.open("acronis.svg")
  >>> fitz.TOOLS.fitz_stderr         # still no complaints?
- u''
+ ''
  >>> pdfbytes = doc.convertToPDF()  # convert that one too
  >>> fitz.TOOLS.fitz_stderr         # and see what would have gone to system STDERR
- u'warning: ... repeated 3 times ...\nwarning: push viewport: 0 0 594.75 841.5\nwarning: push viewbox: 0 0 594.75 841.5\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 980 71\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2512 times ...\nwarning: push viewport: 0 0 112 33\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 120\nwarning: push viewport: 0 0 94 54\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 130 88\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 115\nwarning: push viewport: 0 0 594.75 841.5\n'
+ 'warning: ... repeated 3 times ...\nwarning: push viewport: 0 0 594.75 841.5\nwarning: push viewbox: 0 0 594.75 841.5\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 980 71\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2512 times ...\nwarning: push viewport: 0 0 112 33\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 120\nwarning: push viewport: 0 0 94 54\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 130 88\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 115\nwarning: push viewport: 0 0 594.75 841.5\n'
  >>> 
 
 --------------------------
@@ -1157,7 +1142,9 @@ Numerous methods are available to access and manipulate PDF files on a fairly lo
 
 It also may happen, that functionality previously deemed low-level is lateron assessed as being part of the normal interface. This has happened in v1.14.0 for the class :ref:`Tools` -- you now find it as an item in the Classes chapter.
 
-Anyway - it is a matter of documentation only: in which chapter of the documentation do you find what. Everything is available always and always via the same interface.
+Anyway -- it is a matter of documentation only: in which chapter of the documentation do you find what. Everything is available always and always via the same interface.
+
+----------------------------------
 
 How to Iterate through the XREF 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1169,6 +1156,8 @@ The following script loops through the XREF and prints each object's definition:
             print("object %i:" % xref, doc._getXrefString(xref))
 
 A PDF object definition is an ordinary ASCII string.
+
+----------------------------------
 
 How to Handle Object Streams
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1188,6 +1177,8 @@ Assume that the following snippet wants to read all streams of a PDF for whateve
 
 :meth:`Document._getXrefStream` automatically returns a stream decompressed -- and :meth:`Document._updateStream` automatically compresses it (where beneficial).
 
+----------------------------------
+
 How to Handle Page Contents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Every page has one or more ``/Contents`` objects. These are stream objects describing what appears where on a page (like text and images). They are written in a special mini-language desribed e.g. in chapter "APPENDIX A - Operator Summary" on page 985 of the :ref:`AdobeManual`.
@@ -1196,7 +1187,7 @@ Every PDF reader application must be able to interpret the contents syntax to re
 
 If multiple ``/Contents`` objects are provided, they must be read and interpreted in the specified sequence, i.e. in a way as if these streams were provided as a concatenation of the several.
 
-There are good technical arguments for having several ``/Contents`` objects: it may make constructing or modifying a PDF a lot easier or faster to just add a new small ``/Contents`` object instead of reading, decompressing, modifying, recompressing, rewriting a single big one.
+There are good technical arguments for having several ``/Contents`` objects: it may make constructing or modifying a PDF a lot easier or faster to just add a new ``/Contents`` object instead of reading, decompressing, modifying, recompressing, rewriting a single big one. For example, PyMuPDF adds new, small `/Contents` objects in methods :meth:`Page.insertImage` and :meth:`Page.showPDFpage()`.
 
 There are also situations when a single ``/Contents`` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
 
@@ -1204,8 +1195,8 @@ There are two ways of combining multiple contents of a page::
 
     >>> # method 1: use the clean function
     >>> for i in range(len(doc)):
-            doc[i]._cleanContents() # combines and cleans multiple Contents
-            page = doc[i]           # re-read the page - no has only 1 contents
+            doc[i]._cleanContents() # cleans and combines multiple Contents
+            page = doc[i]           # re-read the page - has only 1 contents now
             cont = page._getContents()[0]
             # do something with the cleaned, combined contents
 
@@ -1215,3 +1206,53 @@ There are two ways of combining multiple contents of a page::
             for xref in page._getContents(): # loop through content xrefs
                 cont += doc._getXrefStream(xref)
             # do something with the combined contents
+
+
+----------------------------------
+
+
+How to Access the PDF Catalog Object
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is a central ("root") object of a PDF which serves as a starting point to reach other objects and which contains any global options for the PDF::
+
+    >>> import fitz
+    >>> doc=fitz.open("PyMuPDF.pdf")
+    >>> cat = doc._getPDFroot()
+    >>> print(doc._getXrefString(cat))
+    <<
+        /Type/Catalog                 % object type
+        /Pages 3593 0 R               % points to page object tree
+        /OpenAction 225 0 R           % action to perform on open
+        /Names 3832 0 R               % points to global names tree
+        /PageMode/UseOutlines         % show the TOC initially
+        /PageLabels<</Nums[0<</S/D>>2<</S/r>>8<</S/D>>]>> % names given to pages
+        /Outlines 3835 0 R            % points to start of outline tree
+    >>
+
+.. note:: Indentation, line breaks and comments are inserted here for clarification purposes only and will not normally appear. For more information on the PDF catalogue see section 3.6.1 on page 137 of the :ref:`AdobeManual`.
+
+How to Access XML Metadata
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A PDF may contain XML metadata in addition to the standard metadata format. In fact, most PDF reader or modification software adds this type of information when being used to save a PDF (Adobe, Nitro PDF, PDF-XChange, etc.).
+
+PyMuPDF has no way to interpret or change this information directly because it contains no XML features. The XML metadata is however stored as a stream object, so we do provide a way to read the XML stream and, potentially, also write back a modified stream or even delete it::
+
+    >>> metaxref = doc._getXmlMetadataXref()           # get xref of XML metadata
+    >>> doc._getXrefString(metaxref)                   # object definition
+    '<</Subtype/XML/Length 3801/Type/Metadata>>'
+    >>> xmlmetadata = doc._getXrefStream(metaxref)     # XML data (stream - bytes obj)
+    >>> print(xmlmetadata.decode("utf8"))              # print str version of bytes
+    <?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
+    <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="3.1-702">
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    ... 
+    omitted data 
+    ...
+    <?xpacket end="w"?>
+
+Using some XML package, the XML data can be interpreted and / or modified and stored back::
+
+    >>> # write back modified XML metadata
+    >>> doc._updateStream(metaxref, xmlmetadata)
+    >>> # if these data are not needed / not wanted, delete them:
+    >>> doc._delXmlMetadata()

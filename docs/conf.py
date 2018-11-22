@@ -201,16 +201,16 @@ latex_logo = "img-pymupdf.jpg"
 #latex_use_parts = False
 
 # If true, show page references after internal links.
-#latex_show_pagerefs = True
+latex_show_pagerefs = False
 
 # If true, show URL addresses after external links.
 latex_show_urls = "footnote"
-latex_use_xindy = True
+#latex_use_xindy = True
 # Documents to append as an appendix to all manuals.
 #latex_appendices = []
 
 # If false, no module index is generated.
-#latex_domain_indices = True
+latex_domain_indices = True
 
 
 # -- Options for manual page output ---------------------------------------

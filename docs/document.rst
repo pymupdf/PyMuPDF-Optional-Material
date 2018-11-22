@@ -69,6 +69,8 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: stream; open args
        pair: filetype; open args
        pair: rect; open args
+       pair: width; open args
+       pair: height; open args
        pair: fontsize; open args
        pair: open; Document
        pair: filename; Document args
@@ -273,6 +275,8 @@ For addional details on **embedded files** refer to Appendix 3.
     .. index::
        pair: fontsize; Document.layout args
        pair: rect; Document.layout args
+       pair: width; Document.layout args
+       pair: height; Document.layout args
 
     .. method:: layout(rect=None, width=0, height=0, fontsize = 11)
 
@@ -673,7 +677,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. Attribute:: openErrMsg
 
-      Contains either an empty string or the last open error message if ``openErrCode > 0``. Together with any other error messages of MuPDF's C library, it will also appear on ``SYSERR``.
+      Contains either an empty string or the last open error message if ``openErrCode > 0``. To see all messages, look at :attr:`Tools.fitz_stderr`.
 
       :type: str
 

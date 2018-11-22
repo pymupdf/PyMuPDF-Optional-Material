@@ -176,12 +176,13 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add an annotation consisting of lines which connect the given points. A **Polygon's** first and last points are automatically connected, which does not happen for a **PolyLine**. The **rectangle** is automatically created as the smallest rectangle containing the points, each one surrounded by a circle of radius 3 (= 3 * line width). The following shows a 'PolyLine' that has been modified with colors and line ends.
 
-      .. image:: img-polyline.png
-
       :arg list points: a list of :ref:`Point` \-like objects.
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes.
+      :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes to achieve something like this:
+
+      .. image:: img-polyline.png
+         :scale: 70
 
    .. method:: addUnderlineAnnot(rect)
 
@@ -553,11 +554,14 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Link`
       :returns: first link on the page (or ``None``).
 
-   .. method:: setRotation(rot)
+   .. index::
+      pair: rotate; Page.setRotation args
+
+   .. method:: setRotation(rotate)
 
       PDF only: Sets the rotation of the page.
 
-      :arg int rot: An integer specifying the required rotation in degrees. Should be an integer multiple of 90.
+      :arg int rotate: An integer specifying the required rotation in degrees. Should be an integer multiple of 90.
 
    .. index::
       pair: reuse_xref; Page.showPDFpage args
