@@ -19,7 +19,6 @@ Yet others are handy, general-purpose utilities.
 :meth:`Document._deleteObject`       PDF only: delete an object
 :meth:`Document._getGCTXerrmsg`      retrieve C-level exception message
 :meth:`Document._getNewXref`         PDF only: create and return a new XREF entry
-:meth:`Document._getObjectString`    PDF only: return object definition "source"
 :meth:`Document._getOLRootNumber`    PDF only: return / create xref of ``/Outline``
 :meth:`Document._getPageObjNumber`   PDF only: return xref and generation number of a page
 :meth:`Document._getPageXref`        PDF only: same as ``_getPageObjNumber()``
@@ -302,8 +301,6 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Document._getObjectString(xref)
-
    .. method:: Document._getXrefString(xref)
 
       Return the string ("source code") representing an arbitrary object. For stream objects, only the non-stream part is returned. To get the stream content, use :meth:`_getXrefStream`.
@@ -360,7 +357,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document._getXrefStream(xref)
 
-      Return the decompressed stream of the object referenced by ``xref``. If the object is no stream, ``None`` is returned.
+      Return the decompressed stream of the object referenced by ``xref``. For non-stream objects ``None`` is returned.
 
       :arg int xref: XREF number.
       

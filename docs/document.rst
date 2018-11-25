@@ -671,13 +671,13 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. Attribute:: openErrCode
 
-      If ``openErrCode > 0``, errors have occurred while opening / parsing the document, which usually means damages like document structure issues. In this case **incremental** save cannot be used. The document is available for processing however, potentially with restrictions (depending on damage details).
+      If ``openErrCode > 0``, errors have occurred while opening / parsing the document, which usually means damages like document structure issues. In this case **incremental** save cannot be used. The **document is available** for processing however, potentially with restrictions (depending on damage details).
 
       :type: int
 
     .. Attribute:: openErrMsg
 
-      Contains either an empty string or the last open error message if ``openErrCode > 0``. To see all messages, look at :attr:`Tools.fitz_stderr`.
+      Contains either an empty string or the last open error message if ``openErrCode > 0``. To see all messages, look at :attr:`Tools.fitz_stderr`, e.g. ``print(fitz.TOOLS.fitz_stderr)``.
 
       :type: str
 

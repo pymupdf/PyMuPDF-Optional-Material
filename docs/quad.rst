@@ -4,11 +4,15 @@
 Quad
 ==========
 
-Represents a four-sided mathematical shape (quadrilateral or tetragon) in the plane, defined as a sequence of four :ref:`Point` objects ul, ur, ll, lr (conveniently called upper left, upper right, lower left, lower right). In (Py) MuPDF, only quads with four 90-degree angles and non-empty areas are of actual interest. Such "interesting" quads can be obtained as results of text search methods (:meth:`Page.searchFor`), and they are used to define text marker annotations (see e.g. :meth:`Page.addSquigglyAnnot` and friends).
+Represents a four-sided mathematical shape (also called "quadrilateral" or "tetragon") in the plane, defined as a sequence of four :ref:`Point` objects ul, ur, ll, lr (conveniently called upper left, upper right, lower left, lower right).
 
-.. note:: If ``m`` is a *rotation* or a *translation* :ref:`Matrix`, and ``rect`` a rectangle, then ``rect.tl * m``, ``rect.tr * m``, ``rect.bl * m``,  and ``rect.br * m`` are the corners of a **rectangular quad**. This is **not in general true** -- examples are shear matrices which produce parallelograms.
+In (Py) MuPDF, only quads with four 90-degree angles and non-empty areas are of actual interest.
 
-.. note:: This class provides an attribute to claculate the envelopping rectangle. Vice versa, rectangles now have the attribute :attr:`Rect.quad`, resp. :attr:`IRect.quad` to obtain their respective tetragon versions.
+Such "interesting" quads can **be obtained** as results of text search methods (:meth:`Page.searchFor`), and they **are used** to define text marker annotations (see e.g. :meth:`Page.addSquigglyAnnot` and friends).
+
+.. note:: If ``m`` is a **rotation**, **scale** or a **translation** :ref:`Matrix`, and ``rect`` is a rectangle, then the four points ``rect.tl * m``, ``rect.tr * m``, ``rect.bl * m``,  and ``rect.br * m`` are the corners of a **rectangular quad**. This is **not in general true** -- examples are shear matrices which produce parallelograms.
+
+.. note:: This class provides an attribute to calculate the envelopping rectangle. Vice versa, rectangles now have the attribute :attr:`Rect.quad`, resp. :attr:`IRect.quad` to obtain their respective tetragon versions.
 
 ============================= =======================================================
 **Methods / Attributes**      **Short Description**

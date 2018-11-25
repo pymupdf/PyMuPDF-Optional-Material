@@ -1148,11 +1148,11 @@ Anyway -- it is a matter of documentation only: in which chapter of the document
 
 How to Iterate through the XREF 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A PDF's XREF table is a list of all objects defined in the file. This table may easily contain several thousand entries. Table entry "0" is reserved and must not be touched.
+A PDF's XREF table is a list of all objects defined in the file. This table may easily contain many thousand entries -- the manual :ref:`AdobeManual` for example has over 330'000 objects. Table entry "0" is reserved and must not be touched.
 The following script loops through the XREF and prints each object's definition::
 
     >>> xreflen = doc._getXrefLength() # number of objects in file
-    >>> for xref in range(1, xreflen): # do not touch item 0!
+    >>> for xref in range(1, xreflen): # skip item 0!
             print("object %i:" % xref, doc._getXrefString(xref))
 
 A PDF object definition is an ordinary ASCII string.
@@ -1168,45 +1168,55 @@ Objects of these types are called "stream objects". PyMuPDF allows reading an ob
 Assume that the following snippet wants to read all streams of a PDF for whatever reason::
 
     >>> xreflen = doc._getXrefLength() # number of objects in file
-    >>> for xref in range(1, xreflen): # do not touch item 0!
+    >>> for xref in range(1, xreflen): # skip item 0!
             stream = doc._getXrefStream(xref)
             # do something with it (it is a bytes object or None)
-            # e.g. just write it back compressed:
+            # e.g. just write it back:
             if stream:
                 doc._updateStream(xref, stream)
 
-:meth:`Document._getXrefStream` automatically returns a stream decompressed -- and :meth:`Document._updateStream` automatically compresses it (where beneficial).
+:meth:`Document._getXrefStream` automatically returns a stream decompressed as a bytes object -- and :meth:`Document._updateStream` automatically compresses it (where beneficial).
 
 ----------------------------------
 
 How to Handle Page Contents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Every page has one or more ``/Contents`` objects. These are stream objects describing what appears where on a page (like text and images). They are written in a special mini-language desribed e.g. in chapter "APPENDIX A - Operator Summary" on page 985 of the :ref:`AdobeManual`.
+Every PDF page has one or more ``/Contents`` objects. These are stream objects describing **what** appears **where** on a page (like text and images). They are written in a special mini-language desribed e.g. in chapter "APPENDIX A - Operator Summary" on page 985 of the :ref:`AdobeManual`.
 
 Every PDF reader application must be able to interpret the contents syntax to reproduce the intended appearance of the page.
 
-If multiple ``/Contents`` objects are provided, they must be read and interpreted in the specified sequence, i.e. in a way as if these streams were provided as a concatenation of the several.
+If multiple ``/Contents`` objects are provided, they must be read and interpreted in the specified sequence in exactly the same way as if these streams were provided as a concatenation of the several.
 
-There are good technical arguments for having several ``/Contents`` objects: it may make constructing or modifying a PDF a lot easier or faster to just add a new ``/Contents`` object instead of reading, decompressing, modifying, recompressing, rewriting a single big one. For example, PyMuPDF adds new, small `/Contents` objects in methods :meth:`Page.insertImage` and :meth:`Page.showPDFpage()`.
+There are good technical arguments for having multiple ``/Contents`` objects:
 
-There are also situations when a single ``/Contents`` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
+* It is a lot easier and faster to just add new ``/Contents`` objects than maintaining a single big one (which entails reading, decompressing, modifying, recompressing, and rewriting it each time).
+* When working with incremental updates, a modified big contents object will bloat the update delta and can thus easily negate the efficiency of incremental saves.
 
-There are two ways of combining multiple contents of a page::
+For example, PyMuPDF adds new, small ``/Contents`` objects in methods :meth:`Page.insertImage`, :meth:`Page.showPDFpage()` and the :ref:`Shape` methods.
+
+However, there are also situations when a single ``/Contents`` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
+
+Here are two ways of combining multiple contents of a page::
 
     >>> # method 1: use the clean function
     >>> for i in range(len(doc)):
             doc[i]._cleanContents() # cleans and combines multiple Contents
-            page = doc[i]           # re-read the page - has only 1 contents now
+            page = doc[i]           # re-read the page (has only 1 contents now)
             cont = page._getContents()[0]
             # do something with the cleaned, combined contents
 
-    >>> # method 2: concatenate multiple contents streams
+    >>> # method 2: self-concatenate multiple contents
     >>> for page in doc:
             cont = b""              # initialize contents
             for xref in page._getContents(): # loop through content xrefs
                 cont += doc._getXrefStream(xref)
             # do something with the combined contents
 
+The clean function :meth:`Page._cleanContents` does a lot more than just glueing ``/Contents`` objects: it also corrects the PDF operator syntax of the page and also that of **all of its annotations** (each :ref:`Annot` annotation also has its own contents object!).
+
+And of course, :meth:`Page._cleanContents` writes back its results to the PDF: when saving it, it will reflect those changes. The same happens for the complete PDF when you use the ``clean=True`` parameter in :meth:`Document.save`.
+
+This may exceed what you actually wanted to achieve.
 
 ----------------------------------
 
@@ -1217,8 +1227,8 @@ This is a central ("root") object of a PDF which serves as a starting point to r
 
     >>> import fitz
     >>> doc=fitz.open("PyMuPDF.pdf")
-    >>> cat = doc._getPDFroot()
-    >>> print(doc._getXrefString(cat))
+    >>> cat = doc._getPDFroot()            # get xref of the /Catalog
+    >>> print(doc._getXrefString(cat))     # print object definition
     <<
         /Type/Catalog                 % object type
         /Pages 3593 0 R               % points to page object tree

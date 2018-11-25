@@ -107,6 +107,13 @@ This is available for PDF documents only. There are basically two groups of meth
       .. image:: img-sticky-note.png
          :scale: 70
 
+   .. index::
+      pair: rect; Page.addFreetextAnnot args
+      pair: fontsize; Page.addFreetextAnnot args
+      pair: fontname; Page.addFreetextAnnot args
+      pair: color; Page.addFreetextAnnot args
+      pair: rotate; Page.addFreetextAnnot args
+
    .. method:: addFreetextAnnot(rect, text, fontsize = 12, fontname = "Helvetica", color = (0,0,0), rotate = 0)
 
       PDF only: Add text in a given rectangle.
@@ -176,7 +183,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add an annotation consisting of lines which connect the given points. A **Polygon's** first and last points are automatically connected, which does not happen for a **PolyLine**. The **rectangle** is automatically created as the smallest rectangle containing the points, each one surrounded by a circle of radius 3 (= 3 * line width). The following shows a 'PolyLine' that has been modified with colors and line ends.
 
-      :arg list points: a list of :ref:`Point` \-like objects.
+      :arg list points: a list of point-like objects.
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes to achieve something like this:
@@ -272,7 +279,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: insertText(point, text = text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
 
-      PDF only: Insert text starting at point-like ``point``.
+      PDF only: Insert text starting at point-like ``point``. See :meth:`Shape.insertText`.
 
    .. index::
       pair: overlay; Page.insertTextbox args
@@ -287,7 +294,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
 
-      PDF only: Insert text into the specified rect-like object.
+      PDF only: Insert text into the specified rect-like ``rect``. See :meth:`Shape.insertTextbox`.
 
    .. index::
       pair: overlay; Page.drawLine args
@@ -301,7 +308,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawLine(p1, p2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a line from :ref:`Point` \-like objects ``p1`` to ``p2``.
+      PDF only: Draw a line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawLine`.
 
    .. index::
       pair: overlay; Page.drawZigzag args
@@ -315,7 +322,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawZigzag(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a zigzag line from :ref:`Point` \-like objects ``p1`` to ``p2``.
+      PDF only: Draw a zigzag line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawZigzag`.
 
    .. index::
       pair: overlay; Page.drawSquiggle args
@@ -329,7 +336,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawSquiggle(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a squiggly (wavy, undulated) line from :ref:`Point` \-like objects ``p1`` to ``p2``.
+      PDF only: Draw a squiggly (wavy, undulated) line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawSquiggle`.
 
    .. index::
       pair: overlay; Page.drawCircle args
@@ -343,7 +350,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawCircle(center, radius, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a circle around ``center`` (point-like) with a radius of ``radius``.
+      PDF only: Draw a circle around ``center`` (point-like) with a radius of ``radius``. See :meth:`Shape.drawCircle`.
 
    .. index::
       pair: overlay; Page.drawOval args
@@ -357,7 +364,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawOval(rect, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw an oval (ellipse) within the given rectangle (rect-like).
+      PDF only: Draw an oval (ellipse) within the given rectangle (rect-like). See :meth:`Shape.drawOval`.
 
    .. index::
       pair: overlay; Page.drawSector args
@@ -372,7 +379,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawSector(center, point, angle, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, fullSector = True, overlay = True, closePath = False, morph = None)
 
-      PDF only: Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie).
+      PDF only: Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie). See :meth:`Shape.drawSector`.
 
    .. index::
       pair: overlay; Page.drawPolyline args
@@ -386,7 +393,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawPolyline(points, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
 
-      PDF only: Draw several connected lines defined by a sequence of point-likes.
+      PDF only: Draw several connected lines defined by a sequence of point-likes. See :meth:`Shape.drawPolyline`.
 
 
    .. index::
@@ -401,7 +408,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawBezier(p1, p2, p3, p4, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
 
-      PDF only: Draw a cubic Bézier curve from ``p1`` to ``p4`` with the control points ``p2`` and ``p3``.
+      PDF only: Draw a cubic Bézier curve from ``p1`` to ``p4`` with the control points ``p2`` and ``p3`` (all are point-likes). See :meth:`Shape.drawBezier`.
 
    .. index::
       pair: overlay; Page.drawCurve args
@@ -415,7 +422,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawCurve(p1, p2, p3, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
 
-      PDF only: This is a special case of ``drawBezier()``.
+      PDF only: This is a special case of ``drawBezier()``. See :meth:`Shape.drawCurve`.
 
    .. index::
       pair: overlay; Page.drawRect args
@@ -429,7 +436,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: drawRect(rect, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
 
-      PDF only: Draw a rectangle.
+      PDF only: Draw a rectangle. See :meth:`Shape.drawRect`.
 
       .. note:: An efficient way to background-color a PDF page with the old Python paper color is
 
@@ -446,7 +453,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Fill the given rectangle (rect-like) with an image. The image's width-height-proportion will be **adjusted to fit** -- so it may appear distorted. Specify the rectangle appropriately if you want to avoid this. The image is taken from a pixmap, a file or a memory area - of these parameters **exactly one** must be specified.
 
-      :arg rect-like rect: where to put the image on the page. ``rect`` must be finite and not empty.
+      :arg rect-like rect: where to put the image on the page. Must be finite and not empty.
 
       :arg str filename: name of an image file (all MuPDF supported formats - see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
 

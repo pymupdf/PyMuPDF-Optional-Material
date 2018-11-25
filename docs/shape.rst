@@ -309,7 +309,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       .. image:: img-even-odd.png
 
-      .. note:: Method **"even-odd"** counts the number of overlaps of areas. Pixels in areas overlapping an odd number of times are regarded **inside**, otherwise **outside**. In contrast, the default method **"nonzero winding"** also looks at the area orientation: it counts ``+1`` if an area is drawn counter-clockwise and ``-1`` else. If the result is zero,the pixel is regarded **outside**, otherwise **inside**. In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
+      .. note:: Method **"even-odd"** counts the number of overlaps of areas. Pixels in areas overlapping an odd number of times are regarded **inside**, otherwise **outside**. In contrast, the default method **"nonzero winding"** also looks at the area orientation: it counts ``+1`` if an area is drawn counter-clockwise and ``-1`` else. If the result is zero, the pixel is regarded **outside**, otherwise **inside**. In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
 
    .. index::
       pair: overlay; Shape.commit args

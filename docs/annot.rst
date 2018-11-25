@@ -120,9 +120,16 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       .. note:: This method **does not work** for widget annotations, and results in a no-op with a warning message. Use :meth:`updateWidget` instead. Certain annotation types have no fill colors. In these cases this value is ignored and a warning is issued. FreeText annotations also require a special handling -- see :meth:`update`.
 
+   .. index::
+      pair: fontsize; Annot.update args
+      pair: text_color; Annot.update args
+      pair: border_color; Annot.update args
+      pair: fill_color; Annot.update args
+      pair: rotate; Annot.update args
+
    .. method:: update(fontsize = 0, text_color = None, border_color = None, fill_color = None, rotate = -1)
 
-      PDF only: Modify the displayed annotation image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and other properties, after they have been modified the respective methods (like. :meth:`setBorder`, :meth:`setColors`, etc.).
+      PDF only: Modify the displayed annotation image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and other properties, after they have been modified by the respective methods (like. :meth:`setBorder`, :meth:`setColors`, etc.).
 
       It is ignored for widget annotations (use :meth:`updateWidget` instead).
 
@@ -159,6 +166,7 @@ There is a parent-child relationship between an annotation and its page. If the 
       :returns: the content of the attached file.
 
    .. index::
+      pair: buffer; Annot.fileUpd args
       pair: filename; Annot.fileUpd args
       pair: ufilename; Annot.fileUpd args
       pair: desc; Annot.fileUpd args
