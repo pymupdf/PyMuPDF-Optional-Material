@@ -56,13 +56,13 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
    .. method:: drawLine(p1, p2)
 
-      Draw a line from :ref:`Point` objects ``p1`` to ``p2``.
+      Draw a line from point-like objects ``p1`` to ``p2``.
 
       :arg p1: starting point
-      :type p1: :ref:`Point`
+      :type p1: point-like
 
       :arg p2: end point
-      :type p2: :ref:`Point`
+      :type p2: point-like
 
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
@@ -72,13 +72,13 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
    .. method:: drawSquiggle(p1, p2, breadth = 2)
 
-      Draw a squiggly (wavy, undulated) line from :ref:`Point` objects ``p1`` to ``p2``. An integer number of full wave periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted as necessary to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
+      Draw a squiggly (wavy, undulated) line from point-like objects ``p1`` to ``p2``. An integer number of full wave periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted as necessary to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
 
       :arg p1: starting point
-      :type p1: :ref:`Point`
+      :type p1: point-like
 
       :arg p2: end point
-      :type p2: :ref:`Point`
+      :type p2: point-like
 
       :arg float breadth: the amplitude of each wave. The condition ``2 * breadth < abs(p2 - p1)`` must be true to fit in at least one wave. See the following picture, which shows two points connected by one full period.
 
@@ -98,13 +98,13 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
    .. method:: drawZigzag(p1, p2, breadth = 2)
 
-      Draw a zigzag line from :ref:`Point` objects ``p1`` to ``p2``. An integer number of full zigzag periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
+      Draw a zigzag line from point-like objects ``p1`` to ``p2``. An integer number of full zigzag periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
 
       :arg p1: starting point
-      :type p1: :ref:`Point`
+      :type p1: point-like
 
       :arg p2: end point
-      :type p2: :ref:`Point`
+      :type p2: point-like
 
       :arg float breadth: the amplitude of the movement. The condition ``2 * breadth < abs(p2 - p1)`` must be true to fit in at least one period.
 
@@ -115,7 +115,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       Draw several connected lines between points contained in the sequence ``points``. This can be used for creating arbitrary polygons by setting the last item equal to the first one.
 
-      :arg sequence points: a sequence of :ref:`Point` objects. Its length must at least be 2 (in which case it is equivalent to ``drawLine()``).
+      :arg sequence points: a sequence of point-like objects. Its length must at least be 2 (in which case it is equivalent to ``drawLine()``).
 
       :rtype: :ref:`Point`
       :returns: ``points[-1]`` -- the last point in the argument sequence.
@@ -125,16 +125,16 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       Draw a standard cubic Bézier curve from ``p1`` to ``p4``, using ``p2`` and ``p3`` as control points.
 
       :arg p1: starting point
-      :type p1: :ref:`Point`
+      :type p1: point-like
 
       :arg p2: control point 1
-      :type p2: :ref:`Point`
+      :type p2: point-like
 
       :arg p3: control point 2
-      :type p3: :ref:`Point`
+      :type p3: point-like
 
       :arg p4: end point
-      :type p4: :ref:`Point`
+      :type p4: point-like
 
       :rtype: :ref:`Point`
       :returns: the end point, ``p4``.
@@ -162,7 +162,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       The method is a shortcut for ``drawSector(center, start, 360, fullSector = False)``. To draw a circle in a clockwise movement, change the sign of the degree.
 
       :arg center: the center of the circle.
-      :type center: :ref:`Point`
+      :type center: point-like
 
       :arg float radius: the radius of the circle. Must be positive.
 
@@ -174,13 +174,13 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       A special case of ``drawBezier()``: Draw a cubic Bézier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degress, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.
 
       :arg p1: starting point.
-      :type p1: :ref:`Point`
+      :type p1: point-like
 
       :arg p2: helper point.
-      :type p2: :ref:`Point`
+      :type p2: point-like
 
       :arg p3: end point.
-      :type p3: :ref:`Point`
+      :type p3: point-like
 
       :rtype: :ref:`Point`
       :returns: the end point, ``p3``.
@@ -197,10 +197,10 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie).
 
       :arg center: the center of the circle.
-      :type center: :ref:`Point`
+      :type center: point-like
 
       :arg point: one of the two end points of the pie's arc segment. The other one is calculated from the ``angle``.
-      :type point: :ref:`Point`
+      :type point: point-like
 
       :arg float angle: the angle of the sector in degrees. Used to calculate the other end point of the arc. Depending on its sign, the arc is drawn counter-clockwise (postive) or clockwise.
 
@@ -236,13 +236,14 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
    .. method:: insertText(point, text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), rotate = 0, morph = None)
 
-      Insert text lines beginning at a :ref:`Point` ``point``.
+      Insert text lines start at ``point``.
 
-      :arg point: the bottom-left position of the first ``text`` character in pixels. ``point.x`` specifies the distance from left border, ``point.y`` the distance from top of page. This is independent from text orientation as requested by ``rotate``. However, there must always be sufficient room "above", which can mean the distance from any of the four page borders.
-      :type point: :ref:`Point`
+      :arg point-like point: the bottom-left position of the first character of ``text`` in pixels. It is important to understand, how this works in conjunction with the ``rotate`` parameter. Please have a look at the following picture. The small red dots indicate the positions of ``point`` in each of the four possible cases.
 
-      :arg text: the text to be inserted. May be specified as either a string type or as a sequence type. For sequences, or strings containing line breaks ``\n``, several lines will be inserted. No care will be taken if lines are too wide, but the number of inserted lines will be limited by "vertical" space on the page (in the sense of reading direction as established by the ``rotate`` parameter). Any rest of ``text`` is discarded -- the return code however contains the number of inserted lines. Only single byte character codes are currently supported.
-      :type text: str or sequence
+         .. image:: img-inserttext.jpg
+            :scale: 33
+
+      :arg str/sequence text: the text to be inserted. May be specified as either a string type or as a sequence type. For sequences, or strings containing line breaks ``\n``, several lines will be inserted. No care will be taken if lines are too wide, but the number of inserted lines will be limited by "vertical" space on the page (in the sense of reading direction as established by the ``rotate`` parameter). Any rest of ``text`` is discarded -- the return code however contains the number of inserted lines.
 
       :arg int rotate: determines whether to rotate the text. Acceptable values are multiples of 90 degrees. Default is 0 (no rotation), meaning horizontal text lines oriented from left to right. 180 means text is shown upside down from **right to left**. 90 means counter-clockwise rotation, text running **upwards**. 270 (or -90) means clockwise rotation, text running **downwards**. In any case, ``point`` specifies the bottom-left coordinates of the first character's rectangle. Multiple lines, if present, always follow the reading direction established by this parameter. So line 2 is located **above** line 1 in case of ``rotate = 180``, etc.
 
@@ -261,15 +262,13 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
       pair: expandtabs; Shape.insertTextbox args
       pair: align; Shape.insertTextbox args
 
-   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, rotate = 0, morph = None)
+   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "helv", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, rotate = 0, morph = None)
 
       PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, depending on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
 
-      :arg rect: the area to use. It must be finite and not empty.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: the area to use. It must be finite and not empty.
 
-      :arg buffer: the text to be inserted. Must be specified as a string or a sequence of strings. Line breaks are respected also when occurring in a sequence entry.
-      :type text: str or sequence
+      :arg str/sequence buffer: the text to be inserted. Must be specified as a string or a sequence of strings. Line breaks are respected also when occurring in a sequence entry.
 
       :arg int align: align each text line. Default is 0 (left). Centered, right and justified are the other supported options, see :ref:`TextAlign`. Please note that the effect of parameter value ``TEXT_ALIGN_JUSTIFY`` is only achievable with "simple" (single-byte) fonts (including the :ref:`Base-14-Fonts`). Refer to :ref:`AdobeManual`, section 5.2.2, page 399.
 

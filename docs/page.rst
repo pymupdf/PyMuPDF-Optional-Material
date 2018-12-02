@@ -59,6 +59,7 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.getPixmap`           create a :ref:`Pixmap`
 :meth:`Page.getSVGimage`         create a page image in SVG format
 :meth:`Page.getText`             extract the page's text
+:meth:`Page.insertFont`          PDF only: insert a font for use by the page
 :meth:`Page.insertImage`         PDF only: insert an image
 :meth:`Page.insertLink`          PDF only: insert a new link
 :meth:`Page.insertText`          PDF only: insert text
@@ -277,7 +278,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: rotate; Page.insertText args
       pair: morph; Page.insertText args
 
-   .. method:: insertText(point, text = text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
+   .. method:: insertText(point, text, fontsize = 11, fontname = "helv", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
 
       PDF only: Insert text starting at point-like ``point``. See :meth:`Shape.insertText`.
 
@@ -292,7 +293,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: rotate; Page.insertTextbox args
       pair: morph; Page.insertTextbox args
 
-   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
+   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "helv", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
 
       PDF only: Insert text into the specified rect-like ``rect``. See :meth:`Shape.insertTextbox`.
 
@@ -442,6 +443,65 @@ This is available for PDF documents only. There are basically two groups of meth
 
           >>> col = fitz.utils.getColor("py_color")
           >>> page.drawRect(page.rect, color=col, fill=col, overlay=False)
+
+   .. index::
+      pair: fontname; Page.insertFont args
+      pair: fontfile; Page.insertFont args
+      pair: fontbuffer; Page.insertFont args
+      pair: set_simple; Page.insertFont args
+
+   .. method:: insertFont(fontname="helv", fontfile=None, fontbuffer=None, set_simple=False)
+
+      PDF only: Add a new font to be used by text output methods. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
+
+      :arg str fontname: The name by which this font shall be referenced when outputting text on this page. You have a "free" choice here, for a formal definition for valid PDF names see :ref:`AdobeManual` (page 56, section 3.2.4). However, if it matches one of the :data:`Base14_Fonts` or one of the CJK fonts, ``fontfile`` and ``fontbuffer`` **are ignored**. In other words, you cannot insert a font via ``fontfile`` or ``fontbuffer`` and also give it a reserved ``fontname``. The reserved font name can be specified in any mixture of upper or lower case and still match the right built-in font definition. When using ``fontname`` in outputting text however, the spelling chosen here must **exactly match**. The default value "helv" installs the built-in "Helvetica".
+
+      :arg str fontfile: a path to a font file. If used, ``fontname`` must be different from all reserved names.
+
+      :arg bytes/bytearray fontbuffer: the image of a font file. If used, ``fontname`` must be different from all reserved names. This parameter would typically be used to transfer fonts between different pages of the same or different PDFs.
+
+      :arg int set_simple: applicable for ``fontfile`` / ``fontbuffer`` cases only: enforce treatment as a "simple" font, i.e. one that only uses character codes up to 255.
+
+      :rytpe: int
+      :returns: the XREF of the installed font.
+
+      .. note:: Built-in fonts will not lead to the inclusion of a font file. So the resulting PDF file will remain small. However, your PDF reader software is responsible for generating an appropriate appearance -- and their **are** differences on whether or how each one of them does this. This is especially true for the CJK fonts. Following are the reserved **Font Names** and their correspondingly installed **Base Font** names:
+
+         **Base-14 Fonts** [#f1]_
+
+         ============= ============================ =========================================
+         **Font Name** **Installed Base Font**      **Comments**
+         ============= ============================ =========================================
+         helv          Helvetica                    normal
+         heit          Helvetica-Oblique            italic
+         hebo          Helvetica-Bold               bold
+         hebi          Helvetica-BoldOblique        bold-italic
+         cour          Courier                      normal
+         coit          Courier-Oblique              italic
+         cobo          Courier-Bold                 bold
+         cobi          Courier-BoldOblique          bold-italic
+         tiro          Times-Roman                  normal
+         tiit          Times-Italic                 italic
+         tibo          Times-Bold                   bold
+         tibi          Times-BoldItalic             bold-italic
+         symb          Symbol
+         zadb          ZapfDingbats
+         ============= ============================ =========================================
+
+         **CJK Fonts** [#f2]_
+
+         ============= ============================ =========================================
+         **Font Name** **Installed Base Font**      **Comments**
+         ============= ============================ =========================================
+         china-s       Heiti                        simplified Chinese
+         china-ss      Song                         simplified Chinese (serif)
+         china-t       Fangti                       traditional Chinese
+         china-ts      Ming                         traditional Chinese (serif)
+         japan         Gothic                       Japanese
+         japan-s       Mincho                       Japanese (serif)
+         korea         Dotum                        Korean
+         korea-s       Batang                       Korean (serif)
+         ============= ============================ =========================================
 
    .. index::
       pair: overlay; Page.insertImage args
@@ -603,7 +663,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       .. note:: The displayed source page is shown without any annotations or links. The source page's complete text and images will become an integral part of the containing page, i.e. they will be included in the output of all text extraction methods and appear in methods :meth:`getFontList` and :meth:`getImageList` (whether they are actually visible - see the ``clip`` parameter - or not).
 
-      .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or watermark) on every page of PDF ``doc``. The first execution actually inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
+      .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or a watermark) on every page of PDF ``doc``. The first execution **actually** inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
 
       >>> # the first showPDFpage will include source page docsrc[pno],
       >>> # subsequents will reuse it via its xref.
@@ -788,7 +848,6 @@ This is an overview of homologous methods on the :ref:`Document` and on the :ref
 ``Document.getPagePixmap(pno, ...)``   :meth:`Page.getPixmap`
 ``Document.getPageText(pno, ...)``     :meth:`Page.getText`
 ``Document.searchPageFor(pno, ...)``   :meth:`Page.searchFor`
-``Document._getPageXref(pno)``         :meth:`Page._getXref`
 ====================================== =====================================
 
 The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``.
@@ -798,3 +857,9 @@ The page number ``pno`` is 0-based and can be any negative or positive number ``
 Most document methods (left column) exist for convenience reasons, and are just wrappers for: ``Document[pno].<page method>``. So they **load and discard the page** on each execution.
 
 However, the first two methods work differently. They only need a page's object definition statement - the page itself will not be loaded. So e.g. :meth:`Page.getFontList` is a wrapper the other way round and defined as follows: ``page.getFontList == page.parent.getPageFontList(page.number)``.
+
+.. rubric:: Footnotes
+
+.. [#f1] If your existing code already uses the installed base name as a font reference (as it was supported by PyMuPDF versions earlier than 1.14), this will continue to work.
+
+.. [#f2] Not all PDF reader software -- which includes internet browsers and office software -- will display all of these fonts. And if they do, the difference between the **serifed** and the **non-serifed** version may hardly be noticable. But serifed and non-serifed versions lead to different installed base fonts, thus providing an option to achieve desired results with a specific PDF reader.

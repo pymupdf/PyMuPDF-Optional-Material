@@ -425,6 +425,136 @@ This script uses :meth:`Page.getTextWords` to look for a string, handed in via c
 .. image:: img-markedpdf.jpg
    :scale: 60
 
+How to Insert Text
+~~~~~~~~~~~~~~~~~~~~
+PyMuPDF provides ways to insert text on new or existing PDF pages with the following features:
+
+* choose the font, including built-in fonts and fonts that are available as files
+* choose text characteristics like bold, italic, font size, font color, etc.
+* position the text in multiple ways:
+    - either as simple line-oriented output starting at a certain point,
+    - or fitting text in a box provided as a rectangle, in which case text alignment choices are also available,
+    - choose whether text should be put in foreground (overlay existing content),
+    - all text can be arbitrarily "morphed", i.e. its appearance can be changed via a :ref:`Matrix`, to achieve effects like shearing or mirroring,
+    - independently from morphing and in addition to that, text can be rotated by multiples of 90 degrees.
+
+All of the above is provided by three basic :ref:`Page` methods:
+
+* :meth:`Page.insertFont` to install a font referencable by the page. This can be a new font (e.g. provided as a file), a font already present somewhere in this or another PDF, or a built-in font.
+* :meth:`Page.insertText` to write some text simply line by line. This uses a :ref:`Shape` method with the same name which provides additional options.
+* :meth:`Page.insertTextbox` to fit text in a given rectangle. Here you can choose text alignment features (left, right, centered, justified) and you keep control as to whether text actually fits. This method invokes a corresponding method of :ref:`Shape` as well.
+
+How to Output Text Lines
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+Output some text lines on a page::
+
+    import fitz
+    doc = fitz.open(...)                 # new or existing PDF
+    page = doc.newPage()                 # new or existing page via doc[n]
+    p = sitz.Point(50, 72)               # start point of 1st line
+    
+    text = "Some text,\nspread across\nseveral lines."
+    # the same result is achievable by
+    # text = ["Some text", "spread across", "several lines."]
+
+    rc = page.insertText(p,                   # bottom-left of 1st char
+                         text,                # the text (honors '\n')
+                         fontname = "helv",   # the default font
+                         fontsize = 11,       # the default font size
+                         rotate = 0,          # also available: 90, 180, 270
+                         )
+    print("%i lines printed on page %i." % (rc, page.number))
+
+    doc.save("text.pdf")
+
+With this method, only the number of output **lines** will be controlled to not go beyond page height. Surplus lines will not be written and the number of actual lines will be returned. Line **width is not measured** here.
+
+The height of each line is calculated as ``1.2 * fontsize``.
+
+Here is another example. It inserts 4 text strings using the four different rotation options, and thereby explains, how the text insertion point must be set to achieve the desired result::
+
+    import fitz
+    doc = fitz.open()
+    page = doc.newPage()
+    # the text strings, each having 3 lines
+    text1 = "rotate=0\nLine 2\nLine 3"
+    text2 = "rotate=90\nLine 2\nLine 3"
+    text3 = "rotate=-90\nLine 2\nLine 3"
+    text4 = "rotate=180\nLine 2\nLine 3"
+    red = (1, 0, 0) # the color for the red dots
+    # the insertion points, each with a 25 pix distance from the corners
+    p1 = fitz.Point(25, 25)
+    p2 = fitz.Point(page.rect.width - 25, 25)
+    p3 = fitz.Point(25, page.rect.height - 25)
+    p4 = fitz.Point(page.rect.width - 25, page.rect.height - 25)
+    # create a Shape to draw on
+    img = page.newShape()
+
+    # draw the insertion points as red dots
+    img.drawCircle(p1,1)
+    img.drawCircle(p2,1)
+    img.drawCircle(p3,1)
+    img.drawCircle(p4,1)
+    img.finish(width=0.3, color=red, fill=red)
+
+    # insert the text strings
+    img.insertText(p1, text1)
+    img.insertText(p3, text2, rotate=90)
+    img.insertText(p2, text3, rotate=-90)
+    img.insertText(p4, text4, rotate=180)
+    
+    # store our work to the page
+    img.commit()
+    doc.save(...)
+
+This is the result:
+
+.. image:: img-inserttext.jpg
+   :scale: 33
+
+------------------------------------------
+
+How to Fill a Text Box
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+This script fills 4 different rectangles with text, each time choosing a different rotation value::
+
+    import fitz
+    doc = fitz.open(...)                             # new or existing PDF
+    page = doc.newPage()                             # new page, or choose doc[n]
+    r1 = fitz.Rect(50,100,100,150)                   # a 50x50 rectangle
+    disp = fitz.Rect(55, 0, 55, 0)                   # add this to get more rects
+    r2 = r1 + disp                                   # 2nd rect
+    r3 = r1 + disp * 2                               # 3rd rect
+    r4 = r1 + disp * 3                               # 4th rect
+    t1 = "text with rotate = 0."                     # the texts we will put in
+    t2 = "text with rotate = 90."
+    t3 = "text with rotate = -90."
+    t4 = "text with rotate = 180."
+    red  = (1,0,0)                                   # some colors
+    gold = (1,1,0)
+    blue = (0,0,1)
+    """We use a Shape object (something like a canvas) to output the text and
+    the rectangles surounding it for demonstration.
+    """
+    img = page.newShape()                            # create Shape
+    img.drawRect(r1)                                 # draw rectangles
+    img.drawRect(r2)                                 # giving them
+    img.drawRect(r3)                                 # a yellow background
+    img.drawRect(r4)                                 # and a red border
+    img.finish(width = 0.3, color = red, fill = gold)
+    # Now insert text in the rectangles. Font "Helvetica" will be used
+    # by default. A return code rc < 0 indicates insufficient space (not checked here).
+    rc = img.insertTextbox(r1, t1, color = blue)
+    rc = img.insertTextbox(r2, t2, color = blue, rotate = 90)
+    rc = img.insertTextbox(r3, t3, color = blue, rotate = -90)
+    rc = img.insertTextbox(r4, t4, color = blue, rotate = 180)
+    img.commit()                                     # write all stuff to page /Contents
+    doc.save("...")
+
+Several default values were used above: font "Helvetica", font size 11 and text alignment "left". The result will look like this:
+
+.. image:: img-textbox.jpg
+   :scale: 50
 
 -----------------------
 

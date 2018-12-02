@@ -45,7 +45,7 @@ copyright = u'2015-2018, Jorj X. McKie'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '1.14.2'
+release = '1.14.3'
 
 # The short X.Y version.
 s = release.split(".")
@@ -94,7 +94,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "classic"
+html_theme = "agogo"
 #html_theme = 'sphinxdoc'
 #html_theme = "sphinx_rtd_theme"
 

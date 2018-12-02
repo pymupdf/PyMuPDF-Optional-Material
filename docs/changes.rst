@@ -1,6 +1,14 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.3
+---------------------------
+This patch version contains minor bug fixes and CJK font output support.
+
+* **Added** support for the four CJK fonts as PyMuPDF generated text output. This pertains to methods :meth:`Page.insertFont`, :meth:`Shape.insertText`, :meth:`Shape.insertTextbox`, and corresponding :ref:`Page` methods. The new fonts are available under "reserved" fontnames "china-t" (traditional Chinese), "china-s" (simplified Chinese), "japan" (Japanese), and "korea" (Korean).
+* **Added** full support for the built-in fonts 'Symbol' and 'Zapfdingbats'.
+* **Changed:** The 14 standard fonts can now each be referenced by a 4-letter abbreviation.
+
 Changes in Version 1.14.1
 ---------------------------
 This patch version contains minor performance improvements.
@@ -10,7 +18,7 @@ This patch version contains minor performance improvements.
 
 Changes in Version 1.14.0
 ---------------------------
-To support MuPDF v1.14.0 massive changes were required in PyMuPDF -- most of them purely technical, with little visibility to the developers. But there are also quite a lot of interesting new and improved features. Following are the details:
+To support MuPDF v1.14.0, massive changes were required in PyMuPDF -- most of them purely technical, with little visibility to developers. But there are also quite a lot of interesting new and improved features. Following are the details:
 
 * **Added** "ink" annotation.
 * **Added** "rubber stamp" annotation.
@@ -27,6 +35,10 @@ To support MuPDF v1.14.0 massive changes were required in PyMuPDF -- most of the
 * **Fixed** issue 214 ("PDF decryption GONE!").
 * **Fixed** issue 215 ("Formatting of links added with pyMuPDF").
 * **Fixed** issue 217 ("extraction through json is failing for my pdf").
+
+Behind the curtain, we have changed the implementation of geometry objects: they now purely exist in Python and no longer have "shadow" twins on the C-level (in MuPDF). This has improved processing speed in that area by more than a factor of two.
+
+Because of the same reason, most methods involving geometry parameters now also accept the corresponding Python sequence. For example, in method ``"page.showPDFpage(rect, ...)"`` parameter ``rect`` may now be any rect-like sequence.
 
 We also invested considerable effort to further extend and improve the :ref:`FAQ` chapter.
 
