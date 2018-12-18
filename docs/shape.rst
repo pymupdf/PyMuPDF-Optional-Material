@@ -3,23 +3,20 @@
 Shape
 ================
 
-This class allows creating interconnected graphical elements on a PDF page. Its methods have the same meaning and name as the corresponding :ref:`Page` methods. Their :ref:`CommonParms` are however exported to a separate method, ``finish()``. In addition, all draw methods return a :ref:`Point` object to support connected drawing paths. This point always equals the **"current point"**, that PDF maintains during path construction.
+This class allows creating interconnected graphical elements on a PDF page. Its methods have the same meaning and name as the corresponding :ref:`Page` methods.
 
-Methods of this class record the area they are covering in a rectangle (:attr:`Shape.rect`). This property can for instance be used to set :attr:`Page.CropBox`.
+In fact, each :ref:`Page` draw method is just a convenience wrapper for (1) one shape draw method, (2) the :meth:`finish` method, and (3) the :meth:`commit` method. For page text insertion, only the :meth:`commit` method is invoked. If many draw and text perations are executed for a page, you should always consider using a Shape object.
 
-Also supported are text insertion methods ``insertText()`` and ``insertTextbox()``. They need a slightly different handling compared to the draw methods:
+Several draw methods can be executed in a row and each one of them will contribute to one drawing. Once the drawing is complete, the :meth:`finish` method must be invoked to apply color, dashing, width, morphing and other attributes.
 
-1. They do not use :attr:`Shape.contents`. Instead they directly modify :attr:`Shape.totalcont`.
-2. They do not use nor need :meth:`Shape.finish`.
-3. They provide their own ``color`` and ``morph`` arguments.
-4. They do not use nor change :attr:`Shape.lastPoint`.
+**Draw** methods of this class (and :meth:`insertTextbox`) are logging the area they are covering in a rectangle (:attr:`Shape.rect`). This property can for instance be used to set :attr:`Page.CropBox`.
 
-As with the draw methods, text insertions require using :meth:`Shape.commit` to update the page.
+**Text insertions** :meth:`insertText` and :meth:`insertTextbox` implicitely execute a "finish" and therefore only require :meth:`commit` to become effective. As a consequence, both include parameters for controlling prperties like colors, etc.
 
 ================================ =================================================
 **Method / Attribute**             **Description**
 ================================ =================================================
-:meth:`Shape.commit`             update the page's ``/Contents`` object
+:meth:`Shape.commit`             update the page's contents
 :meth:`Shape.drawBezier`         draw a cubic Bézier curve
 :meth:`Shape.drawCircle`         draw a circle around a point
 :meth:`Shape.drawCurve`          draw a cubic Bézier using one helper point
@@ -30,17 +27,18 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 :meth:`Shape.drawSector`         draw a circular sector or piece of pie
 :meth:`Shape.drawSquiggle`       draw a squiggly line
 :meth:`Shape.drawZigzag`         draw a zigzag line
-:meth:`Shape.finish`             finish a set of draws
+:meth:`Shape.finish`             finish a set of draw commands
 :meth:`Shape.insertText`         insert text lines
-:meth:`Shape.insertTextbox`      insert text into a rectangle
-:attr:`Shape.contents`           draw commands since last ``finish()``
+:meth:`Shape.insertTextbox`      fit text into a rectangle
 :attr:`Shape.doc`                stores the page's document
+:attr:`Shape.draw_cont`          draw commands since last ``finish()``
 :attr:`Shape.height`             stores the page's height
 :attr:`Shape.lastPoint`          stores the current point
 :attr:`Shape.page`               stores the owning page
 :attr:`Shape.rect`               rectangle surrounding drawings
-:attr:`Shape.width`              stores the page's width
+:attr:`Shape.text_cont`          accumulated text insertions
 :attr:`Shape.totalcont`          accumulated string to be stored in ``/Contents``
+:attr:`Shape.width`              stores the page's width
 ================================ =================================================
 
 **Class API**
@@ -93,7 +91,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/rk700/PyMuPDF/blob/master/demo/draw-sines.py>`_.
 
-   ..index::
+   .. index::
       pair: breadth; Shape.drawZigzag args
 
    .. method:: drawZigzag(p1, p2, breadth = 2)
@@ -302,7 +300,7 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       Finish a set of ``draw*()`` methods by applying :ref:`CommonParms` to all of them. This method also supports morphing the resulting compound drawing using a pivotal :ref:`Point`.
 
-      :arg sequence morph: morph the compound drawing around some arbitrary pivotal :ref:`Point` ``pivot`` by applying :ref:`Matrix` ``matrix`` to it. Default is no morphing (``None``). The matrix can contain any values in its first 4 components, ``matrix.e == matrix.f == 0`` must be true, however. This means that any combination of scaling, shearing, rotating, flipping, etc. is possible, but translations are not.
+      :arg sequence morph: morph the text or the compound drawing around some arbitrary pivotal :ref:`Point` ``pivot`` by applying :ref:`Matrix` ``matrix`` to it. This implies that ``pivot`` is a **fixed point** of this operation. Default is no morphing (``None``). The matrix can contain any values in its first 4 components, ``matrix.e == matrix.f == 0`` must be true, however. This means that any combination of scaling, shearing, rotating, flipping, etc. is possible, but translations are not. 
 
       :arg bool even_odd: request the **"even-odd rule"** for filling operations. Default is ``False``, so that the **"nonzero winding number rule"** is used. These rules are alternative methods to apply the fill color where areas overlap. Only with fairly complex shapes a different behavior is to be expected with these rules. For an in-depth explanation, see :ref:`AdobeManual`, pp. 232 ff. Here is an example to demonstrate the difference.
 
@@ -315,11 +313,11 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
   
    .. method:: commit(overlay = True)
 
-      Update the page's ``/Contents`` with the accumulated drawing commands. If a ``Shape`` is not committed, the page will not be changed. The method must be preceeded with at least one ``finish()`` or one text insertion method.
+      Update the page's ``/Contents`` with the accumulated draw commands and text insertions. If a ``Shape`` is not committed, the page will not be changed.
 
-      The method will reset attributes :attr:`Shape.rect`, :attr:`Shape.lastPoint`, :attr:`Shape.contents` and :attr:`Shape.totalcont`. Afterwards, the shape object can be reused for the **same page**.
+      The method will reset attributes :attr:`Shape.rect`, :attr:`lastPoint`, :attr:`draw_cont`, :attr:`text_cont` and :attr:`totalcont`. Afterwards, the shape object can be reused for the **same page**.
 
-      :arg bool overlay: determine whether to put content in foreground (default) or background. Relevant only, if the page has a non-empty ``/Contents`` object.
+      :arg bool overlay: determine whether to put content in foreground (default) or background. Relevant only, if the page already has a non-empty ``/Contents`` object.
 
    .. attribute:: doc
 
@@ -345,9 +343,15 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       :type: float
 
-   .. attribute:: contents
+   .. attribute:: draw_cont
 
       Accumulated command buffer for draw methods since last finish.
+
+      :type: str
+
+   .. attribute:: text_cont
+
+      Accumulated text buffer. All text insertions go here. On :meth:`commit` this buffer will be appended to :attr:`totalcont`, so that text will never be covered by drawings in the same Shape.
 
       :type: str
 
@@ -357,12 +361,12 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
       A typical use of this attribute would be setting :attr:`Page.CropBox` to this value, when you are creating shapes for later or external use. If you have not manipulated the attribute yourself, it should reflect a rectangle that contains all drawings so far.
 
-      If you have used morphing and want to adjust this attribute accordingly, use the following code:
+      If you have used morphing and need a rectangle containing the morphed objects, use the following code::
 
-      >>> # assuming ...
-      >>> morph = (point, matrix)
-      >>> # ... recalculate the shape rectangle like so:
-      >>> img.rect = (img.rect - fitz.Rect(point, point)) * ~matrix + fitz.Rect(point, point)
+         >>> # assuming ...
+         >>> morph = (point, matrix)
+         >>> # ... recalculate the shape rectangle like so:
+         >>> img.rect = (img.rect - fitz.Rect(point, point)) * ~matrix + fitz.Rect(point, point)
 
       :type: :ref:`Rect`
 
@@ -380,22 +384,22 @@ As with the draw methods, text insertions require using :meth:`Shape.commit` to 
 
 Usage
 ------
-A drawing object is constructed by ``img = page.newShape()``. After this, as many draw, finish and text insertions methods as required may follow. Each sequence of draws must be finished before the drawing is committed. The overall coding pattern looks like this:
+A drawing object is constructed by ``img = page.newShape()``. After this, as many draw, finish and text insertions methods as required may follow. Each sequence of draws must be finished before the drawing is committed. The overall coding pattern looks like this::
 
->>> img = page.newShape()
->>> img.draw1(...)
->>> img.draw2(...)
->>> ...
->>> img.finish(width=..., color = ..., fill = ..., morph = ...)
->>> img.draw3(...)
->>> img.draw4(...)
->>> ...
->>> img.finish(width=..., color = ..., fill = ..., morph = ...)
->>> ...
->>> img.insertText*
->>> ...
->>> img.commit()
->>> ....
+   >>> img = page.newShape()
+   >>> img.draw1(...)
+   >>> img.draw2(...)
+   >>> ...
+   >>> img.finish(width=..., color = ..., fill = ..., morph = ...)
+   >>> img.draw3(...)
+   >>> img.draw4(...)
+   >>> ...
+   >>> img.finish(width=..., color = ..., fill = ..., morph = ...)
+   >>> ...
+   >>> img.insertText*
+   >>> ...
+   >>> img.commit()
+   >>> ....
 
 Notes
 ~~~~~~
@@ -403,11 +407,11 @@ Notes
 
 2. To successfully create compound graphics, let each draw method use the end point of the previous one as its starting point. In the above pseudo code, ``draw2`` should hence use the returned :ref:`Point` of ``draw1`` as its starting point. Failing to do so, would automatically start a new path and ``finish()`` may not work as expected (but it won't complain either).
 
-3. Text insertions may occur anywhere before the commit (they neither touch :attr:`Shape.contents` nor :attr:`Shape.lastPoint`). They are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``.
+3. Text insertions may occur anywhere before the commit (they neither touch :attr:`Shape.draw_cont` nor :attr:`Shape.lastPoint`). They are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``.
 
 4. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page -- thus providing a way to control graphical layers.
 
-5. Only ``commit`` will update the page's contents, the other methods are basically string manipulations. With many draw / text operations, this will result in a much better performance, than issuing the corresponding page methods separately (they each do their own commit).
+5. **Only** ``commit`` **will update** the page's contents, the other methods are basically string manipulations.
 
 Examples
 ---------
@@ -440,7 +444,7 @@ Here is an example for 5 colors:
 >>> for i in range(n):           # calculate the edges
         p0 = img.drawSector(center, p0, beta)
         points.append(p0)
->>> img.contents = ""            # do not draw the circle sectors
+>>> img.draw_cont = ""           # do not draw the circle sectors
 >>> img.drawPolyline(points)     # draw the polygon
 >>> img.finish(color = (1,0,0), fill = (1,1,0), closePath = False)
 >>> img.commit()

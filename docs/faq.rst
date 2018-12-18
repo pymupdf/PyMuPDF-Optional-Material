@@ -4,6 +4,9 @@
 Collection of Recipes
 ==============================
 
+.. highlight:: python
+   :linenothreshold: 5
+
 A collection of recipes in "How-To" format for using PyMuPDF. We aim to extend this section over time. Where appropriate we will refer to the corresponding `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages, but some duplication may still occur.
 
 ----------
@@ -435,12 +438,12 @@ PyMuPDF provides ways to insert text on new or existing PDF pages with the follo
     - either as simple line-oriented output starting at a certain point,
     - or fitting text in a box provided as a rectangle, in which case text alignment choices are also available,
     - choose whether text should be put in foreground (overlay existing content),
-    - all text can be arbitrarily "morphed", i.e. its appearance can be changed via a :ref:`Matrix`, to achieve effects like shearing or mirroring,
-    - independently from morphing and in addition to that, text can be rotated by multiples of 90 degrees.
+    - all text can be arbitrarily "morphed", i.e. its appearance can be changed via a :ref:`Matrix`, to achieve effects like scaling, shearing or mirroring,
+    - independently from morphing and in addition to that, text can be rotated by integer multiples of 90 degrees.
 
-All of the above is provided by three basic :ref:`Page` methods:
+All of the above is provided by three basic :ref:`Page`, resp. :ref:`Shape` methods:
 
-* :meth:`Page.insertFont` to install a font referencable by the page. This can be a new font (e.g. provided as a file), a font already present somewhere in this or another PDF, or a built-in font.
+* :meth:`Page.insertFont` to install a font referencable by the page. This can be a new font (e.g. provided as a file), a font already present somewhere in **this or another** PDF, or a built-in font.
 * :meth:`Page.insertText` to write some text simply line by line. This uses a :ref:`Shape` method with the same name which provides additional options.
 * :meth:`Page.insertTextbox` to fit text in a given rectangle. Here you can choose text alignment features (left, right, centered, justified) and you keep control as to whether text actually fits. This method invokes a corresponding method of :ref:`Shape` as well.
 
@@ -469,9 +472,9 @@ Output some text lines on a page::
 
 With this method, only the number of output **lines** will be controlled to not go beyond page height. Surplus lines will not be written and the number of actual lines will be returned. Line **width is not measured** here.
 
-The height of each line is calculated as ``1.2 * fontsize``.
+The height of each line is internally calculated as ``1.2 * fontsize``.
 
-Here is another example. It inserts 4 text strings using the four different rotation options, and thereby explains, how the text insertion point must be set to achieve the desired result::
+Here is another example. It inserts 4 text strings using the four different rotation options, and thereby explains, how the text insertion point must be chosen to achieve the desired result::
 
     import fitz
     doc = fitz.open()
@@ -490,7 +493,7 @@ Here is another example. It inserts 4 text strings using the four different rota
     # create a Shape to draw on
     img = page.newShape()
 
-    # draw the insertion points as red dots
+    # draw the insertion points as red, filled dots
     img.drawCircle(p1,1)
     img.drawCircle(p2,1)
     img.drawCircle(p3,1)
@@ -848,6 +851,86 @@ This is the result:
 
 .. image:: img-inkannot.jpg
     :scale: 50
+
+------------------------------
+
+Drawing and Graphics
+---------------------
+
+PDF files support elementary drawing operations as part of their syntax. This includes basic geometrical objects like lines, curves, circles, rectangles including specifying colors.
+
+The syntax for such operations is defined in "A Operator Summary" on page 985 of the :ref:`AdobeManual`. Specifying these operators for a PDF page happens in its ``/Contents`` objects.
+
+PyMuPDF implements a large part of the available features via its :ref:`Shape` class, which is comparable to notions like "canvas" in other packages (e.g. `reportlab <https://pypi.org/project/reportlab/>`_).
+
+A shape is always created as a **child of a page**, usually with an instruction like ``img = page.newShape()``. The class defines numerous methods that perform drawing operations on the page's area. For example, ``last_point = img.drawRect(rect)`` draws a rectangle along the borders of a suitably defined ``rect = fitz.Rect(...)``.
+
+The returned ``last_point`` **always** is the :ref:`Point` where drawing operation ended ("last point"). Every such elementary drawing requires a subsequent :meth:`Shape.finish` to "close" it, but there may be multiple drawings which have one common ``finish()`` method.
+
+In fact, :meth:`Shape.finish` *defines* a group of preceding draw operations to form one -- potentially rather complex -- graphics object. PyMuPDF provides several predefined graphics in `shapes_and_symbols.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/shapes_and_symbols.py>`_ which demonstrate how this works.
+
+If you import this script, you can also directly use its graphics as in the following exmple::
+
+    # -*- coding: utf-8 -*-
+    """
+    Created on Sun Dec  9 08:34:06 2018
+    
+    @author: Jorj
+    @license: GNU GPL 3.0+
+    
+    Create a list of available symbols defined in shapes_and_symbols.py
+    
+    This also demonstrates an example usage: how these symbols could be used
+    as bullet-point symbols in some text.
+    
+    """
+    
+    import fitz
+    import shapes_and_symbols as sas
+    
+    # list of available symbol functions and their descriptions
+    tlist = [
+             (sas.arrow, "arrow (easy)"),
+             (sas.caro, "caro (easy)"),
+             (sas.clover, "clover (easy)"),
+             (sas.diamond, "diamond (easy)"),
+             (sas.dontenter, "do not enter (medium)"),
+             (sas.frowney, "frowney (medium)"),
+             (sas.hand, "hand (complex)"),
+             (sas.heart, "heart (easy)"),
+             (sas.pencil, "pencil (very complex)"),
+             (sas.smiley, "smiley (easy)"),
+             ]
+    
+    r = fitz.Rect(50, 50, 100, 100)        # first rect to contain a symbol
+    d = fitz.Rect(0, r.height + 10, 0, r.height + 10) # displacement to next ret
+    p = (15, -r.height * 0.2)              # starting point of explanation text
+    rlist = [r]                            # rectangle list
+    
+    for i in range(1, len(tlist)):         # fill in all the rectangles
+        rlist.append(rlist[i-1] + d)
+    
+    doc = fitz.open()                      # create empty PDF
+    page = doc.newPage()                   # create an empty page
+    img = page.newShape()                  # start a Shape (canvas)
+    
+    for i, r in enumerate(rlist):
+        tlist[i][0](img, rlist[i])         # execute symbol creation
+        img.insertText(rlist[i].br + p,    # insert description text
+                       tlist[i][1], fontsize=r.height/1.2)
+    
+    # store everything to the page's /Contents object
+    img.commit()
+    
+    import os
+    scriptdir = os.path.dirname(__file__)
+    doc.save(os.path.join(scriptdir, "symbol-list.pdf"))  # save the PDF
+
+
+This is the script's outcome:
+
+.. image:: img-symbols.jpg
+   :scale: 50
 
 ------------------------------
 
@@ -1245,24 +1328,45 @@ The messages are not necessarily pertaining to any specific document, so we keep
 
 Here is an interactive session making use of this message store::
 
- >>> import fitz
- >>> doc = fitz.open("acronis.xps") # some XPS document
- >>> fitz.TOOLS.fitz_stderr         # message store is still empty
- ''
- >>> pdfbytes = doc.convertToPDF()  # convert XPS to PDF
- >>> fitz.TOOLS.fitz_stderr         # and look at the message store:
- u'warning: freetype getting character advance: invalid glyph index\n'
- >>> fitz.TOOLS.fitz_stderr_reset() # empty the message store
- >>> fitz.TOOLS.fitz_stderr         # and show it worked
- ''
- >>> doc.close()                    # try another document: SVG this time
- >>> doc = fitz.open("acronis.svg")
- >>> fitz.TOOLS.fitz_stderr         # still no complaints?
- ''
- >>> pdfbytes = doc.convertToPDF()  # convert that one too
- >>> fitz.TOOLS.fitz_stderr         # and see what would have gone to system STDERR
- 'warning: ... repeated 3 times ...\nwarning: push viewport: 0 0 594.75 841.5\nwarning: push viewbox: 0 0 594.75 841.5\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 980 71\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2512 times ...\nwarning: push viewport: 0 0 112 33\nwarning: push viewport: 0 0 594.75 841.5\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 120\nwarning: push viewport: 0 0 94 54\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 130 88\nwarning: ... repeated 2 times ...\nwarning: push viewport: 0 0 181 115\nwarning: push viewport: 0 0 594.75 841.5\n'
- >>> 
+    Python 3.6.7 (default, Oct 22 2018, 11:32:17) 
+    [GCC 8.2.0] on linux
+    Type "help", "copyright", "credits" or "license()" for more information.
+    >>> import fitz
+    >>> doc = fitz.open("Acronis.xps")          # open some XPS file
+    >>> print(fitz.TOOLS.fitz_stderr)           # look for any open issues
+
+    >>> pdfbytes = doc.convertToPDF()           # convert to a PDF image
+    >>> print(fitz.TOOLS.fitz_stderr)           # look again:
+    warning: freetype getting character advance: invalid glyph index
+
+    >>> fitz.TOOLS.fitz_stderr_reset()          # clear the msg store
+    >>> print(fitz.TOOLS.fitz_stderr)           # prove it worked
+
+    >>> doc = fitz.open("acronis.svg")          # try another: SVG this time
+    >>> print(fitz.TOOLS.fitz_stderr)           # no open issues
+
+    >>> pdfbytes = doc.convertToPDF()           # convert this one, too
+    >>> print(fitz.TOOLS.fitz_stderr)           # captured messages:
+    warning: ... repeated 3 times ...
+    warning: push viewport: 0 0 594.75 841.5
+    warning: push viewbox: 0 0 594.75 841.5
+    warning: push viewport: 0 0 594.75 841.5
+    warning: ... repeated 2 times ...
+    warning: push viewport: 0 0 980 71
+    warning: push viewport: 0 0 594.75 841.5
+    warning: ... repeated 2512 times ...
+    warning: push viewport: 0 0 112 33
+    warning: push viewport: 0 0 594.75 841.5
+    warning: ... repeated 2 times ...
+    warning: push viewport: 0 0 181 120
+    warning: push viewport: 0 0 94 54
+    warning: ... repeated 2 times ...
+    warning: push viewport: 0 0 130 88
+    warning: ... repeated 2 times ...
+    warning: push viewport: 0 0 181 115
+    warning: push viewport: 0 0 594.75 841.5
+
+    >>> 
 
 --------------------------
 
@@ -1392,7 +1496,7 @@ PyMuPDF has no way to interpret or change this information directly because it c
 
 Using some XML package, the XML data can be interpreted and / or modified and stored back::
 
-    >>> # write back modified XML metadata
+    >>> # write back modified XML metadata:
     >>> doc._updateStream(metaxref, xmlmetadata)
-    >>> # if these data are not needed / not wanted, delete them:
+    >>> # if these data are not wanted, delete them:
     >>> doc._delXmlMetadata()

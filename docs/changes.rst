@@ -1,6 +1,11 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.4
+---------------------------
+* **Fixes** issue #239 "Annotation coordinate consistency".
+
+
 Changes in Version 1.14.3
 ---------------------------
 This patch version contains minor bug fixes and CJK font output support.

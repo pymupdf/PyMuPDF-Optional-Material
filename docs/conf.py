@@ -45,7 +45,7 @@ copyright = u'2015-2018, Jorj X. McKie'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '1.14.3'
+release = '1.14.4'
 
 # The short X.Y version.
 s = release.split(".")
@@ -191,7 +191,6 @@ latex_documents = [
   ('index', 'PyMuPDF.tex', u'PyMuPDF Documentation',
    u'Jorj X. McKie', 'manual'),
 ]
-
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 latex_logo = "img-pymupdf.jpg"

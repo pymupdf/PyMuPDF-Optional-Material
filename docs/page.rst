@@ -207,7 +207,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Annot`
       :returns: the created annotation. Per annot type, certain color decisions are being made (e.g. "red" for 'StrikeOut', "yellow" for 'Highlight'). To change them, set the "stroke" color accordingly (:meth:`Annot.setColors`) and then perform an :meth:`Annot.update`.
 
-      .. image:: img-markers.png
+      .. image:: img-markers.jpg
          :scale: 80
 
    .. method:: addStampAnnot(rect, stamp = 0)
@@ -218,7 +218,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg int stamp: id number of the stamp text. For available stamps see :ref:`StampIcons`.
 
-      .. note::  The stamp's text (e.g. "APPROVED") and its border line will automatically be sized and put centered in the given rectangle. The property :attr:`Annot.rect` is automatically calculated to fit and will usually be smaller than this parameter. The appearance can be changed using :meth:`Annot.setOpacity` and by setting the "stroke" color (no "fill" color supported).
+      .. note::  The stamp's text (e.g. "APPROVED") and its border line will automatically be sized and put centered in the given rectangle. :attr:`Annot.rect` is automatically calculated to fit and will usually be smaller than this parameter. The appearance can be changed using :meth:`Annot.setOpacity` and by setting the "stroke" color (no "fill" color supported).
 
       .. image :: img-stampannot.jpg
          :scale: 80

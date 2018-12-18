@@ -237,12 +237,12 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page._getContents()
 
-      Return a list of xref numbers of ``/Contents`` objects belongig to the page. The length of this list will always be at least one (otherwise the PDF is damaged).
+      Return a list of xref numbers of ``/Contents`` objects belonging to the page. 
 
       :rtype: list
       :returns: a list of xref integers.
 
-      Each page has one or more associated contents objects (streams) which contain PDF some operator syntax describing what appears where on the page (like text or images, etc. See the :ref:`AdobeManual`, chapter "Operator Summary", page 985). This function only enumerates the number(s) of such objects. To get the actual stream source, use function :meth:`Document._getXrefStream` with one of the numbers in this list. Use :meth:`Document._updateStream` to replace the content [#f1]_ [#f2]_.
+      Each page may have zero to many associated contents objects (streams) which contain PDF some operator syntax describing what appears where on the page (like text or images, etc. See the :ref:`AdobeManual`, chapter "Operator Summary", page 985). This function only enumerates the number(s) of such objects. To get the actual stream source, use function :meth:`Document._getXrefStream` with one of the numbers in this list. Use :meth:`Document._updateStream` to replace the content [#f1]_.
 
 -----
 
@@ -380,7 +380,7 @@ Yet others are handy, general-purpose utilities.
       
       If you update a contents stream, you should use save parameter ``clean = True``. This ensures consistency between PDF operator source and the object structure.
       
-      Example: Let us assume that you no longer want a certain image appear on a page. This can be achieved by deleting [#f2]_ the respective reference in its contents source(s) -- and indeed: the image will be gone after reloading the page. But the page's ``/Resources`` object would still [#f3]_ show the image as being referenced by the page. This save option will clean up any such mismatches.
+      Example: Let us assume that you no longer want a certain image appear on a page. This can be achieved by deleting the respective reference in its contents source(s) -- and indeed: the image will be gone after reloading the page. But the page's ``/Resources`` object would still show the image as being referenced by the page. This save option will clean up any such mismatches.
 
 -----
 
@@ -491,5 +491,3 @@ Yet others are handy, general-purpose utilities.
 .. rubric:: Footnotes
 
 .. [#f1] If a page has multiple contents streams, they are treated as being one logical stream when the document is processed by reader software. A single operator cannot be split between stream boundaries, but a single **instruction** may well be. E.g. invoking the display of an image looks like this: ``q a b c d e f cm /imageid Do Q``. Any single of these items (PDF notation: "lexical tokens") is always contained in one stream, but ``q a b c d e f cm`` may be in one and ``/imageid Do Q`` in the next one.
-.. [#f2] Note that ``/Contents`` objects (similar to /Resources) may be **shared** among pages. A change to a contents stream may therefore affect other pages, too. To avoid this: (1) use :meth:`Page._cleanContents`, (2) read the ``/Contents`` object (there will now be only one left), (3) make your changes.
-.. [#f3] Resources objects are inheritable. This means that many pages can share one. Keeping a page's ``/Resources`` object in sync with changes of its ``/Contents`` therefore may require creating an own ``/Resources`` object for the page. This can best be achieved by using ``clean`` when saving, or by invoking :meth:`Page._cleanContents`.
