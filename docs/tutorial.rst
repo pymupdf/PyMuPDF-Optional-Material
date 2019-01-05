@@ -134,14 +134,21 @@ wxPython
 ~~~~~~~~~~~~~
 Consult their documentation for adjustments to RGB pixmaps and, potentially, specifics for your wxPython release.
 
->>> bitmap = wx.BitmapFromBufferRGBA(pix.width, pix.height, pix.samples)
+>>> # if you used alpha=True (or letting default it):
+>>> bitmap = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
+>>> 
+>>> # if you used alpha=False:
+>>> bitmap = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
 
 Tkinter
 ~~~~~~~~~~
-Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_, especially for changes when processing RGB pixmaps.
+Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
 
 >>> from PIL import Image, ImageTk
->>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
+>>> 
+>>> # set the mode depending on alpha
+>>> mode = "RGBA" if pix.alpha else "RGB"
+>>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
 >>> tkimg = ImageTk.PhotoImage(img)
 
 If your Python contains the **Tk 8.6** version, PNG files and image data are directly supported and you can get along **without using PIL**:
@@ -153,11 +160,23 @@ If you are looking for a complete Tkinter script paging through a document, `her
 
 PyQt4, PyQt5, PySide
 ~~~~~~~~~~~~~~~~~~~~~
-Please also see section 3.16 of the `Pillow documentation <https://Pillow.readthedocs.io>`_, especially for changes when processing RGB pixmaps.
+Please also see section 3.16 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
 
 >>> from PIL import Image, ImageQt
->>> img = Image.frombytes("RGBA", [pix.width, pix.height], pix.samples)
+>>> ...
+>>> # set the mode depending on alpha
+>>> mode = "RGBA" if pix.alpha else "RGB"
+>>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
 >>> qtimg = ImageQt.ImageQt(img)
+
+You can get along **without using PIL** like this:
+
+>>> from PyQt<x>.QtGui import QImage
+>>> ...
+>>> # set the correct QImage format depending on alpha
+>>> fmt = QImage.Format_RGBA8888 if pix.alpha else QImage.Format_RGB888
+>>> qtimg = QImage(pix.samples, pix.width, pix.height, pix.stride, fmt)
+
 
 Extracting Text and Images
 ---------------------------

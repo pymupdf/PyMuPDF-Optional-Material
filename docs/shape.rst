@@ -23,6 +23,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 :meth:`Shape.drawLine`           draw a line
 :meth:`Shape.drawOval`           draw an ellipse
 :meth:`Shape.drawPolyline`       connect a sequence of points
+:meth:`Shape.drawQuad`           draw a quadrilateral
 :meth:`Shape.drawRect`           draw a rectangle
 :meth:`Shape.drawSector`         draw a circular sector or piece of pie
 :meth:`Shape.drawSquiggle`       draw a squiggly line
@@ -143,15 +144,26 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       .. image:: img-drawBezier.png
 
-   .. method:: drawOval(rect)
+   .. method:: drawOval(tetra)
 
-      Draw an ellipse inside the given rectangle. If ``rect`` is a square, a standard circle is drawn. The drawing starts and ends at the middle point of the left rectangle side in a counter-clockwise movement.
+      Draw an "ellipse" inside the given tetrapod (quadrilateral). If it is a square, a regular circle is drawn, a general rectangle will result in an ellipse. If a quadrilateral is used instead, a plethora of shapes can be the result.
 
-      :arg rect: rectangle, must be finite and not empty.
-      :type rect: :ref:`Rect`
+      The drawing starts and ends at the middle point of the left rectangle side in a counter-clockwise movement.
+
+      :arg tetra: a rectangle or a quad.
+      :type tetra: rect-like or quad-like.
 
       :rtype: :ref:`Point`
-      :returns: the middle point of the left rectangle side.
+      :returns: the middle point of the left rectangle / quad side. Look at just a few examples here:
+
+      .. image:: img-drawquad1.jpg
+         :scale: 50
+
+      .. image:: img-drawquad2.jpg
+         :scale: 50
+
+      .. image:: img-drawquad3.jpg
+         :scale: 50
 
    .. method:: drawCircle(center, radius)
 
@@ -218,11 +230,19 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Draw a rectangle. The drawing starts and ends at the top-left corner in a counter-clockwise movement.
       
-      :arg rect: where to put the rectangle on the page.
-      :type rect: :ref:`Rect`
+      :arg rect-like rect: where to put the rectangle on the page.
 
       :rtype: :ref:`Point`
-      :returns: ``rect.top_left`` (top-left corner of the rectangle).
+      :returns: top-left corner of the rectangle.
+
+   .. method:: drawQuad(quad)
+
+      Draw a quadrilateral. The drawing starts and ends at the top-left corner (:attr:`Quad.ul`) in a counter-clockwise movement. It invokes :meth:`drawPolyline` with the argument ``[ul, ll, lr, ur, ul]``.
+      
+      :arg quad-like quad: where to put the tetrapod on the page.
+
+      :rtype: :ref:`Point`
+      :returns: :attr:`Quad.ul`.
 
    .. index::
       pair: fontsize; Shape.insertText args

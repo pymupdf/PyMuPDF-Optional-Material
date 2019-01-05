@@ -26,12 +26,14 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 :meth:`Pixmap.clearWith`      clear parts of a pixmap
 :meth:`Pixmap.copyPixmap`     copy parts of another pixmap
 :meth:`Pixmap.gammaWith`      apply a gamma factor to the pixmap
+:meth:`Pixmap.getImageData`   return a memory area in a variety of formats
 :meth:`Pixmap.getPNGData`     return a PNG as a memory area
 :meth:`Pixmap.invertIRect`    invert the pixels of a given area
+:meth:`Pixmap.pixel`          return the value of a pixel
 :meth:`Pixmap.setAlpha`       sets alpha values
 :meth:`Pixmap.shrink`         reduce size keeping proportions
 :meth:`Pixmap.tintWith`       tint a pixmap with a color
-:meth:`Pixmap.writeImage`     save a pixmap in various formats
+:meth:`Pixmap.writeImage`     save a pixmap in a variety of formats
 :meth:`Pixmap.writePNG`       save a pixmap as a PNG file
 :attr:`Pixmap.alpha`          transparency indicator
 :attr:`Pixmap.colorspace`     pixmap's :ref:`Colorspace`
@@ -175,6 +177,16 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       .. note:: Use this methods to reduce a pixmap's size retaining its proportion. The pixmap is changed "in place". If you want to keep original and also have more granular choices, use the resp. copy constructor above.
 
+   .. method:: pixel(x, y)
+
+      Return the value of the pixel at location (x, y) (column / line).
+
+      :arg int x: the column number of the pixel. Must be in ``range(pix.width)``.
+      :arg int y: the line number of the pixel, Must be in ``range(pix.height)``.
+
+      :rtype: tuple
+      :returns: a tuple of color values and, potentially the alpha value. Its length and content depend on the pixmap's colorspace and the presence of an alpha. For RGBA pixmaps the result would e.g. be ``(r, g, b, a)``. All items are integers in ``range(256)``.
+
    .. method:: setAlpha([alphavalues])
 
       Change the alpha values. The pixmap must have an alpha channel.
@@ -208,9 +220,17 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       Save pixmap as an image file. Depending on the output chosen, only some or all colorspaces are supported and different file extensions can be chosen. Please see the table below. Since MuPDF v1.10a the ``savealpha`` option is no longer supported and will be ignored with a warning.
 
-      :arg str filename: The filename to save to. Depending on the chosen output format, possible file extensions are ``.pam``, ``.pbm``, ``.pgm``, ``ppm``, ``.pnm``, ``.png`` and ``.tga``.
+      :arg str filename: The filename to save to. Choose a file extension compatible with the output parameter (see further down).
 
-      :arg str output: The requested image format. The default is ``png`` for which this function is equal to ``writePNG()``, see below. Other possible values are ``pam``, ``pnm`` and ``tga``.
+      :arg str output: The requested image format. The default is ``png`` for which this function is equal to ``writePNG()``, see below.
+
+   .. method:: getImageData(output="png")
+
+      Return the pixmap as a ``bytes`` memory object of the specified format -- similar to :meth:`writeImage`.
+
+      :arg str output: The requested image format. The default is "png" for which this function is equal to :meth:`getPNGData`. For other possible values see below.
+
+      :rtype: bytes
 
    .. method:: writePNG(filename)
 
@@ -218,11 +238,13 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       :arg str filename: The filename to save to (the extension ``png`` must be specified). Existing files will be overwritten without warning.
 
+   .. method:: getPNGdata()
+
    .. method:: getPNGData()
 
-      Like ``writePNG`` but returnes ``bytearray`` / ``bytes`` instead (Python2, resp. Python 3).
+      Same as :meth:`getImageData` with default parameter.
 
-      :rtype: bytearray / bytes
+      :rtype: bytes
 
    .. attribute:: alpha
 
@@ -318,7 +340,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
 Supported Input Image Types
 -----------------------------------------------
-The following file types are supported as input to construct pixmaps: **BMP, JPEG, GIF, TIFF, JXR,** and **PNG**. This support is two-fold:
+The following file types are supported as **input** to construct pixmaps: **BMP, JPEG, GIF, TIFF, JXR,** and **PNG**. This support is two-fold:
 
 1. Directly create a pixmap with ``Pixmap(filename)`` or ``Pixmap(byterray)``. The pixmap will then have properties as determined by the image.
 
@@ -328,14 +350,22 @@ The following file types are supported as input to construct pixmaps: **BMP, JPE
 
 If you need a **vector image** from the SVG, you must first convert it to a PDF. Try :meth:`Document.convertToPDF`. If this does not work for you, look for other SVG-to-PDF conversion tools like the Python packages `svglib <https://pypi.org/project/svglib>`_, `CairoSVG <https://pypi.org/project/cairosvg>`_, `Uniconvertor <https://sk1project.net/modules.php?name=Products&product=uniconvertor&op=download>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
 
-Details on Saving Images with ``writeImage()``
------------------------------------------------
+Details on Saving Images with :meth:`writeImage` or :meth:`getImageData`
+---------------------------------------------------------------------------
+A variety of image **output** formats are supported. You have the option to either write an image directly to a file, or to generate a bytes object. Both methods accept a 3-letter string identifying the desired format. Please note that not all combinations of pixmap colorspaces and image formats are possible.
 
-.. |wimgopt| image:: img-writeimage.png
-
-The following table shows possible combinations of file extensions, output formats and colorspaces of method ``writeImage()``:
-
-|wimgopt|
+====== =============== =========== ========================
+Format Colorspaces     Extensions  Description
+====== =============== =========== ========================
+png    gray, rgb       .png        Portable Network Graphics
+tga    gray, rgb       .tga, .tpic Targa Image File
+pnm    gray, rgb       .pnm        Portable Anymap
+ppm    gray, rgb       .ppm        Portable Pixmap
+pbm    gray, rgb       .pbm        Portable Bitmap
+pgm    gray, rgb       .pgm        Portable Graymap
+pam    gray, rgb, cmyk .pam
+psd    gray, rgb, cmyk .psd        Adobe Photoshop Document
+====== =============== =========== ========================
 
 .. note:: Not all image file types are available (or at least common) on all platforms. E.g. PAM is mostly unknown on Windows. Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that as a PNG.
 
