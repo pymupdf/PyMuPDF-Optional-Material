@@ -151,12 +151,12 @@ Please also see section 3.19 of the `Pillow documentation <https://Pillow.readth
 >>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
 >>> tkimg = ImageTk.PhotoImage(img)
 
-If your Python contains the **Tk 8.6** version, PNG files and image data are directly supported and you can get along **without using PIL**:
+There are options to avoid Pillow:
 
->>> pngdata = pix.getPNGData()
->>> tkimg = tkinter.PhotoImage(data = pngdata)
+>>> imgdata = pix.getImageData("ppm")
+>>> tkimg = tkinter.PhotoImage(data = imgdata)
 
-If you are looking for a complete Tkinter script paging through a document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_. You need the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
+If you are looking for a complete Tkinter script paging through **any supported** document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ It can also zoom into pages, and it runs under Python 2 or 3. It requires the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
 
 PyQt4, PyQt5, PySide
 ~~~~~~~~~~~~~~~~~~~~~

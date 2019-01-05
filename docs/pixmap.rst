@@ -222,7 +222,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       :arg str filename: The filename to save to. Choose a file extension compatible with the output parameter (see further down).
 
-      :arg str output: The requested image format. The default is ``png`` for which this function is equal to ``writePNG()``, see below.
+      :arg str output: The requested image format. The default is ``png`` for which this function is equal to :meth:`writePNG`. For other possible values see below.
 
    .. method:: getImageData(output="png")
 
@@ -234,15 +234,13 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: writePNG(filename)
 
-      Save the pixmap as a PNG file. Please note that only grayscale and RGB colorspaces are supported (this is **not** a MuPDF restriction). CMYK colorspaces must either be saved as ``*.pam`` files or be converted first.
-
-      :arg str filename: The filename to save to (the extension ``png`` must be specified). Existing files will be overwritten without warning.
+      Same as :meth:`writeImage` with default format parameter.
 
    .. method:: getPNGdata()
 
    .. method:: getPNGData()
 
-      Same as :meth:`getImageData` with default parameter.
+      Same as :meth:`getImageData` with default format parameter.
 
       :rtype: bytes
 
@@ -338,9 +336,9 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
 .. _ImageFiles:
 
-Supported Input Image Types
+Supported Input Image Formats
 -----------------------------------------------
-The following file types are supported as **input** to construct pixmaps: **BMP, JPEG, GIF, TIFF, JXR,** and **PNG**. This support is two-fold:
+The following file types are supported as **input** to construct pixmaps: **BMP, JPEG, GIF, TIFF, JXR,**, **PNG**, **PAM** and all of the **Portable Anymap** family (**PBM, PGM, PNM, PPM**). This support is two-fold:
 
 1. Directly create a pixmap with ``Pixmap(filename)`` or ``Pixmap(byterray)``. The pixmap will then have properties as determined by the image.
 
@@ -350,24 +348,29 @@ The following file types are supported as **input** to construct pixmaps: **BMP,
 
 If you need a **vector image** from the SVG, you must first convert it to a PDF. Try :meth:`Document.convertToPDF`. If this does not work for you, look for other SVG-to-PDF conversion tools like the Python packages `svglib <https://pypi.org/project/svglib>`_, `CairoSVG <https://pypi.org/project/cairosvg>`_, `Uniconvertor <https://sk1project.net/modules.php?name=Products&product=uniconvertor&op=download>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
 
-Details on Saving Images with :meth:`writeImage` or :meth:`getImageData`
+Supported Output Image Formats
 ---------------------------------------------------------------------------
-A variety of image **output** formats are supported. You have the option to either write an image directly to a file, or to generate a bytes object. Both methods accept a 3-letter string identifying the desired format. Please note that not all combinations of pixmap colorspaces and image formats are possible.
+A variety of image **output** formats are supported. You have the option to either write an image directly to a file (:meth:`Pixmap.writeImage`), or to generate a bytes object (:meth:`Pixmap.getImageData`). Both methods accept a 3-letter string identifying the desired format (**Format** column below). Please note that not all combinations of pixmap colorspaces and image formats are possible.
 
-====== =============== =========== ========================
-Format Colorspaces     Extensions  Description
-====== =============== =========== ========================
-png    gray, rgb       .png        Portable Network Graphics
-tga    gray, rgb       .tga, .tpic Targa Image File
-pnm    gray, rgb       .pnm        Portable Anymap
-ppm    gray, rgb       .ppm        Portable Pixmap
-pbm    gray, rgb       .pbm        Portable Bitmap
-pgm    gray, rgb       .pgm        Portable Graymap
-pam    gray, rgb, cmyk .pam
-psd    gray, rgb, cmyk .psd        Adobe Photoshop Document
-====== =============== =========== ========================
+========== =============== ============== ===========================
+**Format** **Colorspaces** **Extensions** **Description**
+========== =============== ============== ===========================
+pam        gray, rgb, cmyk .pam           Portable Arbitrary Map
+pbm        gray, rgb       .pbm           Portable Bitmap
+pgm        gray, rgb       .pgm           Portable Graymap
+png        gray, rgb       .png           Portable Network Graphics
+pnm        gray, rgb       .pnm           Portable Anymap
+ppm        gray, rgb       .ppm           Portable Pixmap
+psd        gray, rgb, cmyk .psd           Adobe Photoshop Document
+tga        gray, rgb       .tga, .tpic    Targa Image File
+========== =============== ============== ===========================
 
-.. note:: Not all image file types are available (or at least common) on all platforms. E.g. PAM is mostly unknown on Windows. Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that as a PNG.
+.. note::
+    * Not all image file types are available (or at least common) on all platforms. E.g. PAM and the Portable Anymap formats are rare or even unknown on Windows.
+    * Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with ``rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)`` and then save that in the desired format.
+    * As can be seen, MuPDF's image support range is different for input and output. Among those supported both ways, PNG is probably the most popular. We recommend using Pillow whenever you face a support gap.
+    * We also recommend using "ppm" or "pgm" formats as input to tkinter's ``PhotoImage`` method like this: ``tkimg = tkinter.PhotoImage(data=pix.getImageData("pgm"))`` (also see the tutorial). This is fast and will work under Python 2 or 3.
+
 
 .. _examples:
 
