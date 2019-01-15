@@ -151,9 +151,11 @@ Please also see section 3.19 of the `Pillow documentation <https://Pillow.readth
 >>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
 >>> tkimg = ImageTk.PhotoImage(img)
 
-There are options to avoid Pillow:
+The following **avoids using Pillow**:
 
->>> imgdata = pix.getImageData("ppm")
+>>> # remove alpha if present
+>>> pix1 = fitz.Pixmap(pix, 0) if pix.alpha else pix   # PPM does not support transparency
+>>> imgdata = pix.getImageData("ppm")                  # extremely fast!
 >>> tkimg = tkinter.PhotoImage(data = imgdata)
 
 If you are looking for a complete Tkinter script paging through **any supported** document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ It can also zoom into pages, and it runs under Python 2 or 3. It requires the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
@@ -169,7 +171,7 @@ Please also see section 3.16 of the `Pillow documentation <https://Pillow.readth
 >>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
 >>> qtimg = ImageQt.ImageQt(img)
 
-You can get along **without using PIL** like this:
+You also can get along **without using PIL** like this:
 
 >>> from PyQt<x>.QtGui import QImage
 >>> ...

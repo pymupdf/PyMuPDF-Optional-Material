@@ -5,7 +5,6 @@ Collection of Recipes
 ==============================
 
 .. highlight:: python
-   :linenothreshold: 5
 
 A collection of recipes in "How-To" format for using PyMuPDF. We aim to extend this section over time. Where appropriate we will refer to the corresponding `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages, but some duplication may still occur.
 
@@ -268,6 +267,91 @@ Instruction ``svg = page.getSVGimage(matrix = fitz.Identity)`` delivers a UTF-8 
 
 ----------
 
+How to Convert Images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Just as a feature among others, PyMuPDF's image conversion is easy. It may avoid using other graphics packages like PIL/Pillow in many cases.
+
+Notwithstanding that interfacing with Pillow is almost trivial.
+
+================= ================== =========================================
+**Input Formats** **Output Formats** **Description**
+================= ================== =========================================
+JPEG              .                  Joint Photographic Experts Group
+BMP               .                  Windows Bitmap
+JXR               .                  JPEG Extended Range
+GIF               .                  Graphics Interchange Format
+TIFF              .                  Tagged Image File Format
+PNG               PNG                Portable Network Graphics
+PNM               PNM                Portable Anymap
+PGM               PGM                Portable Graymap
+PBM               PBM                Portable Bitmap
+PPM               PPM                Portable Pixmap
+PAM               PAM                Portable Arbitrary Map
+TGA               TGA                Targa Image File
+.                 PSD                Adobe Photoshop Document
+.                 PS                 Adobe Postscript
+================= ================== =========================================
+
+The general scheme is just the following two lines::
+
+    import fitz
+    # ...
+    pix = fitz.Pixmap("input.xxx")      # input.xxx: a file in any of the supported input formats
+    pix.writeImage("output.yyy")        # yyy is any of the supported output formats
+
+**Remarks**
+
+1. The **input** argument of ``fitz.Pixmap(arg)`` can be a file or a bytes object containing an image.
+2. Instead of an output **file**, you can also create a bytes object via ``pix.getImageData("yyy")`` and pass this around.
+3. As a matter of course, input and output formats must be compatible in terms of colorspace and transparency. The ``Pixmap`` class has batteries included if additional conversions are needed.
+
+.. note::
+        **Convert JPEG to Photoshop**::
+
+          import fitz
+          # ...
+          pix = fitz.Pixmap("myfamily.jpg")
+          pix.writeImage("myfamily.psd")
+
+
+.. note::
+        **Save to JPEG** using PIL/Pillow::
+
+          from PIL import Image
+          import fitz
+          # ...
+          pix = fitz.Pixmap(...)
+          img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+          img.save("output.jpg", "JPEG")
+
+.. note::
+        Convert **JPEG to Tkinter PhotoImage**. Any **RGB / no-alpha** image works exactly the same. Conversion to one of the **Portable Anymap** formats (PPM, PGM, etc.) does the trick, because they are supported by all Tkinter versions::
+
+          import fitz
+          if str is bytes:                  # this is Python 2!
+              import Tkinter as tk
+          else:                             # Python 3 or later!
+              import tkinter as tk
+          # ...
+          pix = fitz.Pixmap("input.jpg")    # or any RGB / no-alpha image
+          tkimg = tk.PhotoImage(data=pix.getImageData("ppm"))
+
+.. note::
+        Convert **PNG with alpha** to Tkinter PhotoImage. This requires removing the alpha bytes, before we can do the PPM conversion::
+
+          import fitz
+          if str is bytes:                  # this is Python 2!
+              import Tkinter as tk
+          else:                             # Python 3 or later!
+              import tkinter as tk
+          # ...
+          pix = fitz.Pixmap("input.png")    # may have an alpha channel
+          if pix.alpha:                     # we have an alpha channel!
+              pix = fitz.Pixmap(pix, 0)     # remove it
+          tkimg = tk.PhotoImage(data=pix.getImageData("ppm"))
+
+----------
+
 Text
 -----
 
@@ -443,9 +527,19 @@ PyMuPDF provides ways to insert text on new or existing PDF pages with the follo
 
 All of the above is provided by three basic :ref:`Page`, resp. :ref:`Shape` methods:
 
-* :meth:`Page.insertFont` to install a font referencable by the page. This can be a new font (e.g. provided as a file), a font already present somewhere in **this or another** PDF, or a built-in font.
-* :meth:`Page.insertText` to write some text simply line by line. This uses a :ref:`Shape` method with the same name which provides additional options.
-* :meth:`Page.insertTextbox` to fit text in a given rectangle. Here you can choose text alignment features (left, right, centered, justified) and you keep control as to whether text actually fits. This method invokes a corresponding method of :ref:`Shape` as well.
+* :meth:`Page.insertFont` to install a font for the page, which can afterwards be referenced by the chosen name. The result is reflected in the output of :meth:`Document.getPageFontList`. The font can be:
+    - provided as a file,
+    - already present somewhere in **this or another** PDF, or
+    - be a **built-in** font.
+
+* :meth:`Page.insertText` to write some lines of text.
+    Internally, this uses :meth:`Shape.insertText`.
+
+* :meth:`Page.insertTextbox` to fit text in a given rectangle.
+    Here you can choose text alignment features (left, right, centered, justified) and you keep control as to whether text actually fits.
+    Internally, this uses :meth:`Shape.insertTextbox`.
+
+.. note:: Both text insertion methods automatically install the named font if it is not already present. 
 
 How to Output Text Lines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -454,7 +548,7 @@ Output some text lines on a page::
     import fitz
     doc = fitz.open(...)                 # new or existing PDF
     page = doc.newPage()                 # new or existing page via doc[n]
-    p = sitz.Point(50, 72)               # start point of 1st line
+    p = fitz.Point(50, 72)               # start point of 1st line
     
     text = "Some text,\nspread across\nseveral lines."
     # the same result is achievable by
@@ -470,9 +564,11 @@ Output some text lines on a page::
 
     doc.save("text.pdf")
 
-With this method, only the number of output **lines** will be controlled to not go beyond page height. Surplus lines will not be written and the number of actual lines will be returned. Line **width is not measured** here.
+With this method, only the **number of lines** will be controlled to not go beyond page height. Surplus lines will not be written and the number of actual lines will be returned. The calculation uses ``1.2 * fontsize`` as the line height and 36 points (0.5 inches) as bottom margin.
 
-The height of each line is internally calculated as ``1.2 * fontsize``.
+Line **width is ignored**. The surplus part of a line will simply be invisible.
+
+However, for built-in fonts there are ways to calculate the line width beforehand - see :meth:`getTextlen`.
 
 Here is another example. It inserts 4 text strings using the four different rotation options, and thereby explains, how the text insertion point must be chosen to achieve the desired result::
 
@@ -514,6 +610,8 @@ This is the result:
 
 .. image:: img-inserttext.jpg
    :scale: 33
+
+
 
 ------------------------------------------
 

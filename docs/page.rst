@@ -452,20 +452,22 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: insertFont(fontname="helv", fontfile=None, fontbuffer=None, set_simple=False)
 
-      PDF only: Add a new font to be used by text output methods. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
+      PDF only: Add a new font to be used by text output methods and return its XREF number. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
 
-      :arg str fontname: The name by which this font shall be referenced when outputting text on this page. You have a "free" choice here, for a formal definition for valid PDF names see :ref:`AdobeManual` (page 56, section 3.2.4). However, if it matches one of the :data:`Base14_Fonts` or one of the CJK fonts, ``fontfile`` and ``fontbuffer`` **are ignored**. In other words, you cannot insert a font via ``fontfile`` or ``fontbuffer`` and also give it a reserved ``fontname``. The reserved font name can be specified in any mixture of upper or lower case and still match the right built-in font definition. When using ``fontname`` in outputting text however, the spelling chosen here must **exactly match**. The default value "helv" installs the built-in "Helvetica".
+      :arg str fontname: The name by which this font shall be referenced when outputting text on this page. In general, you have a "free" choice here (but consult the :ref:`AdobeManual`, page 56, section 3.2.4 for aformal description of legal names). However, if it matches one of the :data:`Base14_Fonts` or one of the CJK fonts, ``fontfile`` and ``fontbuffer`` **are ignored**.
+      
+      In other words, you cannot insert a font via ``fontfile`` or ``fontbuffer`` and also give it a reserved ``fontname``. The reserved font name can be specified in any mixture of upper or lower case and still match the right built-in font definition.
 
-      :arg str fontfile: a path to a font file. If used, ``fontname`` must be different from all reserved names.
+      :arg str fontfile: a path to a font file. If used, ``fontname`` must be **different from all reserved names**.
 
-      :arg bytes/bytearray fontbuffer: the image of a font file. If used, ``fontname`` must be different from all reserved names. This parameter would typically be used to transfer fonts between different pages of the same or different PDFs.
+      :arg bytes/bytearray fontbuffer: the image of a font file. If used, ``fontname`` must be **different from all reserved names**. This parameter would typically be used to transfer fonts between different pages of the same or different PDFs.
 
       :arg int set_simple: applicable for ``fontfile`` / ``fontbuffer`` cases only: enforce treatment as a "simple" font, i.e. one that only uses character codes up to 255.
 
       :rytpe: int
       :returns: the XREF of the installed font.
 
-      .. note:: Built-in fonts will not lead to the inclusion of a font file. So the resulting PDF file will remain small. However, your PDF reader software is responsible for generating an appropriate appearance -- and their **are** differences on whether or how each one of them does this. This is especially true for the CJK fonts. Following are the reserved **Font Names** and their correspondingly installed **Base Font** names:
+      .. note:: Built-in fonts will not lead to the inclusion of a font file. So the resulting PDF file will remain small. However, your PDF reader software is responsible for generating an appropriate appearance -- and there **are** differences on whether or how each one of them does this. This is especially true for the CJK fonts, but also for Symbol and ZapfDingbats in some cases. Following are the **Font Names** and their correspondingly installed **Base Font** names:
 
          **Base-14 Fonts** [#f1]_
 

@@ -38,14 +38,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'PyMuPDF'
-copyright = u'2015-2018, Jorj X. McKie'
+copyright = u'2015-2019, Jorj X. McKie'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '1.14.5'
+release = '1.14.6'
 
 # The short X.Y version.
 s = release.split(".")

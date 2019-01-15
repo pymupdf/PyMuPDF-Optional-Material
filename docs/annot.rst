@@ -138,7 +138,7 @@ There is a parent-child relationship between an annotation and its page. If the 
       :arg float fontsize: change font size of the text.
       :arg sequence text_color: change the text color.
       :arg sequence border_color: change the border color.
-      :arg sequence fill_color: the fill color.
+      :arg sequence fill_color: the fill color. If you set (or leave) this to ``None``, then **no rectangle at all** will be drawn around the text, and the border color will be ignored. This will leave anything "under" the text visible.
       :arg int rotate: new rotation value. Default (-1) means no change.
 
       :rtype: bool

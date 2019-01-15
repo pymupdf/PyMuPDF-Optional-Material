@@ -1,10 +1,20 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.6
+---------------------------
+* **Added** :meth:`Pixmap.setPixel` to change one pixel value.
+* **Added** documentation for image conversion in the :ref:`FAQ`.
+* **Added** new function :meth:`getTextlen` to determine the string length for a given font.
+* **Added** Postscript image output (changed :meth:`Pixmap.writeImage` and :meth:`Pixmap.getImageData`).
+* **Changed** :meth:`Pixmap.writeImage` and :meth:`Pixmap.getImageData` to ensure valid combinations of colorspace, alpha and output format.
+* **Changed** :meth:`Pixmap.writeImage`: the desired format is now inferred from the filename.
+* **Changed** FreeText annotations can now have a transparent background - see :meth:`Annot.update`.
+
 Changes in Version 1.14.5
 ---------------------------
 * **Changed:** :ref:`Shape` methods now strictly use the transformation matrix of the :ref:`Page` -- instead of "manually" calculating locations.
-* **Added** method :meth:`Pixmap.pixel` which returns the pixel value (a tuple) for given pixel coordinates.
+* **Added** method :meth:`Pixmap.pixel` which returns the pixel value (a list) for given pixel coordinates.
 * **Added** method :meth:`Pixmap.getImageData` which returns a bytes object representing the pixmap in a variety of formats. Previously, this could be done for PNG outputs only (:meth:`Pixmap.getPNGData`).
 * **Changed:** output of methods :meth:`Pixmap.writeImage` and (the new) :meth:`Pixmap.getImageData` may now also be PSD (Adobe Photoshop Document).
 * **Added** method :meth:`Shape.drawQuad` which draws a :ref:`Quad`. This actually is a shorthand for a :meth:`Shape.drawPolyline` with the edges of the quad.
