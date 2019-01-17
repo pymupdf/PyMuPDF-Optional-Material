@@ -276,9 +276,10 @@ Notwithstanding that interfacing with Pillow is almost trivial.
 ================= ================== =========================================
 **Input Formats** **Output Formats** **Description**
 ================= ================== =========================================
-JPEG              .                  Joint Photographic Experts Group
 BMP               .                  Windows Bitmap
+JPEG              .                  Joint Photographic Experts Group
 JXR               .                  JPEG Extended Range
+JPX               .                  JPEG 2000
 GIF               .                  Graphics Interchange Format
 TIFF              .                  Tagged Image File Format
 PNG               PNG                Portable Network Graphics
@@ -539,7 +540,7 @@ All of the above is provided by three basic :ref:`Page`, resp. :ref:`Shape` meth
     Here you can choose text alignment features (left, right, centered, justified) and you keep control as to whether text actually fits.
     Internally, this uses :meth:`Shape.insertTextbox`.
 
-.. note:: Both text insertion methods automatically install the named font if it is not already present. 
+.. note:: Both text insertion methods automatically install the font if necessary.
 
 How to Output Text Lines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -568,7 +569,7 @@ With this method, only the **number of lines** will be controlled to not go beyo
 
 Line **width is ignored**. The surplus part of a line will simply be invisible.
 
-However, for built-in fonts there are ways to calculate the line width beforehand - see :meth:`getTextlen`.
+However, for built-in fonts there are ways to calculate the line width beforehand - see :meth:`getTextlength`.
 
 Here is another example. It inserts 4 text strings using the four different rotation options, and thereby explains, how the text insertion point must be chosen to achieve the desired result::
 

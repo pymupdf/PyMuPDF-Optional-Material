@@ -359,7 +359,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
 Supported Input Image Formats
 -----------------------------------------------
-The following file types are supported as **input** to construct pixmaps: **BMP, JPEG, GIF, TIFF, JXR,**, **PNG**, **PAM** and all of the **Portable Anymap** family (**PBM, PGM, PNM, PPM**). This support is two-fold:
+The following file types are supported as **input** to construct pixmaps: **BMP, JPEG, GIF, TIFF, JXR, JPX**, **PNG**, **PAM** and all of the **Portable Anymap** family (**PBM, PGM, PNM, PPM**). This support is two-fold:
 
 1. Directly create a pixmap with ``Pixmap(filename)`` or ``Pixmap(byterray)``. The pixmap will then have properties as determined by the image.
 

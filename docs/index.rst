@@ -7,6 +7,7 @@
    intro.rst
    installation.rst
    tutorial.rst
+   faq.rst
    classes.rst
    algebra.rst
    lowlevel.rst
@@ -16,5 +17,4 @@
    app2.rst
    app3.rst
    app4.rst
-   faq.rst
    changes.rst

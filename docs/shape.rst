@@ -249,10 +249,11 @@ Several draw methods can be executed in a row and each one of them will contribu
       pair: fontname; Shape.insertText args
       pair: fontfile; Shape.insertText args
       pair: color; Shape.insertText args
+      pair: encoding; Shape.insertText args
       pair: rotate; Shape.insertText args
       pair: morph; Shape.insertText args
 
-   .. method:: insertText(point, text, fontsize = 11, fontname = "Helvetica", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), rotate = 0, morph = None)
+   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, set_simple=False, encoding=TEXT_ENCODING_LATIN, color =(0, 0, 0), rotate=0, morph=None)
 
       Insert text lines start at ``point``.
 
@@ -276,13 +277,14 @@ Several draw methods can be executed in a row and each one of them will contribu
       pair: fontfile; Shape.insertTextbox args
       pair: color; Shape.insertTextbox args
       pair: rotate; Shape.insertTextbox args
+      pair: encoding; Shape.insertTextbox args
       pair: morph; Shape.insertTextbox args
       pair: expandtabs; Shape.insertTextbox args
       pair: align; Shape.insertTextbox args
 
-   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "helv", fontfile = None, idx = 0, set_simple = False, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, rotate = 0, morph = None)
+   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, set_simple=False, encoding=TEXT_ENCODING_LATIN, color=(0, 0, 0), expandtabs=8, align=TEXT_ALIGN_LEFT, rotate=0, morph=None)
 
-      PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, depending on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
+      PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, which depends on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
 
       :arg rect-like rect: the area to use. It must be finite and not empty.
 
@@ -316,7 +318,7 @@ Several draw methods can be executed in a row and each one of them will contribu
       pair: even_odd; Shape.finish args
       pair: morph; Shape.finish args
 
-   .. method:: finish(width = 1, color = (0, 0, 0), fill = None, roundCap = True, dashes = None, closePath = True, even_odd = False, morph = (pivot, matrix))
+   .. method:: finish(width=1, color=(0, 0, 0), fill=None, roundCap=True, dashes=None, closePath=True, even_odd=False, morph=(pivot, matrix))
 
       Finish a set of ``draw*()`` methods by applying :ref:`CommonParms` to all of them. This method also supports morphing the resulting compound drawing using a pivotal :ref:`Point`.
 
@@ -365,13 +367,13 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. attribute:: draw_cont
 
-      Accumulated command buffer for draw methods since last finish.
+      Accumulated command buffer for **draw methods** since last finish.
 
       :type: str
 
    .. attribute:: text_cont
 
-      Accumulated text buffer. All text insertions go here. On :meth:`commit` this buffer will be appended to :attr:`totalcont`, so that text will never be covered by drawings in the same Shape.
+      Accumulated text buffer. All **text insertions** go here. On :meth:`commit` this buffer will be appended to :attr:`totalcont`, so that text will never be covered by drawings in the same Shape.
 
       :type: str
 

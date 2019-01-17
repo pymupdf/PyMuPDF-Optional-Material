@@ -276,9 +276,10 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fontfile; Page.insertText args
       pair: color; Page.insertText args
       pair: rotate; Page.insertText args
+      pair: encoding; Page.insertText args
       pair: morph; Page.insertText args
 
-   .. method:: insertText(point, text, fontsize = 11, fontname = "helv", fontfile = None, idx = 0, color = (0, 0, 0), rotate = 0, morph = None, overlay = True)
+   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), encoding=TEXT_ENCODING_LATIN, rotate=0, morph=None, overlay=True)
 
       PDF only: Insert text starting at point-like ``point``. See :meth:`Shape.insertText`.
 
@@ -288,12 +289,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fontname; Page.insertTextbox args
       pair: fontfile; Page.insertTextbox args
       pair: color; Page.insertTextbox args
+      pair: encoding; Page.insertTextbox args
       pair: expandtabs; Page.insertTextbox args
       pair: align; Page.insertTextbox args
       pair: rotate; Page.insertTextbox args
       pair: morph; Page.insertTextbox args
 
-   .. method:: insertTextbox(rect, buffer, fontsize = 11, fontname = "helv", fontfile = None, idx = 0, color = (0, 0, 0), expandtabs = 8, align = TEXT_ALIGN_LEFT, charwidths = None, rotate = 0, morph = None, overlay = True)
+   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), encoding=TEXT_ENCODING_LATIN, expandtabs=8, align=TEXT_ALIGN_LEFT, charwidths=None, rotate=0, morph=None, overlay=True)
 
       PDF only: Insert text into the specified rect-like ``rect``. See :meth:`Shape.insertTextbox`.
 
@@ -449,8 +451,9 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fontfile; Page.insertFont args
       pair: fontbuffer; Page.insertFont args
       pair: set_simple; Page.insertFont args
+      pair: encoding; Page.insertFont args
 
-   .. method:: insertFont(fontname="helv", fontfile=None, fontbuffer=None, set_simple=False)
+   .. method:: insertFont(fontname="helv", fontfile=None, fontbuffer=None, set_simple=False, encoding=TEXT_ENCODING_LATIN)
 
       PDF only: Add a new font to be used by text output methods and return its XREF number. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
 
@@ -463,6 +466,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg bytes/bytearray fontbuffer: the image of a font file. If used, ``fontname`` must be **different from all reserved names**. This parameter would typically be used to transfer fonts between different pages of the same or different PDFs.
 
       :arg int set_simple: applicable for ``fontfile`` / ``fontbuffer`` cases only: enforce treatment as a "simple" font, i.e. one that only uses character codes up to 255.
+      :arg int encoding: applicable for the "Helvetica", "Courier" and "Times" sets of :data:`Base14_Fonts` only. Select one of the available encodings Latin (0), Cyrillic (2) or Greek (1). Use the default (0 = Latin) for "Symbol" and "ZapfDingBats".
 
       :rytpe: int
       :returns: the XREF of the installed font.

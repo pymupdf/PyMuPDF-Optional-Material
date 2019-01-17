@@ -33,7 +33,7 @@ Yet others are handy, general-purpose utilities.
 :meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
 :meth:`getPDFnow`                    return the current timestamp in PDF format
 :meth:`getPDFstr`                    return PDF-compatible string
-:meth:`getTextlen`                   return string length for a given font & fontsize
+:meth:`getTextlength`                return string length for a given font & fontsize
 :meth:`Page._cleanContents`          PDF only: clean the page's ``/Contents`` objects
 :meth:`Page._getContents`            PDF only: return a list of content numbers
 :meth:`Page._setContents`            PDF only: set page's /Contents object to specified xref
@@ -92,18 +92,19 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: getTextlen(text, fontname="helv", fontsize=12)
+   .. method:: getTextlength(text, fontname="helv", fontsize=11, encoding=TEXT_ENCODING_LATIN)
 
       Calculate the length of text on output with a given font and fontsize.
 
       :arg str text: the text string.
       :arg str fontname: the fontname. Must be one of either the :ref:`Base-14-Fonts` or the CJK fonts, identified by the "reserved" fontnames.
       :arg float fontsize: size of the font.
+      :arg int encoding: the encoding to use. Except 0 = Latin, 1 = Greek, or 2 = Cyrillic are available. Relevant for Base-14 fonts "Helvetica", "Courier" and "Times" and their variants only. Also, use a non-default value only if the intended text insertion uses the same value.
 
       :rtype: float
-      :returns: the length in pixels the string will have when being output with the given font and fontsize (e.g. via :meth:`Page.insertText`).
+      :returns: the length in points the string will have (e.g. is used in :meth:`Page.insertText`).
 
-      .. note:: This function will only do the calculation -- no font will be inserted, no text text will be output.
+      .. note:: This function will only do the calculation -- it does not insert the font or write the text.
 
           Currently this support is limited to the four CJK fonts (traditional and simplified Chinese, Japanese and Korean) and the standard Base14 fonts.
 

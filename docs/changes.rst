@@ -5,7 +5,7 @@ Changes in Version 1.14.6
 ---------------------------
 * **Added** :meth:`Pixmap.setPixel` to change one pixel value.
 * **Added** documentation for image conversion in the :ref:`FAQ`.
-* **Added** new function :meth:`getTextlen` to determine the string length for a given font.
+* **Added** new function :meth:`getTextlength` to determine the string length for a given font.
 * **Added** Postscript image output (changed :meth:`Pixmap.writeImage` and :meth:`Pixmap.getImageData`).
 * **Changed** :meth:`Pixmap.writeImage` and :meth:`Pixmap.getImageData` to ensure valid combinations of colorspace, alpha and output format.
 * **Changed** :meth:`Pixmap.writeImage`: the desired format is now inferred from the filename.
