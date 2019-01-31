@@ -3,7 +3,7 @@ Classes
 ============
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    document.rst
    outline.rst

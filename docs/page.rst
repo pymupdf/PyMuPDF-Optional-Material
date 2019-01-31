@@ -457,16 +457,18 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Add a new font to be used by text output methods and return its XREF number. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
 
-      :arg str fontname: The name by which this font shall be referenced when outputting text on this page. In general, you have a "free" choice here (but consult the :ref:`AdobeManual`, page 56, section 3.2.4 for aformal description of legal names). However, if it matches one of the :data:`Base14_Fonts` or one of the CJK fonts, ``fontfile`` and ``fontbuffer`` **are ignored**.
+      :arg str fontname: The name by which this font shall be referenced when outputting text on this page. In general, you have a "free" choice here (but consult the :ref:`AdobeManual`, page 56, section 3.2.4 for a formal description of building legal PDF names). However, if it matches one of the :data:`Base14_Fonts` or one of the CJK fonts, ``fontfile`` and ``fontbuffer`` **are ignored**.
       
-      In other words, you cannot insert a font via ``fontfile`` or ``fontbuffer`` and also give it a reserved ``fontname``. The reserved font name can be specified in any mixture of upper or lower case and still match the right built-in font definition.
+      In other words, you cannot insert a font via ``fontfile`` / ``fontbuffer`` and also give it a reserved ``fontname``.
+
+      .. note:: A reserved fontname can be specified in any mixture of upper or lower case and still match the right built-in font definition: fontnames "helv", "Helv", "HELV", "Helvetica", etc. all lead to the same font definition "Helvetica". But from a :ref:`Page` perspective, these are **different references**. You can exploit this when using different ``encoding`` variants (Latin, Greek, Cyrillic) of the same font on a page.
 
       :arg str fontfile: a path to a font file. If used, ``fontname`` must be **different from all reserved names**.
 
       :arg bytes/bytearray fontbuffer: the image of a font file. If used, ``fontname`` must be **different from all reserved names**. This parameter would typically be used to transfer fonts between different pages of the same or different PDFs.
 
       :arg int set_simple: applicable for ``fontfile`` / ``fontbuffer`` cases only: enforce treatment as a "simple" font, i.e. one that only uses character codes up to 255.
-      :arg int encoding: applicable for the "Helvetica", "Courier" and "Times" sets of :data:`Base14_Fonts` only. Select one of the available encodings Latin (0), Cyrillic (2) or Greek (1). Use the default (0 = Latin) for "Symbol" and "ZapfDingBats".
+      :arg int encoding: applicable for the "Helvetica", "Courier" and "Times" sets of :data:`Base14_Fonts` only. Select one of the available encodings Latin (0), Cyrillic (2) or Greek (1). Only use the default (0 = Latin) for "Symbol" and "ZapfDingBats".
 
       :rytpe: int
       :returns: the XREF of the installed font.

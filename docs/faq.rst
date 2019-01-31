@@ -288,7 +288,6 @@ PGM               PGM                Portable Graymap
 PBM               PBM                Portable Bitmap
 PPM               PPM                Portable Pixmap
 PAM               PAM                Portable Arbitrary Map
-TGA               TGA                Targa Image File
 .                 PSD                Adobe Photoshop Document
 .                 PS                 Adobe Postscript
 ================= ================== =========================================
@@ -657,6 +656,45 @@ Several default values were used above: font "Helvetica", font size 11 and text 
 
 .. image:: img-textbox.jpg
    :scale: 50
+
+------------------------------------------
+
+How to Use Non-Standard Encoding
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Since v1.14, MuPDF allows Greek and Russian encoding variants for the :data:`Base14_Fonts`. In PyMuPDF this is supported via an additional ``encoding`` argument. Effectively, this is relevant for Helvetica, Times-Roman and Courier (and their bold / italic forms) and characters outside the ASCII code range only. Elsewhere, the argument is ignored. Here is how to request Russian encoding with the standard font Helvetica::
+
+    page.insertText(point, russian_text, encoding=fitz.TEXT_ENCODING_CYRILLIC)
+
+The valid encoding values are TEXT_ENCODING_LATIN (0), TEXT_ENCODING_GREEK (1), and TEXT_ENCODING_CYRILLIC (2, Russian) with Latin being the default. Encoding can be specified by all relevant font and text insertion methods.
+
+By the above statement, the fontname ``helv`` is automatically connected to the Russian font variant of Helvetica. Any subsequent text insertion with **this fontname** will use the Russian Helvetica encoding.
+
+If you change the fontname just slightly, you can also achieve an **encoding "mixture"** for the **same base font** on the same page::
+
+    import fitz
+    doc=fitz.open()
+    page=doc.newPage()
+    img=page.newShape()
+    t="Sômé tèxt wìth nöñ-Lâtîn characterß."
+    img.insertText((50,70), t, fontname="helv", encoding=fitz.TEXT_ENCODING_LATIN)
+    img.insertText((50,90), t, fontname="HElv", encoding=fitz.TEXT_ENCODING_GREEK)
+    img.insertText((50,110), t, fontname="HELV", encoding=fitz.TEXT_ENCODING_CYRILLIC)
+    img.commit()
+    doc.save("t.pdf")
+
+The result:
+
+.. image:: img-encoding.jpg
+   :scale: 66
+
+The snippet above indeed leads to three different copies of the Helvetica font in the PDF. Each copy is uniquely idetified (and referenceable) by using the correct upper-lower case spelling of the reserved word "helv"::
+
+    for f in doc.getPageFontList(0): print(f)
+
+    [6, 'n/a', 'Type1', 'Helvetica', 'helv', 'WinAnsiEncoding']
+    [7, 'n/a', 'Type1', 'Helvetica', 'HElv', 'WinAnsiEncoding']
+    [8, 'n/a', 'Type1', 'Helvetica', 'HELV', 'WinAnsiEncoding']
+
 
 -----------------------
 
@@ -1038,13 +1076,13 @@ General
 
 How to Open with :index:`a Wrong File Extension <pair: wrong; file extension>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-If you have a document which does not have the right file extension for its type, you can still correctly open it.
+If you have a document with a wrong file extension for its type, you can still correctly open it.
 
 Assume that "some.file" is actually an XPS. Open it like so:
 
 >>> doc = fitz.open("some.file", filetype = "xps")
 
-.. note:: MuPDF itself does not try to determine the file type from the file contents. **You** are responsible for supplying the filetype info in some way -- either implicitely via the file extension, or explicitely as shown. Also consult the :ref:`Document` chapter for a full description.
+.. note:: MuPDF itself does not try to determine the file type from the file contents. **You** are responsible for supplying the filetype info in some way -- either implicitely via the file extension, or explicitely as shown. There are pure Python packages like `filetype <https://pypi.org/project/filetype/>`_ that help you doing this. Also consult the :ref:`Document` chapter for a full description.
 
 ----------
 

@@ -30,7 +30,8 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 :meth:`Pixmap.getPNGData`     return a PNG as a memory area
 :meth:`Pixmap.invertIRect`    invert the pixels of a given area
 :meth:`Pixmap.pixel`          return the value of a pixel
-:meth:`Pixmap.setPixel`       set the value of a pixel
+:meth:`Pixmap.setPixel`       set the color of a pixel
+:meth:`Pixmap.setRect`        set the color of a rectangle
 :meth:`Pixmap.setAlpha`       sets alpha values
 :meth:`Pixmap.shrink`         reduce size keeping proportions
 :meth:`Pixmap.tintWith`       tint a pixmap with a color
@@ -103,13 +104,12 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       :arg bool alpha: whether the target will have an alpha channel, default and mandatory if source colorspace is ``None``.
 
-      .. note:: A typical use includes separation of color and transparency bytes in separate pixmaps. Some applications require this like e.g. ``wx.Bitmap.FromBufferAndAlpha()`` of ``wxPython``::
+      .. note:: A typical use includes separation of color and transparency bytes in separate pixmaps. Some applications require this like e.g. ``wx.Bitmap.FromBufferAndAlpha()`` of ``wxPython``:
 
-         # 'pix' is an RGBA pixmap
-         pixcolors = fitz.Pixmap(pix, 0)    # extract the RGB part (drop alpha channel)
-         pixalpha = fitz.Pixmap(None, pix)  # extract the alpha part
-         bitmap = wx.Bitmap.FromBufferAndAlpha(pix.widht, pix.height,
-                                               pixcolors.samples, pixalpha.samples)
+         >>> # 'pix' is an RGBA pixmap
+         >>> pixcolors = fitz.Pixmap(pix, 0)    # extract the RGB part (drop alpha)
+         >>> pixalpha = fitz.Pixmap(None, pix)  # extract the alpha part
+         >>> bm = wx.Bitmap.FromBufferAndAlpha(pix.widht, pix.height, pixcolors.samples, pixalpha.samples)
 
 
    .. method:: __init__(self, filename)
@@ -197,13 +197,25 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
       :rtype: list
       :returns: a list of color values and, potentially the alpha value. Its length and content depend on the pixmap's colorspace and the presence of an alpha. For RGBA pixmaps the result would e.g. be ``[r, g, b, a]``. All items are integers in ``range(256)``.
 
-   .. method:: setPixel(x, y, value)
+   .. method:: setPixel(x, y, color)
 
-      Set the value of the pixel at location (x, y) (column / line).
+      Set the color of the pixel at location (x, y) (column, line).
 
       :arg int x: the column number of the pixel. Must be in ``range(pix.width)``.
-      :arg int y: the line number of the pixel, Must be in ``range(pix.height)``.
-      :arg sequence value: the desired value given as a sequence of integers in ``range(256)``. The length of the sequence must equal :attr:`Pixmap.n`.
+      :arg int y: the line number of the pixel. Must be in ``range(pix.height)``.
+      :arg sequence color: the desired color given as a sequence of integers in ``range(256)``. The length of the sequence must equal :attr:`Pixmap.n`, which includes any alpha byte.
+
+   .. method:: setRect(irect, color)
+
+      Set the pixels of a rectangle to a color.
+
+      :arg irect-like irect: the rectangle to be filled with the color. The actual area is the intersection of this parameter and :attr:`Pixmap.irect`. For an empty intersection (or an invalid parameter), no change will happen.
+      :arg sequence color: the desired color given as a sequence of integers in ``range(256)``. The length of the sequence must equal :attr:`Pixmap.n`, which includes any alpha byte.
+
+      .. note:: 
+      
+         1. This method is equivalent to :meth:`Pixmap.setPixel` executed for each pixel of the rectangle, but obviously **very much faster** if many pixels are involved.
+         2. This method can also be used similar to :meth:`Pixmap.clearWith` to initialize a pixmap with a certain color like ``pix.setRect(pix.irect, (255, 255, 0))``, which colors the complete pixmap with yellow.
 
    .. method:: setAlpha([alphavalues])
 
@@ -220,7 +232,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: copyPixmap(source, irect)
 
-      Copy the :ref:`IRect` part of ``source`` into the corresponding area of this one. The two pixmaps may have different dimensions and different colorspaces (provided each is either :data:`CS_GRAY` or :data:`CS_RGB`), but currently **must** have the same alpha property. The copy mechanism automatically adjusts discrepancies between source and target like so:
+      Copy the ``irect`` part of the ``source`` pixmap into the corresponding area of this one. The two pixmaps may have different dimensions and can each have :data:`CS_GRAY` or :data:`CS_RGB` colorspaces, but they currently **must** have the same alpha property. The copy mechanism automatically adjusts discrepancies between source and target like so:
 
       If copying from :data:`CS_GRAY` to :data:`CS_RGB`, the source gray-shade value will be put into each of the three rgb component bytes. If the other way round, ``(r + g + b) / 3`` will be taken as the gray-shade value of the target.
 
@@ -231,8 +243,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
       :arg source: source pixmap.
       :type source: :ref:`Pixmap`
 
-      :arg irect: The area to be copied.
-      :type irect: :ref:`IRect`
+      :arg irect-like irect: The area to be copied.
 
    .. method:: writeImage(filename, output=None)
 
@@ -240,25 +251,25 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       :arg str filename: The filename to save to. The filename's extension determines the image format, if not overriden by the output parameter.
 
-      :arg str output: The requested image format. The default is the filename's extension. If not recognized, ``png`` is assumed, for which this function is equal to :meth:`writePNG`. For other possible values see :ref:`PixmapOutput`.
+      :arg str output: The requested image format. The default is the filename's extension. If not recognized, ``png`` is assumed. For other possible values see :ref:`PixmapOutput`.
+
+   .. method:: writePNG(filename)
+
+      Equal to ``pix.writeImage(filename, "png")``.
 
    .. method:: getImageData(output="png")
 
       Return the pixmap as a ``bytes`` memory object of the specified format -- similar to :meth:`writeImage`.
 
-      :arg str output: The requested image format. The default is "png" for which this function is equal to :meth:`getPNGData`. For other possible values see :ref:`PixmapOutput`.
+      :arg str output: The requested image format. The default is "png" for which this function equals :meth:`getPNGData`. For other possible values see :ref:`PixmapOutput`.
 
       :rtype: bytes
-
-   .. method:: writePNG(filename)
-
-      Same as :meth:`writeImage` with default format parameter.
 
    .. method:: getPNGdata()
 
    .. method:: getPNGData()
 
-      Same as :meth:`getImageData` with default format parameter.
+      Equal to ``pix.getImageData("png")``.
 
       :rtype: bytes
 
@@ -384,7 +395,6 @@ pnm        gray, rgb       no        .pnm           Portable Anymap
 ppm        gray, rgb       no        .ppm           Portable Pixmap
 ps         gray, rgb, cmyk no        .ps            Adobe PostScript Image
 psd        gray, rgb, cmyk yes       .psd           Adobe Photoshop Document
-tga        gray, rgb       yes       .tga, .tpic    Targa Image File
 ========== =============== ========= ============== ===========================
 
 .. note::
