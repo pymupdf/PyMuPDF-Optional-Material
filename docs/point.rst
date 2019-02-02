@@ -12,7 +12,7 @@ Point
 :meth:`Point.distance_to`    calculate distance to point or rect
 :meth:`Point.transform`      transform point with a matrix
 :attr:`Point.abs_unit`       same as unit, but positive coordinates
-:attr:`Point.unit`           point coordinates divides by abs(point)
+:attr:`Point.unit`           point coordinates divided by ``abs(point)``
 :attr:`Point.x`              the X-coordinate
 :attr:`Point.y`              the Y-coordinate
 ============================ ============================================
@@ -64,7 +64,7 @@ Point
 
    .. attribute:: unit
 
-      Result of dividing each coordinate by ``abs(point)``, which is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
+      Result of dividing each coordinate by ``abs(point)``, the distance of the point to (0,0). This is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
 
       .. image:: img-point-unit.jpg
 

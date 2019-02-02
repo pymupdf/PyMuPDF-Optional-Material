@@ -18,7 +18,7 @@ In PyMuPDF, there exist several ways to create a pixmap. Except the first one, a
 
 .. note:: A number of image formats is supported as input for points 3. and 4. above. See section :ref:`ImageFiles`.
 
-Have a look at the :ref:`examples` section to see some pixmap usage "at work".
+Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
 ============================= ===================================================
 **Method / Attribute**        **Short Description**
@@ -32,7 +32,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 :meth:`Pixmap.pixel`          return the value of a pixel
 :meth:`Pixmap.setPixel`       set the color of a pixel
 :meth:`Pixmap.setRect`        set the color of a rectangle
-:meth:`Pixmap.setAlpha`       sets alpha values
+:meth:`Pixmap.setAlpha`       set alpha values
 :meth:`Pixmap.shrink`         reduce size keeping proportions
 :meth:`Pixmap.tintWith`       tint a pixmap with a color
 :meth:`Pixmap.writeImage`     save a pixmap in a variety of formats
@@ -64,8 +64,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
       :arg colorspace: colorspace.
       :type colorspace: :ref:`Colorspace`
 
-      :arg irect: Tte pixmap's position and dimension.
-      :type irect: :ref:`IRect`
+      :arg irect-like irect: Tte pixmap's position and dimension.
 
       :arg bool alpha: Specifies whether transparency bytes should be included. Default is ``False``.
 
@@ -73,7 +72,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       **Copy and set colorspace:** Copy ``source`` pixmap converting colorspace. Any colorspace combination is possible, but source colorspace must not be ``None``.
 
-      :arg colorspace: desired target colorspace. This **may also be** ``None``. In this case, a "masking" pixmap is created: its :attr:`Pixmap.samples` will consist of the source's alpha bytes only.
+      :arg colorspace: desired **target** colorspace. This **may also be** ``None``. In this case, a "masking" pixmap is created: its :attr:`Pixmap.samples` will consist of the source's alpha bytes only.
       :type colorspace: :ref:`Colorspace`
 
       :arg source: the source pixmap.
@@ -90,8 +89,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       :arg float height: desired target height.
 
-      :arg clip: a region of the source pixmap to take the copy from.
-      :type clip: :ref:`IRect`
+      :arg irect-like clip: a region of the source pixmap to take the copy from.
 
       .. note:: If width or height are in fact no integers, the pixmap will be created with ``alpha = 1``.
 
@@ -126,7 +124,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: __init__(self, colorspace, width, height, samples, alpha)
 
-      **From plain pixels:** Create a pixmap from ``samples``. Each pixel must be represented by a number of bytes as controlled by the ``colorspace`` and ``alpha`` parameters. The origin of the resulting pixmap is ``(0, 0)``. This method is useful when raw image data are provided by some other program -- see :ref:`examples` below.
+      **From plain pixels:** Create a pixmap from ``samples``. Each pixel must be represented by a number of bytes as controlled by the ``colorspace`` and ``alpha`` parameters. The origin of the resulting pixmap is ``(0, 0)``. This method is useful when raw image data are provided by some other program -- see :ref:`FAQ`.
 
       :arg colorspace: Colorspace of image.
       :type colorspace: :ref:`Colorspace`
@@ -156,10 +154,9 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       Initialize the samples area.
 
-      :arg int value: if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will be set to 255 (non-transparent) if present. If omitted, then all bytes (including any alpha) are cleared to 0x00.
+      :arg int value: if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will be set to 255 (non-transparent) if present. If omitted, then all bytes (including any alpha) are cleared to ``0x00``.
 
-      :arg irect: the area to be cleared. Omit to clear the whole pixmap. Can only be specified, if ``value`` is also specified.
-      :type irect: :ref:`IRect`
+      :arg irect-like irect: the area to be cleared. Omit to clear the whole pixmap. Can only be specified, if ``value`` is also specified.
 
    .. method:: tintWith(red, green, blue)
 
@@ -189,7 +186,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
    .. method:: pixel(x, y)
 
-      Return the value of the pixel at location (x, y) (column / line).
+      Return the value of the pixel at location (x, y) (column, line).
 
       :arg int x: the column number of the pixel. Must be in ``range(pix.width)``.
       :arg int y: the line number of the pixel, Must be in ``range(pix.height)``.
@@ -212,10 +209,13 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
       :arg irect-like irect: the rectangle to be filled with the color. The actual area is the intersection of this parameter and :attr:`Pixmap.irect`. For an empty intersection (or an invalid parameter), no change will happen.
       :arg sequence color: the desired color given as a sequence of integers in ``range(256)``. The length of the sequence must equal :attr:`Pixmap.n`, which includes any alpha byte.
 
+      :rtype: bool
+      :returns: ``False`` if the rectangle was invalid or had an empty intersection with :attr:`Pixmap.irect`, else ``True``.
+
       .. note:: 
       
-         1. This method is equivalent to :meth:`Pixmap.setPixel` executed for each pixel of the rectangle, but obviously **very much faster** if many pixels are involved.
-         2. This method can also be used similar to :meth:`Pixmap.clearWith` to initialize a pixmap with a certain color like ``pix.setRect(pix.irect, (255, 255, 0))``, which colors the complete pixmap with yellow.
+         1. This method is equivalent to :meth:`Pixmap.setPixel` executed for each pixel in the rectangle, but is obviously **very much faster** if many pixels are involved.
+         2. This method can be used similar to :meth:`Pixmap.clearWith` to initialize a pixmap with a certain color like this: ``pix.setRect(pix.irect, (255, 255, 0))`` (RGB example, colors the complete pixmap with yellow).
 
    .. method:: setAlpha([alphavalues])
 
@@ -227,8 +227,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       Invert the color of all pixels in :ref:`IRect` ``irect``. Will have no effect if colorspace is ``None``.
 
-      :arg irect: The area to be inverted. Omit to invert everything.
-      :type irect: :ref:`IRect`
+      :arg irect-like irect: The area to be inverted. Omit to invert everything.
 
    .. method:: copyPixmap(source, irect)
 
@@ -236,9 +235,7 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       If copying from :data:`CS_GRAY` to :data:`CS_RGB`, the source gray-shade value will be put into each of the three rgb component bytes. If the other way round, ``(r + g + b) / 3`` will be taken as the gray-shade value of the target.
 
-      Between ``irect`` and the target pixmap's rectangle, an "intersection" is calculated at first. Then the corresponding data of this intersection are being copied. If this intersection is empty, nothing will happen.
-
-      If you want your ``source`` pixmap image to land at a specific target position, set its ``x`` and ``y`` attributes to the top left point of the desired rectangle before copying. See the example below for how this works.
+      Between ``irect`` and the target pixmap's rectangle, an "intersection" is calculated at first. This takes into account the rectangle coordinates and the current attribute values ``source.x`` and ``source.y`` (which you are free to modify for this purpose). Then the corresponding data of this intersection are copied. If the intersection is empty, nothing will happen.
 
       :arg source: source pixmap.
       :type source: :ref:`Pixmap`
@@ -304,13 +301,13 @@ Have a look at the :ref:`examples` section to see some pixmap usage "at work".
 
       The color and (if :attr:`Pixmap.alpha` is true) transparency values for all pixels. It is a write-protected memory area of ``width * height * n`` bytes. Each n bytes define one pixel. Each successive n bytes yield another pixel in scanline order. Subsequent scanlines follow each other with no padding. E.g. for an RGBA colorspace this means, ``samples`` is a sequence of bytes like ``..., R, G, B, A, ...``, and the four byte values R, G, B, A define one pixel.
 
-      This area can be passed to other graphics libraries like PIL (Python Imaging Library) to do additional processing like saving the pixmap in other image formats. See example 3.
+      This area can be passed to other graphics libraries like PIL (Python Imaging Library) to do additional processing like saving the pixmap in other image formats.
 
       :type: bytes
 
    .. attribute:: size
 
-      Contains ``len(pixmap)``. This will generally equal ``len(pix.samples) + 60`` (32bit systems, the delta is 88 on 64bit machines).
+      Contains ``len(pixmap)``. This will generally equal ``len(pix.samples)`` plus some platform-specific value for defining other attributes of the object.
 
       :type: int
 
@@ -403,121 +400,7 @@ psd        gray, rgb, cmyk yes       .psd           Adobe Photoshop Document
     * As can be seen, MuPDF's image support range is different for input and output. Among those supported both ways, PNG is probably the most popular. We recommend using Pillow whenever you face a support gap.
     * We also recommend using "ppm" formats as input to tkinter's ``PhotoImage`` method like this: ``tkimg = tkinter.PhotoImage(data=pix.getImageData("ppm"))`` (also see the tutorial). This is **very** fast (**60 times** faster than PNG) and will work under Python 2 or 3.
 
-.. _examples:
 
-Pixmap Code Snippets
------------------------------
-
-Example 1: Glueing Images
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This shows how pixmaps can be used for purely graphical, non-PDF purposes. The script reads a PNG picture and creates a new PNG file which consist of 3 * 4 tiles of the original one::
-
- import fitz
- # create a pixmap of a picture
- pix0 = fitz.Pixmap("editra.png")
-
- # set target colorspace and pixmap dimensions and create it
- tar_width  = pix0.width * 3              # 3 tiles per row
- tar_height = pix0.height * 4             # 4 tiles per column
- tar_irect  = fitz.IRect(0, 0, tar_width, tar_height)
- # create empty target pixmap
- tar_pix    = fitz.Pixmap(fitz.csRGB, tar_irect, pix0.alpha)
- # clear target with a very lively stone-gray (thanks and R.I.P., Loriot)
- tar_pix.clearWith(90)
-
- # now fill target with 3 * 4 tiles of input picture
- for i in range(4):
-     pix0.y = i * pix0.height                     # modify input's y coord
-     for j in range(3):
-         pix0.x = j * pix0.width                  # modify input's x coord
-         tar_pix.copyPixmap(pix0, pix0.irect)     # copy input to new loc
-         # save all intermediate images to show what is happening
-         fn = "target-%i-%i.png" % (i, j)
-         tar_pix.writePNG(fn) 
-
-.. |editra| image:: img-editra.png
-
-This is the input picture ``editra.png`` (taken from the wxPython directory ``/tools/Editra/pixmaps``):
-
-|editra|
-
-.. |target| image:: img-target.png
-
-Here is the output, showing some intermediate picture and the final result:
-
-|target|
-
-Example 2: Interfacing with NumPy
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This shows how to create a PNG file from a numpy array (several times faster than most other methods)::
-
- import numpy as np
- import fitz
- #==============================================================================
- # create a fun-colored width * height PNG with fitz and numpy
- #==============================================================================
- height = 150
- width  = 100
- bild = np.ndarray((height, width, 3), dtype=np.uint8)
-
- for i in range(height):
-     for j in range(width):
-         # one pixel (some fun coloring)
-         bild[i, j] = [(i+j)%256, i%256, j%256]
-
- samples = bytearray(bild.tostring())    # get plain pixel data from numpy array
- pix = fitz.Pixmap(fitz.csRGB, width, height, samples, alpha=False)
- pix.writePNG("test.png")
-
-Example 3: Interfacing with PIL/Pillow
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This shows how to interface with ``PIL / Pillow`` (the Python Imaging Library), thereby extending the reach of image files that can be processed:
-
->>> import fitz
->>> from PIL import Image
->>> pix = fitz.Pixmap(..., alpha = False)
->>> ...
->>> # create and save a PIL image
->>> img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
->>> img.save(filename, 'jpeg')
->>> ...
->>> # opposite direction:
->>> # create a pixmap from any PIL-supported image file "some_image.xxx"
->>> img = Image.open("some_image.xxx").convert("RGB")
->>> samples = img.tobytes()
->>> pix = fitz.Pixmap(fitz.csRGB, img.size[0], img.size[1], samples, alpha=False)
-
-Example 4: Extracting Alpha Values, Making Stencil Masks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The alpha channel of a pixmap can be extracted by making a copy and choosing target colorspace ``None``. The resulting pixmap is sometimes also called "stencil mask". Its samples contain the source's alpha values.
-
->>> pix
-fitz.Pixmap(DeviceRGB, fitz.IRect(0, 0, 1168, 823), 1)
->>> pix.n
-4
->>> mask = fitz.Pixmap(None, pix)
->>> # now mask.samples will contain the alpha values of pix:
->>> mask
-fitz.Pixmap(None, fitz.IRect(0, 0, 1168, 823), 1)
->>> mask.n
-1
-
-Example 4: Back-Converting Stencil Masks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Stencil masks can be converted to PNG images (or any other image supporting alpha, like PAM). Use this to create a ``DeviceGRAY`` pixmap version:
-
->>> mask                       # stencil mask from previous example
-fitz.Pixmap(None, fitz.IRect(0, 0, 1168, 823), 1)
->>> pix = fitz.Pixmap(mask.getImageData("pam"))   # PAM is much faster than PNG
->>> pix
-fitz.Pixmap(DeviceGRAY, fitz.IRect(0, 0, 1168, 823), 0)
->>> # if required, invert the gray values
->>> pix.invertIRect()
 
 .. rubric:: Footnotes
 

@@ -3,9 +3,10 @@ Change Logs
 
 Changes in Version 1.14.8
 ---------------------------
-* **Added** :meth:`Pixmap.setRect` to change the pixel values in a rectangle.
-* **Fixed** an image extraction issue with JBIG2 (monochrome) encoded PDF images. The issue occurred in :meth:`Page.getText` (parameters "dict" or "rawdict") and in :meth:`Document.extractImage` methods.
-* **Fixed** an issue with not correctly clearing a non-alpha :ref:`Pixmap` rectangle with :meth:`Pixmap.clearWith`.
+* **Added** :meth:`Pixmap.setRect` to change the pixel values in a rectangle. This is also analternative to setting the color of a complete pixmap (:meth:`Pixmap.clearWith`).
+* **Fixed** an image extraction issue with JBIG2 (monochrome) encoded PDF images. The issue occurred in :meth:`Page.getText` (parameters "dict" and "rawdict") and in :meth:`Document.extractImage` methods.
+* **Fixed** an issue with not correctly clearing a non-alpha :ref:`Pixmap` (:meth:`Pixmap.clearWith`).
+* **Fixed** an issue with not correctly inverting colors of a non-alpha :ref:`Pixmap` (:meth:`Pixmap.invertIRect`).
 
 Changes in Version 1.14.7
 ---------------------------

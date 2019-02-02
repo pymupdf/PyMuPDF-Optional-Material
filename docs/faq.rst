@@ -352,6 +352,125 @@ The general scheme is just the following two lines::
 
 ----------
 
+How to Use Pixmaps: Glueing Images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This shows how pixmaps can be used for purely graphical, non-document purposes. The script reads an image file and creates a new image which consist of 3 * 4 tiles of the original::
+
+ import fitz
+ src = fitz.Pixmap("img-7edges.png")      # create pixmap from a picture
+ col = 3                                  # tiles per row
+ lin = 4                                  # tiles per column
+ tar_w = src.width * col                  # width of target
+ tar_h = src.height * lin                 # height of target
+
+ # create target pixmap
+ tar_pix = fitz.Pixmap(src.colorspace, (0, 0, tar_w, tar_h), src.alpha)
+ 
+ # now fill target with the tiles
+ for i in range(col):
+     src.x = src.width * i                # modify input's x coord
+     for j in range(lin):
+         src.y = src.height * j           # modify input's y coord
+         tar_pix.copyPixmap(src, src.irect) # copy input to new loc
+ 
+ tar_pix.writePNG("tar.png")
+
+This is the input picture:
+
+.. image:: img-7edges.png
+   :scale: 33
+
+Here is the output:
+
+.. image:: img-target.png
+   :scale: 33
+
+How to Use Pixmaps: Making a Fractal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is another Pixmap example that creates **Sierpinski's Carpet** -- a fractal generalizing the **Cantor Set** to two dimensions. Given a square carpet, mark its 9 sub-suqares (3 times 3) and cut out the one in the center. Treat each of the remaining eight sub-squares in the same way, and continue *ad infinitum*. The end result is a set with area zero and fractal dimension 1.8928...
+
+This script creates a approximative PNG image of it, by going down to one-pixel granularity. To increase the image precision, change the value of n (precision)::
+
+    import fitz, time
+    if not list(map(int, fitz.VersionBind.split("."))) >= [1, 14, 8]:
+        raise SystemExit("need PyMuPDF v1.14.8 for this script")
+    n = 6                             # depth (precision)
+    d = 3**n                          # edge length
+    
+    t0 = time.perf_counter()
+    ir = (0, 0, d, d)                 # the pixmap rectangle
+    
+    pm = fitz.Pixmap(fitz.csRGB, ir, False)
+    pm.setRect(pm.irect, (255,255,0)) # fill it with some background color
+    
+    color = (0, 0, 255)               # color to fill the punch holes
+    
+    # alternatively, define a 'fill' pixmap for the punch holes
+    # this could be anything, e.g. some photo image ...
+    fill = fitz.Pixmap(fitz.csRGB, ir, False) # same size as 'pm'
+    fill.setRect(fill.irect, (0, 255, 255))   # put some color in
+    
+    def punch(x, y, step):
+        """Recursively "punch a hole" in the central square of a pixmap.
+        Arguments are top-left coords and the step width.
+        """
+        s = step // 3                 # the new step
+        # iterate through the 9 sub-squares
+        # the central one will be filled with the color
+        for i in range(3):
+            for j in range(3):
+                if i != j or i != 1:  # this is not the central cube
+                    if s >= 3:        # recursing needed?
+                        punch(x+i*s, y+j*s, s)       # recurse
+                else:                 # punching alternatives are:
+                    pm.setRect((x+s, y+s, x+2*s, y+2*s), color)     # fill with a color
+                    #pm.copyPixmap(fill, (x+s, y+s, x+2*s, y+2*s))  # copy from fill
+                    #pm.invertIRect((x+s, y+s, x+2*s, y+2*s))       # invert colors
+    
+        return
+    
+    #==============================================================================
+    # main program
+    #==============================================================================
+    # now start punching holes into the pixmap
+    punch(0, 0, d)
+    t1 = time.perf_counter()
+    pm.writeImage("sierpinski-punch.png")
+    t2 = time.perf_counter()
+    print ("%g sec to create / fill the pixmap" % round(t1-t0,3))
+    print ("%g sec to save the image" % round(t2-t1,3))
+
+The result should look something like this:
+
+.. image:: img-sierpinski.png
+   :scale: 33
+
+How to Interface with NumPy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This shows how to create a PNG file from a numpy array (several times faster than most other methods)::
+
+ import numpy as np
+ import fitz
+ #==============================================================================
+ # create a fun-colored width * height PNG with fitz and numpy
+ #==============================================================================
+ height = 150
+ width  = 100
+ bild = np.ndarray((height, width, 3), dtype=np.uint8)
+
+ for i in range(height):
+     for j in range(width):
+         # one pixel (some fun coloring)
+         bild[i, j] = [(i+j)%256, i%256, j%256]
+
+ samples = bytearray(bild.tostring())    # get plain pixel data from numpy array
+ pix = fitz.Pixmap(fitz.csRGB, width, height, samples, alpha=False)
+ pix.writePNG("test.png")
+
+
 Text
 -----
 
@@ -685,7 +804,7 @@ If you change the fontname just slightly, you can also achieve an **encoding "mi
 The result:
 
 .. image:: img-encoding.jpg
-   :scale: 66
+   :scale: 50
 
 The snippet above indeed leads to three different copies of the Helvetica font in the PDF. Each copy is uniquely idetified (and referenceable) by using the correct upper-lower case spelling of the reserved word "helv"::
 
