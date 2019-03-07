@@ -1,9 +1,16 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.9
+---------------------------
+* **Added** new low-level method :meth:`Document._getTrailerString`, which returns the trailer object of a PDF. This is much like :meth:`Document._getXrefString` except that the PDF trailer has no / needs no :data:`xref` to identify it.
+* **Added** new parameters for text insertion methods. You can now set stroke and fill colors of glyphs (text characters) independently, as well as the thickness of the glyph border. A new parameter ``render_mode`` controls the use of these colors, and whether the text should be visible at all.
+* **Fixed** issue #258 ("Copying image streams to new PDF without size increase"): For JPX images embedded in a PDF, :meth:`Document.extractImage` will now return them in their original format. Previously, the MuPDF base library was used, which returns them in PNG format (entailing a massive size increase).
+* **Fixed** issue #259 ("Morphing text to fit inside rect"). Clarified use of :meth:`getTextlength` and removed extra line breaks for long words.
+
 Changes in Version 1.14.8
 ---------------------------
-* **Added** :meth:`Pixmap.setRect` to change the pixel values in a rectangle. This is also analternative to setting the color of a complete pixmap (:meth:`Pixmap.clearWith`).
+* **Added** :meth:`Pixmap.setRect` to change the pixel values in a rectangle. This is also an alternative to setting the color of a complete pixmap (:meth:`Pixmap.clearWith`).
 * **Fixed** an image extraction issue with JBIG2 (monochrome) encoded PDF images. The issue occurred in :meth:`Page.getText` (parameters "dict" and "rawdict") and in :meth:`Document.extractImage` methods.
 * **Fixed** an issue with not correctly clearing a non-alpha :ref:`Pixmap` (:meth:`Pixmap.clearWith`).
 * **Fixed** an issue with not correctly inverting colors of a non-alpha :ref:`Pixmap` (:meth:`Pixmap.invertIRect`).
@@ -92,7 +99,7 @@ Changes in Version 1.13.17
 * **Fixed** an error that intermittently caused an exception in :meth:`Page.showPDFpage`, when pages from many different source PDFs were shown.
 * **Changed** method :meth:`Document.extractImage` to now return more meta information about the extracted imgage. Also, its performance has been greatly improved. Several demo scripts have been changed to make use of this method.
 * **Changed** method :meth:`Document._getXrefStream` to now return ``None`` if the object is no stream and no longer raise an exception if otherwise.
-* **Added** method :meth:`Document._deleteObject` which deletes a PDF object identified by its xref. Only to be used by the experienced PDF expert.
+* **Added** method :meth:`Document._deleteObject` which deletes a PDF object identified by its :data:`xref`. Only to be used by the experienced PDF expert.
 * **Added** a method :meth:`PaperRect` which returns a :ref:`Rect` for a supplied paper format string. Example: ``fitz.PaperRect("letter") = fitz.Rect(0.0, 0.0, 612.0, 792.0)``.
 * **Added** a :ref:`FAQ` chapter to this document.
 
@@ -160,7 +167,7 @@ Changes in Version 1.13.6
 
 Changes in Version 1.13.5
 --------------------------
-* New low-level method :meth:`Page._setContents` defines an object given by its xref to serve as the ``/Contents`` object.
+* New low-level method :meth:`Page._setContents` defines an object given by its :data:`xref` to serve as the :data:`contents` object.
 * Changed and extended PDF form field support: the attribute ``widget_text`` has been renamed to :attr:`Annot.widget_value`. Values of all form field types (except signatures) are now supported. A new attribute :attr:`Annot.widget_choices` contains the selectable values of listboxes and comboboxes. All these attributes now contain ``None`` if no value is present.
 
 Changes in Version 1.13.4
@@ -199,7 +206,7 @@ In PyMuPDF, we are also doing some bug fixes while introducing minor enhancement
     - Colorspace conversion no longer allows dropping the alpha channel: source and target **alpha will now always be the same**. We have seen exceptions and even interpreter crashes when using ``alpha = 0``.
     - As a replacement, the simple pixmap copy lets you choose the target alpha.
 
-* :meth:`Document.save` again offers the full garbage collection range 0 thru 4. Because of a bug in XREF maintenance, we had to temporarily enforce ``garbage > 1``. Finally resolves `issue #148 <https://github.com/rk700/PyMuPDF/issues/148>`_.
+* :meth:`Document.save` again offers the full garbage collection range 0 thru 4. Because of a bug in :data:`xref` maintenance, we had to temporarily enforce ``garbage > 1``. Finally resolves `issue #148 <https://github.com/rk700/PyMuPDF/issues/148>`_.
 
 * :meth:`Document.save` now offers to "prettify" PDF source via an additional argument.
 * :meth:`Page.insertImage` has the additional ``stream`` \-parameter, specifying a memory area holding an image.
@@ -211,7 +218,7 @@ Changes in Version 1.12.4
 --------------------------
 This is an extension of 1.12.3.
 
-* Fix of `issue #147 <https://github.com/rk700/PyMuPDF/issues/147>`_: methods :meth:`Document.getPageFontlist` and :meth:`Document.getPageImagelist` now also show fonts and images contained in ``/Resources`` nested via "Form XObjects".
+* Fix of `issue #147 <https://github.com/rk700/PyMuPDF/issues/147>`_: methods :meth:`Document.getPageFontlist` and :meth:`Document.getPageImagelist` now also show fonts and images contained in :data:`resources` nested via "Form XObjects".
 * Temporary fix of `issue #148 <https://github.com/rk700/PyMuPDF/issues/148>`_: Saving to new PDF files will now automatically use ``garbage = 2`` if a lower value is given. Final fix is to be expected with MuPDF's next version. At that point we will remove this circumvention.
 * Preventive fix of illegally using stencil / image mask pixmaps in some methods.
 * Method :meth:`Document.getPageFontlist` now includes the encoding name for each font in the list.
@@ -290,7 +297,7 @@ Changes in Version 1.11.1
 --------------------------------
 This is an extension of v1.11.0.
 
-* New class ``Shape``. It facilitates and extends the creation of image shapes on PDF pages. It contains multiple methods for creating elementary shapes like lines, rectangles or circles, which can be combined into more complex ones and be given common properties like line width or colors. Combined shapes are handled as a unit and e.g. be "morphed" together. The class can accumulate multiple complex shapes and put them all in the page's foreground or background -- thus also reducing the number of updates to the page's ``/Contents`` object.
+* New class ``Shape``. It facilitates and extends the creation of image shapes on PDF pages. It contains multiple methods for creating elementary shapes like lines, rectangles or circles, which can be combined into more complex ones and be given common properties like line width or colors. Combined shapes are handled as a unit and e.g. be "morphed" together. The class can accumulate multiple complex shapes and put them all in the page's foreground or background -- thus also reducing the number of updates to the page's :data:`contents` object.
 
 * All ``Page`` draw methods now use the new ``Shape`` class.
 
@@ -396,7 +403,7 @@ This version is also based on MuPDF v1.9a. Changes compared to version 1.9.1:
 * ``Document`` objects doc now support the ``len()`` function: ``len(doc) == doc.pageCount``.
 * New method ``Document.getPageImageList()`` creates a list of images used on a page.
 * New method ``Document.getPageFontList()`` creates a list of fonts referenced by a page.
-* New pixmap constructor ``fitz.Pixmap(doc, xref)`` creates a pixmap based on an opened PDF document and an XREF number of the image.
+* New pixmap constructor ``fitz.Pixmap(doc, xref)`` creates a pixmap based on an opened PDF document and an :data:`xref` number of the image.
 * New pixmap constructor ``fitz.Pixmap(cspace, spix)`` creates a pixmap as a copy of another one ``spix`` with the colorspace converted to ``cspace``. This works for all colorspace combinations.
 * Pixmap constructor ``fitz.Pixmap(colorspace, width, height, samples)`` now allows ``samples`` to also be ``bytes``, not only ``bytearray``.
 

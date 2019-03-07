@@ -20,7 +20,7 @@ While PyMuPDF has been available since several years for an earlier version of M
 
 PyMuPDF runs and has been tested on Mac, Linux, Windows XP SP2 and up, Python 2.7 through Python 3.7 (note that Python supports Windows XP only up to v3.4), 32bit and 64bit versions. Other platforms should work too, as long as MuPDF and Python support them.
 
-PyMuPDF is hosted on `GitHub <https://github.com/rk700/PyMuPDF>`_. We also are registered on `PyPI <https://pypi.org/project/PyMuPDF/>`_.
+PyMuPDF is hosted on `GitHub <https://github.com/pymupdf/PyMuPDF>`_. We also are registered on `PyPI <https://pypi.org/project/PyMuPDF/>`_.
 
 For MS Windows and popular Python versions on Mac OSX and Linux we have created wheels. So installation should be convenient enough for hopefully most of our users: just issue
 
@@ -34,7 +34,7 @@ If your platform is not among those supported with a wheel, your installation co
 
 For installation details check out the respective chapter.
 
-There exist several `demo <https://github.com/rk700/PyMuPDF/tree/master/demo>`_ and `example <https://github.com/rk700/PyMuPDF/tree/master/examples>`_ programs in the main repository, ranging from simple code snippets to full-featured utilities, like text extraction, PDF joiners and bookmark maintenance.
+There exist several `demo <https://github.com/pymupdf/PyMuPDF/tree/master/demo>`_ and `example <https://github.com/pymupdf/PyMuPDF/tree/master/examples>`_ programs in the main repository, ranging from simple code snippets to full-featured utilities, like text extraction, PDF joiners and bookmark maintenance.
 
 Interesting **PDF manipulation and generation** functions have been added over time, including metadata and bookmark maintenance, document restructuring, annotation / link handling and document or page creation.
 

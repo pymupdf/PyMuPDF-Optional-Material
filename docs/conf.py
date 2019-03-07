@@ -45,7 +45,7 @@ copyright = u'2015-2019, Jorj X. McKie'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = '1.14.8'
+release = '1.14.9'
 
 # The short X.Y version.
 s = release.split(".")
@@ -67,7 +67,7 @@ exclude_patterns = []
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
-#default_role = None
+default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 #add_function_parentheses = True
@@ -211,52 +211,3 @@ latex_show_urls = "footnote"
 # If false, no module index is generated.
 latex_domain_indices = True
 
-
-# -- Options for manual page output ---------------------------------------
-
-# One entry per manual page. List of tuples
-# (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'PyMuPDF', u'PyMuPDF Documentation',
-     [u'Jorj X. McKie'], 1)
-]
-
-# If true, show URL addresses after external links.
-#man_show_urls = False
-
-
-# -- Options for Texinfo output -------------------------------------------
-
-# Grouping the document tree into Texinfo files. List of tuples
-# (source start file, target name, title, author,
-#  dir menu entry, description, category)
-texinfo_documents = [
-  ('index', 'PyMuPDF', u'PyMuPDF Documentation',
-   u'Jorj X. McKie', 'PyMuPDF', 'One line description of project.',
-   'Miscellaneous'),
-]
-
-# Documents to append as an appendix to all manuals.
-#texinfo_appendices = []
-
-# If false, no module index is generated.
-#texinfo_domain_indices = True
-
-# How to display URL addresses: 'footnote', 'no', or 'inline'.
-texinfo_show_urls = 'inline'
-
-# If true, do not generate a @detailmenu in the "Top" node's menu.
-#texinfo_no_detailmenu = False
-
-pdf_documents = [
-    ('index', u'PyMuPDF', u'PyMuPDF Documentation',
-     r'Jorj X. McKie'),
-                ]
-pdf_stylesheets = ['sphinx', 'kerning', 'A4']
-#pdf_style_path = []
-pdf_compressed = True
-pdf_language = "en_US"
-pdf_use_index = True
-pdf_use_coverpage = True
-pdf_cover_template = 'sphinxcover.tmpl'
-pdf_use_numbered_links = True

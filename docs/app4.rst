@@ -182,12 +182,12 @@ Technical Implementation
 
 This is done using PDF **"Form XObjects"**, see section 4.9 on page 355 of :ref:`AdobeManual`. On execution of a ``Page.showPDFpage(rect, src, pno, ...)``, the following things happen:
 
-    1. The ``/Resources`` and ``/Contents`` objects of page ``pno`` in document ``src`` are copied over to the current document, jointly creating a new **Form XObject** with the following properties. The PDF ``xref`` number of this object is returned by the method.
+    1. The :data:`resources` and :data:`contents` objects of page ``pno`` in document ``src`` are copied over to the current document, jointly creating a new **Form XObject** with the following properties. The PDF :data:`xref` number of this object is returned by the method.
 
         a. ``/BBox`` equals ``/Mediabox`` of the source page
         b. ``/Matrix`` equals the identity matrix ``[1 0 0 1 0 0]``
-        c. ``/Resources`` equals that of the source page. This involves a “deep-copy” of hierarchically nested other objects (including fonts, images, etc.). The complexity involved here is covered by MuPDF’s grafting [#f1]_ technique functions.
-        d. This is a stream object type, and its stream is exactly equal to the ``/Contents`` object of the source (if the source has multiple such objects, these are first concatenated and stored as one new stream into the new form XObject).
+        c. :data:`resources` equals that of the source page. This involves a “deep-copy” of hierarchically nested other objects (including fonts, images, etc.). The complexity involved here is covered by MuPDF’s grafting [#f1]_ technique functions.
+        d. This is a stream object type, and its stream is exactly equal to the :data:`contents` object of the source (if the source has multiple such objects, these are first concatenated and stored as one new stream into the new form XObject).
 
     2. A second **Form XObject** is then created which the containing page uses to invoke the previous one. This object has the following properties:
 
@@ -196,18 +196,18 @@ This is done using PDF **"Form XObjects"**, see section 4.9 on page 355 of :ref:
         c. ``/XObject`` references the previous XObject via the fixed name ``fullpage``.
         d. The stream of this object contains exactly one fixed statement: ``/fullpage Do``.
 
-    3. The ``/Resources`` and ``/Contents`` objects of the invoking page are now modified as follows.
+    3. The :data:`resources` and :data:`contents` objects of the invoking page are now modified as follows.
     
-        a. Add an entry to the ``/XObject`` dictionary of ``/Resources`` with the name ``fzFrm<n>`` with an appropriately chosen integer n that makes this entry unique on the page.
-        b. Depending on ``overlay``, prepend or append a new object to the page's ``/Contents`` containing the statement ``q /fzFrm<n> Do Q``.
+        a. Add an entry to the ``/XObject`` dictionary of :data:`resources` with the name ``fzFrm<n>`` with an appropriately chosen integer n that makes this entry unique on the page.
+        b. Depending on ``overlay``, prepend or append a new object to the page's :data:`contents` containing the statement ``q /fzFrm<n> Do Q``.
 
-    4. Return ``xref`` to the caller.
+    4. Return :data:`xref` to the caller.
 
 Observe the following guideline for optimum results:
 
 The second XObject is small (just about 270 bytes), specific to the containing rectangle, and therefore different each time.
 
-If no precautions are taken, process **step 1** leads to another XObject on every invocation -- even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the ``xref`` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time, memory and disk usage.
+If no precautions are taken, process **step 1** leads to another XObject on every invocation -- even for the same source page. Its size may be several dozens of kilobytes large. To avoid identical source page copies, use parameter ``reuse_xref = xref`` with the :data:`xref` value returned by previous executions. If ``reuse_xref > 0``, the method will not create XObject 1 again, but instead just point to it via XObject 2. This significantly saves processing time, memory and disk usage.
 
 If you forget to use ``reuse_xref``, garbage collection (``mutool clean -ggg`` or save option ``garbage = 3``) can still take care of any duplicates.
 
@@ -226,4 +226,4 @@ You can always empty or check this store of messages. It is kept as a unicode st
 
 .. rubric:: Footnotes
 
-.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses so-called "graftmaps", a form of scratchpad: for each object to be copied, its xref number is looked up in the graftmap. If found, copying is skipped. Otherwise, the new xref is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, as our tests have shown, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. Whether the target document **originally** had identical data is, however, not checked by this technique. Therefore, using save-option ``garbage = 4`` is still reasonable when copying to a non-empty target.
+.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses so-called "graftmaps", a form of scratchpad: for each object to be copied, its :data:`xref` number is looked up in the graftmap. If found, copying is skipped. Otherwise, the new :data:`xref` is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. Whether the target document **originally** had identical data is, however, not checked by this technique. Therefore, using save-option ``garbage = 4`` is still reasonable when copying to a non-empty target.

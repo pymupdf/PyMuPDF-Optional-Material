@@ -18,7 +18,7 @@ There is a parent-child relationship between a link and its page. If the page ob
 :attr:`Link.next`         points to next link
 :attr:`Link.rect`         clickable area in untransformed coordinates.
 :attr:`Link.uri`          link destination
-:attr:`Link.xref`         XREF number of the entry
+:attr:`Link.xref`         :data:`xref` number of the entry
 ========================= ============================================
 
 **Class API**
@@ -69,7 +69,7 @@ There is a parent-child relationship between a link and its page. If the page ob
 
    .. attribute:: xref
 
-      An integer specifying the PDF cross reference number. Zero if not a PDF.
+      An integer specifying the PDF :data:`xref`. Zero if not a PDF.
 
       :type: int
 

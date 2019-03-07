@@ -43,7 +43,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 :attr:`Annot.widget_name`    PDF only: "Widget" field name
 :attr:`Annot.widget_type`    PDF only: "Widget" field type
 :attr:`Annot.widget_value`   PDF only: "Widget" field value
-:attr:`Annot.xref`           the PDF XREF number
+:attr:`Annot.xref`           the PDF :data:`xref` number
 ============================ ==============================================================
 
 **Class API**
@@ -175,7 +175,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Updates the content of an attached file.
 
-      :arg bytes/bytearray buffer: the new file content. May be omitted to only change meta-information.
+      :arg bytes|bytearray buffer: the new file content. May be omitted to only change meta-information.
 
       :arg str filename: new filename to associate with the file.
 
@@ -296,7 +296,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
    .. attribute:: xref
 
-      The PDF cross reference number. Zero if not a PDF.
+      The PDF :data:`xref`. Zero if not a PDF.
 
       :rtype: int
 

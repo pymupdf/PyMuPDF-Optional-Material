@@ -6,7 +6,7 @@ Collection of Recipes
 
 .. highlight:: python
 
-A collection of recipes in "How-To" format for using PyMuPDF. We aim to extend this section over time. Where appropriate we will refer to the corresponding `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages, but some duplication may still occur.
+A collection of recipes in "How-To" format for using PyMuPDF. We aim to extend this section over time. Where appropriate we will refer to the corresponding `Wiki <https://github.com/pymupdf/PyMuPDF/wiki>`_ pages, but some duplication may still occur.
 
 ----------
 
@@ -84,7 +84,7 @@ But it can be achieved using a little circumvention like in `this <https://githu
 
 .. index::
    triple: extract;image;non-PDF
-   single: convertToPDF
+   pair: convertToPDF;examples
 
 How to Extract Images: Non-PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -107,12 +107,12 @@ You have basically two options:
 
 .. index::
    triple: extract;image;PDF
-   single: extractImage
+   pair: extractImage;examples
 
 How to Extract Images: PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Like any other "object" in a PDF, embedded images are identified by a cross reference number (xref, an integer). If you know this number, you have two ways to access the image's data. The following assumes you have opened a PDF under the name "doc":
+Like any other "object" in a PDF, embedded images are identified by a cross reference number (:data:`xref`, an integer). If you know this number, you have two ways to access the image's data. The following assumes you have opened a PDF under the name "doc":
 
 1. Create a :ref:`Pixmap` of the image with instruction ``pix = fitz.Pixmap(doc, xref)``. This method is **very** fast (single digit micro-seconds). The pixmap's properties (width, height, ...) will reflect the ones of the image. As usual, you can save it as a PNG via method :meth:`Pixmap.writePNG` (or get the corresponding binary data :meth:`Pixmap.getPNGData`). There is no way to tell which image format the embedded original has.
 
@@ -120,8 +120,8 @@ Like any other "object" in a PDF, embedded images are identified by a cross refe
 
 The question remains: **"How do I know those cross reference numbers 'xref' of images?"**. There are two answers to this:
 
-a. **"Inspect the page objects"** Loop through the document's page number list and execute :meth:`Document.getPageImageList` for each page number. The result is a list of list, and its items look like ``[xref, smask, ...]``, containing the xref of an image shown on that page. This xref can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
-b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue -- this xref is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
+a. **"Inspect the page objects"** Loop through the document's page number list and execute :meth:`Document.getPageImageList` for each page number. The result is a list of list, and its items look like ``[xref, smask, ...]``, containing the :data:`xref` of an image shown on that page. This :data:`xref` can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
+b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue -- this :data:`xref` is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
 
 For both extraction approaches, there exist ready-to-use general purpose scripts:
 
@@ -143,10 +143,10 @@ Some images in PDFs are accompanied by **stencil masks**. In their simplest form
 
 Whether an image does have such a stencil mask can be recognized in one of two ways in PyMuPDF:
 
-1. An item of :meth:`Document.getPageImageList` has the general format ``[xref, smask, ...]``, where ``xref`` is the image's cross reference number and ``smask``, if positive, is the cross reference number of a stencil mask.
-2. The (dictionary) results of :meth:`Document.extractImage` have a key ``"smask"``, which also contains any stencil mask's cross reference number if positive.
+1. An item of :meth:`Document.getPageImageList` has the general format ``[xref, smask, ...]``, where ``xref`` is the image's :data:`xref` and ``smask``, if positive, is the :data:`xref` of a stencil mask.
+2. The (dictionary) results of :meth:`Document.extractImage` have a key ``"smask"``, which also contains any stencil mask's :data:`xref` if positive.
 
-If ``smask == 0`` then the image encountered via xref can be processed as it is.
+If ``smask == 0`` then the image encountered via :data:`xref` can be processed as it is.
 
 To recover the original image using PyMuPDF, the procedure depicted as follows must be executed:
 
@@ -166,7 +166,10 @@ The scripts `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blo
 
 .. index::
    triple: picture;embed;PDF
-   single: showPDFpage;insertImage;embeddedFileAdd
+   pair: showPDFpage;examples
+   pair: insertImage;examples
+   pair: embeddedFileAdd;examples
+   pair: addFileAnnot;examples
 
 How to Make one PDF of all your Pictures
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -253,9 +256,9 @@ This has a similar performance as the previous script and it also produces a sim
 
 .. index::
    triple: vector;image;SVG
-   single: showPDFpage
-   single: insertImage
-   single: embeddedFileAdd
+   pair: showPDFpage;examples
+   pair: insertImage;examples
+   pair: embeddedFileAdd;examples
 
 How to Create Vector Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -266,6 +269,14 @@ PyMuPDF also offers a way to create a **vector image** of a page in SVG format (
 Instruction ``svg = page.getSVGimage(matrix = fitz.Identity)`` delivers a UTF-8 string ``svg`` which can be stored with extension ".svg".
 
 ----------
+
+.. index::
+   pair: writeImage;examples
+   pair: getImageData;examples
+   pair: Photoshop;examples
+   pair: Postscript;examples
+   pair: JPEG;examples
+   pair: PhotoImage;examples
 
 How to Convert Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -337,7 +348,7 @@ The general scheme is just the following two lines::
           tkimg = tk.PhotoImage(data=pix.getImageData("ppm"))
 
 .. note::
-        Convert **PNG with alpha** to Tkinter PhotoImage. This requires removing the alpha bytes, before we can do the PPM conversion::
+        Convert **PNG with alpha** to Tkinter PhotoImage. This requires **removing the alpha bytes**, before we can do the PPM conversion::
 
           import fitz
           if str is bytes:                  # this is Python 2!
@@ -351,6 +362,9 @@ The general scheme is just the following two lines::
           tkimg = tk.PhotoImage(data=pix.getImageData("ppm"))
 
 ----------
+
+.. index::
+   pair: copyPixmap;examples
 
 How to Use Pixmaps: Glueing Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -385,6 +399,14 @@ Here is the output:
 
 .. image:: img-target.png
    :scale: 33
+
+----------
+
+.. index::
+   pair: setRect;examples
+   pair: invertIRect;examples
+   pair: copyPixmap;examples
+   pair: writeImage;examples
 
 How to Use Pixmaps: Making a Fractal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -446,6 +468,8 @@ The result should look something like this:
 
 .. image:: img-sierpinski.png
    :scale: 33
+
+----------
 
 How to Interface with NumPy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -557,7 +581,7 @@ Responsible for this effect is the PDF creator (software or human). For example,
 
 PyMuPDF has several means to re-establish some reading sequence or even to re-generate a layout close to the original.
 
-As a starting point take the above mentioned `script <https://github.com/rk700/PyMuPDF/wiki/How-to-extract-text-from-a-rectangle>`_ and then use the full page rectangle.
+As a starting point take the above mentioned `script <https://github.com/pymupdf/PyMuPDF/wiki/How-to-extract-text-from-a-rectangle>`_ and then use the full page rectangle.
 
 ----------
 
@@ -567,7 +591,7 @@ If you see a table in a document, you are not normally looking at something like
 
 Extracting a tabular data from such a page area therefore means that you must find a way to **(1)** graphically indicate table and column borders, and **(2)** then extract text based on this information.
 
-The wxPython GUI script `wxTableExtract.py <https://github.com/rk700/PyMuPDF/blob/master/examples/wxTableExtract.py>`_ strives to exactly do that. You may want to have a look at it and adjust it to your liking.
+The wxPython GUI script `wxTableExtract.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/wxTableExtract.py>`_ strives to exactly do that. You may want to have a look at it and adjust it to your liking.
 
 ----------
 
@@ -1115,7 +1139,7 @@ Drawing and Graphics
 
 PDF files support elementary drawing operations as part of their syntax. This includes basic geometrical objects like lines, curves, circles, rectangles including specifying colors.
 
-The syntax for such operations is defined in "A Operator Summary" on page 985 of the :ref:`AdobeManual`. Specifying these operators for a PDF page happens in its ``/Contents`` objects.
+The syntax for such operations is defined in "A Operator Summary" on page 985 of the :ref:`AdobeManual`. Specifying these operators for a PDF page happens in its :data:`contents` objects.
 
 PyMuPDF implements a large part of the available features via its :ref:`Shape` class, which is comparable to notions like "canvas" in other packages (e.g. `reportlab <https://pypi.org/project/reportlab/>`_).
 
@@ -1215,7 +1239,7 @@ PDF supports incorporating arbitrary data. This can be done in one of two ways: 
 
 The basic differences between these options are **(1)** you need edit permission to embed a file, but only annotation permission to attach, **(2)** like all annotations, attachments are visible on a page, embedded files are not.
 
-There exist several example scripts: `embedded-list.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-list.py>`_, `new-annots.py <https://github.com/rk700/PyMuPDF/blob/master/demo/new-annots.py>`_.
+There exist several example scripts: `embedded-list.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-list.py>`_, `new-annots.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/new-annots.py>`_.
 
 Also look at the sections above and at chapter :ref:`Appendix 3`.
 
@@ -1249,15 +1273,15 @@ This snippet creates the respective sub documents which can then be used to prin
 >>> doc.select(p_odd)     # and do the same with the odd pages
 >>> doc.save("odd.pdf")
 
-For more information also have a look at this Wiki `article <https://github.com/rk700/PyMuPDF/wiki/Rearranging-Pages-of-a-PDF>`_.
+For more information also have a look at this Wiki `article <https://github.com/pymupdf/PyMuPDF/wiki/Rearranging-Pages-of-a-PDF>`_.
 
 ----------
 
 How to Join PDFs 
 ~~~~~~~~~~~~~~~~~~
-It is easy to join PDFs with method :meth:`Document.insertPDF`. Given open PDF documents, you can copy page ranges from one to the other. You can select the point where the copied pages should be placed, you can revert the page sequence and also change page rotation. This Wiki `article <https://github.com/rk700/PyMuPDF/wiki/Inserting-Pages-from-other-PDFs>`_ contains a full description.
+It is easy to join PDFs with method :meth:`Document.insertPDF`. Given open PDF documents, you can copy page ranges from one to the other. You can select the point where the copied pages should be placed, you can revert the page sequence and also change page rotation. This Wiki `article <https://github.com/pymupdf/PyMuPDF/wiki/Inserting-Pages-from-other-PDFs>`_ contains a full description.
 
-The GUI script `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ uses this method to join a list of files while also joining the respective table of contents segments. It looks like this:
+The GUI script `PDFjoiner.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ uses this method to join a list of files while also joining the respective table of contents segments. It looks like this:
 
 .. image:: img-pdfjoiner.jpg
    :scale: 60
@@ -1636,10 +1660,10 @@ Anyway -- it is a matter of documentation only: in which chapter of the document
 
 ----------------------------------
 
-How to Iterate through the XREF 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A PDF's XREF table is a list of all objects defined in the file. This table may easily contain many thousand entries -- the manual :ref:`AdobeManual` for example has over 330'000 objects. Table entry "0" is reserved and must not be touched.
-The following script loops through the XREF and prints each object's definition::
+How to Iterate through the :data:`xref` Table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A PDF's :data:`xref` table is a list of all objects defined in the file. This table may easily contain many thousand entries -- the manual :ref:`AdobeManual` for example has over 330'000 objects. Table entry "0" is reserved and must not be touched.
+The following script loops through the :data:`xref` table and prints each object's definition::
 
     >>> xreflen = doc._getXrefLength() # number of objects in file
     >>> for xref in range(1, xreflen): # skip item 0!
@@ -1653,7 +1677,7 @@ How to Handle Object Streams
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Some object types contain additional data apart from their object definition. Examples are images, fonts, embedded files or commands describing the appearance of a page.
 
-Objects of these types are called "stream objects". PyMuPDF allows reading an object's stream via method :meth:`Document._getXrefStream` with the object's XREF as an argument. And it is also possible to write back a modified version of a stream using :meth:`Document._updateStream`.
+Objects of these types are called "stream objects". PyMuPDF allows reading an object's stream via method :meth:`Document._getXrefStream` with the object's :data:`xref` as an argument. And it is also possible to write back a modified version of a stream using :meth:`Document._updateStream`.
 
 Assume that the following snippet wants to read all streams of a PDF for whatever reason::
 
@@ -1671,20 +1695,20 @@ Assume that the following snippet wants to read all streams of a PDF for whateve
 
 How to Handle Page Contents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Every PDF page has one or more ``/Contents`` objects. These are stream objects describing **what** appears **where** on a page (like text and images). They are written in a special mini-language desribed e.g. in chapter "APPENDIX A - Operator Summary" on page 985 of the :ref:`AdobeManual`.
+A PDF page can have one or more :data:`contents` objects -- in fact, a page will be empty if it has no such object. These are stream objects describing **what** appears **where** on a page (like text and images). They are written in a special mini-language desribed e.g. in chapter "APPENDIX A - Operator Summary" on page 985 of the :ref:`AdobeManual`.
 
 Every PDF reader application must be able to interpret the contents syntax to reproduce the intended appearance of the page.
 
-If multiple ``/Contents`` objects are provided, they must be read and interpreted in the specified sequence in exactly the same way as if these streams were provided as a concatenation of the several.
+If multiple :data:`contents` objects are provided, they must be read and interpreted in the specified sequence in exactly the same way as if these streams were provided as a concatenation of the several.
 
-There are good technical arguments for having multiple ``/Contents`` objects:
+There are good technical arguments for having multiple :data:`contents` objects:
 
-* It is a lot easier and faster to just add new ``/Contents`` objects than maintaining a single big one (which entails reading, decompressing, modifying, recompressing, and rewriting it each time).
-* When working with incremental updates, a modified big contents object will bloat the update delta and can thus easily negate the efficiency of incremental saves.
+* It is a lot easier and faster to just add new :data:`contents` objects than maintaining a single big one (which entails reading, decompressing, modifying, recompressing, and rewriting it each time).
+* When working with incremental updates, a modified big :data:`contents` object will bloat the update delta and can thus easily negate the efficiency of incremental saves.
 
-For example, PyMuPDF adds new, small ``/Contents`` objects in methods :meth:`Page.insertImage`, :meth:`Page.showPDFpage()` and the :ref:`Shape` methods.
+For example, PyMuPDF adds new, small :data:`contents` objects in methods :meth:`Page.insertImage`, :meth:`Page.showPDFpage()` and the :ref:`Shape` methods.
 
-However, there are also situations when a single ``/Contents`` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
+However, there are also situations when a single :data:`contents` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
 
 Here are two ways of combining multiple contents of a page::
 
@@ -1702,7 +1726,7 @@ Here are two ways of combining multiple contents of a page::
                 cont += doc._getXrefStream(xref)
             # do something with the combined contents
 
-The clean function :meth:`Page._cleanContents` does a lot more than just glueing ``/Contents`` objects: it also corrects the PDF operator syntax of the page and also that of **all of its annotations** (each :ref:`Annot` annotation also has its own contents object!).
+The clean function :meth:`Page._cleanContents` does a lot more than just glueing :data:`contents` objects: it also corrects the PDF operator syntax of the page and also that of **all of its annotations** (each :ref:`Annot` annotation also has its own contents object!).
 
 And of course, :meth:`Page._cleanContents` writes back its results to the PDF: when saving it, it will reflect those changes. The same happens for the complete PDF when you use the ``clean=True`` parameter in :meth:`Document.save`.
 
@@ -1710,10 +1734,9 @@ This may exceed what you actually wanted to achieve.
 
 ----------------------------------
 
-
 How to Access the PDF Catalog Object
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This is a central ("root") object of a PDF which serves as a starting point to reach other objects and which contains any global options for the PDF::
+This is a central ("root") object of a PDF which serves as a starting point to reach important other objects and which also contains some global options for the PDF::
 
     >>> import fitz
     >>> doc=fitz.open("PyMuPDF.pdf")
@@ -1730,6 +1753,29 @@ This is a central ("root") object of a PDF which serves as a starting point to r
     >>
 
 .. note:: Indentation, line breaks and comments are inserted here for clarification purposes only and will not normally appear. For more information on the PDF catalogue see section 3.6.1 on page 137 of the :ref:`AdobeManual`.
+
+----------------------------------
+
+How to Access the PDF File Trailer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The trailer of a PDF file is a :data:`dictionary` located towards the end of the file and contains special objects and pointers to important other information. See :ref:`AdobeManual` p. 96. Here is an overview:
+
+======= =========== ===================================================================================
+Key     Type        Value 
+======= =========== ===================================================================================
+Size    int         Number of entries in the cross-reference table + 1.
+Prev    int         Offset to previous :data:`xref` section (indicates incremental updates).
+Root    dictionary  (indirect) Pointer to catalog object. See previous section.
+Encrypt dictionary  Pointer to encryption object (encrypted files only).
+Info    dictionary  (indirect) Pointer to information (metadata).
+ID      array       File identifier consisting of two byte strings.
+XRefStm int         Offset of a cross-reference stream. See :ref:`AdobeManual` p. 109.
+======= =========== ===================================================================================
+
+Access this information via PyMuPDF with :meth:`Document._getTrailerString`.
+
+
+----------------------------------
 
 How to Access XML Metadata
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

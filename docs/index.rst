@@ -11,6 +11,7 @@
    classes.rst
    algebra.rst
    lowlevel.rst
+   glossary.rst
    vars.rst
    colors.rst
    app1.rst

@@ -135,7 +135,7 @@ To cut off unneeded stuff from your MuPDF version, our suggested version has the
 
 The MuPDF source includes generation procedures / makefiles for numerous platforms. For Windows platforms, Visual Studio solution and project definitions are provided.
 
-Consult additional installation hints on PyMuPDF's `main page <https://github.com/rk700/PyMuPDF/>`_ on Github. Among other things you will find Wiki pages with details on building the Windows binaries or user provided installation experiences.
+Consult additional installation hints on PyMuPDF's `main page <https://github.com/pymupdf/PyMuPDF/>`_ on Github. Among other things you will find Wiki pages with details on building the Windows binaries or user provided installation experiences.
 
 Step 3: Build / Setup PyMuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -169,7 +169,7 @@ Step 2: Install from GitHub
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This section applies, if you prefer a ZIP file (Windows only) or if you need a special (bug-fix or pre-release) wheel.
 
-`Download <https://github.com/rk700/pymupdf/releases>`_ your Windows, Mac OS or Linux wheel and issue
+`Download <https://github.com/pymupdf/pymupdf/releases>`_ your Windows, Mac OS or Linux wheel and issue
 
 ``pip install [--upgrade] PyMuPDF-<...>.whl``
 

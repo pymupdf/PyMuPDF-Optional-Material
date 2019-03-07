@@ -91,7 +91,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg irect-like clip: a region of the source pixmap to take the copy from.
 
-      .. note:: If width or height are in fact no integers, the pixmap will be created with ``alpha = 1``.
+      .. note:: If width or height are not *de facto* integers (meaning e.g. ``hash(width) != hash(int(width))``), then pixmap will be created with ``alpha = 1``.
 
    .. method:: __init__(self, source, alpha = 1)
 
@@ -143,12 +143,12 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: __init__(self, doc, xref)
 
-      **From a PDF image:** Create a pixmap from an image **contained in PDF** ``doc`` identified by its XREF number. All pimap properties are set by the image. Have a look at `extract-img1.py <https://github.com/rk700/PyMuPDF/tree/master/demo/extract-img1.py>`_ and `extract-img2.py <https://github.com/rk700/PyMuPDF/tree/master/demo/extract-img2.py>`_ to see how this can be used to recover all of a PDF's images.
+      **From a PDF image:** Create a pixmap from an image **contained in PDF** ``doc`` identified by its :data:`xref`. All pimap properties are set by the image. Have a look at `extract-img1.py <https://github.com/pymupdf/PyMuPDF/tree/master/demo/extract-img1.py>`_ and `extract-img2.py <https://github.com/pymupdf/PyMuPDF/tree/master/demo/extract-img2.py>`_ to see how this can be used to recover all of a PDF's images.
 
       :arg doc: an opened **PDF** document.
       :type doc: :ref:`Document`
 
-      :arg int xref: the XREF number of an image object. For example, you can make a list of images used on a particular page with :meth:`Document.getPageImageList`, which also shows the xref numbers of each image.
+      :arg int xref: the :data:`xref` of an image object. For example, you can make a list of images used on a particular page with :meth:`Document.getPageImageList`, which also shows the :data:`xref` numbers of each image.
 
    .. method:: clearWith([value [, irect]])
 

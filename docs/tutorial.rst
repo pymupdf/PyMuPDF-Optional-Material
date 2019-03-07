@@ -70,7 +70,7 @@ subject        subject
 
 .. note:: Apart from these standard metadata, **PDF documents** starting from PDF version 1.4 may also contain so-called *"metadata streams"*. Information in such streams is coded in XML. PyMuPDF deliberately contains no XML components, so we do not directly support access to information contained therein. But you can extract the stream as a whole, inspect or modify it using a package like `lxml <https://pypi.org/project/lxml/>`_ and then store the result back into the PDF. If you want, you can also delete these data altogether.
 
-.. note:: There are two utility scripts in the repository that `import (PDF only) <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2meta.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/meta2csv.py>`_ metadata from resp. to CSV files.
+.. note:: There are two utility scripts in the repository that `import (PDF only) <https://github.com/pymupdf/PyMuPDF/blob/master/examples/csv2meta.py>`_ resp. `export <https://github.com/pymupdf/PyMuPDF/blob/master/examples/meta2csv.py>`_ metadata from resp. to CSV files.
 
 Working with Outlines
 =========================
@@ -82,7 +82,7 @@ This will return a Python list of lists ``[[lvl, title, page, ...], ...]`` which
 
 ``lvl`` is the hierarchy level of the entry (starting from 1), ``title`` is the entry's title, and ``page`` the page number (1-based!). Other parameters describe details of the bookmark target.
 
-.. note:: There are two utility scripts in the repository that `import (PDF only) <https://github.com/rk700/PyMuPDF/blob/master/examples/csv2toc.py>`_ resp. `export <https://github.com/rk700/PyMuPDF/blob/master/examples/toc2csv.py>`_ table of contents from resp. to CSV files.
+.. note:: There are two utility scripts in the repository that `import (PDF only) <https://github.com/pymupdf/PyMuPDF/blob/master/examples/csv2toc.py>`_ resp. `export <https://github.com/pymupdf/PyMuPDF/blob/master/examples/toc2csv.py>`_ table of contents from resp. to CSV files.
 
 Working with Pages
 ======================
@@ -118,7 +118,7 @@ This example creates a **raster** image of a page's content:
 
 ``pix`` is a :ref:`Pixmap` object that (in this case) contains an **RGBA** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGB** image (i.e. containing no alpha channel), specify ``pix = page.getPixmap(alpha = False)``.
 
-.. note:: You can also create a **vector** image of a page by using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/rk700/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
+.. note:: You can also create a **vector** image of a page by using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/pymupdf/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
 Saving the Page Image in a File
 -----------------------------------
@@ -128,7 +128,7 @@ We can simply store the image in a PNG file:
 
 Displaying the Image in Dialog Managers
 -------------------------------------------
-We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more in the `examples <https://github.com/rk700/PyMuPDF/tree/master/examples>`_ directory.
+We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more in the `examples <https://github.com/pymupdf/PyMuPDF/tree/master/examples>`_ directory.
 
 wxPython
 ~~~~~~~~~~~~~
@@ -210,13 +210,13 @@ You can find out, exactly where on a page a certain text string appears:
 
 This delivers a list of up to 16 rectangles (see :ref:`Rect`), each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
 
-Please also do have a look at chapter :ref:`cooperation` and at demo programs `demo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo.py>`_ and `demo-lowlevel.py <https://github.com/rk700/PyMuPDF/blob/master/demo/demo-lowlevel.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
+Please also do have a look at chapter :ref:`cooperation` and at demo programs `demo.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/demo.py>`_ and `demo-lowlevel.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/demo-lowlevel.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
 PDF Maintenance
 ==================
 PDFs are the only document type that can be **modified** using PyMuPDF. Other files are read-only.
 
-However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the result of this conversion. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `pdf-converter.py <https://github.com/rk700/PyMuPDF/blob/master/demo/pdf-converter.py>`_ which can convert any supported document to PDF.
+However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the result of this conversion. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `pdf-converter.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/pdf-converter.py>`_ which can convert any supported document to PDF.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
@@ -272,14 +272,14 @@ Here is a snippet that **splits** ``doc1``. It creates a new document of its fir
 >>> doc2.insertPDF(doc1, from_page = len(doc1) - 10) # last 10 pages
 >>> doc2.save("first-and-last-10.pdf")
 
-More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDFjoiner.py>`_.
+More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/PDFjoiner.py>`_.
 
 Embedding Data
 ---------------
 
 PDFs can be used as containers for abitrary data (exeutables, other PDFs, text files, etc.) much like ZIP archives.
 
-PyMuPDF fully supports this feature via :ref:`Document` ``embeddedFile*`` methods and attributes. For some detail read :ref:`Appendix 3`, consult the Wiki on `embedding files <https://github.com/rk700/PyMuPDF/wiki/Dealing-with-Embedded-Files>`_, or the example scripts `embedded-copy.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-copy.py>`_, `embedded-export.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-export.py>`_, `embedded-import.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-import.py>`_, and `embedded-list.py <https://github.com/rk700/PyMuPDF/blob/master/examples/embedded-list.py>`_.
+PyMuPDF fully supports this feature via :ref:`Document` ``embeddedFile*`` methods and attributes. For some detail read :ref:`Appendix 3`, consult the Wiki on `embedding files <https://github.com/pymupdf/PyMuPDF/wiki/Dealing-with-Embedded-Files>`_, or the example scripts `embedded-copy.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-copy.py>`_, `embedded-export.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-export.py>`_, `embedded-import.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-import.py>`_, and `embedded-list.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-list.py>`_.
 
 
 Saving
@@ -295,7 +295,7 @@ You can write changes back to the **original PDF** by specifying ``incremental =
 **Save Option**     **mutool**  **Effect**
 =================== =========== ==================================================
 garbage=1           g           garbage collect unused objects
-garbage=2           gg          in addition to 1, compact xref tables
+garbage=2           gg          in addition to 1, compact :data:`xref` tables
 garbage=3           ggg         in addition to 2, merge duplicate objects
 garbage=4           gggg        in addition to 3, skip duplicate streams
 clean=1             c           clean content streams
@@ -319,7 +319,7 @@ This can be achieved by the :meth:`Document.close` method. Apart from closing th
 
 Further Reading
 ================
-Also have a look at PyMuPDF's `Wiki <https://github.com/rk700/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipes"** cover over 15 topics written in "How-To" style.
+Also have a look at PyMuPDF's `Wiki <https://github.com/pymupdf/PyMuPDF/wiki>`_ pages. Especially those named in the sidebar under title **"Recipes"** cover over 15 topics written in "How-To" style.
 
 This document also contains a :ref:`FAQ`. This chapter has close connection to the aforementioned recipes, and it will be extended with more content over time.
 

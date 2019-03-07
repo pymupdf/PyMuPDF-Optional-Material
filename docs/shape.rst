@@ -13,9 +13,9 @@ Several draw methods can be executed in a row and each one of them will contribu
 
 **Text insertions** :meth:`insertText` and :meth:`insertTextbox` implicitely execute a "finish" and therefore only require :meth:`commit` to become effective. As a consequence, both include parameters for controlling prperties like colors, etc.
 
-================================ =================================================
+================================ =====================================================
 **Method / Attribute**             **Description**
-================================ =================================================
+================================ =====================================================
 :meth:`Shape.commit`             update the page's contents
 :meth:`Shape.drawBezier`         draw a cubic Bézier curve
 :meth:`Shape.drawCircle`         draw a circle around a point
@@ -38,9 +38,9 @@ Several draw methods can be executed in a row and each one of them will contribu
 :attr:`Shape.page`               stores the owning page
 :attr:`Shape.rect`               rectangle surrounding drawings
 :attr:`Shape.text_cont`          accumulated text insertions
-:attr:`Shape.totalcont`          accumulated string to be stored in ``/Contents``
+:attr:`Shape.totalcont`          accumulated string to be stored in :data:`contents`
 :attr:`Shape.width`              stores the page's width
-================================ =================================================
+================================ =====================================================
 
 **Class API**
 
@@ -90,7 +90,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       .. image:: img-squiggly.png
 
-      .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/rk700/PyMuPDF/blob/master/demo/draw-sines.py>`_.
+      .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/draw-sines.py>`_.
 
    .. index::
       pair: breadth; Shape.drawZigzag args
@@ -249,11 +249,14 @@ Several draw methods can be executed in a row and each one of them will contribu
       pair: fontname; Shape.insertText args
       pair: fontfile; Shape.insertText args
       pair: color; Shape.insertText args
+      pair: fill; Page.insertText args
+      pair: render_mode; Page.insertText args
+      pair: border_width; Page.insertText args
       pair: encoding; Shape.insertText args
       pair: rotate; Shape.insertText args
       pair: morph; Shape.insertText args
 
-   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, set_simple=False, encoding=TEXT_ENCODING_LATIN, color =(0, 0, 0), rotate=0, morph=None)
+   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, set_simple=False, encoding=TEXT_ENCODING_LATIN, color=None, fill=None, render_mode=0, border_width=1, rotate=0, morph=None)
 
       Insert text lines start at ``point``.
 
@@ -276,13 +279,16 @@ Several draw methods can be executed in a row and each one of them will contribu
       pair: fontname; Shape.insertTextbox args
       pair: fontfile; Shape.insertTextbox args
       pair: color; Shape.insertTextbox args
+      pair: fill; Page.insertTextbox args
+      pair: render_mode; Page.insertTextbox args
+      pair: border_width; Page.insertTextbox args
       pair: rotate; Shape.insertTextbox args
       pair: encoding; Shape.insertTextbox args
       pair: morph; Shape.insertTextbox args
       pair: expandtabs; Shape.insertTextbox args
       pair: align; Shape.insertTextbox args
 
-   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, set_simple=False, encoding=TEXT_ENCODING_LATIN, color=(0, 0, 0), expandtabs=8, align=TEXT_ALIGN_LEFT, rotate=0, morph=None)
+   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, set_simple=False, encoding=TEXT_ENCODING_LATIN, color=None, fill=None, render_mode=0, border_width=1, expandtabs=8, align=TEXT_ALIGN_LEFT, rotate=0, morph=None)
 
       PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, which depends on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
 
@@ -335,11 +341,11 @@ Several draw methods can be executed in a row and each one of them will contribu
   
    .. method:: commit(overlay = True)
 
-      Update the page's ``/Contents`` with the accumulated draw commands and text insertions. If a ``Shape`` is not committed, the page will not be changed.
+      Update the page's :data:`contents` with the accumulated draw commands and text insertions. If a ``Shape`` is not committed, the page will not be changed.
 
       The method will reset attributes :attr:`Shape.rect`, :attr:`lastPoint`, :attr:`draw_cont`, :attr:`text_cont` and :attr:`totalcont`. Afterwards, the shape object can be reused for the **same page**.
 
-      :arg bool overlay: determine whether to put content in foreground (default) or background. Relevant only, if the page already has a non-empty ``/Contents`` object.
+      :arg bool overlay: determine whether to put content in foreground (default) or background. Relevant only, if the page already has a non-empty :data:`contents` object.
 
    .. attribute:: doc
 
@@ -527,6 +533,30 @@ Common Parameters
 **color / fill** (*list, tuple*)
 
   Line and fill colors are always specified as RGB triples of floats from 0 to 1. To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names -- see section :ref:`ColorDatabase`.
+
+----
+
+**border_width** (*float*)
+
+  Set the border width for text insertions. New in v1.14.9. Relevant only if the render mode argument is used with a value greater zero.
+
+----
+
+**render_mode** (*int*)
+
+  Integer in ``range(8)`` which controls the text appearance (:meth:`Shape.insertText` and :meth:`Shape.insertTextbox`). See page 398 in :ref:`AdobeManual`. New in v1.14.9. These methods now also differentiate between fill and stroke colors.
+  
+  * For default 0, only the text fill color is used to paint the text. For backward compatibility, using the ``color`` parameter instead also works.
+  * For render mode 1, only the border of each glyph (i.e. text character) is drawn with a thickness as set in argument ``border_width``. The color chosen in the ``color`` argument is taken for this, the ``fill`` parameter is ignored.
+  * For render mode 2, the glyphs are filled and stroked, using both color parameters and the specified border width. You can use this value to simulate **bold text** without using another font: choose the same value for ``fill`` and ``color`` and an appropriate value for ``border_width``.
+  * For render mode 3, the glyphs are neither stroked nor filled: the text becomes invisible.
+
+  .. note:: This version 1.14.0 of the base library MuPDF contains a bug: text with render modes 2 and 6 is returned twice and must be dealt with in your script. A fix can be expected with the next MuPDF version.
+
+  
+  The following examples use border_width=0.3, together with a fontsize of 15. Stroke color is blue and fill color is some yellow.
+
+  .. image:: img-rendermode.jpg
 
 ----
 

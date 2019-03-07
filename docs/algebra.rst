@@ -49,7 +49,7 @@ Unary Operations
 
 Binary Operations
 ------------------
-For the operators ``+, -, *, /``, the **second operand** may be a number, which will be applied to each component. Otherwise:
+For every geometry object "a" and every number "b", the operations "a ° b" and "a °= b" are always defined if "°" is any of the operators ``+, -, *, /``. The respective operation is simply executed for each component of "a". If the second operand is **not a number**, then the following is defined:
 
 +--------+---------------------------------------------------------------+
 |        | **Result**                                                    |

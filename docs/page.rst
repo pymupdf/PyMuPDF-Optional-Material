@@ -81,7 +81,7 @@ This is available for PDF documents only. There are basically two groups of meth
 :attr:`Page.parent`              owning document object
 :attr:`Page.rect`                rectangle (mediabox) of the page
 :attr:`Page.rotation`            PDF only: page rotation
-:attr:`Page.xref`                PDF cross reference number
+:attr:`Page.xref`                PDF :data:`xref`
 ================================ =========================================
 
 **Class API**
@@ -275,11 +275,14 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fontname; Page.insertText args
       pair: fontfile; Page.insertText args
       pair: color; Page.insertText args
+      pair: fill; Page.insertText args
+      pair: render_mode; Page.insertText args
+      pair: border_width; Page.insertText args
       pair: rotate; Page.insertText args
       pair: encoding; Page.insertText args
       pair: morph; Page.insertText args
 
-   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), encoding=TEXT_ENCODING_LATIN, rotate=0, morph=None, overlay=True)
+   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), fill=None, render_mode=0, border_width=1, encoding=TEXT_ENCODING_LATIN, rotate=0, morph=None, overlay=True)
 
       PDF only: Insert text starting at point-like ``point``. See :meth:`Shape.insertText`.
 
@@ -289,13 +292,16 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fontname; Page.insertTextbox args
       pair: fontfile; Page.insertTextbox args
       pair: color; Page.insertTextbox args
+      pair: fill; Page.insertTextbox args
+      pair: render_mode; Page.insertTextbox args
+      pair: border_width; Page.insertTextbox args
       pair: encoding; Page.insertTextbox args
       pair: expandtabs; Page.insertTextbox args
       pair: align; Page.insertTextbox args
       pair: rotate; Page.insertTextbox args
       pair: morph; Page.insertTextbox args
 
-   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), encoding=TEXT_ENCODING_LATIN, expandtabs=8, align=TEXT_ALIGN_LEFT, charwidths=None, rotate=0, morph=None, overlay=True)
+   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), fill=None, render_mode=0, border_width=1, encoding=TEXT_ENCODING_LATIN, expandtabs=8, align=TEXT_ALIGN_LEFT, charwidths=None, rotate=0, morph=None, overlay=True)
 
       PDF only: Insert text into the specified rect-like ``rect``. See :meth:`Shape.insertTextbox`.
 
@@ -455,7 +461,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: insertFont(fontname="helv", fontfile=None, fontbuffer=None, set_simple=False, encoding=TEXT_ENCODING_LATIN)
 
-      PDF only: Add a new font to be used by text output methods and return its XREF number. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
+      PDF only: Add a new font to be used by text output methods and return its :data:`xref`. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
 
       :arg str fontname: The name by which this font shall be referenced when outputting text on this page. In general, you have a "free" choice here (but consult the :ref:`AdobeManual`, page 56, section 3.2.4 for a formal description of building legal PDF names). However, if it matches one of the :data:`Base14_Fonts` or one of the CJK fonts, ``fontfile`` and ``fontbuffer`` **are ignored**.
       
@@ -471,7 +477,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg int encoding: applicable for the "Helvetica", "Courier" and "Times" sets of :data:`Base14_Fonts` only. Select one of the available encodings Latin (0), Cyrillic (2) or Greek (1). Only use the default (0 = Latin) for "Symbol" and "ZapfDingBats".
 
       :rytpe: int
-      :returns: the XREF of the installed font.
+      :returns: the :data:`xref` of the installed font.
 
       .. note:: Built-in fonts will not lead to the inclusion of a font file. So the resulting PDF file will remain small. However, your PDF reader software is responsible for generating an appropriate appearance -- and there **are** differences on whether or how each one of them does this. This is especially true for the CJK fonts, but also for Symbol and ZapfDingbats in some cases. Following are the **Font Names** and their correspondingly installed **Base Font** names:
 
@@ -551,7 +557,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       4. The image content is stored in its original size - which may be much bigger than the size you are ever displaying. Consider decreasing the stored image size by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
 
-      5. The most efficient way to display the same image on multiple pages is :meth:`showPDFpage`. Consult :meth:`Document.convertToPDF` for how to obtain intermediary PDFs usable for that method. Demo script `fitz-logo.py <https://github.com/rk700/PyMuPDF/blob/master/demo/fitz-logo.py>`_ implements a fairly complete approach.
+      5. The most efficient way to display the same image on multiple pages is :meth:`showPDFpage`. Consult :meth:`Document.convertToPDF` for how to obtain intermediary PDFs usable for that method. Demo script `fitz-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/fitz-logo.py>`_ implements a fairly complete approach.
 
    .. method:: getText(output = 'text')
 
@@ -648,9 +654,9 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Display a page of another PDF as a **vector image** (otherwise similar to :meth:`Page.insertImage`). This is a multi-purpose method, use it to
       
-      * create "n-up" versions of existing PDF files, combining several input pages into **one output page** (see example `4-up.py <https://github.com/rk700/PyMuPDF/blob/master/examples/4-up.py>`_),
-      * create "posterized" PDF files, i.e. every input page is split up in parts which each create a separate output page (see `posterize.py <https://github.com/rk700/PyMuPDF/blob/master/examples/posterize.py>`_),
-      * include PDF-based vector images like company logos, watermarks, etc., see `svg-logo.py <https://github.com/rk700/PyMuPDF/blob/master/examples/svg-logo.py>`_, which puts an SVG-based logo on each page (requires additional packages to deal with SVG-to-PDF conversions).
+      * create "n-up" versions of existing PDF files, combining several input pages into **one output page** (see example `4-up.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/4-up.py>`_),
+      * create "posterized" PDF files, i.e. every input page is split up in parts which each create a separate output page (see `posterize.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/posterize.py>`_),
+      * include PDF-based vector images like company logos, watermarks, etc., see `svg-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/svg-logo.py>`_, which puts an SVG-based logo on each page (requires additional packages to deal with SVG-to-PDF conversions).
 
       :arg rect-like rect: where to place the image.
 
@@ -663,15 +669,15 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned xref number of its first inclusion. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
+      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned :data:`xref` of its first inclusion. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
 
       :arg rect-like clip: choose which part of the source page to show. Default is its ``/CropBox``.
 
-      :returns: xref number of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
+      :returns: :data:`xref` of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
 
       .. note:: The displayed source page is shown without any annotations or links. The source page's complete text and images will become an integral part of the containing page, i.e. they will be included in the output of all text extraction methods and appear in methods :meth:`getFontList` and :meth:`getImageList` (whether they are actually visible - see the ``clip`` parameter - or not).
 
-      .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or a watermark) on every page of PDF ``doc``. The first execution **actually** inserts the source page, the subsequent ones will only insert pointers to it via its xref number.
+      .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or a watermark) on every page of PDF ``doc``. The first execution **actually** inserts the source page, the subsequent ones will only insert pointers to it via its :data:`xref`.
 
       >>> # the first showPDFpage will include source page docsrc[pno],
       >>> # subsequents will reuse it via its xref.
@@ -798,7 +804,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. attribute:: xref
 
-      The page's PDF cross reference number. Zero if not a PDF.
+      The page's PDF :data:`xref`. Zero if not a PDF.
 
       :type: :ref:`Rect`
 
@@ -820,7 +826,7 @@ Each entry of the ``getLinks()`` list is a dictionay with the following keys:
 
 * ``uri``:  a string specifying the destination internet resource. Required for ``LINK_URI``, else ignored.
 
-* ``xref``: an integer specifying the PDF cross reference entry of the link object. Do not change this entry in any way. Required for link deletion and update, otherwise ignored. For non-PDF documents, this entry contains ``-1``. It is also ``-1`` for **all** entries in the ``getLinks()`` list, if **any** of the links is not supported by MuPDF - see the note below.
+* ``xref``: an integer specifying the PDF :data:`xref` of the link object. Do not change this entry in any way. Required for link deletion and update, otherwise ignored. For non-PDF documents, this entry contains ``-1``. It is also ``-1`` for **all** entries in the ``getLinks()`` list, if **any** of the links is not supported by MuPDF - see the note below.
 
 Notes on Supporting Links
 ---------------------------
