@@ -1,6 +1,12 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.10
+---------------------------
+* **Changed** :meth:`Page.showPDFpage` to support rotation of the source rectangle. Fixes #261 ("Cannot rotate insterted pages").
+* **Fixed** a bug in :meth:`Page.insertImage` which prevented insertion of multiple images provided as streams.
+
+
 Changes in Version 1.14.9
 ---------------------------
 * **Added** new low-level method :meth:`Document._getTrailerString`, which returns the trailer object of a PDF. This is much like :meth:`Document._getXrefString` except that the PDF trailer has no / needs no :data:`xref` to identify it.

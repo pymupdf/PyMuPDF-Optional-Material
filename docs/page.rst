@@ -648,30 +648,33 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: reuse_xref; Page.showPDFpage args
       pair: keep_proportion; Page.showPDFpage args
       pair: clip; Page.showPDFpage args
+      pair: rotate; Page.showPDFpage args
       pair: overlay; Page.showPDFpage args
 
-   .. method:: showPDFpage(rect, docsrc, pno = 0, keep_proportion = True, overlay = True, reuse_xref = 0, clip = None)
+   .. method:: showPDFpage(rect, docsrc, pno=0, keep_proportion=True, overlay=True, reuse_xref=0, rotate=0, clip=None)
 
-      PDF only: Display a page of another PDF as a **vector image** (otherwise similar to :meth:`Page.insertImage`). This is a multi-purpose method, use it to
+      PDF only: Display a page of another PDF as a **vector image** (otherwise similar to :meth:`Page.insertImage`). This is a multi-purpose method. For example, you can use it to
       
       * create "n-up" versions of existing PDF files, combining several input pages into **one output page** (see example `4-up.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/4-up.py>`_),
       * create "posterized" PDF files, i.e. every input page is split up in parts which each create a separate output page (see `posterize.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/posterize.py>`_),
       * include PDF-based vector images like company logos, watermarks, etc., see `svg-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/svg-logo.py>`_, which puts an SVG-based logo on each page (requires additional packages to deal with SVG-to-PDF conversions).
 
-      :arg rect-like rect: where to place the image.
+      :arg rect-like rect: where to place the image on current page.
 
       :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file.
       :type docsrc: :ref:`Document`
 
       :arg int pno: page number (0-based) to be shown.
 
-      :arg bool keep_proportion: whether to maintain the width-height-ratio (default).
+      :arg bool keep_proportion: whether to maintain the width-height-ratio (default). If false, the source rectangle will fill the display rectangle completely.
 
       :arg bool overlay: put image in foreground (default) or background.
 
+      :arg int rotate: show the source rectangle rotated. Must be an integer multiple of 90.
+
       :arg int reuse_xref: if a source page should be shown multiple times, specify the returned :data:`xref` of its first inclusion. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
 
-      :arg rect-like clip: choose which part of the source page to show. Default is its ``/CropBox``.
+      :arg rect-like clip: choose which part of the source page to show. Default is the full page rectangle.
 
       :returns: :data:`xref` of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
 
@@ -685,6 +688,22 @@ This is available for PDF documents only. There are basically two groups of meth
       >>> for page in doc:
               xref = page.showPDFpage(rect, docsrc, pno,
                                       reuse_xref = xref)
+
+      Example: Show a page rotated by 90 and by -90 degrees:
+
+      >>> import fitz
+      >>> doc = fitz.open()
+      >>> page=doc.newPage()
+      >>> # upper half page
+      >>> r1 = fitz.Rect(0, 0, page.rect.width, page.rect.height/2)
+      >>> # lower half page
+      >>> r2 = r1 + (0, page.rect.height/2, 0, page.rect.height/2)
+      >>> src = fitz.open("PyMuPDF.pdf")
+      >>> xref = page.showPDFpage(r1, src, 0, rotate=90)
+      >>> page.showPDFpage(r2, src, 0, rotate=-90, reuse_xref=xref)
+      >>> doc.save("show.pdf")
+
+      .. image:: img-showpdfpage.jpg
 
    .. method:: newShape()
 
