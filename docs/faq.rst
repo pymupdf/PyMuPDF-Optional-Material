@@ -495,6 +495,55 @@ This shows how to create a PNG file from a numpy array (several times faster tha
  pix.writePNG("test.png")
 
 
+----------
+
+How to Add Images to a PDF Page
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two methods to add images to a PDF page: :meth:`Page.insertImage` and :meth:`Page.showPDFpage`. Both methods have things in common, but there also exist differences.
+
+============================== ===================================== =========================================
+**Criterion**                  :meth:`Page.insertImage`              :meth:`Page.showPDFpage`
+============================== ===================================== =========================================
+displayable content            image file, image in memory, pixmap   PDF page
+display resolution             image resolution                      vectorized (except raster page content)
+rotation                       multiple of 90 degrees                any angle
+clipping                       no (full image only)                  yes
+keep aspect ratio              yes (default option)                  yes (default option)
+transparency (water marking)   depends on image                      yes
+location / placement           scaled to fit target rectangle        scaled to fit target rectangle
+performance                    automatic prevention of duplicates;   automatic prevention of duplicates;
+                               MD5 calculation on every execution    faster than :meth:`Page.insertImage`
+ease of use                    simple, intuitive;                    simple, intuitive;
+                               performance considerations apply      usable for **all document types**
+                               for multiple insertions of same image (including images!) after conversion to
+                                                                     PDF with :meth:`Document.convertToPDF`
+============================== ===================================== =========================================
+
+Basic code pattern for :meth:`Page.insertImage`. **Exactly one** of the parameters **filename / stream / pixmap** must be given::
+
+    page.insertImage(
+        rect,                  # where to place the image (rect-like)
+        filename=None,         # image in a file
+        stream=None,           # image in memory (bytes)
+        pixmap=None,           # image from pixmap
+        rotate=0,              # rotate (int, multiple of 90)
+        keep_proportion=True,  # keep aspect ratio
+        overlay=True,          # put in foreground
+    )
+
+Basic code pattern for :meth:`Page.showPDFpage`. Source and target PDF must be different :ref:`Document` objects (but may be opened from the same file)::
+
+    page.showPDFpage(
+        rect,                  # where to place the image (rect-like)
+        src,                   # source PDF
+        pno=0,                 # page number in source PDF
+        clip=None,             # only display this area (rect-like)
+        rotate=0,              # rotate (float, any value)
+        keep_proportion=True,  # keep aspect ratio
+        overlay=True,          # put in foreground
+    )
+
 Text
 -----
 
@@ -1079,15 +1128,15 @@ The result looks like this:
 
 How to Use Ink Annotations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ink annotations are used to contain freehand scribbling. Technically an ink annotation is implemented as a list of list of points. Each list of points is regarded as a continuous line connecting them. Different point lists represent disconnected line segments of the scribbling.
+Ink annotations are used to contain freehand scribblings. A typical example maybe an image of your signature consisting of first name and last name. Technically an ink annotation is implemented as a **list of lists of points**. Each point list is regarded as a continuous line connecting the points. Different point lists represent indepndent line segments of the annotation.
 
-The following script creates two line segments and puts them in a given rectangle. The lines themselves are arbitrarily chosen to be the sine and the cosine function graphs::
+The following script creates an ink annotation with two mathematical curves (sine and cosine function graphs) as line segments::
 
     import math
     import fitz
     
     #------------------------------------------------------------------------------
-    # preliminary stuff
+    # preliminary stuff: create function value lists for sine and cosine
     #------------------------------------------------------------------------------
     w360 = math.pi * 2                          # go through full circle
     deg = w360 / 360                            # 1 degree as radiants
@@ -1097,7 +1146,7 @@ The following script creates two line segments and puts them in a given rectangl
     x_step = rect.width / 360                   # rect width means 360 degrees
     y_scale = rect.height / 2.                  # rect height means 2
     sin_points = []                             # sine values go here
-    cos_points = []                             # cosine values here
+    cos_points = []                             # cosine values go here
     for x in range(362):                        # now fill in the values
         x_coord = x * x_step + first_x          # current x coordinate
         y = -math.sin(x * deg)                  # sine
@@ -1114,7 +1163,7 @@ The following script creates two line segments and puts them in a given rectangl
     page = doc.newPage()                        # give it a page
     
     #------------------------------------------------------------------------------
-    # add the Ink annotation, consisting of 2 segments
+    # add the Ink annotation, consisting of 2 curve segments
     #------------------------------------------------------------------------------
     annot = page.addInkAnnot((sin_points, cos_points))
     # let it look a little nicer
@@ -1435,11 +1484,12 @@ This deals with splitting up pages of a PDF in arbitrary pieces. For example, yo
             page = doc.newPage(-1,              # new output page with rx dimensions
                                width = rx.width,
                                height = rx.height)
-            xref = page.showPDFpage(page.rect,  # fill all new page with the image
-                                    src,        # input document
-                                    spage.number, # input page number
-                                    subrect = rx, # which part to use of input page
-                                    reuse_xref = xref) # copy input page once only
+            page.showPDFpage(
+                    page.rect,  # fill all new page with the image
+                    src,        # input document
+                    spage.number, # input page number
+                    subrect = rx, # which part to use of input page
+                )
                                     
     # that's it, save output file
     doc.save("poster-" + src.name,
@@ -1758,10 +1808,10 @@ This is a central ("root") object of a PDF which serves as a starting point to r
 
 How to Access the PDF File Trailer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The trailer of a PDF file is a :data:`dictionary` located towards the end of the file and contains special objects and pointers to important other information. See :ref:`AdobeManual` p. 96. Here is an overview:
+The trailer of a PDF file is a :data:`dictionary` located towards the end of the file. It contains special objects, and pointers to important other information. See :ref:`AdobeManual` p. 96. Here is an overview:
 
 ======= =========== ===================================================================================
-Key     Type        Value 
+**Key** **Type**    **Value**
 ======= =========== ===================================================================================
 Size    int         Number of entries in the cross-reference table + 1.
 Prev    int         Offset to previous :data:`xref` section (indicates incremental updates).
@@ -1774,6 +1824,12 @@ XRefStm int         Offset of a cross-reference stream. See :ref:`AdobeManual` p
 
 Access this information via PyMuPDF with :meth:`Document._getTrailerString`.
 
+    >>> import fitz
+    >>> doc=fitz.open("PyMuPDF.pdf")
+    >>> trailer=doc._getTrailerString()
+    >>> print(trailer)
+    <</Size 5535/Info 5275 0 R/Root 5274 0 R/ID[(\340\273fE\225^l\226\232O|\003\201\325g\245)(}#1,\317\205\000\371\251wO6\352Oa\021)]>>
+    >>> 
 
 ----------------------------------
 

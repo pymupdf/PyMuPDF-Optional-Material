@@ -1,6 +1,12 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.11
+---------------------------
+* **Changed** :meth:`Page.showPDFpage` to always position the source rectangle centered in the target. This method now also supports **rotation by arbitrary angles**. The argument ``reuse_xref`` has been deprecated: prevention of duplicates is now **handled internally**.
+* **Changed** :meth:`Page.insertImage` to support rotated display of the image and keeping the aspect ratio. Only rotations by multiples of 90 degrees are supported here.
+* **Fixed** issue #265 ("TypeError: insertText() got an unexpected keyword argument 'idx'"). This issue only occurred when using :meth:`Document.insertPage` with also inserting text.
+
 Changes in Version 1.14.10
 ---------------------------
 * **Changed** :meth:`Page.showPDFpage` to support rotation of the source rectangle. Fixes #261 ("Cannot rotate insterted pages").

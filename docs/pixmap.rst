@@ -186,6 +186,8 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: pixel(x, y)
 
+      .. versionadded:: 1.14.5
+
       Return the value of the pixel at location (x, y) (column, line).
 
       :arg int x: the column number of the pixel. Must be in ``range(pix.width)``.
@@ -196,6 +198,8 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: setPixel(x, y, color)
 
+      .. versionadded:: 1.14.7
+
       Set the color of the pixel at location (x, y) (column, line).
 
       :arg int x: the column number of the pixel. Must be in ``range(pix.width)``.
@@ -203,6 +207,8 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
       :arg sequence color: the desired color given as a sequence of integers in ``range(256)``. The length of the sequence must equal :attr:`Pixmap.n`, which includes any alpha byte.
 
    .. method:: setRect(irect, color)
+
+      .. versionadded:: 1.14.8
 
       Set the pixels of a rectangle to a color.
 
@@ -244,6 +250,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: writeImage(filename, output=None)
 
+      
       Save pixmap as an image file. Depending on the output chosen, only some or all colorspaces are supported and different file extensions can be chosen. Please see the table below. Since MuPDF v1.10a the ``savealpha`` option is no longer supported and will be silently ignored.
 
       :arg str filename: The filename to save to. The filename's extension determines the image format, if not overriden by the output parameter.
@@ -255,6 +262,8 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
       Equal to ``pix.writeImage(filename, "png")``.
 
    .. method:: getImageData(output="png")
+
+      .. versionadded:: 1.14.5
 
       Return the pixmap as a ``bytes`` memory object of the specified format -- similar to :meth:`writeImage`.
 

@@ -95,6 +95,8 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: getTextlength(text, fontname="helv", fontsize=11, encoding=TEXT_ENCODING_LATIN)
 
+      .. versionadded:: 1.14.7
+
       Calculate the length of text on output with a given **builtin** font, fontsize and encoding.
 
       :arg str text: the text string.
@@ -157,6 +159,8 @@ Yet others are handy, general-purpose utilities.
 -----
 
    .. method:: Document._getTrailerString()
+
+      .. versionadded:: 1.14.9
 
       Return the trailer of the PDF (UTF-8), which is usually located at the PDF file's end. If not a PDF or the PDF has no trailer (because of irrecoverable errors), ``None`` is returned.
 

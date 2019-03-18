@@ -153,6 +153,8 @@ Several draw methods can be executed in a row and each one of them will contribu
       :arg tetra: a rectangle or a quad.
       :type tetra: rect-like or quad-like.
 
+          .. versionchanged:: 1.14.5
+
       :rtype: :ref:`Point`
       :returns: the middle point of the left rectangle / quad side. Look at just a few examples here:
 
@@ -543,6 +545,8 @@ Common Parameters
 ----
 
 **render_mode** (*int*)
+
+  .. versionadded 1.14.9
 
   Integer in ``range(8)`` which controls the text appearance (:meth:`Shape.insertText` and :meth:`Shape.insertTextbox`). See page 398 in :ref:`AdobeManual`. New in v1.14.9. These methods now also differentiate between fill and stroke colors.
   

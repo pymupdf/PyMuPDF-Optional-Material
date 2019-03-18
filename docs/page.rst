@@ -34,8 +34,8 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
 :meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
 :meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
-:meth:`Page.addStampAnnot`       PDF only: add a "rubber stamp" annotation
 :meth:`Page.addSquigglyAnnot`    PDF only: add a "squiggly" annotation
+:meth:`Page.addStampAnnot`       PDF only: add a "rubber stamp" annotation
 :meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
 :meth:`Page.addTextAnnot`        PDF only: add comment and a note icon
 :meth:`Page.addUnderlineAnnot`   PDF only: add an "underline" annotation
@@ -61,7 +61,7 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.getText`             extract the page's text
 :meth:`Page.insertFont`          PDF only: insert a font for use by the page
 :meth:`Page.insertImage`         PDF only: insert an image
-:meth:`Page.insertLink`          PDF only: insert a new link
+:meth:`Page.insertLink`          PDF only: insert a link
 :meth:`Page.insertText`          PDF only: insert text
 :meth:`Page.insertTextbox`       PDF only: insert a text box
 :meth:`Page.loadLinks`           return the first link on a page
@@ -521,20 +521,33 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: overlay; Page.insertImage args
       pair: filename; Page.insertImage args
       pair: pixmap; Page.insertImage args
+      pair: rotate; Page.insertImage args
+      pair: keep_proportion; Page.insertImage args
       pair: stream; Page.insertImage args
 
-   .. method:: insertImage(rect, filename = None, pixmap = None, stream = None, overlay = True)
+   .. method:: insertImage(rect, filename=None, pixmap=None, stream=None, rotate=0, keep_proportion=True, overlay=True)
 
-      PDF only: Fill the given rectangle (rect-like) with an image. The image's width-height-proportion will be **adjusted to fit** -- so it may appear distorted. Specify the rectangle appropriately if you want to avoid this. The image is taken from a pixmap, a file or a memory area - of these parameters **exactly one** must be specified.
+      PDF only: Put an image inside the given rectangle. The image can be taken from a pixmap, a file or a memory area - of these parameters **exactly one** must be specified.
 
-      :arg rect-like rect: where to put the image on the page. Must be finite and not empty.
+      .. versionchanged:: 1.14.11
+         By default, the image keeps its aspect ratio.
 
-      :arg str filename: name of an image file (all MuPDF supported formats - see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
+      :arg rect-like rect: where to put the image on the page -- must be finite and its intersection with the page must not be empty.
 
-      :arg bytes/bytearray stream: memory resident image (all MuPDF supported formats - see :ref:`ImageFiles`).
+      :arg str filename: name of an image file (all formats supported by MuPDF -- see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
 
-      :arg pixmap: pixmap containing the image.
+      :arg bytes/bytearray stream: image in memory (all formats supported by MuPDF -- see :ref:`ImageFiles`). This is the most efficient option.
+
+      :arg pixmap: a pixmap containing the image.
       :type pixmap: :ref:`Pixmap`
+
+      :arg int rotate: rotate the image. Must be an integer multiple of 90 degrees. If you need a non-orthogonal rotation by an arbitrary angle, consider converting the image to a PDF (:meth:`Document.convertToPDF`) first and then use :meth:`Page.showPDFpage` instead.
+      
+         .. versionadded:: v1.14.11
+
+      :arg bool keep_proportion: maintain the aspect ratio of the image.
+      
+         .. versionadded:: v1.14.11
 
       For a description of ``overlay`` see :ref:`CommonParms`.
 
@@ -547,28 +560,28 @@ This is available for PDF documents only. There are basically two groups of meth
               page.insertImage(rect, stream = img)
       >>> doc.save(...)
 
-      Notes:
+      .. note::
       
-      1. If that same image had already been present in the PDF, then only a reference will be inserted. This of course considerably saves disk space and processing time. But to detect this fact, existing PDF images need to be compared with the new one. This is achieved by storing an MD5 code for each image in a table and only compare the new image's code against the table entries. Generating this MD5 table, however, is done only when doing the first image insertion - which therefore may have an extended response time.
+         1. If that same image had already been present in the PDF, then only a reference to it will be inserted. This of course considerably saves disk space and processing time. But to detect this fact, existing PDF images need to be compared with the new one. This is achieved by storing an MD5 code for each image in a table and only compare the new image's MD5 code against the table entries. Generating this MD5 table, however, is done when the first image is inserted - which therefore may have an extended response time.
 
-      2. You can use this method to provide a background or foreground image for the page, like a copyright, a watermark or a background color. Or you can combine it with ``searchFor()`` to achieve a textmarker effect. Please remember, that watermarks require a transparent image ...
+         2. You can use this method to provide a background or foreground image for the page, like a copyright, a watermark. Please remember, that watermarks require a transparent image ...
 
-      3. The image may be inserted uncompressed, e.g. if a ``Pixmap`` is used or if the image has an alpha channel. Therefore, consider using ``deflate = True`` when saving the file.
+         3. The image may be inserted uncompressed, e.g. if a ``Pixmap`` is used or if the image has an alpha channel. Therefore, consider using ``deflate=True`` when saving the file.
 
-      4. The image content is stored in its original size - which may be much bigger than the size you are ever displaying. Consider decreasing the stored image size by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
+         4. The image is stored in the PDF in its original quality. This may be much better than you ever need for your display. Consider decreasing the image size before inserting it -- e.g. by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
 
-      5. The most efficient way to display the same image on multiple pages is :meth:`showPDFpage`. Consult :meth:`Document.convertToPDF` for how to obtain intermediary PDFs usable for that method. Demo script `fitz-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/fitz-logo.py>`_ implements a fairly complete approach.
+         5. The most efficient way to display the same image on multiple pages is another method: :meth:`showPDFpage`. Consult :meth:`Document.convertToPDF` for how to obtain intermediary PDFs usable for that method. Demo script `fitz-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/fitz-logo.py>`_ implements a fairly complete approach.
 
-   .. method:: getText(output = 'text')
+   .. method:: getText(output="text")
 
-      Retrieves the content of a page in a large variety of formats.
+      Retrieves the content of a page in a variety of formats.
 
-      If ``'text'`` is specified, plain text is returned **in the order as specified during document creation** (i.e. not necessarily the normal reading order).
+      If "text" is specified, plain text is returned **in the order as specified during document creation** (i.e. not necessarily in normal reading order).
 
-      :arg str output: A string indicating the requested format, one of ``"text"`` (default), ``"html"``, ``"dict"``, ``"xml"``, ``"xhtml"`` or ``"json"``.
+      :arg str output: A string indicating the requested format, one of "text" (default), "html", "dict", "rawdict", "xml", "xhtml" or "json".
 
       :rtype: (*str* or *dict*)
-      :returns: The page's content as one string or as a dictionary. The information levels of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use ``"dict"``, it is more convenient and faster.
+      :returns: The page's content as one string or as a dictionary. The information levels of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use "dict", it is more convenient and faster.
 
       .. note:: You can use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML or XHTML documents works in exactly the same way. For XML you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
 
@@ -604,24 +617,24 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: clip; Page.getPixmap args
       pair: alpha; Page.getPixmap args
 
-   .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, clip = None, alpha = True)
+   .. method:: getPixmap(matrix=fitz.Identity, colorspace=fitz.csRGB, clip=None, alpha=True)
 
-     Create a pixmap from the page. This is probably the most often used method to create pixmaps.
+     Create a pixmap from the page. This is probably the most often used method to create a pixmap.
 
      :arg matrix-like matrix: a matrix-like object, default is :ref:`Identity`.
 
-     :arg colorspace: Defines the required colorspace, one of ``GRAY``, ``RGB`` or ``CMYK`` (case insensitive). Or specify a :ref:`Colorspace`, e.g. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
-     :type colorspace: string, :ref:`Colorspace`
+     :arg colorspace: Defines the required colorspace, one of "GRAY", "RGB" or "CMYK" (case insensitive). Or specify a :ref:`Colorspace`, e.g. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
+     :type colorspace: str or :ref:`Colorspace`
 
      :arg irect-like clip: restrict rendering to this area.
 
-     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time in most cases. Also note an important difference in how the image will appear:
+     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time. Also note an **important difference** in how the image will appear:
 
-        * ``True``: pixmap's samples will be pre-cleared with ``0x00``, including the alpha byte. This will result in **transparent** areas where the page is empty.
+        * ``True``: pixmap's samples will be pre-cleared with ``0x00``, including the alpha byte. This results in **transparent** areas where the page is empty.
 
         .. image:: img-alpha-1.png
 
-        * ``False``: pixmap's samples will be pre-cleared with ``0xff``. This will result in **white** where the page has nothing to show.
+        * ``False``: pixmap's samples will be pre-cleared with ``0xff``. This results in **white** where the page has nothing to show.
 
         .. image:: img-alpha-0.png
 
@@ -645,13 +658,12 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg int rotate: An integer specifying the required rotation in degrees. Should be an integer multiple of 90.
 
    .. index::
-      pair: reuse_xref; Page.showPDFpage args
       pair: keep_proportion; Page.showPDFpage args
       pair: clip; Page.showPDFpage args
       pair: rotate; Page.showPDFpage args
       pair: overlay; Page.showPDFpage args
 
-   .. method:: showPDFpage(rect, docsrc, pno=0, keep_proportion=True, overlay=True, reuse_xref=0, rotate=0, clip=None)
+   .. method:: showPDFpage(rect, docsrc, pno=0, keep_proportion=True, overlay=True, rotate=0, clip=None)
 
       PDF only: Display a page of another PDF as a **vector image** (otherwise similar to :meth:`Page.insertImage`). This is a multi-purpose method. For example, you can use it to
       
@@ -659,51 +671,54 @@ This is available for PDF documents only. There are basically two groups of meth
       * create "posterized" PDF files, i.e. every input page is split up in parts which each create a separate output page (see `posterize.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/posterize.py>`_),
       * include PDF-based vector images like company logos, watermarks, etc., see `svg-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/svg-logo.py>`_, which puts an SVG-based logo on each page (requires additional packages to deal with SVG-to-PDF conversions).
 
-      :arg rect-like rect: where to place the image on current page.
+      .. versionchanged:: 1.14.11
+         Parameter ``reuse_xref`` has been deprecated.
+
+      :arg rect-like rect: where to place the image on current page. Must be finite and its intersection with the page must not be empty.
+
+          .. versionchanged:: 1.14.11
+             Position the source rectangle centered in this rectangle.
 
       :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file.
       :type docsrc: :ref:`Document`
 
       :arg int pno: page number (0-based) to be shown.
 
-      :arg bool keep_proportion: whether to maintain the width-height-ratio (default). If false, the source rectangle will fill the display rectangle completely.
+      :arg bool keep_proportion: whether to maintain the width-height-ratio (default). If false, all 4 corners are always positioned on the border of the target rectangle -- whatever the rotation value. In general, this will deliver distorted and /or non-rectangular images.
 
       :arg bool overlay: put image in foreground (default) or background.
 
-      :arg int rotate: show the source rectangle rotated. Must be an integer multiple of 90.
+      :arg float rotate: show the source rectangle rotated by some angle.
 
-      :arg int reuse_xref: if a source page should be shown multiple times, specify the returned :data:`xref` of its first inclusion. This prevents duplicate source page copies, and thus improves performance and saves memory. Note that source document and page must still be provided!
+          .. versionadded:: 1.14.10
 
-      :arg rect-like clip: choose which part of the source page to show. Default is the full page rectangle.
+          .. versionchanged:: 1.14.11
+             Any angle is now supported.
 
-      :returns: :data:`xref` of the stored page image if successful. Use this as the value of argument ``reuse_xref`` to show the same source page again.
+      :arg rect-like clip: choose which part of the source page to show. Default is the full page, else must be finite and its intersection with the source page must not be empty.
 
-      .. note:: The displayed source page is shown without any annotations or links. The source page's complete text and images will become an integral part of the containing page, i.e. they will be included in the output of all text extraction methods and appear in methods :meth:`getFontList` and :meth:`getImageList` (whether they are actually visible - see the ``clip`` parameter - or not).
+      .. note:: In contrast to method :meth:`Document.insertPDF`, this method does not copy annotations or links, so they are not shown. But all its **other resources (text, images, fonts, etc.)** will be imported into the current PDF. They will therefore appear in text extractions and in :meth:`getFontList` and :meth:`getImageList` lists -- even if they are not contained in the visible area given by ``clip``.
 
-      .. note:: Use the ``reuse_xref`` argument to prevent duplicates as follows. For a technical description of how this function is implemented, see :ref:`FormXObject`. The following example will put the same source page (probably a company logo or a watermark) on every page of PDF ``doc``. The first execution **actually** inserts the source page, the subsequent ones will only insert pointers to it via its :data:`xref`.
-
-      >>> # the first showPDFpage will include source page docsrc[pno],
-      >>> # subsequents will reuse it via its xref.
-      >>> xref = 0
-      >>> for page in doc:
-              xref = page.showPDFpage(rect, docsrc, pno,
-                                      reuse_xref = xref)
-
-      Example: Show a page rotated by 90 and by -90 degrees:
+      Example: Show the same source page, rotated by 90 and by -90 degrees:
 
       >>> import fitz
-      >>> doc = fitz.open()
-      >>> page=doc.newPage()
+      >>> doc = fitz.open()  # new empty PDF
+      >>> page=doc.newPage()  # new page in A4 format
+      >>>
       >>> # upper half page
       >>> r1 = fitz.Rect(0, 0, page.rect.width, page.rect.height/2)
+      >>>
       >>> # lower half page
       >>> r2 = r1 + (0, page.rect.height/2, 0, page.rect.height/2)
-      >>> src = fitz.open("PyMuPDF.pdf")
-      >>> xref = page.showPDFpage(r1, src, 0, rotate=90)
-      >>> page.showPDFpage(r2, src, 0, rotate=-90, reuse_xref=xref)
+      >>>
+      >>> src = fitz.open("PyMuPDF.pdf")  # show page 0 of this
+      >>>
+      >>> page.showPDFpage(r1, src, 0, rotate=90)
+      >>> page.showPDFpage(r2, src, 0, rotate=-90)
       >>> doc.save("show.pdf")
 
       .. image:: img-showpdfpage.jpg
+         :scale: 70
 
    .. method:: newShape()
 
