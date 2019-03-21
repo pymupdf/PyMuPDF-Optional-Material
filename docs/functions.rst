@@ -69,7 +69,7 @@ Yet others are handy, general-purpose utilities.
       :arg str s: any format name supported by :meth:`PaperSize`.
 
       :rtype: :ref:`Rect`
-      :returns: ``fitz.Rect(0, 0, width, height)`` with ``width, height = fitz.PaperSize(s)``.
+      :returns: ``fitz.Rect(0, 0, width, height)`` with ``width, height=fitz.PaperSize(s)``.
 
       >>> import fitz
       >>> fitz.PaperRect("letter-l")
@@ -121,7 +121,7 @@ Yet others are handy, general-purpose utilities.
       :rtype: str
       :returns: PDF-compatible string enclosed in either ``()`` or ``<>``.
 
-   .. method:: ConversionHeader(output = "text", filename = "UNKNOWN")
+   .. method:: ConversionHeader("text", filename="UNKNOWN")
 
       Return the header string required to make a valid document out of page text outputs.
 
@@ -210,7 +210,7 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Page.getTextBlocks(images = False)
+   .. method:: Page.getTextBlocks(images=False)
 
       Extract all blocks of the page's :ref:`TextPage` as a Python list. Provides basic positioning information but at a much higher speed than :meth:`TextPage.extractDICT`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
 
@@ -268,7 +268,7 @@ Yet others are handy, general-purpose utilities.
       >>> for xref in xreflist: c += doc._getXrefStream(xref)
       >>> doc._updateStream(xreflist[0], c)
       >>> page._setContents(xreflist[0])
-      >>> # doc.save(..., garbage = 1) will remove the unused objects
+      >>> # doc.save(..., garbage=1) will remove the unused objects
 
       :arg int xref: the cross reference number of a :data:`contents` object. An exception is raised if outside the valid :data:`xref` range or not a stream object.
 
@@ -292,7 +292,7 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Document.getCharWidths(xref = 0, limit = 256)
+   .. method:: Document.getCharWidths(xref=0, limit=256)
 
       Return a list of character glyphs and their widths for a font that is present in the document. A font must be specified by its PDF cross reference number :data:`xref`. This function is called automatically from :meth:`Page.insertText` and :meth:`Page.insertTextbox`. So you should rarely need to do this yourself.
 
@@ -343,7 +343,7 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Document._updateObject(xref, obj_str, page = None)
+   .. method:: Document._updateObject(xref, obj_str, page=None)
 
       Associate the object identified by string ``obj_str`` with ``xref``, which must already exist. If ``xref`` pointed to an existing object, this will be replaced with the new object. If a page object is specified, links and other annotations of this page will be reloaded after the object has been updated.
 
@@ -379,9 +379,9 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Document._updateStream(xref, stream, new = False)
+   .. method:: Document._updateStream(xref, stream, new=False)
 
-      Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised unless ``new = True`` is used. The function automatically performs a compress operation ("deflate").
+      Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised unless ``new=True`` is used. The function automatically performs a compress operation ("deflate").
 
       :arg int xref: :data:`xref` number.
       
@@ -391,7 +391,7 @@ Yet others are handy, general-purpose utilities.
 
       This method is intended to manipulate streams containing PDF operator syntax (see pp. 985 of the :ref:`AdobeManual`) as it is the case for e.g. page content streams.
       
-      If you update a contents stream, you should use save parameter ``clean = True``. This ensures consistency between PDF operator source and the object structure.
+      If you update a contents stream, you should use save parameter ``clean=True``. This ensures consistency between PDF operator source and the object structure.
       
       Example: Let us assume that you no longer want a certain image appear on a page. This can be achieved by deleting the respective reference in its contents source(s) -- and indeed: the image will be gone after reloading the page. But the page's :data:`resources` object would still show the image as being referenced by the page. This save option will clean up any such mismatches.
 
@@ -404,7 +404,7 @@ Yet others are handy, general-purpose utilities.
       :rtype: int
       :returns: :data:`xref` number of the **/Outlines** root object.
 
-   .. method:: Document.extractImage(xref = 0)
+   .. method:: Document.extractImage(xref=0)
 
       PDF Only: Extract data and meta information of an image stored in the document. The output can directly be used to be stored as an image file, as input for PIL, :ref:`Pixmap` creation, etc. This method avoids using pixmaps wherever possible to present the image in its original format (e.g. as JPEG).
 
@@ -462,7 +462,7 @@ Yet others are handy, general-purpose utilities.
             In [30]: len(img["image"])
             Out[30]: 371177
 
-   .. method:: Document.extractFont(xref, info_only = False)
+   .. method:: Document.extractFont(xref, info_only=False)
 
       PDF Only: Return an embedded font file's data and appropriate file extension. This can be used to store the font as an external file. The method does not throw exceptions (other than via checking for PDF and valid :data:`xref`).
 

@@ -115,22 +115,22 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: color; Page.addFreetextAnnot args
       pair: rotate; Page.addFreetextAnnot args
 
-   .. method:: addFreetextAnnot(rect, text, fontsize = 12, fontname = "Helvetica", color = (0,0,0), rotate = 0)
+   .. method:: addFreetextAnnot(rect, text, fontsize=12, fontname="helv", color=(0,0,0), rotate=0)
 
       PDF only: Add text in a given rectangle.
 
-      :arg rect-like rect: the rectangle into which the text should be inserted.
+      :arg rect-like rect: the rectangle into which the text should be inserted. Text is automatically wrapped to a new line at box width. Lines not fitting into the box will be invisible.
 
       :arg str text: the text. May contain any Latin characters.
       :arg float fontsize: the font size. Default is 12.
       :arg str fontname: the font name. Default is "Helvetica". Accepted alternatives are "Courier", "Times-Roman", "ZapfDingbats" and "Symbol". The name may be abbreviated to the first two characters, "Co" for "Courier". Lower case is also accepted.
-      :arg sequence color: the text and rectangle border color. Default is black. Text is automatically wrapped to a new line at box width. Lines not fitting to the box will be invisible.
+      :arg sequence color: the text and rectangle border color. Default is black.
       :arg int rotate: the text orientation. Accepted values are 0, 90, 270, else zero is used.
 
       :rtype: :ref:`Annot`
       :returns: the created annotation. The text and rectangle border will be drawn in the same specified color. Rectangle background is white. These properties can only be changed using special parameters of :meth:`Annot.update`. Changeable properties are text color, box interior and border color and text font size.
 
-   .. method:: addFileAnnot(pos, buffer, filename, ufilename = None, desc = None)
+   .. method:: addFileAnnot(pos, buffer, filename, ufilename=None, desc=None)
 
       PDF only: Add a file attachment annotation with a "PushPin" icon at the specified location.
 
@@ -210,7 +210,7 @@ This is available for PDF documents only. There are basically two groups of meth
       .. image:: img-markers.jpg
          :scale: 80
 
-   .. method:: addStampAnnot(rect, stamp = 0)
+   .. method:: addStampAnnot(rect, stamp=0)
 
       PDF only: Add a "rubber stamp" like annotation to e.g. indicate the document's intended use ("DRAFT", "CONFIDENTIAL", etc.).
 
@@ -232,7 +232,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :returns: a widget annotation.
 
-      .. note:: Make sure to use parameter ``clean = True`` when saving the file. This will cause recalculation of the annotations appearance.
+      .. note:: Make sure to use parameter ``clean=True`` when saving the file. This will cause recalculation of the annotations appearance.
 
    .. method:: deleteAnnot(annot)
 
@@ -282,7 +282,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: encoding; Page.insertText args
       pair: morph; Page.insertText args
 
-   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), fill=None, render_mode=0, border_width=1, encoding=TEXT_ENCODING_LATIN, rotate=0, morph=None, overlay=True)
+   .. method:: insertText(point, text, fontsize=11, fontname="helv", fontfile=None, idx=0, color=None, fill=None, render_mode=0, border_width=1, encoding=TEXT_ENCODING_LATIN, rotate=0, morph=None, overlay=True)
 
       PDF only: Insert text starting at point-like ``point``. See :meth:`Shape.insertText`.
 
@@ -301,7 +301,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: rotate; Page.insertTextbox args
       pair: morph; Page.insertTextbox args
 
-   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, idx=0, color=(0, 0, 0), fill=None, render_mode=0, border_width=1, encoding=TEXT_ENCODING_LATIN, expandtabs=8, align=TEXT_ALIGN_LEFT, charwidths=None, rotate=0, morph=None, overlay=True)
+   .. method:: insertTextbox(rect, buffer, fontsize=11, fontname="helv", fontfile=None, idx=0, color=None, fill=None, render_mode=0, border_width=1, encoding=TEXT_ENCODING_LATIN, expandtabs=8, align=TEXT_ALIGN_LEFT, charwidths=None, rotate=0, morph=None, overlay=True)
 
       PDF only: Insert text into the specified rect-like ``rect``. See :meth:`Shape.insertTextbox`.
 
@@ -315,7 +315,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawLine args
       pair: width; Page.drawLine args
 
-   .. method:: drawLine(p1, p2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
+   .. method:: drawLine(p1, p2, color=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
 
       PDF only: Draw a line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawLine`.
 
@@ -329,7 +329,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawZigzag args
       pair: width; Page.drawZigzag args
 
-   .. method:: drawZigzag(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
+   .. method:: drawZigzag(p1, p2, breadth=2, color=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
 
       PDF only: Draw a zigzag line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawZigzag`.
 
@@ -343,7 +343,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawSquiggle args
       pair: width; Page.drawSquiggle args
 
-   .. method:: drawSquiggle(p1, p2, breadth = 2, color = (0, 0, 0), width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
+   .. method:: drawSquiggle(p1, p2, breadth=2, color=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
 
       PDF only: Draw a squiggly (wavy, undulated) line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawSquiggle`.
 
@@ -357,7 +357,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawCircle args
       pair: width; Page.drawCircle args
 
-   .. method:: drawCircle(center, radius, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
+   .. method:: drawCircle(center, radius, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
 
       PDF only: Draw a circle around ``center`` (point-like) with a radius of ``radius``. See :meth:`Shape.drawCircle`.
 
@@ -371,7 +371,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawOval args
       pair: width; Page.drawOval args
 
-   .. method:: drawOval(rect, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
+   .. method:: drawOval(rect, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
 
       PDF only: Draw an oval (ellipse) within the given rectangle (rect-like). See :meth:`Shape.drawOval`.
 
@@ -386,7 +386,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: width; Page.drawSector args
       pair: fullSector; Page.drawSector args
 
-   .. method:: drawSector(center, point, angle, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, fullSector = True, overlay = True, closePath = False, morph = None)
+   .. method:: drawSector(center, point, angle, color=None, fill=None, width=1, dashes=None, roundCap=True, fullSector=True, overlay=True, closePath=False, morph=None)
 
       PDF only: Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie). See :meth:`Shape.drawSector`.
 
@@ -400,7 +400,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawPolyline args
       pair: width; Page.drawPolyline args
 
-   .. method:: drawPolyline(points, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
+   .. method:: drawPolyline(points, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, closePath=False, morph=None)
 
       PDF only: Draw several connected lines defined by a sequence of point-likes. See :meth:`Shape.drawPolyline`.
 
@@ -415,7 +415,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawBezier args
       pair: width; Page.drawBezier args
 
-   .. method:: drawBezier(p1, p2, p3, p4, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
+   .. method:: drawBezier(p1, p2, p3, p4, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, closePath=False, morph=None)
 
       PDF only: Draw a cubic Bézier curve from ``p1`` to ``p4`` with the control points ``p2`` and ``p3`` (all are point-likes). See :meth:`Shape.drawBezier`.
 
@@ -429,7 +429,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawCurve args
       pair: width; Page.drawCurve args
 
-   .. method:: drawCurve(p1, p2, p3, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, closePath = False, morph = None)
+   .. method:: drawCurve(p1, p2, p3, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, closePath=False, morph=None)
 
       PDF only: This is a special case of ``drawBezier()``. See :meth:`Shape.drawCurve`.
 
@@ -443,7 +443,7 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawRect args
       pair: width; Page.drawRect args
 
-   .. method:: drawRect(rect, color = (0, 0, 0), fill = None, width = 1, dashes = None, roundCap = True, overlay = True, morph = None)
+   .. method:: drawRect(rect, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
 
       PDF only: Draw a rectangle. See :meth:`Shape.drawRect`.
 
@@ -498,8 +498,8 @@ This is available for PDF documents only. There are basically two groups of meth
          tiit          Times-Italic                 italic
          tibo          Times-Bold                   bold
          tibi          Times-BoldItalic             bold-italic
-         symb          Symbol
-         zadb          ZapfDingbats
+         symb          Symbol                       [#f3]_
+         zadb          ZapfDingbats                 [#f3]_
          ============= ============================ =========================================
 
          **CJK Fonts** [#f2]_
@@ -603,7 +603,7 @@ This is available for PDF documents only. There are basically two groups of meth
    .. index::
       pair: matrix; Page.getSVGimage args
 
-   .. method:: getSVGimage(matrix = fitz.Identity)
+   .. method:: getSVGimage(matrix=fitz.Identity)
 
       Create an SVG image from the page. Only full page images are currently supported.
 
@@ -730,7 +730,7 @@ This is available for PDF documents only. There are basically two groups of meth
    .. index::
       pair: hit_max; Page.searchFor args
 
-   .. method:: searchFor(text, hit_max = 16, quads = False)
+   .. method:: searchFor(text, hit_max=16, quads=False)
 
       Searches for ``text`` on a page. Identical to :meth:`TextPage.search`.
 
@@ -910,4 +910,6 @@ However, the first two methods work differently. They only need a page's object 
 
 .. [#f1] If your existing code already uses the installed base name as a font reference (as it was supported by PyMuPDF versions earlier than 1.14), this will continue to work.
 
-.. [#f2] Not all PDF reader software -- which includes internet browsers and office software -- will display all of these fonts. And if they do, the difference between the **serifed** and the **non-serifed** version may hardly be noticable. But serifed and non-serifed versions lead to different installed base fonts, thus providing an option to achieve desired results with a specific PDF reader.
+.. [#f2] Not all PDF reader software (including internet browsers and office software) display all of these fonts. And if they do, the difference between the **serifed** and the **non-serifed** version may hardly be noticable. But serifed and non-serifed versions lead to different installed base fonts, thus providing an option to achieve desired results with your specific PDF reader.
+
+.. [#f3] Not all PDF readers display these fonts at all. Some do, but use a wrong character spacing, etc.

@@ -58,7 +58,7 @@ A ``DisplayList`` is populated with objects from a page usually by executing :me
       pair: clip; DisplayList.getPixmap args
       pair: alpha; DisplayList.getPixmap args
 
-   .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, alpha = 0, clip = None)
+   .. method:: getPixmap(matrix=fitz.Identity, colorspace=fitz.csRGB, alpha=0, clip=None)
 
       Run the display list through a draw device and return a pixmap.
 

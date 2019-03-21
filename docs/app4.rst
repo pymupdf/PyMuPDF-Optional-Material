@@ -8,25 +8,42 @@ Appendix 4: Assorted Technical Information
 
 PDF Base 14 Fonts
 ---------------------
-The following 14 builtin font names must be supported by every PDF viewer aplication. They are available as follows::
+The following 14 builtin font names **must be supported by every PDF viewer** aplication. They are available as a dictionary, which maps their full names amd their abbreviations in lower case to the full font basename. Whereever a fontname must be given, any key or value from the dictionary may be used::
 
- In [1]: import fitz
- In [2]: fitz.Base14_fontnames
- Out[2]: 
- ('Courier',
-  'Courier-Oblique',
-  'Courier-Bold',
-  'Courier-BoldOblique',
-  'Helvetica',
-  'Helvetica-Oblique',
-  'Helvetica-Bold',
-  'Helvetica-BoldOblique',
-  'Times-Roman',
-  'Times-Italic',
-  'Times-Bold',
-  'Times-BoldItalic',
-  'Symbol',
-  'ZapfDingbats')
+    In [2]: fitz.Base14_fontdict
+    Out[2]:
+    {'courier': 'Courier',
+    'courier-oblique': 'Courier-Oblique',
+    'courier-bold': 'Courier-Bold',
+    'courier-boldoblique': 'Courier-BoldOblique',
+    'helvetica': 'Helvetica',
+    'helvetica-oblique': 'Helvetica-Oblique',
+    'helvetica-bold': 'Helvetica-Bold',
+    'helvetica-boldoblique': 'Helvetica-BoldOblique',
+    'times-roman': 'Times-Roman',
+    'times-italic': 'Times-Italic',
+    'times-bold': 'Times-Bold',
+    'times-bolditalic': 'Times-BoldItalic',
+    'symbol': 'Symbol',
+    'zapfdingbats': 'ZapfDingbats',
+    'helv': 'Helvetica',
+    'heit': 'Helvetica-Oblique',
+    'hebo': 'Helvetica-Bold',
+    'hebi': 'Helvetica-BoldOblique',
+    'cour': 'Courier',
+    'coit': 'Courier-Oblique',
+    'cobo': 'Courier-Bold',
+    'cobi': 'Courier-BoldOblique',
+    'tiro': 'Times-Roman',
+    'tibo': 'Times-Bold',
+    'tiit': 'Times-Italic',
+    'tibi': 'Times-BoldItalic',
+    'symb': 'Symbol',
+    'zadb': 'ZapfDingbats'}
+
+Please note that not all PDF Readers correctly or completely support these fonts -- this is especially true for Symbol and ZapfDingbats. Also the glyph images will be specific to every reader.
+
+To see how these fonts can be used -- including the CJK fonts -- look at the table in :meth:`Page.insertFont`.
 
 ------------
 
@@ -220,7 +237,7 @@ You can always empty or check this store of messages. It is kept as a unicode st
 
 .. rubric:: Footnotes
 
-.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses so-called "graftmaps", like a form of scratchpad: for each object to be copied, its :data:`xref` number is looked up in the graftmap. If found, copying is skipped. Otherwise, the new :data:`xref` is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. However, you may still want to consider using garbage collection (option 4) in the following cases:
+.. [#f1] MuPDF supports "deep-copying" objects between PDF documents. To avoid duplicate data in the target, it uses so-called "graftmaps", like a form of scratchpad: for each object to be copied, its :data:`xref` number is looked up in the graftmap. If found, copying is skipped. Otherwise, the new :data:`xref` is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: :meth:`Document.insertPDF` and :meth:`Page.showPDFpage`. This process is fast and very efficient, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. However, you may still want to consider using garbage collection (option 4) in any of the following cases:
 
-    1. The target PDF is not new / empty: grafting does not check for resource types that already existed (e.g. fonts) in the target document
-    2. Using :meth:`Page.showPDFpage` for more than one source document: each grafting occurs within one source PDF only, not across multiple.
+    1. The target PDF is not new / empty: grafting does not check for resource types that already existed (e.g. images, fonts) in the target document
+    2. Using :meth:`Page.showPDFpage` for more than one source document: each grafting occurs **within one source** PDF only, not across multiple.

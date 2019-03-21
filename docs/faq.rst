@@ -514,6 +514,7 @@ transparency (water marking)   depends on image                      yes
 location / placement           scaled to fit target rectangle        scaled to fit target rectangle
 performance                    automatic prevention of duplicates;   automatic prevention of duplicates;
                                MD5 calculation on every execution    faster than :meth:`Page.insertImage`
+multi-page image support       no                                    yes (non-PDF files after conversion)
 ease of use                    simple, intuitive;                    simple, intuitive;
                                performance considerations apply      usable for **all document types**
                                for multiple insertions of same image (including images!) after conversion to

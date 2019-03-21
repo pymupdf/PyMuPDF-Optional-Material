@@ -1,6 +1,12 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.12
+---------------------------
+* **Changed** the draw methods of :ref:`Page` and :ref:`Shape` to support not only RGB, but also GRAY and CMYK colorspaces. This solves issue #270 ("Is there a way to use CMYK color to draw shapes?"). This change also applies to text insertion methods of :ref:`Shape`, resp. :ref:`Page`.
+* **Fixed** issue #269 ("AttributeError in Document.insertPage()"), which occurred when using :meth:`Document.insertPage` with text insertion.
+
+
 Changes in Version 1.14.11
 ---------------------------
 * **Changed** :meth:`Page.showPDFpage` to always position the source rectangle centered in the target. This method now also supports **rotation by arbitrary angles**. The argument ``reuse_xref`` has been deprecated: prevention of duplicates is now **handled internally**.

@@ -55,7 +55,7 @@ There is a parent-child relationship between an annotation and its page. If the 
       pair: colorspace; Annot.getPixmap args
       pair: alpha; Annot.getPixmap args
 
-   .. method:: getPixmap(matrix = fitz.Identity, colorspace = fitz.csRGB, alpha = False)
+   .. method:: getPixmap(matrix=fitz.Identity, colorspace=fitz.csRGB, alpha=False)
 
       Creates a pixmap from the annotation as it appears on the page in untransformed coordinates. The pixmap's :ref:`IRect` equals ``Annot.rect.irect`` (see below).
 
@@ -127,7 +127,7 @@ There is a parent-child relationship between an annotation and its page. If the 
       pair: fill_color; Annot.update args
       pair: rotate; Annot.update args
 
-   .. method:: update(fontsize = 0, text_color = None, border_color = None, fill_color = None, rotate = -1)
+   .. method:: update(fontsize=0, text_color=None, border_color=None, fill_color=None, rotate=-1)
 
       PDF only: Modify the displayed annotation image such that it coincides with the values contained in the ``width``, ``border``, ``colors`` and other properties, after they have been modified by the respective methods (like. :meth:`setBorder`, :meth:`setColors`, etc.).
 
@@ -171,7 +171,7 @@ There is a parent-child relationship between an annotation and its page. If the 
       pair: ufilename; Annot.fileUpd args
       pair: desc; Annot.fileUpd args
 
-   .. method:: fileUpd(buffer = None, filename=None, ufilename=None, desc = None)
+   .. method:: fileUpd(buffer=None, filename=None, ufilename=None, desc=None)
 
       Updates the content of an attached file.
 

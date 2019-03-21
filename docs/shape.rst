@@ -69,7 +69,7 @@ Several draw methods can be executed in a row and each one of them will contribu
    ..index::
       pair: breadth; Shape.drawSquiggle args
 
-   .. method:: drawSquiggle(p1, p2, breadth = 2)
+   .. method:: drawSquiggle(p1, p2, breadth=2)
 
       Draw a squiggly (wavy, undulated) line from point-like objects ``p1`` to ``p2``. An integer number of full wave periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted as necessary to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
 
@@ -95,7 +95,7 @@ Several draw methods can be executed in a row and each one of them will contribu
    .. index::
       pair: breadth; Shape.drawZigzag args
 
-   .. method:: drawZigzag(p1, p2, breadth = 2)
+   .. method:: drawZigzag(p1, p2, breadth=2)
 
       Draw a zigzag line from point-like objects ``p1`` to ``p2``. An integer number of full zigzag periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
 
@@ -171,7 +171,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Draw a circle given its center and radius. The drawing starts and ends at point ``start = center - (radius, 0)`` in a counter-clockwise movement. ``start`` corresponds to the middle point of the enclosing square's left border.
 
-      The method is a shortcut for ``drawSector(center, start, 360, fullSector = False)``. To draw a circle in a clockwise movement, change the sign of the degree.
+      The method is a shortcut for ``drawSector(center, start, 360, fullSector=False)``. To draw a circle in a clockwise movement, change the sign of the degree.
 
       :arg center: the center of the circle.
       :type center: point-like
@@ -204,7 +204,7 @@ Several draw methods can be executed in a row and each one of them will contribu
    .. index::
       pair: fullSector; Shape.drawSector args
 
-   .. method:: drawSector(center, point, angle, fullSector = True)
+   .. method:: drawSector(center, point, angle, fullSector=True)
 
       Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie).
 
@@ -326,7 +326,7 @@ Several draw methods can be executed in a row and each one of them will contribu
       pair: even_odd; Shape.finish args
       pair: morph; Shape.finish args
 
-   .. method:: finish(width=1, color=(0, 0, 0), fill=None, roundCap=True, dashes=None, closePath=True, even_odd=False, morph=(pivot, matrix))
+   .. method:: finish(width=1, color=None, fill=None, roundCap=True, dashes=None, closePath=True, even_odd=False, morph=(pivot, matrix))
 
       Finish a set of ``draw*()`` methods by applying :ref:`CommonParms` to all of them. This method also supports morphing the resulting compound drawing using a pivotal :ref:`Point`.
 
@@ -341,7 +341,7 @@ Several draw methods can be executed in a row and each one of them will contribu
    .. index::
       pair: overlay; Shape.commit args
   
-   .. method:: commit(overlay = True)
+   .. method:: commit(overlay=True)
 
       Update the page's :data:`contents` with the accumulated draw commands and text insertions. If a ``Shape`` is not committed, the page will not be changed.
 
@@ -420,28 +420,28 @@ A drawing object is constructed by ``img = page.newShape()``. After this, as man
    >>> img.draw1(...)
    >>> img.draw2(...)
    >>> ...
-   >>> img.finish(width=..., color = ..., fill = ..., morph = ...)
+   >>> img.finish(width=..., color=..., fill=..., morph=...)
    >>> img.draw3(...)
    >>> img.draw4(...)
    >>> ...
-   >>> img.finish(width=..., color = ..., fill = ..., morph = ...)
+   >>> img.finish(width=..., color=..., fill=..., morph=...)
    >>> ...
    >>> img.insertText*
    >>> ...
    >>> img.commit()
    >>> ....
 
-Notes
-~~~~~~
-1. Each ``finish()`` combines the preceding draws into one logical shape, giving it common colors, line width, morphing, etc. If ``closePath`` is specified, it will also connect the end point of the last draw with the starting point of the first one.
+.. note::
 
-2. To successfully create compound graphics, let each draw method use the end point of the previous one as its starting point. In the above pseudo code, ``draw2`` should hence use the returned :ref:`Point` of ``draw1`` as its starting point. Failing to do so, would automatically start a new path and ``finish()`` may not work as expected (but it won't complain either).
+   1. Each ``finish()`` combines the preceding draws into one logical shape, giving it common colors, line width, morphing, etc. If ``closePath`` is specified, it will also connect the end point of the last draw with the starting point of the first one.
 
-3. Text insertions may occur anywhere before the commit (they neither touch :attr:`Shape.draw_cont` nor :attr:`Shape.lastPoint`). They are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``.
+   2. To successfully create compound graphics, let each draw method use the end point of the previous one as its starting point. In the above pseudo code, ``draw2`` should hence use the returned :ref:`Point` of ``draw1`` as its starting point. Failing to do so, would automatically start a new path and ``finish()`` may not work as expected (but it won't complain either).
 
-4. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page -- thus providing a way to control graphical layers.
+   3. Text insertions may occur anywhere before the commit (they neither touch :attr:`Shape.draw_cont` nor :attr:`Shape.lastPoint`). They are appended to ``Shape.totalcont`` directly, whereas draws will be appended by ``Shape.finish``.
 
-5. **Only** ``commit`` **will update** the page's contents, the other methods are basically string manipulations.
+   4. Each ``commit`` takes all text insertions and shapes and places them in foreground or background on the page -- thus providing a way to control graphical layers.
+
+   5. **Only** ``commit`` **will update** the page's contents, the other methods are basically string manipulations.
 
 Examples
 ---------
@@ -455,9 +455,9 @@ Examples
 >>> p0     = fitz.Point(...)     # starting point
 >>> for i in range(pieces):
         p0 = img.drawSector(center, p0, beta,
-                            fullSector = True) # draw piece
+                            fullSector=True) # draw piece
         # now fill it but do not connect ends of the arc
-        img.finish(fill = cols[i], closePath = False)
+        img.finish(fill=cols[i], closePath=False)
 >>> img.commit()                 # update the page
 
 Here is an example for 5 colors:
@@ -476,7 +476,7 @@ Here is an example for 5 colors:
         points.append(p0)
 >>> img.draw_cont = ""           # do not draw the circle sectors
 >>> img.drawPolyline(points)     # draw the polygon
->>> img.finish(color = (1,0,0), fill = (1,1,0), closePath = False)
+>>> img.finish(color=(1,0,0), fill=(1,1,0), closePath=False)
 >>> img.commit()
 
 Here is the polygon for n = 7:
@@ -508,12 +508,6 @@ Common Parameters
 
 ----
 
-**idx** (*int*)
-
-  Font files may contain more than one font. Use this parameter to select the right one. This setting cannot be reverted. Subsequent changes are ignored.
-
-----
-
 **set_simple** (*bool*)
 
   Fonts installed from files are installed as **Type0** fonts by default. If you want to use 1-byte characters only, set this to true. This setting cannot be reverted. Subsequent changes are ignored.
@@ -534,7 +528,9 @@ Common Parameters
 
 **color / fill** (*list, tuple*)
 
-  Line and fill colors are always specified as RGB triples of floats from 0 to 1. To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names -- see section :ref:`ColorDatabase`.
+  Line and fill colors can be specified as tuples or list of of floats from 0 to 1. These sequences must have a length of 1 (GRAY), 3 (RGB) or 4 (CMYK). For GRAY colorspace, a single float instead of the unwieldy ``(float,)`` tuple spec is also accepted.
+  
+  To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used to get predefined RGB color triples by name. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names -- see section :ref:`ColorDatabase`.
 
 ----
 

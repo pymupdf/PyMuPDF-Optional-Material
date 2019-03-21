@@ -79,7 +79,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: rect; Document args
        pair: fontsize; Document args
 
-    .. method:: __init__(self, filename = None, stream = None, filetype = None, rect = None, width = 0, height = 0, fontsize = 11)
+    .. method:: __init__(self, filename=None, stream=None, filetype=None, rect=None, width=0, height=0, fontsize=11)
 
       Creates a ``Document`` object.
 
@@ -106,12 +106,12 @@ For addional details on **embedded files** refer to Appendix 3.
       >>> # from a file
       >>> doc = fitz.open("some.pdf")
       >>> doc = fitz.open("some.file", None, "pdf")      # copes with wrong extension
-      >>> doc = fitz.open("some.file", filetype = "pdf") # copes with wrong extension
+      >>> doc = fitz.open("some.file", filetype="pdf") # copes with wrong extension
 
       >>> # from memory
       >>> doc = fitz.open("pdf", mem_area)
       >>> doc = fitz.open(None, mem_area, "pdf")
-      >>> doc = fitz.open(stream = mem_area, filetype = "pdf")
+      >>> doc = fitz.open(stream=mem_area, filetype="pdf")
 
       >>> # new empty PDF
       >>> doc = fitz.open()
@@ -125,7 +125,7 @@ For addional details on **embedded files** refer to Appendix 3.
       :rtype: int
       :returns: positive value if decryption was successful, zero otherwise. If successful, indicator ``isEncrypted`` is set to ``False``.
 
-    .. method:: loadPage(pno = 0)
+    .. method:: loadPage(pno=0)
 
       Load a :ref:`Page` for further processing like rendering, text searching, etc.
 
@@ -140,7 +140,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: to_page; Document.convertToPDF args
        pair: rotate; Document.convertToPDF args
 
-    .. method:: convertToPDF(from_page = -1, to_page = -1, rotate = 0)
+    .. method:: convertToPDF(from_page=-1, to_page=-1, rotate=0)
 
       Create a PDF version of the current document and write it to memory. **All document types** (except PDF) are supported. The parameters have the same meaning as in :meth:`insertPDF`. In essence, you can restrict the conversion to a page subset, specify page rotation, and revert page sequence.
 
@@ -151,7 +151,7 @@ For addional details on **embedded files** refer to Appendix 3.
       :arg int rotate: rotation angle. Default is 0 (no rotation). Should be ``n * 90`` with an integer ``n`` (not checked).
       
       :rtype: bytes
-      :returns: a Python ``bytes`` object containing a PDF file image. It is created by internally using ``write(garbage=4, deflate = True)``. See :meth:`write`. You can output it directly to disk or open it as a PDF via ``fitz.open("pdf", pdfbytes)``. Here are some examples:
+      :returns: a Python ``bytes`` object containing a PDF file image. It is created by internally using ``write(garbage=4, deflate=True)``. See :meth:`write`. You can output it directly to disk or open it as a PDF via ``fitz.open("pdf", pdfbytes)``. Here are some examples:
 
       >>> # convert an XPS file to PDF
       >>> xps = fitz.open("some.xps")
@@ -171,9 +171,9 @@ For addional details on **embedded files** refer to Appendix 3.
       >>> doc = fitz.open()                     # new PDF
       >>> imglist = [ ... image file names ...] # e.g. a directory listing
       >>> for img in imglist:
-              imgdoc = fitz.open(img)           # open image as a document
-              pdfbytes = imgdoc.convertToPDF()  # make a 1-page PDF of it
-              imgpdf = fitz.open("pdf", pdfbytes)
+              imgdoc=fitz.open(img)           # open image as a document
+              pdfbytes=imgdoc.convertToPDF()  # make a 1-page PDF of it
+              imgpdf=fitz.open("pdf", pdfbytes)
               doc.insertPDF(imgpdf)             # insert the image PDF
       >>> doc.save("allmyimages.pdf")
 
@@ -184,7 +184,7 @@ For addional details on **embedded files** refer to Appendix 3.
         * EPUB, CBZ, FB2: similar to XPS.
         * SVG: medium. Roughly comparable to `svglib <https://github.com/deeplook/svglib>`_.
 
-    .. method:: getToC(simple = True)
+    .. method:: getToC(simple=True)
 
       Creates a table of contents out of the document's outline chain.
 
@@ -197,7 +197,7 @@ For addional details on **embedded files** refer to Appendix 3.
         * ``lvl`` -- hierarchy level (positive *int*). The first entry is always 1. Entries in a row are either **equal**, **increase** by 1, or **decrease** by any number.
         * ``title`` -- title (*str*)
         * ``page`` -- 1-based page number (*int*). Page numbers ``< 1`` either indicate a target outside this document or no target at all (see next entry).
-        * ``dest`` -- (*dict*) included only if ``simple = False``. Contains details of the link destination.
+        * ``dest`` -- (*dict*) included only if ``simple=False``. Contains details of the link destination.
 
     .. method:: getPagePixmap(pno, *args, **kwargs)
 
@@ -262,7 +262,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       .. note:: This list has no duplicate entries: the combination of :data:`xref` and ``name`` is unique. But by themselves, each of the two may occur multiple times. Duplicate ``name`` entries indicate the presence of "Form XObjects" on the page, e.g. generated by :meth:`Page.showPDFpage`.
 
-    .. method:: getPageText(pno, output = "text")
+    .. method:: getPageText(pno, output="text")
 
       Extracts the text of a page given its page number ``pno`` (zero-based). Invokes :meth:`Page.getText`.
 
@@ -278,7 +278,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: width; Document.layout args
        pair: height; Document.layout args
 
-    .. method:: layout(rect=None, width=0, height=0, fontsize = 11)
+    .. method:: layout(rect=None, width=0, height=0, fontsize=11)
 
       Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
 
@@ -297,7 +297,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Sets or updates the metadata of the document as specified in ``m``, a Python dictionary. As with :meth:`select`, these changes become permanent only when you save the document. Incremental save is supported.
 
-      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``m = {}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument. Arbitrary unicode values are possible if specified as UTF-8-encoded.
+      :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``{}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument. Arbitrary unicode values are possible if specified as UTF-8-encoded.
 
     .. method:: setToC(toc)
 
@@ -319,7 +319,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
             - ``page`` (int) is the target page number **(attention: 1-based to support getToC()-output)**, must be in valid page range if positive. Set this to ``-1`` if there is no target, or the target is external.
 
-            - ``dest`` (optional) is a dictionary or a number. If a number, it will be interpreted as the desired height (in points) this entry should point to on ``page`` in the current document. Use a dictionary (like the one given as output by ``getToC(simple = False)``) if you want to store destinations that are either "named", or reside outside this documennt (other files, internet resources, etc.).
+            - ``dest`` (optional) is a dictionary or a number. If a number, it will be interpreted as the desired height (in points) this entry should point to on ``page`` in the current document. Use a dictionary (like the one given as output by ``getToC(simple=False)``) if you want to store destinations that are either "named", or reside outside this documennt (other files, internet resources, etc.).
 
       :rtype: int
       :returns: ``outline`` and ``getToC()`` will be updated upon successful execution. The return code will either equal the number of inserted items (``len(toc)``) or the number of deleted items if ``toc`` is an empty sequence.
@@ -363,11 +363,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: saveIncr()
 
-      PDF only: saves the document incrementally. This is a convenience abbreviation for ``doc.save(doc.name, incremental = True)``.
+      PDF only: saves the document incrementally. This is a convenience abbreviation for ``doc.save(doc.name, incremental=True)``.
 
     .. caution:: A PDF may not be encrypted, but still be password protected against changes -- see the ``permissions`` property. Performing incremental saves while ``permissions["edit"] == False`` can lead to unpredictable results. Save to a new file in such a case. We also consider raising an exception under this condition.
 
-    .. method:: searchPageFor(pno, text, hit_max = 16, quads = False)
+    .. method:: searchPageFor(pno, text, hit_max=16, quads=False)
 
        Search for ``text`` on page number ``pno``. Works exactly like the corresponding :meth:`Page.searchFor`. Any integer ``pno < len(doc)`` is acceptable.
 
@@ -385,7 +385,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: rotate; Document.insertPDF args
        pair: links; Document.insertPDF args
 
-    .. method:: insertPDF(docsrc, from_page = -1, to_page = -1, start_at = -1, rotate = -1, links = True)
+    .. method:: insertPDF(docsrc, from_page=-1, to_page=-1, start_at=-1, rotate=-1, links=True)
 
       PDF only: Copy the page range **[from_page, to_page]** (including both) of PDF document ``docsrc`` into the current one. Inserts will start with page number ``start_at``. Negative values can be used to indicate default values. All pages thus copied will be rotated as specified. Links can be excluded in the target, see below. All page numbers are zero-based.
 
@@ -402,9 +402,27 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg bool links: Choose whether (internal and external) links should be included with the copy. Default is ``True``. An **internal** link is always excluded if its destination is outside the copied page range.
 
-    .. note:: If ``from_page > to_page``, pages will be **copied in reverse order**. If ``0 <= from_page == to_page``, then one page will be copied.
+    .. note::
 
-    .. note:: ``docsrc`` bookmarks **will not be copied**. It is easy however, to recover a table of contents for the resulting document. Look at the examples below and at program `PDFjoiner.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the *examples* directory: it can join PDF documents and at the same time piece together respective parts of the tables of contents.
+       1. If ``from_page > to_page``, pages will be **copied in reverse order**. If ``0 <= from_page == to_page``, then one page will be copied.
+
+       2. ``docsrc`` bookmarks **will not be copied**. It is easy however, to recover a table of contents for the resulting document. Look at the examples below and at program `PDFjoiner.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ in the *examples* directory: it can join PDF documents and at the same time piece together respective parts of the tables of contents.
+
+    .. index::
+       pair: width; Document.newPage args
+       pair: height; Document.newPage args
+
+    .. method:: newPage(pno=-1, width=595, height=842)
+    
+      PDF only: Insert an empty page.
+
+      :arg int pno: page number in front of which the new page should be inserted. Must be in ``range(-1, len(doc) + 1)``. Special values -1 and ``len(doc)`` insert **after** the last page.
+
+      :arg float width: page width.
+      :arg float height: page height.
+
+      :rtype: :ref:`Page`
+      :returns: the created page object.
 
     .. index::
        pair: fontsize; Document.insertPage args
@@ -414,71 +432,27 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: fontfile; Document.insertPage args
        pair: color; Document.insertPage args
 
-    .. method:: insertPage(to = -1, text = None, fontsize = 11, width = 595, height = 842, fontname = "Helvetica", fontfile = None, color = (0, 0, 0))
+    .. method:: insertPage(pno, text=None, fontsize=11, width=595, height=842, fontname="helv", fontfile=None, color=None)
 
-      PDF only: Insert an new page. Default page dimensions are those of A4 portrait paper format. Optionally, text can also be inserted -- provided as a string or as a sequence.
+      PDF only: Insert a new page and insert some text. Convenience function which combines :meth:`Document.newPage` and (parts of) :meth:`Page.insertText`.
 
-      :arg int to: page number (0-based) in front of which to insert. Valid specifications must be in range ``-1 <= pno <= len(doc)``. The default ``-1`` and ``pno = len(doc)`` indicate end of document, i.e. after the last page.
+      :arg int pno: page number (0-based) **in front of which** to insert. Must be in ``range(-1, len(doc) + 1)``. Special values -1 and ``len(doc)`` insert **after** the last page.
 
-      :arg text: optional text to put on the page. If given, it will start at 72 points (one inch) below top and 50 points from left. Line breaks (``\n``) will be honored, if it is a string. No care will be taken as to whether lines are too wide. However, text output stops when no more lines will fit on the page (discarding any remaining text). If a sequence is specified, its entries must be a of type string. Each entry will be put on one line. Line breaks *within an entry* will be treated as any other white space. If you want to calculate the number of lines fitting on a page beforehand, use this formula: ``int((height - 108) / (fontsize * 1.2)``. So, this methods reserves one inch at the top and 1/2 inches at the bottom of the page as free space.
-      :type text: str or sequence
+          .. versionchanged:: 1.14.12
+             This is now a positional parameter
 
-      :arg float fontsize: font size in pixels. Default is 11. If more than one line is provided, a line spacing of ``fontsize * 1.2`` (fontsize plus 20%) is used.
-
-      :arg float width: width in pixels. Default is 595 (A4 width). Choose 612 for *Letter width*.
-
-      :arg float height: page height in pixels. Default is 842 (A4 height). Choose 792 for *Letter height*.
-
-      :arg str fontname: name of one of the :ref:`Base-14-Fonts` (default is "Helvetica") if fontfile is not specified.
-
-      :arg str fontfile: file path of a font existing on the system. If this parameter is specified, specifying ``fontname`` is **mandatory**. If the font is new to the PDF, it will be embedded. Of the font file, index 0 is used. Be sure to choose a font that supports horizontal, left-to-right spacing.
-
-      :arg sequence color: RGB text color specified as a triple of floats in range 0 to 1. E.g. specify black (default) as ``(0, 0, 0)``, red as ``(1, 0, 0)``, some gray value as ``(0.5, 0.5, 0.5)``, etc.
+      For the other parameters, please consult the aforementioned methods.
 
       :rtype: int
-      :returns: number of text lines put on the page. Use this to check which part of your text did not fit.
+      :returns: the result of :meth:`Page.insertText` (number of successfully inserted lines).
 
-      **Notes:**
-
-      This method can be used to
-
-      1. create a PDF containing only one empty page of a given dimension. The size of such a file is well below 500 bytes and hence close to the theoretical PDF minimum.
-      2. create a protocol page of which files have been embedded, or separator pages between joined pieces of PDF Documents.
-      3. convert textfiles to PDF like in the demo script `text2pdf.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/text2pdf.py>`_.
-      4. For now, the inserted text should restrict itself to one byte character codes.
-      5. An easy way to create pages with a usual paper format, use a statement like ``width, height = fitz.PaperSize("A4-L")``.
-      6. To simplify color specification, we provide a :ref:`ColorDatabase`. This allows you to specify ``color = getColor("turquoise")``, without bothering about any more details.
-
-    .. index::
-       pair: width; Document.newPage args
-       pair: height; Document.newPage args
-
-    .. method:: newPage(to = -1, width = 595, height = 842)
-    
-      PDF only: Convenience method: insert an empty page like ``insertPage()`` does. Valid parameters have the same meaning. However, no text can be inserted, instead the inserted page object is returned.
-
-      If you do not need to insert text with your new page right away, then this method is the more convenient one: it saves you one statement if you need it for subsequent work -- see the below example.
-
-      :rtype: :ref:`Page`
-      :returns: the page object just inserted.
-
-      >>> # let the following be a list of image files, from which we
-      >>> # create a PDF with one image per page:
-      >>> imglist = [...]   # list of image filenames
-      >>> doc = fitz.open() # new empty PDF
-      >>> for img in imglist:
-              pix = fitz.Pixmap(img)
-              page = doc.newPage(-1, width = pix.width, height = pix.height)
-              page.insertImage(page.rect, pixmap = pix)
-      >>> doc.save("image-file.pdf", deflate = True)
-
-    .. method:: deletePage(pno = -1)
+    .. method:: deletePage(pno=-1)
 
       PDF only: Delete a page given by its 0-based number in range ``0 <= pno < len(doc)``.
 
       :arg int pno: the page to be deleted. For ``-1`` the last page will be deleted.
 
-    .. method:: deletePageRange(from_page = -1, to_page = -1)
+    .. method:: deletePageRange(from_page=-1, to_page=-1)
 
       PDF only: Delete a range of pages specified as 0-based numbers. Any ``-1`` parameter will first be replaced by ``len(doc) - 1``. After that, condition ``0 <= from_page <= to_page < len(doc)`` must be true. If the parameters are equal, one page will be deleted.
 
@@ -486,7 +460,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int to_page: the last page to be deleted.
 
-    .. method:: copyPage(pno, to = -1)
+    .. method:: copyPage(pno, to=-1)
 
       PDF only: Copy a page within the document.
 
@@ -494,7 +468,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int to: the page number in front of which to copy. To insert after the last page (default), specify ``-1``.
 
-    .. method:: movePage(pno, to = -1)
+    .. method:: movePage(pno, to=-1)
 
       PDF only: Move (copy and then delete original) a page within the document.
 
@@ -507,7 +481,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: ufilename; Document.embeddedFileAdd args
        pair: desc; Document.embeddedFileAdd args
 
-    .. method:: embeddedFileAdd(buffer, name, filename = None, ufilename = None, desc = None)
+    .. method:: embeddedFileAdd(buffer, name, filename=None, ufilename=None, desc=None)
 
       PDF only: Embed a new file. All string parameters except the name may be unicode (in previous versions, only ASCII worked correctly). File contents will be compressed (where beneficial).
 
@@ -559,7 +533,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: ufilename; Document.embeddedFileUpd args
        pair: desc; Document.embeddedFileUpd args
 
-    .. method:: embeddedFileUpd(n, buffer = None, filename = None, ufilename = None, desc = None)
+    .. method:: embeddedFileUpd(n, buffer=None, filename=None, ufilename=None, desc=None)
 
       PDF only: Change an embedded file given its entry number or name. All parameters are optional. Letting them default leads to a no-operation.
 
@@ -569,7 +543,7 @@ For addional details on **embedded files** refer to Appendix 3.
       :arg str ufilename: the new unicode filename.
       :arg str desc: the new description.
 
-    .. method:: embeddedFileSetInfo(n, filename = None, ufilename = None, desc = None)
+    .. method:: embeddedFileSetInfo(n, filename=None, ufilename=None, desc=None)
 
       PDF only: Change embedded file meta information. All parameters are optional. Letting them default will lead to a no-operation.
 
@@ -639,13 +613,13 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: metadata
 
-      Contains the document's meta data as a Python dictionary or ``None`` (if ``isEncrypted = True`` and ``needPass=True``). Keys are ``format``, ``encryption``, ``title``, ``author``, ``subject``, ``keywords``, ``creator``, ``producer``, ``creationDate``, ``modDate``. All item values are strings or ``None``.
+      Contains the document's meta data as a Python dictionary or ``None`` (if ``isEncrypted=True`` and ``needPass=True``). Keys are ``format``, ``encryption``, ``title``, ``author``, ``subject``, ``keywords``, ``creator``, ``producer``, ``creationDate``, ``modDate``. All item values are strings or ``None``.
 
       Except ``format`` and ``encryption``, the key names correspond in an obvious way to the PDF keys ``/Creator``, ``/Producer``, ``/CreationDate``, ``/ModDate``, ``/Title``, ``/Author``, ``/Subject``, and ``/Keywords`` respectively.
 
       - ``format`` contains the PDF version (e.g. 'PDF-1.6').
 
-      - ``encryption`` either contains ``None`` (no encryption), or a string naming an encryption method (e.g. ``'Standard V4 R4 128-bit RC4'``). Note that an encryption method may be specified **even if** ``needsPass = False``. In such cases not all permissions will probably have been granted. Check dictionary ``permissions`` for details.
+      - ``encryption`` either contains ``None`` (no encryption), or a string naming an encryption method (e.g. ``'Standard V4 R4 128-bit RC4'``). Note that an encryption method may be specified **even if** ``needsPass=False``. In such cases not all permissions will probably have been granted. Check dictionary ``permissions`` for details.
 
       - If the date fields contain valid data (which need not be the case at all!), they are strings in the PDF-specific timestamp format "D:<TS><TZ>", where
 
@@ -723,7 +697,7 @@ Delete pages with no text::
 
  if len(r) < len(doc):                      # did we actually delete anything?
      doc.select(r)                          # apply the list
- doc.save("out.pdf", garbage = 4)           # save result to new PDF, OR
+ doc.save("out.pdf", garbage=4)           # save result to new PDF, OR
 
  # update the original document ... *** VERY FAST! ***
  doc.saveIncr()
@@ -735,7 +709,7 @@ Create a sub document with only the odd pages:
 >>> doc = fitz.open("any.pdf")
 >>> r = list(range(0, len(doc), 2))
 >>> doc.select(r)                              # apply the list
->>> doc.save("oddpages.pdf", garbage = 4)      # save sub-PDF of the odd pages
+>>> doc.save("oddpages.pdf", garbage=4)      # save sub-PDF of the odd pages
 
 
 Concatenate a document with itself:
@@ -803,8 +777,8 @@ This shows how to modify or add a table of contents. Also have a look at `csv2to
 >>> doc1 = fitz.open("file1.pdf")          # must be a PDF
 >>> doc2 = fitz.open("file2.pdf")          # must be a PDF
 >>> pages1 = len(doc1)                     # save doc1's page count
->>> toc1 = doc1.getToC(simple = False)     # save TOC 1
->>> toc2 = doc2.getToC(simple = False)     # save TOC 2
+>>> toc1 = doc1.getToC(False)     # save TOC 1
+>>> toc2 = doc2.getToC(False)     # save TOC 2
 >>> doc1.insertPDF(doc2)                   # doc2 at end of doc1
 >>> for t in toc2:                         # increase toc2 page numbers
         t[2] += pages1                     # by old len(doc1)
@@ -815,13 +789,13 @@ Obviously, similar ways can be found in more general situations. Just make sure 
 **(2) More examples:**
 
 >>> # insert 5 pages of doc2, where its page 21 becomes page 15 in doc1
->>> doc1.insertPDF(doc2, from_page = 21, to_page = 25, start_at = 15)
+>>> doc1.insertPDF(doc2, from_page=21, to_page=25, start_at=15)
 
 >>> # same example, but pages are rotated and copied in reverse order
->>> doc1.insertPDF(doc2, from_page = 25, to_page = 21, start_at = 15, rotate = 90)
+>>> doc1.insertPDF(doc2, from_page=25, to_page=21, start_at=15, rotate=90)
 
 >>> # put copied pages in front of doc1
->>> doc1.insertPDF(doc2, from_page = 21, to_page = 25, start_at = 0)
+>>> doc1.insertPDF(doc2, from_page=21, to_page=25, start_at=0)
 
 Other Examples
 ----------------
