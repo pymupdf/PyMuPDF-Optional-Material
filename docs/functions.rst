@@ -32,6 +32,8 @@ Yet others are handy, general-purpose utilities.
 :meth:`Document.extractFont`         PDF only: extract embedded font
 :meth:`Document.extractImage`        PDF only: extract embedded image
 :meth:`Document.getCharWidths`       PDF only: return a list of glyph widths of a font
+:meth:`Document.isStream`            PDF only: check whether an :data:`xref` is a stream object
+:meth:`ImageProperties`              return a dictionary of basic image properties
 :meth:`getPDFnow`                    return the current timestamp in PDF format
 :meth:`getPDFstr`                    return PDF-compatible string
 :meth:`getTextlength`                return string length for a given font & fontsize
@@ -121,6 +123,38 @@ Yet others are handy, general-purpose utilities.
       :rtype: str
       :returns: PDF-compatible string enclosed in either ``()`` or ``<>``.
 
+-----
+
+   .. method:: ImageProperties(image)
+      Return a number of basic properties for an image.
+
+      .. versionadded 1.14.14
+
+      :arg bytes|bytearray|BytesIO|file image: an image either in memory or an **opened** file. A memory resident image maybe any of the formats ``bytes``, ``bytearray`` or ``io.BytesIO``.
+
+      :returns: a dictionary with the following keys (an empty dictionary for any error):
+
+         ========== ====================================================
+         **Key**    **Value**
+         ========== ====================================================
+         width      (int) width in pixels
+         height     (int) height in pixels
+         colorspace (int) colorspace.n (e.g. 3 = RGB)
+         bpc        (int) bits per component (usually 8)
+         format     (int) image format in ``range(15)``
+         ext        (str) suggested image file extension for the format
+         size       (int) length of the image in bytes
+         ========== ====================================================
+      
+      Example:
+
+      >>> fitz.ImageProperties(open("img-clip.jpg","rb"))
+      {'bpc': 8, 'format': 9, 'colorspace': 3, 'height': 325, 'width': 244, 'ext': 'jpeg', 'size': 14161}
+      >>> 
+
+
+-----
+
    .. method:: ConversionHeader("text", filename="UNKNOWN")
 
       Return the header string required to make a valid document out of page text outputs.
@@ -131,6 +165,7 @@ Yet others are handy, general-purpose utilities.
 
       :rtype: str
 
+-----
 
    .. method:: ConversionTrailer(output)
 
@@ -158,19 +193,32 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Document._getTrailerString()
+   .. method:: Document._getTrailerString(compressed=False)
 
       .. versionadded:: 1.14.9
 
       Return the trailer of the PDF (UTF-8), which is usually located at the PDF file's end. If not a PDF or the PDF has no trailer (because of irrecoverable errors), ``None`` is returned.
 
+      :arg bool compressed: whether to generate a compressed output or one with nice indentations to ease reading (default).
+
+         .. versionadded:: 1.14.14
+
       :returns: a string with the PDF trailer information. This is the analogous method to :meth:`Document._getXrefString` except that the trailer has no identifying :data:`xref` number. As can be seen here, the trailer object points to other important objects:
 
       >>> doc=fitz.open("adobe.pdf")
-      >>> print(doc._getTrailerString())
+      >>> print(doc._getTrailerString(True))
       '<</Size 334093/Prev 25807185/XRefStm 186352/Root 333277 0 R/Info 109959 0 R
       /ID[(\\227\\366/gx\\016ds\\244\\207\\326\\261\\\\\\305\\376u)
       (H\\323\\177\\346\\371pkF\\243\\262\\375\\346\\325\\002)]>>'
+      >>> print(doc._getTrailerString(False))
+      <<
+         /Size 334093
+         /Prev 25807185
+         /XRefStm 186352
+         /Root 333277 0 R
+         /Info 109959 0 R
+         /ID [ (\227\366/gx\016ds\244\207\326\261\\\305\376u) (H\323\177\346\371pkF\243\262\375\346\325\002`w) ]
+      >>
 
       .. note:: MuPDF is capable of recovering from a number of damages a PDF may have. This includes re-generating a trailer, where the end of a file has been lost (e.g. because of incomplete downloads). If however ``None`` is returned for a PDF, then the recovery mechanisms were unsuccessful and you should check for any error messages (:attr:`Document.openErrCode`, :attr:`Document.openErrMsg`, :attr:`Tools.fitz_stderr`).
 
@@ -255,7 +303,7 @@ Yet others are handy, general-purpose utilities.
       :rtype: list
       :returns: a list of :data:`xref` integers.
 
-      Each page may have zero to many associated contents objects (streams) which contain PDF some operator syntax describing what appears where on the page (like text or images, etc. See the :ref:`AdobeManual`, chapter "Operator Summary", page 985). This function only enumerates the number(s) of such objects. To get the actual stream source, use function :meth:`Document._getXrefStream` with one of the numbers in this list. Use :meth:`Document._updateStream` to replace the content.
+      Each page may have zero to many associated contents objects (:data:`stream` \s) which contain some operator syntax describing what appears where and how on the page (like text or images, etc. See the :ref:`AdobeManual`, chapter "Operator Summary", page 985). This function only enumerates the number(s) of such objects. To get the actual stream source, use function :meth:`Document._getXrefStream` with one of the numbers in this list. Use :meth:`Document._updateStream` to replace the content.
 
 -----
 
@@ -314,14 +362,64 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Document._getXrefString(xref)
+   .. method:: Document._getXrefString(xref, compressed=False)
 
-      Return the string ("source code") representing an arbitrary object. For stream objects, only the non-stream part is returned. To get the stream content, use :meth:`_getXrefStream`.
+      Return the string ("source code") representing an arbitrary object. For :data:`stream` objects, only the non-stream part is returned. To get the stream data, use :meth:`_getXrefStream`.
+
+      :arg int xref: :data:`xref` number.
+      :arg bool compressed: whether to generate a compressed output or one with nice indentations to ease reading (default).
+
+         .. versionadded:: 1.14.14
+
+      :rtype: string
+      :returns: the string defining the object identified by :data:`xref`. Example:
+
+      >>> doc = fitz.open("Adobe PDF Reference 1-7.pdf")  # the PDF
+      >>> page = doc[100]  # some page in it
+      >>> print(doc._getXrefString(page.xref, compressed=True))
+      <</CropBox[0 0 531 666]/Annots[4795 0 R 4794 0 R 4793 0 R 4792 0 R 4797 0 R 4796 0 R]
+      /Parent 109820 0 R/StructParents 941/Contents 229 0 R/Rotate 0/MediaBox[0 0 531 666]
+      /Resources<</Font<</T1_0 3914 0 R/T1_1 3912 0 R/T1_2 3957 0 R/T1_3 3913 0 R/T1_4 4576 0 R
+      /T1_5 3931 0 R/T1_6 3944 0 R>>/ProcSet[/PDF/Text]/ExtGState<</GS0 333283 0 R>>>>
+      /Type/Page>>
+      >>> print(doc._getXrefString(page.xref, compressed=False))
+      <<
+         /CropBox [ 0 0 531 666 ]
+         /Annots [ 4795 0 R 4794 0 R 4793 0 R 4792 0 R 4797 0 R 4796 0 R ]
+         /Parent 109820 0 R
+         /StructParents 941
+         /Contents 229 0 R
+         /Rotate 0
+         /MediaBox [ 0 0 531 666 ]
+         /Resources <<
+            /Font <<
+               /T1_0 3914 0 R
+               /T1_1 3912 0 R
+               /T1_2 3957 0 R
+               /T1_3 3913 0 R
+               /T1_4 4576 0 R
+               /T1_5 3931 0 R
+               /T1_6 3944 0 R
+            >>
+            /ProcSet [ /PDF /Text ]
+            /ExtGState <<
+               /GS0 333283 0 R
+            >>
+         >>
+         /Type /Page
+      >>
+
+-----
+
+   .. method:: Document.isStream(xref)
+
+      PDF only: Check whether the object represented by :data:`xref` is a :data:`stream` type. Return is ``False`` if not a PDF or if the number is outside the valid xref range.
+
+      .. versionadded:: 1.14.14
 
       :arg int xref: :data:`xref` number.
 
-      :rtype: string
-      :returns: the string defining the object identified by :data:`xref`.
+      :returns: ``True`` if the object definition is followed by data wrapped in keyword pair ``stream``, ``endstream``.
 
 -----
 
@@ -381,11 +479,14 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document._updateStream(xref, stream, new=False)
 
-      Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised unless ``new=True`` is used. The function automatically performs a compress operation ("deflate").
+      Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised unless ``new=True`` is used. The function automatically performs a compress operation ("deflate") where beneficial.
 
       :arg int xref: :data:`xref` number.
       
-      :arg bytes|bytearray stream: the new content of the stream.
+      :arg bytes|bytearray|BytesIO stream: the new content of the stream.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` objects are now also supported.
       
       :arg bool new: whether to force accepting the stream, and thus **turning it into a stream object**.
 
@@ -408,7 +509,7 @@ Yet others are handy, general-purpose utilities.
 
       PDF Only: Extract data and meta information of an image stored in the document. The output can directly be used to be stored as an image file, as input for PIL, :ref:`Pixmap` creation, etc. This method avoids using pixmaps wherever possible to present the image in its original format (e.g. as JPEG).
 
-      :arg int xref: :data:`xref` of an image object. If the object is not an image or other errors occur, an empty dictionary is returned and no exception is generated. Must however be in range of valid PDF cross reference numbers.
+      :arg int xref: :data:`xref` of an image object. Must be in ``range(1, doc._getXrefLength())``, else an exception is raised. If the object is no image or other errors occur, an empty dictionary is returned and no exception occurs.
 
       :rtype: dict
       :returns: a dictionary with the following keys

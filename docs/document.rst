@@ -87,13 +87,16 @@ For addional details on **embedded files** refer to Appendix 3.
       * If ``stream`` is given, then the document is created from memory and either ``filename`` or ``filetype`` must indicate its type.
       * If ``stream`` is ``None``, then a document is created from a file given by ``filename``. Its type is inferred from the extension, which can be overruled by specifying ``filetype``.
 
-      :arg str/pathlib filename: A UTF-8 string or ``pathlib`` object containing a file path (or a file type, see below).
+      :arg str|pathlib filename: A UTF-8 string or ``pathlib`` object containing a file path (or a file type, see below).
 
-      :arg bytes/bytearray stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
+      :arg bytes|bytearray|BytesIO stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
 
       :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      :arg rect-like rect: a rectangle specifying the desired page size. This parameter is only meaningful for document types with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
+      :arg rect-like rect: a rectangle specifying the desired page size. This parameter is only meaningful for documents with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
 
       :arg float width: may used together with ``height`` as an alternative to ``rect`` to specify layout information.
 
@@ -129,11 +132,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
       Load a :ref:`Page` for further processing like rendering, text searching, etc.
 
-      :arg int pno: page number, zero-based (0 is default and the first page of the document) and ``< doc.pageCount``. If ``pno < 0``, then page ``pno % pageCount`` will be loaded (IAW ``pageCount`` will be added to ``pno`` until the result is no longer negative). For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
+      :arg int pno: page number, zero-based (0 is default and the first page of the document). Any value in ``range(-inf, doc.pageCount)`` is acceptable. If pno is negative, then ``doc.pageCount`` will be added until this is no longer the case. For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
 
       :rtype: :ref:`Page`
 
-    .. note:: Conveniently, pages can also be loaded via indexes over the document: ``doc.loadPage(n) == doc[n]``. Consequently, a document can also be used as an iterator over its pages, e.g. ``for page in doc: ...`` and ``for page in reversed(doc): ...`` will yield the :ref:`Page`\ s of ``doc`` as ``page``.
+    .. note:: Documents also follow the Python sequence protocol with page numbers as indices: ``doc.loadPage(n) == doc[n]``. Consequently, expressions like ``"for page in doc: ..."`` and ``"for page in reversed(doc): ..."`` will successively yield the document's pages.
 
     .. index::
        pair: from_page; Document.convertToPDF args
@@ -289,7 +292,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: select(s)
 
-      PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty sequences or elements outside the range ``0 <= page < doc.pageCount`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
+      PDF only: Keeps only those pages of the document whose numbers occur in the list. Empty sequences or elements outside ``range(len(doc))`` will cause a ``ValueError``. For more details see remarks at the bottom or this chapter.
 
       :arg sequence s: A sequence (see :ref:`SequenceTypes`) of page numbers (zero-based) to be included. Pages not in the sequence will be deleted (from memory) and become unavailable until the document is reopened. **Page numbers can occur multiple times and in any order:** the resulting document will reflect the sequence exactly as specified.
 
@@ -369,7 +372,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: searchPageFor(pno, text, hit_max=16, quads=False)
 
-       Search for ``text`` on page number ``pno``. Works exactly like the corresponding :meth:`Page.searchFor`. Any integer ``pno < len(doc)`` is acceptable.
+       Search for ``text`` on page number ``pno``. Works exactly like the corresponding :meth:`Page.searchFor`. Any integer ``-inf < pno < len(doc)`` is acceptable.
 
     .. method:: write(garbage=0, clean=False, deflate=False, ascii=False, expand=0, linear=False, pretty=False, decrypt=True)
 
@@ -448,7 +451,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: deletePage(pno=-1)
 
-      PDF only: Delete a page given by its 0-based number in range ``0 <= pno < len(doc)``.
+      PDF only: Delete a page given by its 0-based number in ``range(-1, len(doc))``.
 
       :arg int pno: the page to be deleted. For ``-1`` the last page will be deleted.
 
@@ -485,19 +488,23 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Embed a new file. All string parameters except the name may be unicode (in previous versions, only ASCII worked correctly). File contents will be compressed (where beneficial).
 
-      :arg bytes/bytearray buffer: file contents.
+      :arg bytes|bytearray|BytesIO buffer: file contents.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
+
       :arg str name: entry identifier, must not already exist.
       :arg str filename: optional filename. Documentation only, will be set to ``name`` if ``None``.
       :arg str ufilename: optional unicode filename. Documentation only, will be set to ``filename`` if ``None``.
       :arg str desc: optional description. Documentation only, will be set to ``name`` if ``None``.
       
-      .. note:: The position of the new entry in the embedded files list can in general not be predicted. Do not assume a specific place (like the end or the beginning), even if the chosen name seems to suggest it. If you add several files, their sequence in that list will probably not be maintained either. In addition, the various PDF viewers each seem to use their own ordering logic when showing the list of embedded files for the same PDF.
+      .. note:: The position of the new entry in the embedded files list can in general not be predicted. Do not assume a specific place (like the end or the beginning), even if the chosen name seems to suggest it. If you add several files with this method, their sequence in that list will probably not be maintained either. In addition, the various PDF viewers each seem to use their own ordering logic when showing the list of embedded files for the same PDF.
 
     .. method:: embeddedFileGet(n)
 
       PDF only: Retrieve the content of embedded file by its entry number or name. If the document is not a PDF, or entry cannot be found, an exception is raised.
 
-      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
+      :arg int|str n: index or name of entry. An integer must be in ``range(0, embeddedFileCount)``.
 
       :rtype: bytes
 
@@ -516,7 +523,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Retrieve information of an embedded file given by its number or by its name.
 
-      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
+      :arg int/str n: index or name of entry. An integer must be in ``range(0, embeddedFileCount)``.
 
       :rtype: dict
       :returns: a dictionary with the following keys:
@@ -537,8 +544,12 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Change an embedded file given its entry number or name. All parameters are optional. Letting them default leads to a no-operation.
 
-      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
-      :arg bytes/bytearray buffer: the new file content.
+      :arg int/str n: index or name of entry. An integer must be in ``range(0, embeddedFileCount)``.
+      :arg bytes|bytearray|BytesIO buffer: the new file content.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
+
       :arg str filename: the new filename.
       :arg str ufilename: the new unicode filename.
       :arg str desc: the new description.
@@ -547,12 +558,12 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Change embedded file meta information. All parameters are optional. Letting them default will lead to a no-operation.
 
-      :arg int/str n: index or name of entry. For an integer ``0 <= n < embeddedFileCount`` must be true.
+      :arg int|str n: index or name of entry. An integer must be in ``range(0, embeddedFileCount)``.
       :arg str filename: sets the filename.
       :arg str ufilename: sets the unicode filename.
       :arg str desc: sets the description.
 
-      .. note:: Deprecated subset of :meth:`embeddedFileUpd`. Will be deleted in next version.
+      .. note:: Deprecated subset of :meth:`embeddedFileUpd`. Will be deleted in a future version.
 
     .. method:: close()
 
@@ -590,7 +601,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: needsPass
 
-      Contains an indicator showing whether the document is encrypted (``True``) or not (``False``). This indicator remains unchanged -- **even after the document has been authenticated**. Precludes incremental saves if ``True``.
+      Contains an indicator showing whether the document is password-protected against any access (``True``) or not (``False``). This indicator remains unchanged -- **even after the document has been authenticated**. Precludes incremental saves if ``True``.
 
       :type: bool
 
@@ -697,7 +708,7 @@ Delete pages with no text::
 
  if len(r) < len(doc):                      # did we actually delete anything?
      doc.select(r)                          # apply the list
- doc.save("out.pdf", garbage=4)           # save result to new PDF, OR
+ doc.save("out.pdf", garbage=4)             # save result to new PDF, OR
 
  # update the original document ... *** VERY FAST! ***
  doc.saveIncr()

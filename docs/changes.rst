@@ -1,6 +1,24 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.15
+---------------------------
+* **Fixed** issues #301 ("Line cap and Line join"), #300 ("How to draw a shape without outlines") and #298 ("utils.updateRect exception"). These bugs pertain to drawing shapes with PyMuPDF. Drawing shapes without any border is fully supported. Line cap styles and line line join style are now differentiated and support all possible PDF values (0, 1, 2) instead of just being a bool. The previous parameter ``roundCap`` is deprecated in favor of ``lineCap`` and ``lineJoin`` and will be deleted in the next release.
+* **Fixed** issue #290 ("Memory Leak with getText('rawDICT')"). This bug caused memory not being (completely) freed after invoking the "dict", "rawdict" and "json" versions of :meth:`Page.getText`.
+
+
+Changes in Version 1.14.14
+---------------------------
+* **Added** new low-level function :meth:`ImageProperties` to determine a number of characteristics for an image.
+* **Added** new low-level function :meth:`Document.isStream`, which checks whether an object is of stream type.
+* **Changed** low-level functions :meth:`Document._getXrefString` and :meth:`Document._getTrailerString` now by default return object definitions in formatted form.
+
+Changes in Version 1.14.13
+---------------------------
+* **Changed** methods working with binary input: while ever supporting bytes and bytearray objects, they now also accept ``io.BytesIO`` input, using their ``getvalue()`` method. This pertains to document creation, embedded files, FileAttachment annotations, pixmap creation and others. Fixes issue #274 ("Segfault when using BytesIO as a stream for insertImage").
+* **Fixed** issue #278 ("Is insertImage(keep_proportion=True) broken?"). Images are now correctly presented when keeping aspect ratio.
+
+
 Changes in Version 1.14.12
 ---------------------------
 * **Changed** the draw methods of :ref:`Page` and :ref:`Shape` to support not only RGB, but also GRAY and CMYK colorspaces. This solves issue #270 ("Is there a way to use CMYK color to draw shapes?"). This change also applies to text insertion methods of :ref:`Shape`, resp. :ref:`Page`.

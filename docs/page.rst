@@ -6,7 +6,7 @@ Page
 
 Class representing a document page. A page object is created by :meth:`Document.loadPage` or, equivalently, via indexing the document like ``doc[n]`` - it has no independent constructor.
 
-There is a parent-child relationship between a document and its pages. If the document is closed or deleted, all page objects (and their respective children, too) in existence will become unusable. If a page property or method is being used, an exception is raised saying that the page object is "orphaned".
+There is a parent-child relationship between a document and its pages. If the document is closed or deleted, all page objects (and their respective children, too) in existence will become unusable ("orphaned"): If a page property or method is being used, an exception is raised.
 
 Several page methods have a :ref:`Document` counterpart for convenience. At the end of this chapter you will find a synopsis.
 
@@ -136,9 +136,13 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg point-like pos: the top-left point of a 18x18 rectangle containing the MuPDF-provided "PushPin" icon.
 
-      :arg bytes/bytearray buffer: the data to be stored (actual file content, calculated data, etc.).
-      :arg str filename: the filename.
-      :arg str ufilename: the optional PDF unicode filename. Defaults to filename.
+      :arg bytes|bytearray|BytesIO buffer: the data to be stored (actual file content, any data, etc.).
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
+
+      :arg str filename: the filename to associate with the data.
+      :arg str ufilename: the optional PDF unicode version of filename. Defaults to filename.
       :arg str desc: an optional description of the file. Defaults to filename.
 
       :rtype: :ref:`Annot`
@@ -310,12 +314,14 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawLine args
       pair: morph; Page.drawLine args
       pair: dashes; Page.drawLine args
-      pair: roundCap; Page.drawLine args
+      pair: lineCap; Page.drawLine args
+      pair: lineJoin; Page.drawLine args
+      pair: lineJoin; Page.drawLine args
       pair: color; Page.drawLine args
       pair: fill; Page.drawLine args
       pair: width; Page.drawLine args
 
-   .. method:: drawLine(p1, p2, color=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
+   .. method:: drawLine(p1, p2, color=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
 
       PDF only: Draw a line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawLine`.
 
@@ -324,12 +330,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawZigzag args
       pair: morph; Page.drawZigzag args
       pair: dashes; Page.drawZigzag args
-      pair: roundCap; Page.drawZigzag args
+      pair: lineCap; Page.drawZigzag args
+      pair: lineJoin; Page.drawZigZag args
       pair: color; Page.drawZigzag args
       pair: fill; Page.drawZigzag args
       pair: width; Page.drawZigzag args
 
-   .. method:: drawZigzag(p1, p2, breadth=2, color=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
+   .. method:: drawZigzag(p1, p2, breadth=2, color=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
 
       PDF only: Draw a zigzag line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawZigzag`.
 
@@ -338,12 +345,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawSquiggle args
       pair: morph; Page.drawSquiggle args
       pair: dashes; Page.drawSquiggle args
-      pair: roundCap; Page.drawSquiggle args
+      pair: lineCap; Page.drawSquiggle args
+      pair: lineJoin; Page.drawSquiggle args
       pair: color; Page.drawSquiggle args
       pair: fill; Page.drawSquiggle args
       pair: width; Page.drawSquiggle args
 
-   .. method:: drawSquiggle(p1, p2, breadth=2, color=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
+   .. method:: drawSquiggle(p1, p2, breadth=2, color=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
 
       PDF only: Draw a squiggly (wavy, undulated) line from ``p1`` to ``p2`` (point-likes). See :meth:`Shape.drawSquiggle`.
 
@@ -352,12 +360,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawCircle args
       pair: morph; Page.drawCircle args
       pair: dashes; Page.drawCircle args
-      pair: roundCap; Page.drawCircle args
+      pair: lineCap; Page.drawCircle args
+      pair: lineJoin; Page.drawCircle args
       pair: color; Page.drawCircle args
       pair: fill; Page.drawCircle args
       pair: width; Page.drawCircle args
 
-   .. method:: drawCircle(center, radius, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
+   .. method:: drawCircle(center, radius, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
 
       PDF only: Draw a circle around ``center`` (point-like) with a radius of ``radius``. See :meth:`Shape.drawCircle`.
 
@@ -366,12 +375,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawOval args
       pair: morph; Page.drawOval args
       pair: dashes; Page.drawOval args
-      pair: roundCap; Page.drawOval args
+      pair: lineCap; Page.drawOval args
+      pair: lineJoin; Page.drawOval args
       pair: color; Page.drawOval args
       pair: fill; Page.drawOval args
       pair: width; Page.drawOval args
 
-   .. method:: drawOval(rect, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
+   .. method:: drawOval(rect, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
 
       PDF only: Draw an oval (ellipse) within the given rectangle (rect-like). See :meth:`Shape.drawOval`.
 
@@ -380,13 +390,14 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawSector args
       pair: morph; Page.drawSector args
       pair: dashes; Page.drawSector args
-      pair: roundCap; Page.drawSector args
+      pair: lineCap; Page.drawSector args
+      pair: lineJoin; Page.drawSector args
       pair: color; Page.drawSector args
       pair: fill; Page.drawSector args
       pair: width; Page.drawSector args
       pair: fullSector; Page.drawSector args
 
-   .. method:: drawSector(center, point, angle, color=None, fill=None, width=1, dashes=None, roundCap=True, fullSector=True, overlay=True, closePath=False, morph=None)
+   .. method:: drawSector(center, point, angle, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, fullSector=True, overlay=True, closePath=False, morph=None)
 
       PDF only: Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie). See :meth:`Shape.drawSector`.
 
@@ -395,12 +406,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawPolyline args
       pair: morph; Page.drawPolyline args
       pair: dashes; Page.drawPolyline args
-      pair: roundCap; Page.drawPolyline args
+      pair: lineCap; Page.drawPolyline args
+      pair: lineJoin; Page.drawPolyline args
       pair: color; Page.drawPolyline args
       pair: fill; Page.drawPolyline args
       pair: width; Page.drawPolyline args
 
-   .. method:: drawPolyline(points, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, closePath=False, morph=None)
+   .. method:: drawPolyline(points, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, closePath=False, morph=None)
 
       PDF only: Draw several connected lines defined by a sequence of point-likes. See :meth:`Shape.drawPolyline`.
 
@@ -410,12 +422,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawBezier args
       pair: morph; Page.drawBezier args
       pair: dashes; Page.drawBezier args
-      pair: roundCap; Page.drawBezier args
+      pair: lineCap; Page.drawBezier args
+      pair: lineJoin; Page.drawBezier args
       pair: color; Page.drawBezier args
       pair: fill; Page.drawBezier args
       pair: width; Page.drawBezier args
 
-   .. method:: drawBezier(p1, p2, p3, p4, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, closePath=False, morph=None)
+   .. method:: drawBezier(p1, p2, p3, p4, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, closePath=False, morph=None)
 
       PDF only: Draw a cubic Bézier curve from ``p1`` to ``p4`` with the control points ``p2`` and ``p3`` (all are point-likes). See :meth:`Shape.drawBezier`.
 
@@ -424,12 +437,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawCurve args
       pair: morph; Page.drawCurve args
       pair: dashes; Page.drawCurve args
-      pair: roundCap; Page.drawCurve args
+      pair: lineCap; Page.drawCurve args
+      pair: lineJoin; Page.drawCurve args
       pair: color; Page.drawCurve args
       pair: fill; Page.drawCurve args
       pair: width; Page.drawCurve args
 
-   .. method:: drawCurve(p1, p2, p3, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, closePath=False, morph=None)
+   .. method:: drawCurve(p1, p2, p3, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, closePath=False, morph=None)
 
       PDF only: This is a special case of ``drawBezier()``. See :meth:`Shape.drawCurve`.
 
@@ -438,12 +452,13 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: closePath; Page.drawRect args
       pair: morph; Page.drawRect args
       pair: dashes; Page.drawRect args
-      pair: roundCap; Page.drawRect args
+      pair: lineCap; Page.drawRect args
+      pair: lineJoin; Page.drawRect args
       pair: color; Page.drawRect args
       pair: fill; Page.drawRect args
       pair: width; Page.drawRect args
 
-   .. method:: drawRect(rect, color=None, fill=None, width=1, dashes=None, roundCap=True, overlay=True, morph=None)
+   .. method:: drawRect(rect, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
 
       PDF only: Draw a rectangle. See :meth:`Shape.drawRect`.
 
@@ -532,16 +547,22 @@ This is available for PDF documents only. There are basically two groups of meth
       .. versionchanged:: 1.14.11
          By default, the image keeps its aspect ratio.
 
-      :arg rect-like rect: where to put the image on the page -- must be finite and its intersection with the page must not be empty.
+      :arg rect-like rect: where to put the image on the page. Only the rectangle part which is inside the page is used. This intersection must be finite and not empty.
+
+         .. versionchanged:: 1.14.13
+            The image is now always placed **centered** in the rectangle.
 
       :arg str filename: name of an image file (all formats supported by MuPDF -- see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
 
-      :arg bytes/bytearray stream: image in memory (all formats supported by MuPDF -- see :ref:`ImageFiles`). This is the most efficient option.
+      :arg bytes|bytearray|io.BytesIO stream: image in memory (all formats supported by MuPDF -- see :ref:`ImageFiles`). This is the most efficient option.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
 
       :arg pixmap: a pixmap containing the image.
       :type pixmap: :ref:`Pixmap`
 
-      :arg int rotate: rotate the image. Must be an integer multiple of 90 degrees. If you need a non-orthogonal rotation by an arbitrary angle, consider converting the image to a PDF (:meth:`Document.convertToPDF`) first and then use :meth:`Page.showPDFpage` instead.
+      :arg int rotate: rotate the image. Must be an integer multiple of 90 degrees. If you need a rotation by an arbitrary angle, consider converting the image to a PDF (:meth:`Document.convertToPDF`) first and then use :meth:`Page.showPDFpage` instead.
       
          .. versionadded:: v1.14.11
 
@@ -682,7 +703,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file.
       :type docsrc: :ref:`Document`
 
-      :arg int pno: page number (0-based) to be shown.
+      :arg int pno: page number (0-based, in ``range(-inf, len(docsrc))``) to be shown.
 
       :arg bool keep_proportion: whether to maintain the width-height-ratio (default). If false, all 4 corners are always positioned on the border of the target rectangle -- whatever the rotation value. In general, this will deliver distorted and /or non-rectangular images.
 

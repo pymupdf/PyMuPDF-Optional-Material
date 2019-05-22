@@ -54,7 +54,7 @@ Glossary
             … zero or more bytes …
             endstream
 
-        See :ref:`AdobeManual` p. 60. PyMuPDF supports retrieving stream values via :meth:`Document._getXrefStream`.
+        See :ref:`AdobeManual` p. 60. PyMuPDF supports retrieving stream content via :meth:`Document._getXrefStream`. Use :meth:`Document.isStream` to determine whether an object is of stream type.
 
 .. data:: xref 
 

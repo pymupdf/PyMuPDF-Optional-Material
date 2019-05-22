@@ -80,7 +80,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: __init__(self, source, width, height, [clip])
 
-      **Copy and scale:** Copy ``source`` pixmap choosing new width and height values. Supports partial copying and the source colorspace may be ``None``.
+      **Copy and scale:** Copy ``source`` pixmap choosing new width and height values. Supports partial copying and the source colorspace may be also ``None``.
 
       :arg source: the source pixmap.
       :type source: ``Pixmap``
@@ -116,11 +116,15 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg str filename: Path of the image file.
 
-   .. method:: __init__(self, img)
+   .. method:: __init__(self, stream)
 
       **From memory:** Create a pixmap from a memory area. All properties are inferred from the input. The origin of the resulting pixmap is ``(0, 0)``.
 
-      :arg bytes/bytearray img: Data containing a complete, valid image. Could have been created by e.g. ``img = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only**.
+      :arg bytes|bytearray|BytesIO stream: Data containing a complete, valid image. Could have been created by e.g. ``stream = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only**, because ``bytes == str`` in Python 2 and the method will interpret the stream as a filename.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
+
 
    .. method:: __init__(self, colorspace, width, height, samples, alpha)
 
@@ -133,13 +137,18 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg int height: image height
 
-      :arg bytes/bytearray samples:  an area containing all pixels of the image. Must include alpha values if specified.
+      :arg bytes|bytearray|BytesIO samples:  an area containing all pixels of the image. Must include alpha values if specified.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` can now also be used. Data are now copied to the pixmap, hence the source data can safely be deleted.
 
       :arg bool alpha: whether a transparency channel is included.
 
-      .. note:: The following equation **must be true**: ``(colorspace.n + alpha) * width * height == len(samples)``.
-      
-      .. caution:: The method will not make a copy of ``samples``, but rather record a pointer. Therefore make sure that it remains available throughout the lifetime of the pixmap. Otherwise the pixmap's image will likely be destroyed or even worse things will happen.
+      .. note::
+
+         1. The following equation **must be true**: ``(colorspace.n + alpha) * width * height == len(samples)``.
+         2. Starting with version 1.14.13, the samples data are **copied** to the pixmap. So, source data becoming unavailable should no longer be a concern.
+
 
    .. method:: __init__(self, doc, xref)
 
@@ -227,7 +236,11 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       Change the alpha values. The pixmap must have an alpha channel.
 
-      :arg bytes/bytearray alphavalues: the new alpha values. If provided, its length must be at least ``width * height``. If omitted, all alpha values are set to 255 (no transparency).
+      :arg bytes|bytearray|BytesIO alphavalues: the new alpha values. If provided, its length must be at least ``width * height``. If omitted, all alpha values are set to 255 (no transparency).
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
+
 
    .. method:: invertIRect([irect])
 
@@ -237,7 +250,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: copyPixmap(source, irect)
 
-      Copy the ``irect`` part of the ``source`` pixmap into the corresponding area of this one. The two pixmaps may have different dimensions and can each have :data:`CS_GRAY` or :data:`CS_RGB` colorspaces, but they currently **must** have the same alpha property. The copy mechanism automatically adjusts discrepancies between source and target like so:
+      Copy the ``irect`` part of the ``source`` pixmap into the corresponding area of this one. The two pixmaps may have different dimensions and can each have :data:`CS_GRAY` or :data:`CS_RGB` colorspaces, but they currently **must** have the same alpha property [#f2]_. The copy mechanism automatically adjusts discrepancies between source and target like so:
 
       If copying from :data:`CS_GRAY` to :data:`CS_RGB`, the source gray-shade value will be put into each of the three rgb component bytes. If the other way round, ``(r + g + b) / 3`` will be taken as the gray-shade value of the target.
 
@@ -414,3 +427,5 @@ psd        gray, rgb, cmyk yes       .psd           Adobe Photoshop Document
 .. rubric:: Footnotes
 
 .. [#f1] If you need a **vector image** from the SVG, you must first convert it to a PDF. Try :meth:`Document.convertToPDF`. If this is not not good enough, look for other SVG-to-PDF conversion tools like the Python packages `svglib <https://pypi.org/project/svglib>`_, `CairoSVG <https://pypi.org/project/cairosvg>`_, `Uniconvertor <https://sk1project.net/modules.php?name=Products&product=uniconvertor&op=download>`_ or the Java solution `Apache Batik <https://github.com/apache/batik>`_. Have a look at our Wiki for more examples.
+
+.. [#f2] To also set the alpha property, add an additional step to this method by dropping or adding an alpha channel to the result.

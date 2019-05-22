@@ -175,7 +175,11 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Updates the content of an attached file.
 
-      :arg bytes|bytearray buffer: the new file content. May be omitted to only change meta-information.
+      :arg bytes|bytearray|BytesIO buffer: the new file content. May be omitted to only change meta-information.
+
+         .. versionchanged:: 1.14.13
+            ``io.BytesIO`` is now also supported.
+
 
       :arg str filename: new filename to associate with the file.
 

@@ -5,7 +5,7 @@ Shape
 
 This class allows creating interconnected graphical elements on a PDF page. Its methods have the same meaning and name as the corresponding :ref:`Page` methods.
 
-In fact, each :ref:`Page` draw method is just a convenience wrapper for (1) one shape draw method, (2) the :meth:`finish` method, and (3) the :meth:`commit` method. For page text insertion, only the :meth:`commit` method is invoked. If many draw and text perations are executed for a page, you should always consider using a Shape object.
+In fact, each :ref:`Page` draw method is just a convenience wrapper for (1) one shape draw method, (2) the :meth:`finish` method, and (3) the :meth:`commit` method. For page text insertion, only the :meth:`commit` method is invoked. If many draw and text operations are executed for a page, you should always consider using a Shape object.
 
 Several draw methods can be executed in a row and each one of them will contribute to one drawing. Once the drawing is complete, the :meth:`finish` method must be invoked to apply color, dashing, width, morphing and other attributes.
 
@@ -66,7 +66,7 @@ Several draw methods can be executed in a row and each one of them will contribu
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
 
-   ..index::
+   .. index::
       pair: breadth; Shape.drawSquiggle args
 
    .. method:: drawSquiggle(p1, p2, breadth=2)
@@ -169,7 +169,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawCircle(center, radius)
 
-      Draw a circle given its center and radius. The drawing starts and ends at point ``start = center - (radius, 0)`` in a counter-clockwise movement. ``start`` corresponds to the middle point of the enclosing square's left border.
+      Draw a circle given its center and radius. The drawing starts and ends at point ``center - (radius, 0)`` in a counter-clockwise movement. This corresponds to the middle point of the enclosing rectangle's left side.
 
       The method is a shortcut for ``drawSector(center, start, 360, fullSector=False)``. To draw a circle in a clockwise movement, change the sign of the degree.
 
@@ -181,9 +181,12 @@ Several draw methods can be executed in a row and each one of them will contribu
       :rtype: :ref:`Point`
       :returns: ``center - (radius, 0)``.
 
+      .. image:: img-drawcircle.jpg
+         :scale: 60
+
    .. method:: drawCurve(p1, p2, p3)
 
-      A special case of ``drawBezier()``: Draw a cubic Bézier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degress, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.
+      A special case of ``drawBezier()``: Draw a cubic Bézier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degrees, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.
 
       :arg p1: starting point.
       :type p1: point-like
@@ -320,13 +323,14 @@ Several draw methods can be executed in a row and each one of them will contribu
       pair: color; Shape.finish args
       pair: width; Shape.finish args
       pair: fill; Shape.finish args
-      pair: roundCap; Shape.finish args
+      pair: lineCap; Shape.finish args
+      pair: lineJoin; Shape.finish args
       pair: dashes; Shape.finish args
       pair: closePath; Shape.finish args
       pair: even_odd; Shape.finish args
       pair: morph; Shape.finish args
 
-   .. method:: finish(width=1, color=None, fill=None, roundCap=True, dashes=None, closePath=True, even_odd=False, morph=(pivot, matrix))
+   .. method:: finish(width=1, color=None, fill=None, lineCap=0, lineJoin=0, dashes=None, closePath=True, even_odd=False, morph=(pivot, matrix))
 
       Finish a set of ``draw*()`` methods by applying :ref:`CommonParms` to all of them. This method also supports morphing the resulting compound drawing using a pivotal :ref:`Point`.
 
@@ -336,7 +340,13 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       .. image:: img-even-odd.png
 
-      .. note:: Method **"even-odd"** counts the number of overlaps of areas. Pixels in areas overlapping an odd number of times are regarded **inside**, otherwise **outside**. In contrast, the default method **"nonzero winding"** also looks at the area orientation: it counts ``+1`` if an area is drawn counter-clockwise and ``-1`` else. If the result is zero, the pixel is regarded **outside**, otherwise **inside**. In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
+      .. note:: For each pixel in a drawing the following will happen:
+
+         1. Rule **"even-odd"** counts, how many areas are overlapping at a pixel. If this count is **odd** the pixel is regarded **inside**, if it is **even**, the pixel is **outside**.
+
+         2. Default rule **"nonzero winding"** also looks at the orientation of overlapping areas: it **adds 1** if an area is drawn anit-clockwise and it **subtracts 1** for clockwise areas. If the result is zero, the pixel is regarded **outside**, pixels with a non-zero count are **inside**.
+         
+         In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
 
    .. index::
       pair: overlay; Shape.commit args
@@ -542,7 +552,7 @@ Common Parameters
 
 **render_mode** (*int*)
 
-  .. versionadded 1.14.9
+  .. versionadded:: 1.14.9
 
   Integer in ``range(8)`` which controls the text appearance (:meth:`Shape.insertText` and :meth:`Shape.insertTextbox`). See page 398 in :ref:`AdobeManual`. New in v1.14.9. These methods now also differentiate between fill and stroke colors.
   
@@ -574,9 +584,18 @@ Common Parameters
 
 ----
 
-**roundCap** (*bool*)
+**lineCap (deprecated: "roundCap")** (*int*)
 
-  Cause lines, dashes and edges to be rounded (default). If false, sharp edges and square line and dashes ends will be generated. Rounded lines / dashes will end in a semi-circle with a diameter equal to line width and make longer by the radius of this semi-circle.
+  Controls the look of line ends. The default value 0 lets each line end at exactly the given coordinate in a sharp edge. A value of 1 adds a semi-circle to the ends, whose center is the end point and whose diameter is the line width. Value 2 adds a semi-square with an edge length of line width and a center of the line end.
+
+  .. versionchanged:: 1.14.15
+----
+
+**lineJoin** (*int*)
+
+  Controls the way how line connections look like. This may be either as a sharp edge (0), a rounded join (1), or a cut-off edge (2, "butt").
+
+  .. versionadded:: 1.14.15
 
 ----
 

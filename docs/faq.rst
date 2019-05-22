@@ -627,11 +627,99 @@ How to Extract Text in Natural Reading Order
 
 One of the common issues with PDF text extraction is, that text may not appear in any particular reading order.
 
-Responsible for this effect is the PDF creator (software or human). For example, page headers may have been inserted in a separate step -- after the document had been produced. In such a case, the header text will appear at the end of a page text extraction (allthough it will be correctly shown by PDF viewer software).
+Responsible for this effect is the PDF creator (software or a human). For example, page headers may have been inserted in a separate step -- after the document had been produced. In such a case, the header text will appear at the end of a page text extraction (allthough it will be correctly shown by PDF viewer software).
 
 PyMuPDF has several means to re-establish some reading sequence or even to re-generate a layout close to the original.
 
 As a starting point take the above mentioned `script <https://github.com/pymupdf/PyMuPDF/wiki/How-to-extract-text-from-a-rectangle>`_ and then use the full page rectangle.
+
+On rare occasions, when the PDF creator has been "over-creative", extracted text does not even keep the correct reading sequence of **single letters**: instead of the two words "DELUXE PROPERTY" you might sometimes get an anagram, consisting of 8 words like "DEL", "XE" , "P", "OP", "RTY", "U", "R" and "E".
+
+Such a PDF is also not searchable by all PDF viewers, but it is displayed correctly and looks harmless.
+
+In those cases, the following function will help composing the original words of the page. The resulting list is also searchable and can be used to deliver rectangles for the found text locations::
+
+    from operator import itemgetter
+    from itertools import groupby
+    import fitz
+
+    def recover(words, rect):
+        """ Word recovery.
+
+        Notes:
+            Method 'getTextWords()' does not try to recover words, if their single
+            letters do not appear in correct lexical order. This function steps in
+            here and creates a new list of recovered words.
+        Args:
+            words: list of words as created by 'getTextWords()'
+            rect: rectangle to consider (usually the full page)
+        Returns:
+            List of recovered words. Same format as 'getTextWords', but left out
+            block, line and word number - a list of items of the following format:
+            [x0, y0, x1, y1, "word"]
+        """
+        # build my sublist of words contained in given rectangle
+        mywords = [w for w in words if fitz.Rect(w[:4]) in rect]
+
+        # sort the words by lower line, then by word start coordinate
+        mywords.sort(key=itemgetter(3, 0))  # sort by y1, x0 of word rectangle
+
+        # build word groups on same line
+        grouped_lines = groupby(mywords, key=itemgetter(3))
+
+        words_out = []  # we will return this
+
+        # iterate through the grouped lines
+        # for each line coordinate ("_"), the list of words is given
+        for _, words_in_line in grouped_lines:
+            for i, w in enumerate(words_in_line):
+                if i == 0:  # store first word
+                    x0, y0, x1, y1, word = w[:5]
+                    continue
+
+                r = fitz.Rect(w[:4])  # word rect
+
+                # Compute word distance threshold as 20% of width of 1 letter.
+                # So we should be safe joining text pieces into one word if they
+                # have a distance shorter than that.
+                threshold = r.width / len(w[4]) / 5
+                if r.x0 <= x1 + threshold:  # join with previous word
+                    word += w[4]  # add string
+                    x1 = r.x1  # new end-of-word coordinate
+                    y0 = max(y0, r.y0)  # extend word rect upper bound
+                    continue
+
+                # now have a new word, output previous one
+                words_out.append([x0, y0, x1, y1, word])
+
+                # store the new word
+                x0, y0, x1, y1, word = w[:5]
+
+            # output word waiting for completion
+            words_out.append([x0, y0, x1, y1, word])
+
+        return words_out
+
+    def search_for(text, words):
+        """ Search for text in items of list of words
+
+        Notes:
+            Can be adjusted / extended in obvious ways, e.g. using regular
+            expressions, or being case insensitive, or only looking for complete
+            words, etc.
+        Args:
+            text: string to be searched for
+            words: list of items in format delivered by 'getTextWords()'.
+        Returns:
+            List of rectangles, one for each found locations.
+        """
+        rect_list = []
+        for w in words:
+            if text in w[4]:
+                rect_list.append(fitz.Rect(w[:4]))
+        
+        return rect_list
+
 
 ----------
 
@@ -734,7 +822,7 @@ All of the above is provided by three basic :ref:`Page`, resp. :ref:`Shape` meth
 
 .. note:: Both text insertion methods automatically install the font if necessary.
 
-How to Output Text Lines
+How to Write Text Lines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 Output some text lines on a page::
 
@@ -1264,6 +1352,28 @@ This is the script's outcome:
 
 ------------------------------
 
+Multiprocessing
+----------------
+MuPDF has no integrated support for threading - they call themselves "threading-agnostic". While there do exist tricky possibilities to still use threading with MuPDF, the baseline consequence for **PyMuPDF** is:
+
+**No Python threading support**.
+
+Using PyMuPDF in a Python threading environment will lead to blocking effects for the main thread.
+
+However, there exists the option to use Python's ``multiprocessing`` module in a variety of ways.
+
+If you are looking to speed up page-oriented processing for a large document, use this script as a starting point. It should be at least twice as fast as the corresponding sequential processing.
+
+.. literalinclude:: multiprocess-render.py
+   :language: python
+
+Here is a more complex example involving inter-process communication between a main process (showing a GUI) and a child process doing PyMuPDF access to a document.
+
+.. literalinclude:: multiprocess-gui.py
+   :language: python
+
+------------------------------
+
 General
 --------
 
@@ -1410,10 +1520,10 @@ If a clean, non-corrupt / decompressed PDF is needed, one could dynamically invo
              return PdfReader(ibuffer)       # if this works: fine!
          except:
              pass
-     del ibuffer                             # free some storage
+
      # either we need a password or it is a problem-PDF
      # create a repaired / decompressed / decrypted version
-     doc = fitz.open("pdf", idata)
+     doc = fitz.open("pdf", ibuffer)
      if password is not None:                # decrypt if password provided
          rc = doc.authenticate(password)
          if not rc > 0:
@@ -1716,9 +1826,50 @@ How to Iterate through the :data:`xref` Table
 A PDF's :data:`xref` table is a list of all objects defined in the file. This table may easily contain many thousand entries -- the manual :ref:`AdobeManual` for example has over 330'000 objects. Table entry "0" is reserved and must not be touched.
 The following script loops through the :data:`xref` table and prints each object's definition::
 
-    >>> xreflen = doc._getXrefLength() # number of objects in file
-    >>> for xref in range(1, xreflen): # skip item 0!
-            print("object %i:" % xref, doc._getXrefString(xref))
+    >>> xreflen = doc._getXrefLength()  # number of objects in file
+    >>> for xref in range(1, xreflen):  # skip item 0!
+            print("")
+            print("object %i (stream: %s)" % (xref, doc.isStream(xref)))
+            print(doc._getXrefString(i, compressed=False))
+
+This produces the following output::
+ 
+    object 1 (stream: False)
+    <<
+        /ModDate (D:20170314122233-04'00')
+        /PXCViewerInfo (PDF-XChange Viewer;2.5.312.1;Feb  9 2015;12:00:06;D:20170314122233-04'00')
+    >>
+
+    object 2 (stream: False)
+    <<
+        /Type /Catalog
+        /Pages 3 0 R
+    >>
+
+    object 3 (stream: False)
+    <<
+        /Kids [ 4 0 R 5 0 R ]
+        /Type /Pages
+        /Count 2
+    >>
+
+    object 4 (stream: False)
+    <<
+        /Type /Page
+        /Annots [ 6 0 R ]
+        /Parent 3 0 R
+        /Contents 7 0 R
+        /MediaBox [ 0 0 595 842 ]
+        /Resources 8 0 R
+    >>
+    ...
+    object 7 (stream: True)
+    <<
+        /Length 494
+        /Filter /FlateDecode
+    >>
+    ...
+
 
 A PDF object definition is an ordinary ASCII string.
 
