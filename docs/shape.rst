@@ -158,13 +158,7 @@ Several draw methods can be executed in a row and each one of them will contribu
       :rtype: :ref:`Point`
       :returns: the middle point of the left rectangle / quad side. Look at just a few examples here:
 
-      .. image:: img-drawquad1.jpg
-         :scale: 50
-
-      .. image:: img-drawquad2.jpg
-         :scale: 50
-
-      .. image:: img-drawquad3.jpg
+      .. image:: img-drawquad.jpg
          :scale: 50
 
    .. method:: drawCircle(center, radius)

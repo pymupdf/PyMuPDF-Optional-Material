@@ -451,13 +451,13 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: deletePage(pno=-1)
 
-      PDF only: Delete a page given by its 0-based number in ``range(-1, len(doc))``.
+      PDF only: Delete a page given by its 0-based number in ``range(-inf, len(doc)-1)``.
 
-      :arg int pno: the page to be deleted. For ``-1`` the last page will be deleted.
+      :arg int pno: the page to be deleted. Negative number count backwards from the end of the document (like with indices).
 
     .. method:: deletePageRange(from_page=-1, to_page=-1)
 
-      PDF only: Delete a range of pages specified as 0-based numbers. Any ``-1`` parameter will first be replaced by ``len(doc) - 1``. After that, condition ``0 <= from_page <= to_page < len(doc)`` must be true. If the parameters are equal, one page will be deleted.
+      PDF only: Delete a range of pages specified as 0-based numbers. Any ``-1`` parameter will first be replaced by ``len(doc) - 1``. After that, condition ``0 <= from_page <= to_page < len(doc)`` must be true. If the parameters are equal, one page will be deleted. This method invokes :meth:`Page.deletePage` for each number in the given range.
 
       :arg int from_page: the first page to be deleted.
 
@@ -567,7 +567,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: close()
 
-      Release objects and space allocations associated with the document. If created from a file, also closes ``filename`` (releasing control to the OS).
+      Release objects and space allocations associated with the document. If created from a file, also closes it (releasing control to the OS).
 
     .. attribute:: outline
 

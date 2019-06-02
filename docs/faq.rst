@@ -1811,6 +1811,74 @@ Here is an interactive session making use of this message store::
 
 --------------------------
 
+Common Issues and their Solutions
+---------------------------------
+
+Misplaced Item Insertions on PDF Pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^^^
+
+You insert an item on an existing PDF page, but you find it being placed at a different location than intended. For example an image should be inserted at the top, but it unexpectedly appears near the bottom of the page.
+
+Cause
+^^^^^^
+
+The creator of the PDF has established a non-standard page geometry without keeping it "local" (as they should!). Most commonly, the PDF standard point (0,0) at *bottom-left* has been changed to the *top-left* point. So top and bottom are reversed -- causing your insertion to be misplaced.
+
+The visible image of a PDF page is controlled by commands coded in a special language. These commands are stored in :data:`contents` objects as strings. In order to keep command scopes local, they must be wrapped by the command pair ``q`` ("save graphics state", stack) and ``Q`` ("restore graphics state", unstack).
+
+
+So the PDF creator did this::
+
+    stream
+    1 0 0 -1 0 792 cm    % <=== letter page, top / bottom reversed
+    (more commands)      % remains active beyond this line
+    endstream
+
+but should have done this::
+
+    stream
+    q
+    1 0 0 -1 0 792 cm    % <=== scope limited by Q command
+    (more commands)
+    Q                    % after this line, standard geometry prevails
+    endstream
+
+.. note:: The PDF command syntax accepts any number of spaces or line breaks as delimiters for command tokens. The keywords "stream" and "endstream" are inserted automatically -- not by the programmer.
+
+Solution
+^^^^^^^^^^
+
+Pick one of the following:
+
+1. The easiest way: in your script, do a :meth:`Page._cleanContents` before your first item insertion.
+2. Pre-process your PDF with the MuPDF command line utility ``mutool clean -c ...`` and work with its output.
+3. Read and (when needed) re-write the page's ``/Contents`` objects with the required stacking commands.
+
+**Solutions 1. and 2.** have technically the same effect and **do a lot more** than what is required: they also clean up any other inconsistencies or redundancies that may exist. If the page has several ``/Contents`` objects, those will also be concatenated into one, etc.
+
+.. note::
+
+    * It has to be mentioned, that the underlying C function in the MuPDF base library is **not bug free**, so success is not guaranteed.
+    * Using solution 1., this cleaning approach may have an unpleasant implication for **incremental updates**, because a lot of things are going to change which will consequently bloat the update delta.
+
+**Solution 3.** is completely under your control and does no more than is required. Suggested procedure:
+
+* Get a list of ``/Contents`` object xref numbers (integers): :meth:`Page._getContents`. The list's length ranges from zero to many, but most often is 1.
+* If the list has no entry, there is no to-do. Shouldn't actually happen, because that page is empty.
+* Read the first (or only) ``/Contents`` object: ``c = doc._getXrefStream(first_xref)``. This is a ``bytes`` object. Write it back prefixed with the stacking command like this: ``doc._updateStream(first_xref, b"q\n" + c)``.
+* Read the last ``/Contents`` object: ``c = doc._getXrefStream(last_xref)`` and write it back with an appended unstacking command: ``doc._updateStream(last_xref, c + b"\nQ")``.
+
+.. note::
+
+    * If small incremental update deltas are a concern, this approach is the most effective.
+    * Of course, the last two bullets can (and should) be combined if there is only one ``/Contents`` object.
+
+
+--------------------------
+
 Low-Level Interfaces
 ---------------------
 Numerous methods are available to access and manipulate PDF files on a fairly low level. Admittedly, a clear distinction between "low level" and "normal" functionality is not always possible or subject to personal taste.
