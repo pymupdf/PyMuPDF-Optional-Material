@@ -185,7 +185,7 @@ The first one converts each image to a PDF page with the same dimensions::
  imgdir = "D:/2012_10_05"                     # where the pics are
  imglist = os.listdir(imgdir)                 # list of them
  imgcount = len(imglist)                      # pic count
- 
+
  for i, f in enumerate(imglist):
      img = fitz.open(os.path.join(imgdir, f)) # open pic as document
      rect = img[0].rect                       # pic dimension
@@ -197,7 +197,7 @@ The first one converts each image to a PDF page with the same dimensions::
      page.showPDFpage(rect, imgPDF, 0)        # image fills the page
      psg.EasyProgressMeter("Import Images",   # show our progress
          i+1, imgcount)
- 
+
  doc.save("all-my-pics.pdf")
 
 This will generate a PDF only marginally larger than the combined pictures' size. Some numbers on performance:
@@ -219,7 +219,7 @@ The second script **embeds** the (image) files. You would need a suitable PDF vi
  import PySimpleGUI as psg                    # for showing progress bar
  doc = fitz.open()                            # PDF with the pictures
  imgdir = "D:/2012_10_05"                     # where the pictures are
- 
+
  imglist = os.listdir(imgdir)                 # list of pictures
  imgcount = len(imglist)                      # pic count
  imglist.sort()                               # nicely sort them
@@ -230,9 +230,9 @@ The second script **embeds** the (image) files. You would need a suitable PDF vi
                          ufilename=f, desc=f)
      psg.EasyProgressMeter("Embedding Files", # show our progress
          i+1, imgcount)
- 
+
  page = doc.newPage()                         # at least 1 page is needed,
- 
+
  doc.save("all-my-pics-embedded.pdf")
 
 .. image:: img-embed-progress.jpg
@@ -380,14 +380,14 @@ This shows how pixmaps can be used for purely graphical, non-document purposes. 
 
  # create target pixmap
  tar_pix = fitz.Pixmap(src.colorspace, (0, 0, tar_w, tar_h), src.alpha)
- 
+
  # now fill target with the tiles
  for i in range(col):
      src.x = src.width * i                # modify input's x coord
      for j in range(lin):
          src.y = src.height * j           # modify input's y coord
          tar_pix.copyPixmap(src, src.irect) # copy input to new loc
- 
+
  tar_pix.writePNG("tar.png")
 
 This is the input picture:
@@ -420,20 +420,20 @@ This script creates a approximative PNG image of it, by going down to one-pixel 
         raise SystemExit("need PyMuPDF v1.14.8 for this script")
     n = 6                             # depth (precision)
     d = 3**n                          # edge length
-    
+
     t0 = time.perf_counter()
     ir = (0, 0, d, d)                 # the pixmap rectangle
-    
+
     pm = fitz.Pixmap(fitz.csRGB, ir, False)
     pm.setRect(pm.irect, (255,255,0)) # fill it with some background color
-    
+
     color = (0, 0, 255)               # color to fill the punch holes
-    
+
     # alternatively, define a 'fill' pixmap for the punch holes
     # this could be anything, e.g. some photo image ...
     fill = fitz.Pixmap(fitz.csRGB, ir, False) # same size as 'pm'
     fill.setRect(fill.irect, (0, 255, 255))   # put some color in
-    
+
     def punch(x, y, step):
         """Recursively "punch a hole" in the central square of a pixmap.
         Arguments are top-left coords and the step width.
@@ -450,9 +450,9 @@ This script creates a approximative PNG image of it, by going down to one-pixel 
                     pm.setRect((x+s, y+s, x+2*s, y+2*s), color)     # fill with a color
                     #pm.copyPixmap(fill, (x+s, y+s, x+2*s, y+2*s))  # copy from fill
                     #pm.invertIRect((x+s, y+s, x+2*s, y+2*s))       # invert colors
-    
+
         return
-    
+
     #==============================================================================
     # main program
     #==============================================================================
@@ -717,7 +717,7 @@ In those cases, the following function will help composing the original words of
         for w in words:
             if text in w[4]:
                 rect_list.append(fitz.Rect(w[:4]))
-        
+
         return rect_list
 
 
@@ -751,7 +751,7 @@ But you have other options::
 
  import sys
  import fitz
- 
+
  def mark_word(page, text):
      """Underline each word that contains 'text'.
      """
@@ -763,7 +763,7 @@ But you have other options::
              r = fitz.Rect(w[:4])       # make rect from word bbox
              page.addUnderlineAnnot(r)  # underline
      return found
- 
+
  fname = sys.argv[1]                    # filename
  text = sys.argv[2]                     # search string
  doc = fitz.open(fname)
@@ -777,7 +777,7 @@ But you have other options::
      if found:                          # if anything found ...
          new_doc = True
          print("found '%s' %i times on page %i" % (text, found, page.number + 1))
- 
+
  if new_doc:
      doc.save("marked-" + doc.name)
 
@@ -830,7 +830,7 @@ Output some text lines on a page::
     doc = fitz.open(...)                 # new or existing PDF
     page = doc.newPage()                 # new or existing page via doc[n]
     p = fitz.Point(50, 72)               # start point of 1st line
-    
+
     text = "Some text,\nspread across\nseveral lines."
     # the same result is achievable by
     # text = ["Some text", "spread across", "several lines."]
@@ -882,7 +882,7 @@ Here is another example. It inserts 4 text strings using the four different rota
     img.insertText(p3, text2, rotate=90)
     img.insertText(p2, text3, rotate=-90)
     img.insertText(p4, text4, rotate=180)
-    
+
     # store our work to the page
     img.commit()
     doc.save(...)
@@ -1008,7 +1008,7 @@ As an overview for these capabilities, look at the following script that fills a
     print("Python", sys.version, "on", sys.platform, "\n")
     import fitz
     print(fitz.__doc__, "\n")
-    
+
     text = "text in line\ntext in line\ntext in line\ntext in line"
     red    = (1, 0, 0)
     blue   = (0, 0, 1)
@@ -1019,34 +1019,34 @@ As an overview for these capabilities, look at the following script that fills a
     displ = fitz.Rect(0, 50, 0, 50)
     r = fitz.Rect(50, 100, 220, 135)
     t1 = u"têxt üsès Lätiñ charß,\nEUR: €, mu: µ, super scripts: ²³!"
-    
+
     def print_descr(rect, annot):
         """Print a short description to the right of an annot rect."""
         annot.parent.insertText(rect.br + (10, 0),
                         "'%s' annotation" % annot.type[1], color = red)
-    
+
     def rect_from_quad(q):
         """Create a rect envelopping a quad (= rotated rect)."""
         return fitz.Rect(q[0], q[1]) | q[2] | q[3]
-    
+
     doc = fitz.open()
     page = doc.newPage()
     annot = page.addFreetextAnnot(r, t1, rotate = 90)
     annot.setBorder(border)
     annot.update(fontsize = 10, border_color=red, fill_color=gold, text_color=blue)
-    
+
     print_descr(annot.rect, annot)
     r = annot.rect + displ
     print("added 'FreeText'")
-    
+
     annot = page.addTextAnnot(r.tl, t1)
     annot.setColors(colors2)
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'Sticky Note'")
-    
+
     pos = annot.rect.tl + displ.tl
-    
+
     # first insert 4 text lines, rotated clockwise by 15 degrees
     page.insertText(pos, text, fontsize=11, morph = (pos, fitz.Matrix(-15)))
     # now search text to get the quads
@@ -1059,19 +1059,19 @@ As an overview for these capabilities, look at the following script that fills a
     # need to convert quad to rect for descriptive text ...
     print_descr(rect_from_quad(r0), annot)
     print("added 'HighLight'")
-    
+
     annot = page.addStrikeoutAnnot(r1)
     print_descr(rect_from_quad(r1), annot)
     print("added 'StrikeOut'")
-    
+
     annot = page.addUnderlineAnnot(r2)
     print_descr(rect_from_quad(r2), annot)
     print("added 'Underline'")
-    
+
     annot = page.addSquigglyAnnot(r3)
     print_descr(rect_from_quad(r3), annot)
     print("added 'Squiggly'")
-    
+
     r = rect_from_quad(r3) + displ
     annot = page.addPolylineAnnot([r.bl, r.tr, r.br, r.tl])
     annot.setBorder(border)
@@ -1080,7 +1080,7 @@ As an overview for these capabilities, look at the following script that fills a
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'PolyLine'")
-    
+
     r+= displ
     annot = page.addPolygonAnnot([r.bl, r.tr, r.br, r.tl])
     annot.setBorder(border)
@@ -1089,7 +1089,7 @@ As an overview for these capabilities, look at the following script that fills a
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'Polygon'")
-    
+
     r+= displ
     annot = page.addLineAnnot(r.tr, r.bl)
     annot.setBorder(border)
@@ -1098,7 +1098,7 @@ As an overview for these capabilities, look at the following script that fills a
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'Line'")
-    
+
     r+= displ
     annot = page.addRectAnnot(r)
     annot.setBorder(border)
@@ -1106,7 +1106,7 @@ As an overview for these capabilities, look at the following script that fills a
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'Square'")
-    
+
     r+= displ
     annot = page.addCircleAnnot(r)
     annot.setBorder(border)
@@ -1114,14 +1114,14 @@ As an overview for these capabilities, look at the following script that fills a
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'Circle'")
-    
+
     r+= displ
     annot = page.addFileAnnot(r.tl, b"just anything for testing", "testdata.txt")
     annot.setColors(colors2)
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'FileAttachment'")
-    
+
     r+= displ
     annot = page.addStampAnnot(r, stamp = 0)
     annot.setColors(colors)
@@ -1129,7 +1129,7 @@ As an overview for these capabilities, look at the following script that fills a
     annot.update()
     print_descr(annot.rect, annot)
     print("added 'Stamp'")
-    
+
     doc.save("new-annots.pdf", expand=255)
 
 This script should lead to the following output:
@@ -1145,24 +1145,24 @@ This script searches for text and marks it::
 
     # -*- coding: utf-8 -*-
     import fitz
-    
+
     # the document to annotate
     doc = fitz.open("tilted-text.pdf")
-    
+
     # the text to be marked
     t = "¡La práctica hace el campeón!"
-    
+
     # work with first page only
     page = doc[0]
-    
+
     # get list of text locations
     # we use "quads", not rectangles because text may be tilted!
     rl = page.searchFor(t, quads = True)
-    
+
     # loop through the found locations to add a marker
     for r in rl:
         page.addSquigglyAnnot(r)
-    
+
     # save to a new PDF
     doc.save("a-squiggly.pdf")
 
@@ -1179,32 +1179,32 @@ This script shows a couple of possibilities for 'FreeText' annotations::
 
     # -*- coding: utf-8 -*-
     import fitz
-    
+
     # some colors
     blue  = (0,0,1)
     green = (0,1,0)
     red   = (1,0,0)
     gold  = (1,1,0)
-    
+
     # a new PDF with 1 page
     doc = fitz.open()
     page = doc.newPage()
-    
+
     # 3 rectangles, same size, abvove each other
     r1 = fitz.Rect(100,100,200,150)
     r2 = r1 + (0,75,0,75)
     r3 = r2 + (0,75,0,75)
-    
+
     # the text, Latin alphabet
     t = "¡Un pequeño texto para practicar!"
-    
+
     # add 3 annots, modify the last one somewhat
     a1 = page.addFreetextAnnot(r1, t, color=red)
     a2 = page.addFreetextAnnot(r2, t, fontname="Ti", color=blue)
     a3 = page.addFreetextAnnot(r3, t, fontname="Co", color=blue, rotate=90)
     a3.setBorder({"width":0.0})
     a3.update(fontsize=8, fill_color=gold)
-    
+
     # save the PDF
     doc.save("a-freetext.pdf")
 
@@ -1223,7 +1223,7 @@ The following script creates an ink annotation with two mathematical curves (sin
 
     import math
     import fitz
-    
+
     #------------------------------------------------------------------------------
     # preliminary stuff: create function value lists for sine and cosine
     #------------------------------------------------------------------------------
@@ -1244,13 +1244,13 @@ The following script creates an ink annotation with two mathematical curves (sin
         y = -math.cos(x * deg)                  # cosine
         p = (x_coord, y * y_scale + first_y)    # corresponding point
         cos_points.append(p)                    # append
-    
+
     #------------------------------------------------------------------------------
     # create the document with one page
     #------------------------------------------------------------------------------
     doc = fitz.open()                           # make new PDF
     page = doc.newPage()                        # give it a page
-    
+
     #------------------------------------------------------------------------------
     # add the Ink annotation, consisting of 2 curve segments
     #------------------------------------------------------------------------------
@@ -1259,10 +1259,10 @@ The following script creates an ink annotation with two mathematical curves (sin
     annot.setBorder({"width":0.3, "dashes":[1]})# line thickness, some dashing
     annot.setColors({"stroke":(0,0,1)})         # make the lines blue
     annot.update()                              # update the appearance
-    
+
     # expendable, only shows that we actually hit the rectangle
     page.drawRect(rect, width = 0.3)            # only to demonstrate we did OK
-    
+
     doc.save("a-inktest.pdf")
 
 This is the result:
@@ -1292,20 +1292,20 @@ If you import this script, you can also directly use its graphics as in the foll
     # -*- coding: utf-8 -*-
     """
     Created on Sun Dec  9 08:34:06 2018
-    
+
     @author: Jorj
     @license: GNU GPL 3.0+
-    
+
     Create a list of available symbols defined in shapes_and_symbols.py
-    
+
     This also demonstrates an example usage: how these symbols could be used
     as bullet-point symbols in some text.
-    
+
     """
-    
+
     import fitz
     import shapes_and_symbols as sas
-    
+
     # list of available symbol functions and their descriptions
     tlist = [
              (sas.arrow, "arrow (easy)"),
@@ -1319,27 +1319,27 @@ If you import this script, you can also directly use its graphics as in the foll
              (sas.pencil, "pencil (very complex)"),
              (sas.smiley, "smiley (easy)"),
              ]
-    
+
     r = fitz.Rect(50, 50, 100, 100)        # first rect to contain a symbol
     d = fitz.Rect(0, r.height + 10, 0, r.height + 10) # displacement to next ret
     p = (15, -r.height * 0.2)              # starting point of explanation text
     rlist = [r]                            # rectangle list
-    
+
     for i in range(1, len(tlist)):         # fill in all the rectangles
         rlist.append(rlist[i-1] + d)
-    
+
     doc = fitz.open()                      # create empty PDF
     page = doc.newPage()                   # create an empty page
     img = page.newShape()                  # start a Shape (canvas)
-    
+
     for i, r in enumerate(rlist):
         tlist[i][0](img, rlist[i])         # execute symbol creation
         img.insertText(rlist[i].br + p,    # insert description text
                        tlist[i][1], fontsize=r.height/1.2)
-    
+
     # store everything to the page's /Contents object
     img.commit()
-    
+
     import os
     scriptdir = os.path.dirname(__file__)
     doc.save(os.path.join(scriptdir, "symbol-list.pdf"))  # save the PDF
@@ -1435,9 +1435,22 @@ This snippet creates the respective sub documents which can then be used to prin
 
 For more information also have a look at this Wiki `article <https://github.com/pymupdf/PyMuPDF/wiki/Rearranging-Pages-of-a-PDF>`_.
 
+
+The following example will reverse the order of all pages (**extremely fast:** sub-second time for the 1310 pages of the :ref:`AdobeManual`):
+
+>>> lastPage = len(doc) - 1
+>>> for i in range(lastPage):
+        doc.movePage(lastPage, i)  # move current last page to the front
+
+This snippet duplicates the PDF with itself so that it will contain the pages ``0, 1, ..., n, 0, 1, ..., n`` **(extremely fast and without noticeably increasing the file size!)**:
+
+>>> pageCount = len(doc)
+>>> for i in range(pageCount):
+        doc.copyPage(i)  # copy this page to after last page
+
 ----------
 
-How to Join PDFs 
+How to Join PDFs
 ~~~~~~~~~~~~~~~~~~
 It is easy to join PDFs with method :meth:`Document.insertPDF`. Given open PDF documents, you can copy page ranges from one to the other. You can select the point where the copied pages should be placed, you can revert the page sequence and also change page rotation. This Wiki `article <https://github.com/pymupdf/PyMuPDF/wiki/Inserting-Pages-from-other-PDFs>`_ contains a full description.
 
@@ -1508,7 +1521,7 @@ If a clean, non-corrupt / decompressed PDF is needed, one could dynamically invo
  from io import BytesIO
  from pdfrw import PdfReader
  import fitz
- 
+
  #---------------------------------------
  # 'Tolerant' PDF reader
  #---------------------------------------
@@ -1550,22 +1563,22 @@ This deals with splitting up pages of a PDF in arbitrary pieces. For example, yo
     ---------------------------------------------------
     License: GNU GPL V3
     (c) 2018 Jorj X. McKie
-    
+
     Usage
     ------
     python posterize.py input.pdf
-    
+
     Result
     -------
     A file "poster-input.pdf" with 4 output pages for every input page.
-    
+
     Notes
     -----
     (1) Output file is chosen to have page dimensions of 1/4 of input.
-    
+
     (2) Easily adapt the example to make n pages per input, or decide per each
         input page or whatever.
-    
+
     Dependencies
     ------------
     PyMuPDF 1.12.2 or later
@@ -1575,13 +1588,13 @@ This deals with splitting up pages of a PDF in arbitrary pieces. For example, yo
     infile = sys.argv[1]                        # input file name
     src = fitz.open(infile)
     doc = fitz.open()                           # empty output PDF
-    
+
     for spage in src:                           # for each page in input
         xref = 0                                # force initial page copy to output
         r = spage.rect                          # input page rectangle
         d = fitz.Rect(spage.CropBoxPosition,    # CropBox displacement if not
                       spage.CropBoxPosition)    # starting at (0, 0)
-        #--------------------------------------------------------------------------                  
+        #--------------------------------------------------------------------------
         # example: cut input page into 2 x 2 parts
         #--------------------------------------------------------------------------
         r1 = r * 0.5                            # top left rect
@@ -1589,7 +1602,7 @@ This deals with splitting up pages of a PDF in arbitrary pieces. For example, yo
         r3 = r1 + (0, r1.height, 0, r1.height)  # bottom left rect
         r4 = fitz.Rect(r1.br, r.br)             # bottom right rect
         rect_list = [r1, r2, r3, r4]            # put them in a list
-        
+
         for rx in rect_list:                    # run thru rect list
             rx += d                             # add the CropBox displacement
             page = doc.newPage(-1,              # new output page with rx dimensions
@@ -1601,7 +1614,7 @@ This deals with splitting up pages of a PDF in arbitrary pieces. For example, yo
                     spage.number, # input page number
                     subrect = rx, # which part to use of input page
                 )
-                                    
+
     # that's it, save output file
     doc.save("poster-" + src.name,
              garbage = 3,                       # eliminate duplicate objects
@@ -1646,19 +1659,19 @@ This deals with joining PDF pages to form a new PDF with pages each combining tw
     infile = sys.argv[1]
     src = fitz.open(infile)
     doc = fitz.open()                      # empty output PDF
-    
+
     width, height = fitz.PaperSize("a4")   # A4 portrait output page format
     r = fitz.Rect(0, 0, width, height)
-    
+
     # define the 4 rectangles per page
     r1 = r * 0.5                           # top left rect
     r2 = r1 + (r1.width, 0, r1.width, 0)   # top right
     r3 = r1 + (0, r1.height, 0, r1.height) # bottom left
     r4 = fitz.Rect(r1.br, r.br)            # bottom right
-    
+
     # put them in a list
     r_tab = [r1, r2, r3, r4]
-    
+
     # now copy input pages to output
     for spage in src:
         if spage.number % 4 == 0:           # create new output page
@@ -1669,7 +1682,7 @@ This deals with joining PDF pages to form a new PDF with pages each combining tw
         page.showPDFpage(r_tab[spage.number % 4],    # select output rect
                          src,               # input document
                          spage.number)      # input page number
-    
+
     # by all means, save new file using garbage collection and compression
     doc.save("4up-" + infile, garbage = 3, deflate = True)
 
@@ -1687,20 +1700,20 @@ It features maintaining any metadata, table of contents and links contained in t
     Demo script: Convert input file to a PDF
     -----------------------------------------
     Intended for multi-page input files like XPS, EPUB etc.
-    
+
     Features:
     ---------
     Recovery of table of contents and links of input file.
     While this works well for bookmarks (outlines, table of contents),
     links will only work if they are not of type "LINK_NAMED".
     This link type is skipped by the script.
-    
+
     For XPS and EPUB input, internal links however **are** of type "LINK_NAMED".
     Base library MuPDF does not resolve them to page numbers.
-    
+
     So, for anyone expert enough to know the internal structure of these
     document types, can further interpret and resolve these link types.
-    
+
     Dependencies
     --------------
     PyMuPDF v1.14.0+
@@ -1712,9 +1725,9 @@ It features maintaining any metadata, table of contents and links contained in t
     fn = sys.argv[1]
 
     print("Converting '%s' to '%s.pdf'" % (fn, fn))
-    
+
     doc = fitz.open(fn)
-    
+
     b = doc.convertToPDF()                      # convert to pdf
     pdf = fitz.open("pdf", b)                   # open as pdf
 
@@ -1729,7 +1742,7 @@ It features maintaining any metadata, table of contents and links contained in t
     meta["modDate"] = fitz.getPDFnow()
     meta["creationDate"] = meta["modDate"]
     pdf.setMetadata(meta)
-    
+
     # now process the links
     link_cnti = 0
     link_skip = 0
@@ -1743,13 +1756,13 @@ It features maintaining any metadata, table of contents and links contained in t
                 link_skip += 1        # count them
                 continue
             pout.insertLink(l)        # simply output the others
-    
+
     # save the conversion result
     pdf.save(fn + ".pdf", garbage=4, deflate=True)
     # say how many named links we skipped
     if link_cnti > 0:
         print("Skipped %i named links of a total of %i in input." % (link_skip, link_cnti))
-    
+
     # now print any MuPDF warnings or errors:
     errors = fitz.TOOLS.fitz_stderr
     if errors:                        # any issues?
@@ -1769,7 +1782,7 @@ The messages are not necessarily pertaining to any specific document, so we keep
 
 Here is an interactive session making use of this message store::
 
-    Python 3.6.7 (default, Oct 22 2018, 11:32:17) 
+    Python 3.6.7 (default, Oct 22 2018, 11:32:17)
     [GCC 8.2.0] on linux
     Type "help", "copyright", "credits" or "license()" for more information.
     >>> import fitz
@@ -1807,7 +1820,7 @@ Here is an interactive session making use of this message store::
     warning: push viewport: 0 0 181 115
     warning: push viewport: 0 0 594.75 841.5
 
-    >>> 
+    >>>
 
 --------------------------
 
@@ -1820,62 +1833,59 @@ Misplaced Item Insertions on PDF Pages
 Problem
 ^^^^^^^^^
 
-You insert an item on an existing PDF page, but you find it being placed at a different location than intended. For example an image should be inserted at the top, but it unexpectedly appears near the bottom of the page.
+You inserted an item on an existing PDF page, but later you find it being placed at a different location than intended. For example an image should be inserted at the top, but it unexpectedly appears near the bottom of the page.
 
 Cause
 ^^^^^^
 
 The creator of the PDF has established a non-standard page geometry without keeping it "local" (as they should!). Most commonly, the PDF standard point (0,0) at *bottom-left* has been changed to the *top-left* point. So top and bottom are reversed -- causing your insertion to be misplaced.
 
-The visible image of a PDF page is controlled by commands coded in a special language. These commands are stored in :data:`contents` objects as strings. In order to keep command scopes local, they must be wrapped by the command pair ``q`` ("save graphics state", stack) and ``Q`` ("restore graphics state", unstack).
-
+The visible image of a PDF page is controlled by commands coded in a special mini-language. For an overview of this language consult "Operator Summary" on pp. 985 of the :ref:`AdobeManual`. These commands are stored in :data:`contents` objects as strings (``bytes`` in PyMuPDF). In order to keep command scopes local, they must be wrapped by the command pair ``q`` ("save graphics state", or "stack") and ``Q`` ("restore graphics state", or "unstack").
 
 So the PDF creator did this::
 
     stream
     1 0 0 -1 0 792 cm    % <=== letter page, top / bottom reversed
-    (more commands)      % remains active beyond this line
+    ...                  % remains active beyond these lines
     endstream
 
-but should have done this::
+where they should have done this::
 
     stream
-    q
-    1 0 0 -1 0 792 cm    % <=== scope limited by Q command
-    (more commands)
+    q                    % put the following in a stack
+    1 0 0 -1 0 792 cm    % <=== scope of this is limited by Q command
+    ...
     Q                    % after this line, standard geometry prevails
     endstream
 
-.. note:: The PDF command syntax accepts any number of spaces or line breaks as delimiters for command tokens. The keywords "stream" and "endstream" are inserted automatically -- not by the programmer.
+.. note::
 
-Solution
+   * In the mini-language's syntax, spaces and line breaks are equally accepted token delimiters.
+   * Multiple consecutive delimiters are treated as one.
+   * Keywords "stream" and "endstream" are inserted automatically -- not by the programmer.
+
+Solutions
 ^^^^^^^^^^
 
 Pick one of the following:
 
-1. The easiest way: in your script, do a :meth:`Page._cleanContents` before your first item insertion.
-2. Pre-process your PDF with the MuPDF command line utility ``mutool clean -c ...`` and work with its output.
-3. Read and (when needed) re-write the page's ``/Contents`` objects with the required stacking commands.
+1. The easiest way: in your script, do a :meth:`Page._cleanContents` before you do your first item insertion.
+2. Pre-process your PDF with the MuPDF command line utility ``mutool clean -c ...`` and work with its output file instead.
+3. Directly wrap the page's :data:`contents` with the stacking commands before you do your first item insertion.
 
-**Solutions 1. and 2.** have technically the same effect and **do a lot more** than what is required: they also clean up any other inconsistencies or redundancies that may exist. If the page has several ``/Contents`` objects, those will also be concatenated into one, etc.
+**Solutions 1. and 2.** use the same technical basis and **do a lot more** than what is required in this context: they also clean up other inconsistencies or redundancies that may exist, multiple ``/Contents`` objects will be concatenated into one, and much more.
 
-.. note::
+For **incremental saves,** solution 1. has an unpleasant implication: it will bloat the update delta, because it changes so many things. So, if you use :meth:`Page._cleanContents` you should consider **saving to a new file** with ``garbage=3`` at least.
 
-    * It has to be mentioned, that the underlying C function in the MuPDF base library is **not bug free**, so success is not guaranteed.
-    * Using solution 1., this cleaning approach may have an unpleasant implication for **incremental updates**, because a lot of things are going to change which will consequently bloat the update delta.
+**Solution 3.** is completely under your control and only does the minimum corrective action. There exists a handy low-level utility function which you can use for this. Suggested procedure:
 
-**Solution 3.** is completely under your control and does no more than is required. Suggested procedure:
-
-* Get a list of ``/Contents`` object xref numbers (integers): :meth:`Page._getContents`. The list's length ranges from zero to many, but most often is 1.
-* If the list has no entry, there is no to-do. Shouldn't actually happen, because that page is empty.
-* Read the first (or only) ``/Contents`` object: ``c = doc._getXrefStream(first_xref)``. This is a ``bytes`` object. Write it back prefixed with the stacking command like this: ``doc._updateStream(first_xref, b"q\n" + c)``.
-* Read the last ``/Contents`` object: ``c = doc._getXrefStream(last_xref)`` and write it back with an appended unstacking command: ``doc._updateStream(last_xref, c + b"\nQ")``.
+* **Prepend** the missing stacking command by executing ``fitz.TOOLS._insert_contents(page, b"q\n", False)``
+* **Append** an unstacking command by executing ``fitz.TOOLS._insert_contents(page, b"\nQ", True)``
 
 .. note::
 
-    * If small incremental update deltas are a concern, this approach is the most effective.
-    * Of course, the last two bullets can (and should) be combined if there is only one ``/Contents`` object.
-
+   * If small incremental update deltas are a concern, this approach is the most effective.
+   * The utility function creates a new PDF :data:`stream` object and inserts it in the page's array of :data:`contents`. The function's last parameter ("overlay") controls the position of this insertion: ``False`` = prepend, ``True`` = append.
 
 --------------------------
 
@@ -1901,7 +1911,7 @@ The following script loops through the :data:`xref` table and prints each object
             print(doc._getXrefString(i, compressed=False))
 
 This produces the following output::
- 
+
     object 1 (stream: False)
     <<
         /ModDate (D:20170314122233-04'00')
@@ -2049,7 +2059,7 @@ Access this information via PyMuPDF with :meth:`Document._getTrailerString`.
     >>> trailer=doc._getTrailerString()
     >>> print(trailer)
     <</Size 5535/Info 5275 0 R/Root 5274 0 R/ID[(\340\273fE\225^l\226\232O|\003\201\325g\245)(}#1,\317\205\000\371\251wO6\352Oa\021)]>>
-    >>> 
+    >>>
 
 ----------------------------------
 
@@ -2067,8 +2077,8 @@ PyMuPDF has no way to interpret or change this information directly because it c
     <?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
     <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="3.1-702">
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    ... 
-    omitted data 
+    ...
+    omitted data
     ...
     <?xpacket end="w"?>
 

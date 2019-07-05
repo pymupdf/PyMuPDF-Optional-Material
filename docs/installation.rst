@@ -2,7 +2,7 @@ Installation
 =============
 Installation generally encompasses downloading and generating PyMuPDF and MuPDF from sources. This process consists of three steps described below under :ref:`InstallSource`.
 
-**However**, for popular configurations, binary setups via wheels are available, detailed out under :ref:`InstallBinary`. This process is **much faster**, less error-prone and requires the download of only one file (either ``.zip`` or ``.whl``) -- no compiler, no Visual Studio, no download of MuPDF, even no download of PyMuPDF.
+**However**, for popular configurations, binary setups via wheels are available, detailed out under :ref:`InstallBinary`. This process is **much faster**, less error-prone and requires the download of only one file (either ``.zip`` or ``.whl``) -- no compiler, no Visual Studio, no download of MuPDF.
 
 .. _InstallSource:
 
@@ -11,15 +11,15 @@ Option 1: Install from Sources
 
 Step 1: Download PyMuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-Download this repository and unzip / decompress it. This will give you a folder, let us call it ``PyFitz``.
+Download this repository and unzip / decompress it. This will give you a folder, let us call it ``pyfitz``.
 
 Step 2: Download and Generate MuPDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Download ``mupdf-x.xx-source.tar.gz`` from https://mupdf.com/downloads/archive and unzip / decompress it. Call the resulting folder ``mupdf``. The latest MuPDF **development sources** are available on https://github.com/ArtifexSoftware/mupdf -- this is **not** what you want here.
 
-Make sure you download the (sub-) version for which PyMuPDF has stated its compatibility. The various Linux flavors usually have their own specific ways to support download of packages which we cannot cover here. Do not hesitate posting issues to our web site or sending an e-mail to the authors for getting support.
+Make sure you download the (sub-) version for which PyMuPDF has stated its compatibility. The various Linux flavors often have their own specific ways to support download of packages which we cannot cover here. Do not hesitate posting issues to our web site or sending an e-mail to the authors for getting support.
 
-Put it inside ``PyFitz`` as a subdirectory for keeping everything in one place.
+Put it inside ``pyfitz`` as a subdirectory for keeping everything in one place.
 
 **Applying any Changes or Hot Fixes to MuPDF**
 
@@ -33,107 +33,105 @@ Any such files are contained in the ``fitz`` directory of the PyMuPDF download -
 
 **Controlling the Binary File Size:**
 
-Since version 1.9, MuPDF includes support for many dozens of additional, so-called NOTO ("no TOFU") fonts for all sorts of alphabets from all over the world like Chinese, Japanese, Corean, Kyrillic, Indonesian, Chinese etc. If you accept MuPDF's standard here, the resulting binary for PyMuPDF will be very big and easily approach 30 MB. The features actually needed by PyMuPDF in contrast only represent a fraction of this size: about 8-10 MB currently.
+Since version 1.9, MuPDF includes support for many dozens of additional, so-called NOTO ("no TOFU") fonts for all sorts of alphabets from all over the world, like Chinese, Japanese, Corean, Kyrillic, Indonesian, Chinese etc. If you accept MuPDF's standard here, the resulting binary for PyMuPDF will be very big and easily **exceed 30 MB**. The features actually needed by PyMuPDF in contrast only represent a fraction of this size: about 8-10 MB currently.
 
 To cut off unneeded stuff from your MuPDF version, our suggested version has the following content::
 
-    #ifndef FZ_CONFIG_H
-    
-    #define FZ_CONFIG_H
-    
-    /*
-    	Enable the following for spot (and hence overprint/overprint
-    	simulation) capable rendering. This forces FZ_PLOTTERS_N on.
-    */
-    #define FZ_ENABLE_SPOT_RENDERING 1
-    
-    /*
-    	Choose which plotters we need.
-    	By default we build all the plotters in. To avoid building
-    	plotters in that aren't needed, define the unwanted
-    	FZ_PLOTTERS_... define to 0.
-    */
-    /* #define FZ_PLOTTERS_G 1 */
-    /* #define FZ_PLOTTERS_RGB 1 */
-    /* #define FZ_PLOTTERS_CMYK 1 */
-    /* #define FZ_PLOTTERS_N 1 */
-    
-    /*
-    	Choose which document agents to include.
-    	By default all but GPRF are enabled. To avoid building unwanted
-    	ones, define FZ_ENABLE_... to 0.
-    */
-    /* #define FZ_ENABLE_PDF 1 */
-    /* #define FZ_ENABLE_XPS 1 */
-    /* #define FZ_ENABLE_SVG 1 */
-    /* #define FZ_ENABLE_CBZ 1 */
-    /* #define FZ_ENABLE_IMG 1 */
-    /* #define FZ_ENABLE_HTML 1 */
-    /* #define FZ_ENABLE_EPUB 1 */
-    /* #define FZ_ENABLE_GPRF 1 */
-    
-    /*
-    	Choose whether to enable JPEG2000 decoding.
-    	By default, it is enabled, but due to frequent security
-    	issues with the third party libraries we support disabling
-    	it with this flag.
-    */
-    /* #define FZ_ENABLE_JPX 1 */
-    
-    /*
-    	Choose whether to enable JavaScript.
-    	By default JavaScript is enabled both for mutool and PDF interactivity.
-    */
-    /* #define FZ_ENABLE_JS 1 */
-    
-    /*
-    	Choose which fonts to include.
-    	By default we include the base 14 PDF fonts,
-    	DroidSansFallback from Android for CJK, and
-    	Charis SIL from SIL for epub/html.
-    	Enable the following defines to AVOID including
-    	unwanted fonts.
-    */
-    /* To avoid all noto fonts except CJK, enable: */
-    #define TOFU // <=== PyMuPDF
-    
-    /* To skip the CJK font, enable: (this implicitly enables TOFU_CJK_EXT and TOFU_CJK_LANG) */
-    // #define TOFU_CJK
-    
-    /* To skip CJK Extension A, enable: (this implicitly enables TOFU_CJK_LANG) */
-    #define TOFU_CJK_EXT // <=== PyMuPDF
-    
-    /* To skip CJK language specific fonts, enable: */
-    #define TOFU_CJK_LANG // <=== PyMuPDF
-    
-    /* To skip the Emoji font, enable: */
-    #define TOFU_EMOJI // <=== PyMuPDF
-    
-    /* To skip the ancient/historic scripts, enable: */
-    #define TOFU_HISTORIC // <=== PyMuPDF
-    
-    /* To skip the symbol font, enable: */
-    #define TOFU_SYMBOL // <=== PyMuPDF
-    
-    /* To skip the SIL fonts, enable: */
-    #define TOFU_SIL // <=== PyMuPDF
-    
-    /* To skip the ICC profiles, enable: */
-    #define NO_ICC // <=== PyMuPDF
-    
-    /* To skip the Base14 fonts, enable: */
-    /* #define TOFU_BASE14 */
-    /* (You probably really don't want to do that except for measurement purposes!) */
-    
-    /* ---------- DO NOT EDIT ANYTHING UNDER THIS LINE ---------- */
-    
-    ... omitted lines ...
-    #endif /* FZ_CONFIG_H */
+  #ifndef FZ_CONFIG_H
 
+  #define FZ_CONFIG_H
 
-**Generate MuPDF now**.
+  /*
+    Enable the following for spot (and hence overprint/overprint
+    simulation) capable rendering. This forces FZ_PLOTTERS_N on.
+  */
+  #define FZ_ENABLE_SPOT_RENDERING 1
 
-The MuPDF source includes generation procedures / makefiles for numerous platforms. For Windows platforms, Visual Studio solution and project definitions are provided.
+  /*
+    Choose which plotters we need.
+    By default we build all the plotters in. To avoid building
+    plotters in that aren't needed, define the unwanted
+    FZ_PLOTTERS_... define to 0.
+  */
+  /* #define FZ_PLOTTERS_G 1 */
+  /* #define FZ_PLOTTERS_RGB 1 */
+  /* #define FZ_PLOTTERS_CMYK 1 */
+  /* #define FZ_PLOTTERS_N 1 */
+
+  /*
+    Choose which document agents to include.
+    By default all but GPRF are enabled. To avoid building unwanted
+    ones, define FZ_ENABLE_... to 0.
+  */
+  /* #define FZ_ENABLE_PDF 1 */
+  /* #define FZ_ENABLE_XPS 1 */
+  /* #define FZ_ENABLE_SVG 1 */
+  /* #define FZ_ENABLE_CBZ 1 */
+  /* #define FZ_ENABLE_IMG 1 */
+  /* #define FZ_ENABLE_HTML 1 */
+  /* #define FZ_ENABLE_EPUB 1 */
+  /* #define FZ_ENABLE_GPRF 1 */
+
+  /*
+    Choose whether to enable JPEG2000 decoding.
+    By default, it is enabled, but due to frequent security
+    issues with the third party libraries we support disabling
+    it with this flag.
+  */
+  /* #define FZ_ENABLE_JPX 1 */
+
+  /*
+    Choose whether to enable JavaScript.
+    By default JavaScript is enabled both for mutool and PDF interactivity.
+  */
+  /* #define FZ_ENABLE_JS 1 */
+
+  /*
+    Choose which fonts to include.
+    By default we include the base 14 PDF fonts,
+    DroidSansFallback from Android for CJK, and
+    Charis SIL from SIL for epub/html.
+    Enable the following defines to AVOID including
+    unwanted fonts.
+  */
+  /* To avoid all noto fonts except CJK, enable: */
+  #define TOFU // <=== PyMuPDF
+
+  /* To skip the CJK font, enable: (this implicitly enables TOFU_CJK_EXT and TOFU_CJK_LANG) */
+  // #define TOFU_CJK
+
+  /* To skip CJK Extension A, enable: (this implicitly enables TOFU_CJK_LANG) */
+  #define TOFU_CJK_EXT // <=== PyMuPDF
+
+  /* To skip CJK language specific fonts, enable: */
+  #define TOFU_CJK_LANG // <=== PyMuPDF
+
+  /* To skip the Emoji font, enable: */
+  #define TOFU_EMOJI // <=== PyMuPDF
+
+  /* To skip the ancient/historic scripts, enable: */
+  #define TOFU_HISTORIC // <=== PyMuPDF
+
+  /* To skip the symbol font, enable: */
+  #define TOFU_SYMBOL // <=== PyMuPDF
+
+  /* To skip the SIL fonts, enable: */
+  #define TOFU_SIL // <=== PyMuPDF
+
+  /* To skip the ICC profiles, enable: */
+  #define NO_ICC // <=== PyMuPDF
+
+  /* To skip the Base14 fonts, enable: */
+  /* #define TOFU_BASE14 */
+  /* (You probably really don't want to do that except for measurement purposes!) */
+
+  /* ---------- DO NOT EDIT ANYTHING UNDER THIS LINE ---------- */
+
+  < omitted lines >
+
+**Generate MuPDF now.**
+
+The MuPDF source includes generation procedures / makefiles for numerous platforms. For Windows platforms, Visual Studio solution and project definitions are provided. The author of this manual has tested Linux and Windows installation material successfully.
 
 Consult additional installation hints on PyMuPDF's `main page <https://github.com/pymupdf/PyMuPDF/>`_ on Github. Among other things you will find Wiki pages with details on building the Windows binaries or user provided installation experiences.
 
@@ -142,6 +140,12 @@ Step 3: Build / Setup PyMuPDF
 Adjust the setup.py script as necessary. E.g. make sure that
   * the include directory is correctly set in sync with your directory structure
   * the object code libraries are correctly defined
+
+.. versionchanged:: 1.14.17
+   We have changed the installation material so that it more closely resembles the original generation process. Also, sites which are generating PyMuPDF to provide it as part of their operating system, cannot properly handle automatically generated content. This means that
+
+   * Pre-generated interface files ``fitz.py`` and ``fitz_wrap.c`` are **no longer included** in the installation material.
+   * You need a working `SWIG <https://www.swig.org/>`_ installation to generate these interface files.
 
 Now perform a ``python setup.py install``.
 

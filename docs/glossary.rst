@@ -13,33 +13,41 @@ Glossary
 .. data:: dictionary
 
         A PDF :data:`object` type, which is somewhat comparable to the same-named Python notion: "A dictionary object is an associative table containing pairs of objects, known as the dictionary’s entries. The first element of each entry is the key and the second element is the value. The key must be a name (...). The value can be any kind of object, including another dictionary. A dictionary entry whose value is null (...) is equivalent to an absent entry." (:ref:`AdobeManual` p. 59).
-        
+
         Dictionaries are the most important :data:`object` type in PDF. Here is an example (describing a :data:`page`)::
 
             <<
-            /Contents 40 0 R                  % value: indirect object
-            /Type/Page                        % value: name object
-            /MediaBox[0 0 595.32 841.92]      % value: array object
-            /Rotate 0                         % value: number object
-            /Parent 12 0 R
-            /Resources<<                      % value: dictionary object
+            /Contents 40 0 R                  % value: an indirect object
+            /Type/Page                        % value: a name object
+            /MediaBox[0 0 595.32 841.92]      % value: an array object
+            /Rotate 0                         % value: a number object
+            /Parent 12 0 R                    % value: an indirect object
+            /Resources<<                      % value: a dictionary object
                 /ExtGState<</R7 26 0 R>>
                 /Font<<
                      /R8 27 0 R/R10 21 0 R/R12 24 0 R/R14 15 0 R
                      /R17 4 0 R/R20 30 0 R/R23 7 0 R /R27 20 0 R
                      >>
-                /ProcSet[/PDF/Text]           % value: array of two names
+                /ProcSet[/PDF/Text]           % value: array of two name objects
                 >>
             /Annots[55 0 R]                   % value: array, one entry (indirect object)
             >>
 
         ``/Contents``, ``/Type``, ``/MediaBox``, etc. are **keys**, ``40 0 R``, ``/Page``, ``[0 0 595.32 841.92]``, etc. are the respective **values**. The strings ``<<`` and ``>>`` are used to enclose object definitions.
-        
-        This example also shows the syntax of **nested** dictionary values: ``/Resources`` has an object as its value, which in turn is a dictionary with keys like ``/ExtGState`` (with the value ``<</R7 26 0 R>>``, another dictionary), etc.
+
+        This example also shows the syntax of **nested** dictionary values: ``/Resources`` has an object as its value, which in turn is a dictionary with keys like ``/ExtGState`` (with the value ``<</R7 26 0 R>>``, which is another dictionary), etc.
 
 .. data:: page
 
         A PDF page is a :data:`dictionary` object which defines one page in the document, see :ref:`AdobeManual` p. 145.
+
+.. data:: pagetree
+
+        "The pages of a document are accessed through a structure known as the page tree, which defines the ordering of pages in the document. The tree structure allows PDF consumer applications, using only limited memory, to quickly open a document containing thousands of pages. The tree contains nodes of two types: intermediate nodes, called page tree nodes, and leaf nodes, called page objects." (:ref:`AdobeManual` p. 143).
+
+        While it is possible to list all page references in just one array, PDFs with many pages are often created using *balanced tree* structures ("page trees") for faster access to any single page. In relation to the total number of pages, this can reduce the average page access time by page number from a linear to some logarithmic order of magnitude.
+
+        For fast page access, MuPDF can use its own array in memory -- independently from what may or may not be present in the document file. This array is indexed by page number and therefore much faster than even the access via a perfectly balanced page tree.
 
 .. data:: object
 
@@ -56,6 +64,6 @@ Glossary
 
         See :ref:`AdobeManual` p. 60. PyMuPDF supports retrieving stream content via :meth:`Document._getXrefStream`. Use :meth:`Document.isStream` to determine whether an object is of stream type.
 
-.. data:: xref 
+.. data:: xref
 
         Abbreviation for cross-reference number: this is an integer unique identification for objects in a PDF. There exists a cross-reference table (which may consist of several separate segments) in each PDF, which stores the relative position of each object for quick lookup. The cross-reference table is one entry longer than the number of existing object: item zero is reserved and must not be used in any way. Many PyMuPDF classes have an ``xref`` attribute (which is zero for non-PDFs), and one can find out the total number of objects in a PDF via :meth:`Document._getXrefLength`.

@@ -1,6 +1,21 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.17
+---------------------------
+* **Added** :meth:`Document.fullcopyPage` to make full page copies within a PDF (not just copied references as :meth:`Document.copyPage` does).
+* **Changed** :meth:`Page.getPixmap`, :meth:`Document.getPagePixmap` now use ``alpha=False`` as default.
+* **Changed** text extraction: the span dictionary now (again) contains its rectangle under the ``bbox`` key.
+* **Changed** :meth:`Document.movePage` and :meth:`Document.copyPage` to use direct functions instead of wrapping :meth:`Document.select` -- similar to :meth:`Document.deletePage` in v1.14.16.
+
+Changes in Version 1.14.16
+---------------------------
+* **Changed** :ref:`Document` methods around PDF ``/EmbeddedFiles`` to no longer use MuPDF's "portfolio" functions. That support will be dropped in MuPDF v1.15 -- therefore another solution was required.
+* **Changed** :meth:`Document.embeddedFileCount` to be a function (was an attribute).
+* **Added** new method :meth:`Document.embeddedFileNames` which returns a list of names of embedded files.
+* **Changed** :meth:`Document.deletePage` and :meth:`Document.deletePageRange` to internally no longer use :meth:`Document.select`, but instead use functions to perform the deletion directly. As it has turned out, the :meth:`Document.select` method yields invalid outline trees (tables of content) for very complex PDFs and sophisticated use of annotations.
+
+
 Changes in Version 1.14.15
 ---------------------------
 * **Fixed** issues #301 ("Line cap and Line join"), #300 ("How to draw a shape without outlines") and #298 ("utils.updateRect exception"). These bugs pertain to drawing shapes with PyMuPDF. Drawing shapes without any border is fully supported. Line cap styles and line line join style are now differentiated and support all possible PDF values (0, 1, 2) instead of just being a bool. The previous parameter ``roundCap`` is deprecated in favor of ``lineCap`` and ``lineJoin`` and will be deleted in the next release.
@@ -11,7 +26,7 @@ Changes in Version 1.14.14
 ---------------------------
 * **Added** new low-level function :meth:`ImageProperties` to determine a number of characteristics for an image.
 * **Added** new low-level function :meth:`Document.isStream`, which checks whether an object is of stream type.
-* **Changed** low-level functions :meth:`Document._getXrefString` and :meth:`Document._getTrailerString` now by default return object definitions in formatted form.
+* **Changed** low-level functions :meth:`Document._getXrefString` and :meth:`Document._getTrailerString` now by default return object definitions in a formatted form which makes parsing easy.
 
 Changes in Version 1.14.13
 ---------------------------

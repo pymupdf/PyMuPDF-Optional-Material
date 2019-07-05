@@ -87,6 +87,9 @@ This class represents text and images shown on a document page. All MuPDF docume
 Dictionary Structure of :meth:`extractDICT` and :meth:`extractRAWDICT`
 -------------------------------------------------------------------------
 
+.. image:: img-textpage.png
+   :scale: 66
+
 Page Dictionary
 ~~~~~~~~~~~~~~~~~
 =============== ============================================
@@ -107,7 +110,7 @@ Blocks come in two different formats: **image blocks** and **text blocks**.
 Key             Value
 =============== ===============================================================
 type            1 = image *(int)*
-bbox            block / image rectangle, formatted as ``list(fitz.Rect)``
+bbox            block / image rectangle, formatted as ``tuple(fitz.Rect)``
 ext             image type *(str)*, as its file extension, see below
 width           original image width *(float)*
 height          original image height *(float)*
@@ -121,13 +124,13 @@ Possible values of key ``"ext"`` are ``"bmp"``, ``"gif"``, ``"jpeg"``, ``"jpx"``
 
 **Text block:**
 
-=============== ==================================================
+=============== ====================================================
 Key             Value
-=============== ==================================================
+=============== ====================================================
 type            0 = text *(int)*
-bbox            block rectangle, formatted as ``list(fitz.Rect)``
+bbox            block rectangle, formatted as ``tuple(fitz.Rect)``
 lines           *list* of text line dictionaries
-=============== ==================================================
+=============== ====================================================
 
 Line Dictionary
 ~~~~~~~~~~~~~~~~~
@@ -135,7 +138,7 @@ Line Dictionary
 =============== =====================================================
 Key             Value
 =============== =====================================================
-bbox            line rectangle, formatted as ``list(fitz.Rect)``
+bbox            line rectangle, formatted as ``tuple(fitz.Rect)``
 wmode           writing mode *(int)*: 0 = horizontal, 1 = vertical
 dir             writing direction *(list of floats)*: ``[x, y]``
 spans           *list* of span dictionaries
@@ -151,11 +154,15 @@ The values indicate the "relative writing speed" in each direction, such that x\
 Span Dictionary
 ~~~~~~~~~~~~~~~~~
 
-Spans contain the actual text. In contrast to MuPDF versions prior to v1.12, a span no longer includes positioning information. Therefore, to reconstruct the text of a line, the text pieces of all spans must be concatenated. A span since v1.12 also contains font information. A line contains more than one span only, if the font or its attributes of the text are changing.
+Spans contain the actual text. In contrast to MuPDF versions prior to v1.12, a span no longer includes positioning information. Therefore, to reconstruct the text of a line, the text pieces of all spans must be concatenated. A span since v1.12 also contains font information. A line contains **more than one span only**, if it contains text with different font properties.
+
+.. versionchanged:: 1.14.17
+    Spans now also have a ``bbox`` key (again).
 
 =============== =====================================================================
 Key             Value
 =============== =====================================================================
+bbox            span rectangle, formatted as ``tuple(fitz.Rect)``
 font            font name *(str)*
 size            font size *(float)*
 flags           font characteristics *(int)*
@@ -177,17 +184,17 @@ Test these characteristics like so:
 >>> if flags & 2**1: print("italic")
 >>> if flags & 2**2: print("serif")
 >>> # etc.
->>> 
+>>>
 
 
 Character Dictionary for :meth:`extractRAWDICT`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-=============== =====================================================
+=============== ========================================================
 Key             Value
-=============== =====================================================
-bbox            character rectangle, formatted as ``list(fitz.Rect)``
+=============== ========================================================
+bbox            character rectangle, formatted as ``tuple(fitz.Rect)``
 c               the character (unicode)
 origin          *tuple* coordinates of the bottom left point
-=============== =====================================================
+=============== ========================================================
 

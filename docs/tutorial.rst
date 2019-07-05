@@ -238,8 +238,6 @@ There are several ways to manipulate the so-called **page tree** (a structure de
 
 :meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to other locations within the same document.
 
-These methods are just wrappers for the following more sophisticated method:
-
 :meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a sequence [#f3]_ of the page numbers that you want to include. These integers must all be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
 
 So you can easily create new PDFs with

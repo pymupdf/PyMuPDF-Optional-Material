@@ -27,6 +27,7 @@ Yet others are handy, general-purpose utilities.
 :meth:`Document._getXrefLength`      PDF only: return length of :data:`xref` table
 :meth:`Document._getXrefStream`      PDF only: return content of a stream object
 :meth:`Document._getXrefString`      PDF only: return object definition "source"
+:meth:`Document._make_page_map`      PDF only: create a fast-access array of page numbers
 :meth:`Document._updateObject`       PDF only: insert or update a PDF object
 :meth:`Document._updateStream`       PDF only: replace the stream of an object
 :meth:`Document.extractFont`         PDF only: extract embedded font
@@ -206,10 +207,12 @@ Yet others are handy, general-purpose utilities.
       :returns: a string with the PDF trailer information. This is the analogous method to :meth:`Document._getXrefString` except that the trailer has no identifying :data:`xref` number. As can be seen here, the trailer object points to other important objects:
 
       >>> doc=fitz.open("adobe.pdf")
+      >>> # compressed output
       >>> print(doc._getTrailerString(True))
-      '<</Size 334093/Prev 25807185/XRefStm 186352/Root 333277 0 R/Info 109959 0 R
+      <</Size 334093/Prev 25807185/XRefStm 186352/Root 333277 0 R/Info 109959 0 R
       /ID[(\\227\\366/gx\\016ds\\244\\207\\326\\261\\\\\\305\\376u)
-      (H\\323\\177\\346\\371pkF\\243\\262\\375\\346\\325\\002)]>>'
+      (H\\323\\177\\346\\371pkF\\243\\262\\375\\346\\325\\002)]>>
+      >>> # non-compressed otput:
       >>> print(doc._getTrailerString(False))
       <<
          /Size 334093
@@ -217,11 +220,17 @@ Yet others are handy, general-purpose utilities.
          /XRefStm 186352
          /Root 333277 0 R
          /Info 109959 0 R
-         /ID [ (\227\366/gx\016ds\244\207\326\261\\\305\376u) (H\323\177\346\371pkF\243\262\375\346\325\002`w) ]
+         /ID [ (\227\366/gx\016ds\244\207\326\261\\\305\376u) (H\323\177\346\371pkF\243\262\375\346\325\002) ]
       >>
 
       .. note:: MuPDF is capable of recovering from a number of damages a PDF may have. This includes re-generating a trailer, where the end of a file has been lost (e.g. because of incomplete downloads). If however ``None`` is returned for a PDF, then the recovery mechanisms were unsuccessful and you should check for any error messages (:attr:`Document.openErrCode`, :attr:`Document.openErrMsg`, :attr:`Tools.fitz_stderr`).
 
+
+-----
+
+   .. method:: Document._make_page_map()
+
+      Create an internal array of page numbers, which significantly speeds up page lookup (:meth:`Document.loadPage`). If this array exists, finding a page object will be up to two times faster. Functions which change the PDF's page layout (copy, delete, move, select pages) will destroy this array again.
 
 -----
 

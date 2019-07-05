@@ -479,7 +479,7 @@ This is available for PDF documents only. There are basically two groups of meth
       PDF only: Add a new font to be used by text output methods and return its :data:`xref`. If not already present in the file, the font definition will be added. Supported are the built-in :data:`Base14_Fonts` and the CJK fonts via **"reserved"** fontnames. Fonts can also be provided as a file path or a memory area containing the image of a font file.
 
       :arg str fontname: The name by which this font shall be referenced when outputting text on this page. In general, you have a "free" choice here (but consult the :ref:`AdobeManual`, page 56, section 3.2.4 for a formal description of building legal PDF names). However, if it matches one of the :data:`Base14_Fonts` or one of the CJK fonts, ``fontfile`` and ``fontbuffer`` **are ignored**.
-      
+
       In other words, you cannot insert a font via ``fontfile`` / ``fontbuffer`` and also give it a reserved ``fontname``.
 
       .. note:: A reserved fontname can be specified in any mixture of upper or lower case and still match the right built-in font definition: fontnames "helv", "Helv", "HELV", "Helvetica", etc. all lead to the same font definition "Helvetica". But from a :ref:`Page` perspective, these are **different references**. You can exploit this when using different ``encoding`` variants (Latin, Greek, Cyrillic) of the same font on a page.
@@ -563,11 +563,11 @@ This is available for PDF documents only. There are basically two groups of meth
       :type pixmap: :ref:`Pixmap`
 
       :arg int rotate: rotate the image. Must be an integer multiple of 90 degrees. If you need a rotation by an arbitrary angle, consider converting the image to a PDF (:meth:`Document.convertToPDF`) first and then use :meth:`Page.showPDFpage` instead.
-      
+
          .. versionadded:: v1.14.11
 
       :arg bool keep_proportion: maintain the aspect ratio of the image.
-      
+
          .. versionadded:: v1.14.11
 
       For a description of ``overlay`` see :ref:`CommonParms`.
@@ -582,7 +582,7 @@ This is available for PDF documents only. There are basically two groups of meth
       >>> doc.save(...)
 
       .. note::
-      
+
          1. If that same image had already been present in the PDF, then only a reference to it will be inserted. This of course considerably saves disk space and processing time. But to detect this fact, existing PDF images need to be compared with the new one. This is achieved by storing an MD5 code for each image in a table and only compare the new image's MD5 code against the table entries. Generating this MD5 table, however, is done when the first image is inserted - which therefore may have an extended response time.
 
          2. You can use this method to provide a background or foreground image for the page, like a copyright, a watermark. Please remember, that watermarks require a transparent image ...
@@ -599,19 +599,20 @@ This is available for PDF documents only. There are basically two groups of meth
 
       If "text" is specified, plain text is returned **in the order as specified during document creation** (i.e. not necessarily in normal reading order).
 
-      :arg str output: A string indicating the requested format, one of "text" (default), "html", "dict", "rawdict", "xml", "xhtml" or "json".
+      :arg str output: A string indicating the requested format, one of "text" (default), "html", "dict", "rawdict", "xml", "xhtml" or "json". A mixture of upper and lower case is supported.
 
       :rtype: (*str* or *dict*)
       :returns: The page's content as one string or as a dictionary. The information levels of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use "dict", it is more convenient and faster.
 
-      .. note:: You can use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML or XHTML documents works in exactly the same way. For XML you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`.
+      .. note:: You can use this method to convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML or XHTML documents works in exactly the same way. For XML you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`:
 
-      >>> doc = fitz.open(...)
-      >>> ofile = open(doc.name + ".html", "w")
-      >>> ofile.write(fitz.ConversionHeader("html"))
-      >>> for page in doc: ofile.write(page.getText("html"))
-      >>> ofile.write(fitz.ConversionTrailer("html"))
-      >>> ofile.close()
+         >>> doc = fitz.open(...)
+         >>> ofile = open(doc.name + ".html", "w")
+         >>> ofile.write(fitz.ConversionHeader("html"))
+         >>> for page in doc:
+                 ofile.write(page.getText("html"))
+         >>> ofile.write(fitz.ConversionTrailer("html"))
+         >>> ofile.close()
 
    .. method:: getFontList()
 
@@ -638,33 +639,38 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: clip; Page.getPixmap args
       pair: alpha; Page.getPixmap args
 
-   .. method:: getPixmap(matrix=fitz.Identity, colorspace=fitz.csRGB, clip=None, alpha=True)
+   .. method:: getPixmap(matrix=fitz.Identity, colorspace=fitz.csRGB, clip=None, alpha=False)
 
      Create a pixmap from the page. This is probably the most often used method to create a pixmap.
 
-     :arg matrix-like matrix: a matrix-like object, default is :ref:`Identity`.
+     :arg matrix-like matrix: default is :ref:`Identity`.
 
-     :arg colorspace: Defines the required colorspace, one of "GRAY", "RGB" or "CMYK" (case insensitive). Or specify a :ref:`Colorspace`, e.g. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
+     :arg colorspace: Defines the required colorspace, one of "GRAY", "RGB" or "CMYK" (case insensitive). Or specify a :ref:`Colorspace`, ie. one of the predefined ones: :data:`csGRAY`, :data:`csRGB` or :data:`csCMYK`.
      :type colorspace: str or :ref:`Colorspace`
 
      :arg irect-like clip: restrict rendering to this area.
 
-     :arg bool alpha: A bool indicating whether an alpha channel should be included in the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time. Also note an **important difference** in how the image will appear:
+     :arg bool alpha: whether to add an alpha channel to the pixmap. Choose ``False`` if you do not really need transparency. This will save a lot of memory (25% in case of RGB ... and pixmaps are typically **large**!), and also processing time. Also note an **important difference** in how the image will be rendered: with ``True`` the pixmap's samples area will be pre-cleared with ``0x00``. This results in **transparent** areas where the page is empty. With ``False`` the pixmap's samples will be pre-cleared with ``0xff``. This results in **white** where the page has nothing to show.
 
-        * ``True``: pixmap's samples will be pre-cleared with ``0x00``, including the alpha byte. This results in **transparent** areas where the page is empty.
+      .. versionchanged:: 1.14.17
+         The default alpha value is now ``False``.
 
-        .. image:: img-alpha-1.png
+         * Generated with ``alpha=True``
 
-        * ``False``: pixmap's samples will be pre-cleared with ``0xff``. This results in **white** where the page has nothing to show.
+         .. image:: img-alpha-1.png
 
-        .. image:: img-alpha-0.png
+
+         * Generated with ``alpha=False``
+
+         .. image:: img-alpha-0.png
+
 
      :rtype: :ref:`Pixmap`
      :returns: Pixmap of the page.
 
    .. method:: loadLinks()
 
-      Return the first link on a page. Synonym of property ``firstLink``.
+      Return the first link on a page. Synonym of property :attr:`firstLink`.
 
       :rtype: :ref:`Link`
       :returns: first link on the page (or ``None``).
@@ -676,7 +682,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Sets the rotation of the page.
 
-      :arg int rotate: An integer specifying the required rotation in degrees. Should be an integer multiple of 90.
+      :arg int rotate: An integer specifying the required rotation in degrees. Must be an integer multiple of 90.
 
    .. index::
       pair: keep_proportion; Page.showPDFpage args
@@ -687,7 +693,7 @@ This is available for PDF documents only. There are basically two groups of meth
    .. method:: showPDFpage(rect, docsrc, pno=0, keep_proportion=True, overlay=True, rotate=0, clip=None)
 
       PDF only: Display a page of another PDF as a **vector image** (otherwise similar to :meth:`Page.insertImage`). This is a multi-purpose method. For example, you can use it to
-      
+
       * create "n-up" versions of existing PDF files, combining several input pages into **one output page** (see example `4-up.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/4-up.py>`_),
       * create "posterized" PDF files, i.e. every input page is split up in parts which each create a separate output page (see `posterize.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/posterize.py>`_),
       * include PDF-based vector images like company logos, watermarks, etc., see `svg-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/svg-logo.py>`_, which puts an SVG-based logo on each page (requires additional packages to deal with SVG-to-PDF conversions).

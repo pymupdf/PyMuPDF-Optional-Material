@@ -59,7 +59,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: __init__(self, colorspace, irect, alpha)
 
-      **New empty pixmap:** Create an empty pixmap of size and origin given by the rectangle. So, ``irect.top_left`` designates the top left corner of the pixmap, and its width and height are ``irect.width`` resp. ``irect.height``. Note that the image area is **not initialized** and will contain crap data -- use :meth:`clearWith` to be sure.
+      **New empty pixmap:** Create an empty pixmap of size and origin given by the rectangle. So, ``irect.top_left`` designates the top left corner of the pixmap, and its width and height are ``irect.width`` resp. ``irect.height``. Note that the image area is **not initialized** and will contain crap data -- use eg. :meth:`clearWith` or :meth:`setRect` to be sure.
 
       :arg colorspace: colorspace.
       :type colorspace: :ref:`Colorspace`
@@ -91,7 +91,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg irect-like clip: a region of the source pixmap to take the copy from.
 
-      .. note:: If width or height are not *de facto* integers (meaning e.g. ``hash(width) != hash(int(width))``), then pixmap will be created with ``alpha = 1``.
+      .. note:: If width or height are not *de facto* integers (meaning e.g. ``round(width) != width``), then pixmap will be created with ``alpha = 1``.
 
    .. method:: __init__(self, source, alpha = 1)
 
@@ -227,8 +227,8 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
       :rtype: bool
       :returns: ``False`` if the rectangle was invalid or had an empty intersection with :attr:`Pixmap.irect`, else ``True``.
 
-      .. note:: 
-      
+      .. note::
+
          1. This method is equivalent to :meth:`Pixmap.setPixel` executed for each pixel in the rectangle, but is obviously **very much faster** if many pixels are involved.
          2. This method can be used similar to :meth:`Pixmap.clearWith` to initialize a pixmap with a certain color like this: ``pix.setRect(pix.irect, (255, 255, 0))`` (RGB example, colors the complete pixmap with yellow).
 
@@ -263,7 +263,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: writeImage(filename, output=None)
 
-      
+
       Save pixmap as an image file. Depending on the output chosen, only some or all colorspaces are supported and different file extensions can be chosen. Please see the table below. Since MuPDF v1.10a the ``savealpha`` option is no longer supported and will be silently ignored.
 
       :arg str filename: The filename to save to. The filename's extension determines the image format, if not overriden by the output parameter.
@@ -307,7 +307,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
    .. attribute:: stride
 
       Contains the length of one row of image data in :attr:`Pixmap.samples`. This is primarily used for calculation purposes. The following expressions are true:
-      
+
       * ``len(samples) == height * stride``
       * ``width * n == stride``.
 
