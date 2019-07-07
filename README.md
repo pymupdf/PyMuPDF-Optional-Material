@@ -4,32 +4,9 @@
 
 This repository contains **Windows-specific** material for [PyMuPDF](https://github.com/rk700/PyMuPDF), the Python bindings for MuPDF.
 
-Apart from a CHM documentation file, this repository contains binary installation files (in a self-made ZIP format).
+~~Apart from a CHM documentation file, this repository contains binary installation files (in a self-made ZIP format).~~
 
-## Directory ``binary_setups``
-Contains ZIP files for installing PyMuPDF on your Windows system.
-
-PyMuPDF supports all Python versions 2.7 and up. To limit space requirements and network traffic, only a subset is recorded here, however. Please enter an [issue here](https://github.com/rk700/PyMuPDF/issues), to request another version.
-
-The ZIP files follow the naming convention ``pymupdf-version-pyXY-platform.zip``, where XY stands for the major and minor Python version (i.e. '27' is for any Python 2.7) and ``platform`` (either `x86` or `x64`) indicates the Python **bitness** (**not** the one of your Windows).
-
-All 'x86' setups should work on any Windows version XP SP2 or higher, whether x86 or x64. Please remember, that Python's support for Windows XP ends with version 3.4.
-
-Setups with a platform of 'x64' do require Windows x64.
-
-You are probably interested in only one or two specific versions: **left-click** on the respective ZIP file. Apart from some complaint ("... too big to display ..." etc.) Github should then offer you a **Download** button.
-
-
-## Support for standard Python Wheels
-If you prefer, you can download the wheel (not just for Windows) of your choice either from PyPI or from PyMuPDF's [releases](https://github.com/rk700/PyMuPDF/releases) folder and use
-
-`pip install [--upgrade] pymupdf`
-
-or
-
-`pip install --upgrade PyMuPDF-<...>.whl`
-
-respectively to install.
+Please note, that we no longer provide binary files in zip format. If you prefer the old **egg** format over wheels, please use a repo like [this](https://github.com/dairiki/humpty) one to convert your preferred wheel to it.
 
 ## Directory ``doc``
 Contains a **CHM based documentation file**. PyMuPDF itself comes with PDF and HTML based help. If you wish to use a compiled HTML Windows help, left-click [here](https://github.com/JorjMcKie/PyMuPDF-optional-material/blob/master/doc/PyMuPDF.chm).
