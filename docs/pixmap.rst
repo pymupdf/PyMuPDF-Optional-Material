@@ -139,15 +139,14 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg bytes|bytearray|BytesIO samples:  an area containing all pixels of the image. Must include alpha values if specified.
 
-         .. versionchanged:: 1.14.13
-            ``io.BytesIO`` can now also be used. Data are now copied to the pixmap, hence the source data can safely be deleted.
+         .. versionchanged:: 1.14.13 (1) ``io.BytesIO`` can now also be used. (2) Data are now **copied** to the pixmap, so may safely be deleted or become unavailable.
 
       :arg bool alpha: whether a transparency channel is included.
 
       .. note::
 
          1. The following equation **must be true**: ``(colorspace.n + alpha) * width * height == len(samples)``.
-         2. Starting with version 1.14.13, the samples data are **copied** to the pixmap. So, source data becoming unavailable should no longer be a concern.
+         2. Starting with version 1.14.13, the samples data are **copied** to the pixmap.
 
 
    .. method:: __init__(self, doc, xref)
@@ -321,9 +320,13 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. attribute:: samples
 
-      The color and (if :attr:`Pixmap.alpha` is true) transparency values for all pixels. It is a write-protected memory area of ``width * height * n`` bytes. Each n bytes define one pixel. Each successive n bytes yield another pixel in scanline order. Subsequent scanlines follow each other with no padding. E.g. for an RGBA colorspace this means, ``samples`` is a sequence of bytes like ``..., R, G, B, A, ...``, and the four byte values R, G, B, A define one pixel.
+      The color and (if :attr:`Pixmap.alpha` is true) transparency values for all pixels. It is an area of ``width * height * n`` bytes. Each n bytes define one pixel. Each successive n bytes yield another pixel in scanline order. Subsequent scanlines follow each other with no padding. E.g. for an RGBA colorspace this means, ``samples`` is a sequence of bytes like ``..., R, G, B, A, ...``, and the four byte values R, G, B, A define one pixel.
 
       This area can be passed to other graphics libraries like PIL (Python Imaging Library) to do additional processing like saving the pixmap in other image formats.
+
+      .. note::
+         * The underlying data is a typically **large** memory area from which a ``bytes`` copy is made for this attribute: for example an RGB-rendered letter page has a samples size of almost 1.4 MB. So consider assigning a new variable if you repeatedly use it.
+         * Any changes to the underlying data are available only after again accessing this attribute.
 
       :type: bytes
 

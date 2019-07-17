@@ -26,6 +26,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.embeddedFileInfo`     PDF only: metadata of an embedded file
 :meth:`Document.embeddedFileNames`    PDF only: list of embedded files
 :meth:`Document.embeddedFileUpd`      PDF only: change an embedded file
+:meth:`Document.fullcopyPage`         PDF only: duplicate a page
 :meth:`Document.getPageFontList`      PDF only: make a list of fonts on a page
 :meth:`Document.getPageImageList`     PDF only: make a list of images on a page
 :meth:`Document.getPagePixmap`        create a pixmap of a page by page number
@@ -37,7 +38,6 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.loadPage`             read a page
 :meth:`Document.movePage`             PDF only: move a page to another location
 :meth:`Document.newPage`              PDF only: insert a new empty page
-:meth:`Document.fullcopyPage`         PDF only: duplicate a page
 :meth:`Document.save`                 PDF only: save the document
 :meth:`Document.saveIncr`             PDF only: save the document incrementally
 :meth:`Document.searchPageFor`        search for a string on a page
@@ -149,11 +149,11 @@ For addional details on **embedded files** refer to Appendix 3.
       Create a PDF version of the current document and write it to memory. **All document types** (except PDF) are supported. The parameters have the same meaning as in :meth:`insertPDF`. In essence, you can restrict the conversion to a page subset, specify page rotation, and revert page sequence.
 
       :arg int from_page: first page to copy (0-based). Default is first page.
-      
+
       :arg int to_page: last page to copy (0-based). Default is last page.
-      
+
       :arg int rotate: rotation angle. Default is 0 (no rotation). Should be ``n * 90`` with an integer ``n`` (not checked).
-      
+
       :rtype: bytes
       :returns: a Python ``bytes`` object containing a PDF file image. It is created by internally using ``write(garbage=4, deflate=True)``. See :meth:`write`. You can output it directly to disk or open it as a PDF via ``fitz.open("pdf", pdfbytes)``. Here are some examples:
 
@@ -218,7 +218,7 @@ For addional details on **embedded files** refer to Appendix 3.
       :rtype: list
 
       :returns: a list of images shown on this page. Each entry looks like ``[xref, smask, width, height, bpc, colorspace, alt. colorspace, name, filter]``. Where
-      
+
         * ``xref`` (*int*) is the image object number,
         * ``smask`` (*int* optional) is the object number of its soft-mask image (if present),
         * ``width`` and ``height`` (*ints*) are the image dimensions,
@@ -227,7 +227,7 @@ For addional details on **embedded files** refer to Appendix 3.
         * ``alt. colorspace`` (*str* optional) is any alternate colorspace depending on the value of ``colorspace``,
         * ``name`` (*str*) is the symbolic name by which the **page references the image** in its content stream, and
         * ``filter`` (*str* optional) is the decode filter of the image (:ref:`AdobeManual`, pp. 65).
-      
+
       See below how this information can be used to extract PDF images as separate files. Another demonstration:
 
       >>> doc = fitz.open("pymupdf.pdf")
@@ -248,7 +248,7 @@ For addional details on **embedded files** refer to Appendix 3.
       :rtype: list
 
       :returns: a list of fonts referenced by this page. Each entry looks like ``[xref, ext, type, basefont, name, encoding]``. Where
-      
+
         * ``xref`` (*int*) is the font object number (may be zero if the PDF uses one of the builtin fonts directly),
         * ``ext`` (*str*) font file extension (e.g. ``ttf``, see :ref:`FontExtensions`),
         * ``type`` (*str*) is the font type (like ``Type1`` or ``TrueType`` etc.),
@@ -426,7 +426,7 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: height; Document.newPage args
 
     .. method:: newPage(pno=-1, width=595, height=842)
-    
+
       PDF only: Insert an empty page.
 
       :arg int pno: page number in front of which the new page should be inserted. Must be in ``range(-1, len(doc) + 1)``. Special values -1 and ``len(doc)`` insert **after** the last page.
@@ -492,7 +492,7 @@ For addional details on **embedded files** refer to Appendix 3.
         >>> t0=time.perf_counter();doc.deletePageRange(500, 520);t1=time.perf_counter()
         >>> round(t1 - t0, 2)
         0.66
-        >>> 
+        >>>
 
         This is still more than 10 times faster than the corresponding :meth:`select`:
 
@@ -500,7 +500,7 @@ For addional details on **embedded files** refer to Appendix 3.
         >>> t0=time.perf_counter();doc.select(l);t1=time.perf_counter()
         >>> round(t1 - t0, 2)
         7.62
-        >>> 
+        >>>
 
     .. method:: copyPage(pno, to=-1)
 
@@ -522,7 +522,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int to: the page number in front of which to copy. The default inserts **after** the last page.
 
-      .. note:: In contrast to :meth:`copyPage`, this method creates a completely identical new page object -- with the exception of :attr:`Page.xref`. So changes to a copy will only show there.
+      .. note:: In contrast to :meth:`copyPage`, this method creates a completely identical new page object -- with the exception of :attr:`Page.xref` of course, which will be different. So changes to a copy will only show there.
 
     .. method:: movePage(pno, to=-1)
 
@@ -553,7 +553,7 @@ For addional details on **embedded files** refer to Appendix 3.
       :arg str filename: optional filename. Documentation only, will be set to ``name`` if ``None``.
       :arg str ufilename: optional unicode filename. Documentation only, will be set to ``filename`` if ``None``.
       :arg str desc: optional description. Documentation only, will be set to ``name`` if ``None``.
-      
+
 
     .. method:: embeddedFileCount()
 

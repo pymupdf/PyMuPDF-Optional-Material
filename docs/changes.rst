@@ -1,6 +1,11 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.18
+---------------------------
+* **Fixed** issue #319 (" InsertText function error when use custom font").
+
+
 Changes in Version 1.14.17
 ---------------------------
 * **Added** :meth:`Document.fullcopyPage` to make full page copies within a PDF (not just copied references as :meth:`Document.copyPage` does).
