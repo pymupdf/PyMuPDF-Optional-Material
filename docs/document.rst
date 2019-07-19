@@ -31,6 +31,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.getPageImageList`     PDF only: make a list of images on a page
 :meth:`Document.getPagePixmap`        create a pixmap of a page by page number
 :meth:`Document.getPageText`          extract the text of a page by page number
+:meth:`Document.getSigFlags`          PDF only: determine signature state
 :meth:`Document.getToC`               create a table of contents
 :meth:`Document.insertPage`           PDF only: insert a new page
 :meth:`Document.insertPDF`            PDF only: insert pages from another PDF
@@ -531,6 +532,16 @@ For addional details on **embedded files** refer to Appendix 3.
       :arg int pno: the page to be moved. Must be in range ``0 <= pno < len(doc)``.
 
       :arg int to: the page number in front of which to insert the moved page. The default moves **after** the last page.
+
+    .. method:: getSigFlags()
+
+      PDF only: Return whether the document contains signatures fields.
+
+      :rtype: int
+      :returns:
+         * -1: not a Form PDF or no signature fields exist.
+         * 1: at least one signature field exists.
+         * 3:  contains signatures that may be invalidated if the file is saved (written) in a way that alters its previous contents, as opposed to an incremental update.
 
     .. index::
        pair: filename; Document.embeddedFileAdd args

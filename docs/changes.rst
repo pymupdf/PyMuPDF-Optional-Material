@@ -1,9 +1,10 @@
 Change Logs
 ===============
 
-Changes in Version 1.14.18
+Changes in Version 1.14.19
 ---------------------------
-* **Fixed** issue #319 (" InsertText function error when use custom font").
+* **Fixed** issue #319 ("InsertText function error when use custom font").
+* **Added** new method :meth:`Document.getSigFlags` which return information on whether a PDF is signed, resolves issue #326 ("How to detect signature in a form pdf?").
 
 
 Changes in Version 1.14.17
