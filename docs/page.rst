@@ -196,20 +196,31 @@ This is available for PDF documents only. There are basically two groups of meth
       .. image:: img-polyline.png
          :scale: 70
 
-   .. method:: addUnderlineAnnot(rect)
+   .. method:: addUnderlineAnnot(arg)
 
-   .. method:: addStrikeoutAnnot(rect)
+   .. method:: addStrikeoutAnnot(arg)
 
-   .. method:: addSquigglyAnnot(rect)
+   .. method:: addSquigglyAnnot(arg)
 
-   .. method:: addHighlightAnnot(rect)
+   .. method:: addHighlightAnnot(arg)
 
-      PDF only: These annotations are used for marking some text that has previously been located via :meth:`searchFor`. Colors are automatically chosen: yellowish for highlighting, red for strike out and blue for underlining. Note that :meth:`searchFor` now supports quadrilaterals as an output option. Correspondingly, the ``rect`` parameter for these annotations may either be rectangles or quadrilaterals.
+      PDF only: These annotations are normally used for marking text that has previously been located in some way (for example via :meth:`searchFor`). But the actual presence of text within the specified area(s) is neither checked nor is it required. So you are free to mark anything -- like an image.
 
-      :arg rect-like/quad-like rect: the rectangle or quad containing the to-be-marked text.
+      Standard colors are chosen per annotation type: **yellow** for highlighting, **red** for strike out and **blue** for (squiggly) underlining.
+
+      The methods convert the argument to a list of :ref:`Quad` objects. The **annotation** rectangle is calculated as the union of rectangles envelopping these quadrilaterals.
+
+      .. note:: :meth:`searchFor` supports :ref:`Quad` objects as an output option. The following two statements locate and mark every occurrence of string "pymupdf" with **one common** annotation::
+
+           >>> quads = page.searchFor("pymupdf", hit_max=100, quads=True)
+           >>> page.addHighlightAnnot(quads)
+
+      :arg rect-like,quad-like,list,tuple arg: the rectangles or quads containing the to-be-marked locations. A list or tuple must consist of rect-like or quad-like items (or even a mixture of either). You should prefer using quads over rectangles, because this will automatically support non-horizontal text and avoid rectangle-to-quad-conversion effort.
+
+         .. versionchanged:: 1.14.20
 
       :rtype: :ref:`Annot`
-      :returns: the created annotation. Per annot type, certain color decisions are being made (e.g. "red" for 'StrikeOut', "yellow" for 'Highlight'). To change them, set the "stroke" color accordingly (:meth:`Annot.setColors`) and then perform an :meth:`Annot.update`.
+      :returns: the created annotation. To change colors, set the "stroke" color accordingly (:meth:`Annot.setColors`) and then perform an :meth:`Annot.update`.
 
       .. image:: img-markers.jpg
          :scale: 80
@@ -756,19 +767,22 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. index::
       pair: hit_max; Page.searchFor args
+      pair: quads; Page.searchFor args
 
    .. method:: searchFor(text, hit_max=16, quads=False)
 
       Searches for ``text`` on a page. Identical to :meth:`TextPage.search`.
 
-      :arg str text: Text to search for. Upper / lower case is ignored. The string may contain spaces.
+      :arg str text: Text to search for. Upper and lower case are treated as equal. The string may contain spaces.
 
       :arg int hit_max: Maximum number of occurrences accepted.
       :arg bool quads: Return :ref:`Quad` instead of :ref:`Rect` objects.
 
       :rtype: list
 
-      :returns: A list of rectangles (quadrilaterals resp.) each of which surrounds one occurrence of ``text``.
+      :returns: A list of rectangles (quadrilaterals resp.) each of which surrounds one occurrence of ``text`` -- **normally**. **However:** if the search string spreads across more than one line, then a separate item is recorded in the list for each part of the string per line.
+
+        .. note:: In this way, the effect supports multi-line text marker annotations.
 
    .. method:: setCropBox(r)
 

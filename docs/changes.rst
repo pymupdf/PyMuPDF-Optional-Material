@@ -1,6 +1,11 @@
 Change Logs
 ===============
 
+Changes in Version 1.14.20
+---------------------------
+* **Changed** text marker annotations to support multiple rectangles / quadrilaterals. This fixes issue #341 ("Question : How to addhighlight so that a string spread across more than a line is covered by one highlight?") and similar (#285).
+
+
 Changes in Version 1.14.19
 ---------------------------
 * **Fixed** issue #319 ("InsertText function error when use custom font").

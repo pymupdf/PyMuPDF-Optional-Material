@@ -2,6 +2,22 @@
 Glossary
 ==============
 
+.. data:: matrix-like
+
+        A Python sequence of 6 numbers.
+
+.. data:: rect-like
+
+        A Python sequence of 4 numbers.
+
+.. data:: point-like
+
+        A Python sequence of 2 numbers.
+
+.. data:: quad-like
+
+        A Python sequence of 4 :data:`point-like` items.
+
 .. data:: contents
 
         "A **content stream** is a PDF :data:`stream` :data:`object` whose data consists of a sequence of instructions describing the graphical elements to be painted on a page." (:ref:`AdobeManual` p. 151). For an overview of the mini-language used in these streams see chapter "Operator Summary" on page 985 of the :ref:`AdobeManual`. A PDF :data:`page` can have none to many contents objects. If it has none, the page is empty. If it has several, they will be interpreted in sequence as if their instructions had been present in one such object (i.e. like in a concatenated string). It should be noted that there are more stream object types which use the same syntax: e.g. appearance dictionaries associated with annotations and Form XObjects.

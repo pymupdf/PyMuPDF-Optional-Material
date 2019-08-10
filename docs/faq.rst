@@ -616,6 +616,13 @@ Or, more forgiving, respectively::
     Forscher das Ereignis »lunare Katastrophe«. Später setzte
     sich die Bezeichnung Großes Bombardement durch.
 
+The latter output also includes words *intersecting* the rectangle.
+
+What if your **rectangle spans across more than one page**? Follow this recipe:
+
+* Create a common list of all words of all pages which your rectangle intersects.
+* When adding word items to this common list, increase their **y-coordinates** by the accumulated height of all previous pages.
+
 
 ----------
 

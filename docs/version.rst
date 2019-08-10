@@ -1,6 +1,6 @@
 Covered Version
 --------------------
 
-This documentation covers PyMuPDF v1.14.19 features as of **2019-07-18 20:01:17**.
+This documentation covers PyMuPDF v1.14.20 features as of **2019-08-10 08:43:18**.
 
 .. note:: The major and minor versions of **PyMuPDF** and **MuPDF** will always be the same. Only the third qualifier (patch level) may be different from that of MuPDF.
