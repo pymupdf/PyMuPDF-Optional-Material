@@ -30,7 +30,7 @@ Point
    .. method:: __init__(self, sequence)
 
       Overloaded constructors.
-      
+
       Without parameters, ``Point(0, 0)`` will be created.
 
       With another point specified, a **new copy** will be crated, "sequence" must be Python sequence object of 2 floats (see :ref:`SequenceTypes`).
@@ -66,7 +66,7 @@ Point
 
       Result of dividing each coordinate by ``abs(point)``, the distance of the point to (0,0). This is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
 
-      .. image:: img-point-unit.jpg
+      .. image:: images/img-point-unit.jpg
 
       :type: :ref:`Point`
 

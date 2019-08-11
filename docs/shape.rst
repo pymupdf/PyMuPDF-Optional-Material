@@ -84,11 +84,11 @@ Several draw methods can be executed in a row and each one of them will contribu
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
 
-      .. image:: img-breadth.png
+      .. image:: images/img-breadth.png
 
       Here is an example of three connected lines, forming a closed, filled triangle. Little arrows indicate the stroking direction.
 
-      .. image:: img-squiggly.png
+      .. image:: images/img-squiggly.png
 
       .. note:: Waves drawn are **not** trigonometric (sine / cosine). If you need that, have a look at `draw-sines.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/draw-sines.py>`_.
 
@@ -142,7 +142,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Example:
 
-      .. image:: img-drawBezier.png
+      .. image:: images/img-drawBezier.png
 
    .. method:: drawOval(tetra)
 
@@ -158,7 +158,7 @@ Several draw methods can be executed in a row and each one of them will contribu
       :rtype: :ref:`Point`
       :returns: the middle point of the left rectangle / quad side. Look at just a few examples here:
 
-      .. image:: img-drawquad.jpg
+      .. image:: images/img-drawquad.jpg
          :scale: 50
 
    .. method:: drawCircle(center, radius)
@@ -175,7 +175,7 @@ Several draw methods can be executed in a row and each one of them will contribu
       :rtype: :ref:`Point`
       :returns: ``center - (radius, 0)``.
 
-      .. image:: img-drawcircle.jpg
+      .. image:: images/img-drawcircle.jpg
          :scale: 60
 
    .. method:: drawCurve(p1, p2, p3)
@@ -196,7 +196,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Example: a filled quarter ellipse segment.
 
-      .. image:: img-drawCurve.png
+      .. image:: images/img-drawCurve.png
 
    .. index::
       pair: fullSector; Shape.drawSector args
@@ -220,15 +220,15 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Examples:
 
-      .. image:: img-drawSector1.png
+      .. image:: images/img-drawSector1.png
 
-      .. image:: img-drawSector2.png
+      .. image:: images/img-drawSector2.png
 
 
    .. method:: drawRect(rect)
 
       Draw a rectangle. The drawing starts and ends at the top-left corner in a counter-clockwise movement.
-      
+
       :arg rect-like rect: where to put the rectangle on the page.
 
       :rtype: :ref:`Point`
@@ -237,7 +237,7 @@ Several draw methods can be executed in a row and each one of them will contribu
    .. method:: drawQuad(quad)
 
       Draw a quadrilateral. The drawing starts and ends at the top-left corner (:attr:`Quad.ul`) in a counter-clockwise movement. It invokes :meth:`drawPolyline` with the argument ``[ul, ll, lr, ur, ul]``.
-      
+
       :arg quad-like quad: where to put the tetrapod on the page.
 
       :rtype: :ref:`Point`
@@ -261,7 +261,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       :arg point-like point: the bottom-left position of the first character of ``text`` in pixels. It is important to understand, how this works in conjunction with the ``rotate`` parameter. Please have a look at the following picture. The small red dots indicate the positions of ``point`` in each of the four possible cases.
 
-         .. image:: img-inserttext.jpg
+         .. image:: images/img-inserttext.jpg
             :scale: 33
 
       :arg str/sequence text: the text to be inserted. May be specified as either a string type or as a sequence type. For sequences, or strings containing line breaks ``\n``, several lines will be inserted. No care will be taken if lines are too wide, but the number of inserted lines will be limited by "vertical" space on the page (in the sense of reading direction as established by the ``rotate`` parameter). Any rest of ``text`` is discarded -- the return code however contains the number of inserted lines.
@@ -307,9 +307,9 @@ Several draw methods can be executed in a row and each one of them will contribu
 
           **If negative**: no execution. The value returned is the space deficit to store text lines. Enlarge rectangle, decrease ``fontsize``, decrease text amount, etc.
 
-      .. image:: img-rotate.png
+      .. image:: images/img-rotate.png
 
-      .. image:: img-rot+morph.png
+      .. image:: images/img-rot+morph.png
 
       For a description of the other parameters see :ref:`CommonParms`.
 
@@ -328,23 +328,23 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Finish a set of ``draw*()`` methods by applying :ref:`CommonParms` to all of them. This method also supports morphing the resulting compound drawing using a pivotal :ref:`Point`.
 
-      :arg sequence morph: morph the text or the compound drawing around some arbitrary pivotal :ref:`Point` ``pivot`` by applying :ref:`Matrix` ``matrix`` to it. This implies that ``pivot`` is a **fixed point** of this operation. Default is no morphing (``None``). The matrix can contain any values in its first 4 components, ``matrix.e == matrix.f == 0`` must be true, however. This means that any combination of scaling, shearing, rotating, flipping, etc. is possible, but translations are not. 
+      :arg sequence morph: morph the text or the compound drawing around some arbitrary pivotal :ref:`Point` ``pivot`` by applying :ref:`Matrix` ``matrix`` to it. This implies that ``pivot`` is a **fixed point** of this operation. Default is no morphing (``None``). The matrix can contain any values in its first 4 components, ``matrix.e == matrix.f == 0`` must be true, however. This means that any combination of scaling, shearing, rotating, flipping, etc. is possible, but translations are not.
 
       :arg bool even_odd: request the **"even-odd rule"** for filling operations. Default is ``False``, so that the **"nonzero winding number rule"** is used. These rules are alternative methods to apply the fill color where areas overlap. Only with fairly complex shapes a different behavior is to be expected with these rules. For an in-depth explanation, see :ref:`AdobeManual`, pp. 232 ff. Here is an example to demonstrate the difference.
 
-      .. image:: img-even-odd.png
+      .. image:: images/img-even-odd.png
 
       .. note:: For each pixel in a drawing the following will happen:
 
          1. Rule **"even-odd"** counts, how many areas are overlapping at a pixel. If this count is **odd** the pixel is regarded **inside**, if it is **even**, the pixel is **outside**.
 
          2. Default rule **"nonzero winding"** also looks at the orientation of overlapping areas: it **adds 1** if an area is drawn anit-clockwise and it **subtracts 1** for clockwise areas. If the result is zero, the pixel is regarded **outside**, pixels with a non-zero count are **inside**.
-         
+
          In the top two shapes, three circles are drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.
 
    .. index::
       pair: overlay; Shape.commit args
-  
+
    .. method:: commit(overlay=True)
 
       Update the page's :data:`contents` with the accumulated draw commands and text insertions. If a ``Shape`` is not committed, the page will not be changed.
@@ -466,7 +466,7 @@ Examples
 
 Here is an example for 5 colors:
 
-.. image:: img-cake.png
+.. image:: images/img-cake.png
 
 2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon:
 
@@ -485,7 +485,7 @@ Here is an example for 5 colors:
 
 Here is the polygon for n = 7:
 
-.. image:: img-7edges.png
+.. image:: images/img-7edges.png
 
 .. _CommonParms:
 
@@ -501,7 +501,7 @@ Common Parameters
   3. Specify a font file present on your system. In this case choose an arbitrary, but new name for this parameter (without "/" prefix).
 
   If inserted text should re-use one of the page's fonts, use its reference name appearing in :meth:`getFontList` like so:
-  
+
   Suppose the font list has the entry ``[1024, 0, 'Type1', 'CJXQIC+NimbusMonL-Bold', 'R366']``, then specify ``fontname = "/R366", fontfile = None`` to use font ``CJXQIC+NimbusMonL-Bold``.
 
 ----
@@ -533,7 +533,7 @@ Common Parameters
 **color / fill** (*list, tuple*)
 
   Line and fill colors can be specified as tuples or list of of floats from 0 to 1. These sequences must have a length of 1 (GRAY), 3 (RGB) or 4 (CMYK). For GRAY colorspace, a single float instead of the unwieldy ``(float,)`` tuple spec is also accepted.
-  
+
   To simplify color specification, method ``getColor()`` in ``fitz.utils`` may be used to get predefined RGB color triples by name. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names -- see section :ref:`ColorDatabase`.
 
 ----
@@ -549,7 +549,7 @@ Common Parameters
   .. versionadded:: 1.14.9
 
   Integer in ``range(8)`` which controls the text appearance (:meth:`Shape.insertText` and :meth:`Shape.insertTextbox`). See page 398 in :ref:`AdobeManual`. New in v1.14.9. These methods now also differentiate between fill and stroke colors.
-  
+
   * For default 0, only the text fill color is used to paint the text. For backward compatibility, using the ``color`` parameter instead also works.
   * For render mode 1, only the border of each glyph (i.e. text character) is drawn with a thickness as set in argument ``border_width``. The color chosen in the ``color`` argument is taken for this, the ``fill`` parameter is ignored.
   * For render mode 2, the glyphs are filled and stroked, using both color parameters and the specified border width. You can use this value to simulate **bold text** without using another font: choose the same value for ``fill`` and ``color`` and an appropriate value for ``border_width``.
@@ -557,10 +557,10 @@ Common Parameters
 
   .. note:: This version 1.14.0 of the base library MuPDF contains a bug: text with render modes 2 and 6 is returned twice and must be dealt with in your script. A fix can be expected with the next MuPDF version.
 
-  
+
   The following examples use border_width=0.3, together with a fontsize of 15. Stroke color is blue and fill color is some yellow.
 
-  .. image:: img-rendermode.jpg
+  .. image:: images/img-rendermode.jpg
 
 ----
 

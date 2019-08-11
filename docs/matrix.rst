@@ -7,7 +7,7 @@ Matrix
 
 Matrix is a row-major 3x3 matrix used by image transformations in MuPDF (which complies with the respective concepts laid down in the :ref:`AdobeManual`). With matrices you can manipulate the rendered image of a page in a variety of ways: (parts of) the page can be rotated, zoomed, flipped, sheared and shifted by setting some or all of just six float values.
 
-.. |matrix| image:: img-matrix.png
+.. |matrix| image:: images/img-matrix.png
 
 Since all points or pixels live in a two-dimensional space, one column vector of that matrix is a constant unit vector, and only the remaining six elements are used for manipulations. These six elements are usually represented by ``[a, b, c, d, e, f]``. Here is how they are positioned in the matrix:
 
@@ -55,17 +55,17 @@ Please note:
    .. method:: __init__(self, sequence)
 
       Overloaded constructors.
-      
+
       Without parameters, the zero matrix ``Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)`` will be created.
-      
+
       ``zoom-*`` and ``shear-*`` specify zoom or shear values (float) and create a zoom or shear matrix, respectively.
 
       For "matrix" a **new copy** of another matrix will be made.
-      
+
       Float value "degree" specifies the creation of a rotation matrix which rotates anit-clockwise.
 
       A "sequence" must be any Python sequence object with exactly 6 float entries (see :ref:`SequenceTypes`).
-      
+
       ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0)`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
 
    .. method:: preRotate(deg)
@@ -207,7 +207,7 @@ Examples
 -------------
 Here are examples to illustrate some of the effects achievable. The following pictures start with a page of the PDF version of this help file. We show what happens when a matrix is being applied (though always full pages are created, only parts are displayed here to save space).
 
-.. |original| image:: img-original.png
+.. |original| image:: images/img-original.png
 
 This is the original page image:
 
@@ -215,13 +215,13 @@ This is the original page image:
 
 Shifting
 ------------
-.. |e100| image:: img-e-is-100.png
+.. |e100| image:: images/img-e-is-100.png
 
 We transform it with a matrix where ``e = 100`` (right shift by 100 pixels).
 
 |e100|
 
-.. |f100| image:: img-f-is-100.png
+.. |f100| image:: images/img-f-is-100.png
 
 Next we do a down shift by 100 pixels: ``f = 100``.
 
@@ -229,13 +229,13 @@ Next we do a down shift by 100 pixels: ``f = 100``.
 
 Flipping
 --------------
-.. |aminus1| image:: img-a-is--1.png
+.. |aminus1| image:: images/img-a-is--1.png
 
 Flip the page left-right (``a = -1``).
 
 |aminus1|
 
-.. |dminus1| image:: img-d-is--1.png
+.. |dminus1| image:: images/img-d-is--1.png
 
 Flip up-down (``d = -1``).
 
@@ -243,13 +243,13 @@ Flip up-down (``d = -1``).
 
 Shearing
 ----------------
-.. |bnull5| image:: img-b-is-0.5.png
+.. |bnull5| image:: images/img-b-is-0.5.png
 
 First a shear in Y direction (``b = 0.5``).
 
 |bnull5|
 
-.. |cnull5| image:: img-c-is-0.5.png
+.. |cnull5| image:: images/img-c-is-0.5.png
 
 Second a shear in X direction (``c = 0.5``).
 
@@ -257,7 +257,7 @@ Second a shear in X direction (``c = 0.5``).
 
 Rotating
 ---------
-.. |rot60| image:: img-rot-60.png
+.. |rot60| image:: images/img-rot-60.png
 
 Finally a rotation by 30 clockwise degrees (``preRotate(-30)``).
 

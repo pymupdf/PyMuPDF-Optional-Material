@@ -12,7 +12,7 @@ Following are three sections that deal with different aspects of performance:
 
 In each section, the same fixed set of PDF files is being processed by a set of tools. The set of tools varies -- for reasons we will explain in the section.
 
-.. |fsizes| image:: img-filesizes.png
+.. |fsizes| image:: images/img-filesizes.png
 
 Here is the list of files we are using. Each file name is accompanied by further information: **size** in bytes, number of **pages**, number of bookmarks (**toc** entries), number of **links**, **text** size as a percentage of file size, **KB** per page, PDF **version** and remarks. **text %** and **KB index** are indicators for whether a file is text or graphics oriented.
 |fsizes|
@@ -72,8 +72,8 @@ This is how each of the tools was used:
 
 **Observations**
 
-.. |cpyspeed1| image:: img-copy-speed-1.png
-.. |cpyspeed2| image:: img-copy-speed-2.png
+.. |cpyspeed1| image:: images/img-copy-speed-1.png
+.. |cpyspeed2| image:: images/img-copy-speed-2.png
 
 These are our run time findings (in **seconds**, please note the European number convention: meaning of decimal point and comma is reversed):
 
@@ -115,7 +115,7 @@ All tools have been used with their most basic, fanciless functionality -- no la
 
 For demonstration purposes, we have included a version of ``GetText(doc, output = "json")``, that also re-arranges the output according to occurrence on the page.
 
-.. |textperf| image:: img-textperformance.png
+.. |textperf| image:: images/img-textperformance.png
 
 Here are the results using the same test files as above (again: decimal point and comma reversed):
 
@@ -151,7 +151,7 @@ We have tested rendering speed of MuPDF against the ``pdftopng.exe``, a command 
 ::
  pdftopng.exe file.pdf ./
 
-.. |renderspeed| image:: img-render-speed.png
+.. |renderspeed| image:: images/img-render-speed.png
 
 The resulting runtimes can be found here (again: meaning of decimal point and comma reversed):
 

@@ -56,7 +56,7 @@ Such "interesting" quads can **be obtained** as results of text search methods (
 
       The smallest rectangle containing the quad, represented by the blue area in the following picture.
 
-      .. image:: img-quads.jpg
+      .. image:: images/img-quads.jpg
 
       :type: :ref:`Rect`
 

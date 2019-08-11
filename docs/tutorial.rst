@@ -9,21 +9,17 @@ Because MuPDF supports not only PDF, but also XPS, OpenXPS, CBZ, CBR, FB2 and EP
 
 Importing the Bindings
 ==========================
-The Python bindings to MuPDF are made available by this import statement:
+The Python bindings to MuPDF are made available by this import statement::
 
 >>> import fitz
 
 You can check your version by printing the docstring:
 
->>> print(fitz.__doc__)
-PyMuPDF 1.13.16: Python bindings for the MuPDF 1.13.0 library,
-built on 2018-07-26 09:52:26
-
-Or simply
-
->>> fitz.version
-('1.13.16', '1.13.0', '20180726095226')
-
+    >>> print(fitz.__doc__)
+    PyMuPDF 1.14.20: Python bindings for the MuPDF 1.14.0 library.
+    Version date: 2019-08-10 09:00:32.
+    Built for Python 3.7 on win32 (64-bit).
+    >>>
 
 Opening a Document
 ======================
@@ -103,7 +99,7 @@ Some typical uses of :ref:`Page`\s follow:
 
 Inspecting the Links of a Page
 ------------------------------------
-Links are shown as "hot areas" when a document is displayed with some software. If you click while your cursor shows a hand symbol, you will usually be taken to the taget that is encoded in that hot area. Here is how to get all links and their types. 
+Links are shown as "hot areas" when a document is displayed with some software. If you click while your cursor shows a hand symbol, you will usually be taken to the taget that is encoded in that hot area. Here is how to get all links and their types.
 
 >>> # get all links on a page
 >>> links = page.getLinks()
@@ -136,7 +132,7 @@ Consult their documentation for adjustments to RGB pixmaps and, potentially, spe
 
 >>> # if you used alpha=True (or letting default it):
 >>> bitmap = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
->>> 
+>>>
 >>> # if you used alpha=False:
 >>> bitmap = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
 
@@ -145,7 +141,7 @@ Tkinter
 Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
 
 >>> from PIL import Image, ImageTk
->>> 
+>>>
 >>> # set the mode depending on alpha
 >>> mode = "RGBA" if pix.alpha else "RGB"
 >>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
@@ -245,7 +241,7 @@ So you can easily create new PDFs with
 * the first or last 10 pages,
 * only the odd or only the even pages (for doing double-sided printing),
 * pages that **do** or **don't** contain a given text,
-* reverse the page sequence, ... 
+* reverse the page sequence, ...
 
 ... whatever you can think of.
 

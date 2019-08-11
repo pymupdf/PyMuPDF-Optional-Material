@@ -90,7 +90,7 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       Three overlapping 'Circle' annotations with each opacity set to 0.5:
 
-      .. image:: img-opacity.jpg
+      .. image:: images/img-opacity.jpg
 
    .. method:: setRect(rect)
 
@@ -251,7 +251,7 @@ There is a parent-child relationship between an annotation and its page. If the 
    .. attribute:: vertices
 
       PDF only: A list containing a variable number of point ("vertices") coordinates (each given by a pair of floats) for various types of annotations:
-      
+
       * ``Line`` -- the starting and ending coordinates (2 float pairs).
       * ``[2, 'FreeText', 'FreeTextCallout']`` -- 2 or 3 float pairs designating the starting, the (optional) knee point, and the ending coordinates.
       * ``PolyLine`` / ``Polygon`` -- the coordinates of the edges connected by line pieces (n float pairs for n points).
@@ -324,12 +324,12 @@ Change the graphical image of an annotation. Also update the "author" and the te
  page = doc[0]                          # page 0
  annot = page.firstAnnot                # get the annotation
  annot.setBorder({"dashes": [3]})       # set dashes to "3 on, 3 off ..."
- 
+
  # set stroke and fill color to some blue
  annot.setColors({"stroke":(0, 0, 1), "fill":(0.75, 0.8, 0.95)})
  info = annot.info                      # get info dict
  info["title"] = "Jorj X. McKie"        # set author
- 
+
  # text in popup window ...
  info["content"] = "I changed border and colors and enlarged the image by 20%."
  info["subject"] = "Demonstration of PyMuPDF"     # some PDF viewers also show this
@@ -344,5 +344,5 @@ Change the graphical image of an annotation. Also update the "author" and the te
 This is how the circle annotation looks like before and after the change (pop-up windows displayed using Nitro PDF viewer):
 
 |circle|
- 
-.. |circle| image:: img-circle.png
+
+.. |circle| image:: images/img-circle.png

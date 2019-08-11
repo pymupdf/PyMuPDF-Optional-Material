@@ -80,14 +80,14 @@ This class represents text and images shown on a document page. All MuPDF docume
 
       Example: If the search for string "pymupdf" contains a hit like shown, then the corresponding entry will either be the blue rectangle, or, if ``quads`` was specified, ``Quad(ul, ur, ll, lr)``.
 
-      .. image:: img-quads.jpg
+      .. image:: images/img-quads.jpg
 
    .. note:: All of the above can be achieved by using the appropriate :meth:`Page.getText` and :meth:`Page.searchFor` methods. Also see further down and in the :ref:`Page` chapter for examples on how to create a valid file format by adding respective headers and trailers.
 
 Dictionary Structure of :meth:`extractDICT` and :meth:`extractRAWDICT`
 -------------------------------------------------------------------------
 
-.. image:: img-textpage.png
+.. image:: images/img-textpage.png
    :scale: 66
 
 Page Dictionary

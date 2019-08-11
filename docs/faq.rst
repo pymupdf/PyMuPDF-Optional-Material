@@ -61,7 +61,7 @@ You do not always need the full image of a page. This may be the case e.g. when 
 
 Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of your page, thus using a four times better resolution.
 
-.. image:: img-clip.jpg
+.. image:: images/img-clip.jpg
    :scale: 80
 
 >>> mat = fitz.Matrix(2, 2)                  # zoom factor 2 in each direction
@@ -127,12 +127,12 @@ For both extraction approaches, there exist ready-to-use general purpose scripts
 
 `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imga.py>`_ extracts images by page:
 
-.. image:: img-extract-imga.jpg
+.. image:: images/img-extract-imga.jpg
    :scale: 80
 
 and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imgb.py>`_ extracts images by cross reference number:
 
-.. image:: img-extract-imgb.jpg
+.. image:: images/img-extract-imgb.jpg
    :scale: 80
 
 ----------
@@ -150,7 +150,7 @@ If ``smask == 0`` then the image encountered via :data:`xref` can be processed a
 
 To recover the original image using PyMuPDF, the procedure depicted as follows must be executed:
 
-.. image:: img-stencil.jpg
+.. image:: images/img-stencil.jpg
    :scale: 60
 
 >>> pix1 = fitz.Pixmap(doc, xref)    # (1) pixmap of image w/o alpha
@@ -204,7 +204,7 @@ This will generate a PDF only marginally larger than the combined pictures' size
 
 The above script needed about 1 minute on my machine for 149 pictures with a total size of 514 MB (and about the same resulting PDF size).
 
-.. image:: img-import-progress.jpg
+.. image:: images/img-import-progress.jpg
    :scale: 80
 
 Look `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-inserted.py>`_ for a more complete source code: it offers a directory selection dialog and skips unsupported files and non-file entries.
@@ -235,7 +235,7 @@ The second script **embeds** the (image) files. You would need a suitable PDF vi
 
  doc.save("all-my-pics-embedded.pdf")
 
-.. image:: img-embed-progress.jpg
+.. image:: images/img-embed-progress.jpg
    :scale: 80
 
 This is by far the fastest method, and it also produces the smallest possible output file size. The above pictures needed 20 seonds on my machine and yielded a PDF size of 510 MB. Look `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-embedded.py>`_ for a more complete source code: it offers a direcory selection dialog and skips non-file entries.
@@ -246,7 +246,7 @@ A third way to achieve this task is **attaching files** via page annotations see
 
 This has a similar performance as the previous script and it also produces a similar file size. In this example, we have chosen a small page size to demonstrate the automatic generation of "protocol" pages as necessary. Here is the first page:
 
-.. image:: img-attach-result.jpg
+.. image:: images/img-attach-result.jpg
 
 .. note:: Both, the **embed** and the **attach** methods can be used for **arbitrary files** -- not just images.
 
@@ -392,12 +392,12 @@ This shows how pixmaps can be used for purely graphical, non-document purposes. 
 
 This is the input picture:
 
-.. image:: img-7edges.png
+.. image:: images/img-7edges.png
    :scale: 33
 
 Here is the output:
 
-.. image:: img-target.png
+.. image:: images/img-target.png
    :scale: 33
 
 ----------
@@ -466,7 +466,7 @@ This script creates a approximative PNG image of it, by going down to one-pixel 
 
 The result should look something like this:
 
-.. image:: img-sierpinski.png
+.. image:: images/img-sierpinski.png
    :scale: 33
 
 ----------
@@ -587,7 +587,7 @@ Please refer to the script `textboxtract.py <https://github.com/JorjMcKie/PyMuPD
 
 It demonstrates ways to extract text contained in the following red rectangle,
 
-.. image:: img-textboxtract.png
+.. image:: images/img-textboxtract.png
    :scale: 75
 
 by using more or less restrictive conditions to find the relevant words::
@@ -797,7 +797,7 @@ This script uses :meth:`Page.getTextWords` to look for a string, handed in via c
 * You can use **anything** to mark the word: 'Underline', 'Highlight', 'StrikeThrough' or 'Square' annotations, etc.
 * Here is an example snippet of a page of this manual, where "MuPDF" has been used as the search string. Note that all strings **containing "MuPDF"** have been completely underlined (not just the search string).
 
-.. image:: img-markedpdf.jpg
+.. image:: images/img-markedpdf.jpg
    :scale: 60
 
 How to Insert Text
@@ -896,7 +896,7 @@ Here is another example. It inserts 4 text strings using the four different rota
 
 This is the result:
 
-.. image:: img-inserttext.jpg
+.. image:: images/img-inserttext.jpg
    :scale: 33
 
 
@@ -942,7 +942,7 @@ This script fills 4 different rectangles with text, each time choosing a differe
 
 Several default values were used above: font "Helvetica", font size 11 and text alignment "left". The result will look like this:
 
-.. image:: img-textbox.jpg
+.. image:: images/img-textbox.jpg
    :scale: 50
 
 ------------------------------------------
@@ -972,7 +972,7 @@ If you change the fontname just slightly, you can also achieve an **encoding "mi
 
 The result:
 
-.. image:: img-encoding.jpg
+.. image:: images/img-encoding.jpg
    :scale: 50
 
 The snippet above indeed leads to three different copies of the Helvetica font in the PDF. Each copy is uniquely idetified (and referenceable) by using the correct upper-lower case spelling of the reserved word "helv"::
@@ -1141,7 +1141,7 @@ As an overview for these capabilities, look at the following script that fills a
 
 This script should lead to the following output:
 
-.. image:: img-annots.jpg
+.. image:: images/img-annots.jpg
    :scale: 80
 
 ------------------------------
@@ -1175,7 +1175,7 @@ This script searches for text and marks it::
 
 The result looks like this:
 
-.. image:: img-textmarker.jpg
+.. image:: images/img-textmarker.jpg
    :scale: 80
 
 ------------------------------
@@ -1217,7 +1217,7 @@ This script shows a couple of possibilities for 'FreeText' annotations::
 
 The result looks like this:
 
-.. image:: img-freetext.jpg
+.. image:: images/img-freetext.jpg
    :scale: 80
 
 --------------------------
@@ -1274,7 +1274,7 @@ The following script creates an ink annotation with two mathematical curves (sin
 
 This is the result:
 
-.. image:: img-inkannot.jpg
+.. image:: images/img-inkannot.jpg
     :scale: 50
 
 ------------------------------
@@ -1354,7 +1354,7 @@ If you import this script, you can also directly use its graphics as in the foll
 
 This is the script's outcome:
 
-.. image:: img-symbols.jpg
+.. image:: images/img-symbols.jpg
    :scale: 50
 
 ------------------------------
@@ -1463,7 +1463,7 @@ It is easy to join PDFs with method :meth:`Document.insertPDF`. Given open PDF d
 
 The GUI script `PDFjoiner.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/PDFjoiner.py>`_ uses this method to join a list of files while also joining the respective table of contents segments. It looks like this:
 
-.. image:: img-pdfjoiner.jpg
+.. image:: images/img-pdfjoiner.jpg
    :scale: 60
 
 ----------

@@ -105,7 +105,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Annot`
       :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
-      .. image:: img-sticky-note.png
+      .. image:: images/img-sticky-note.png
          :scale: 70
 
    .. index::
@@ -148,7 +148,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Annot`
       :returns: the created annotation. Use methods of :ref:`Annot` to make any changes.
 
-      .. image:: img-fileattach.jpg
+      .. image:: images/img-fileattach.jpg
          :scale: 70
 
    .. method:: addInkAnnot(list)
@@ -193,7 +193,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Annot`
       :returns: the created annotation. It is drawn with line color black, no fill color and line width 1. Use methods of :ref:`Annot` to make any changes to achieve something like this:
 
-      .. image:: img-polyline.png
+      .. image:: images/img-polyline.png
          :scale: 70
 
    .. method:: addUnderlineAnnot(arg)
@@ -222,7 +222,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: :ref:`Annot`
       :returns: the created annotation. To change colors, set the "stroke" color accordingly (:meth:`Annot.setColors`) and then perform an :meth:`Annot.update`.
 
-      .. image:: img-markers.jpg
+      .. image:: images/img-markers.jpg
          :scale: 80
 
    .. method:: addStampAnnot(rect, stamp=0)
@@ -235,7 +235,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       .. note::  The stamp's text (e.g. "APPROVED") and its border line will automatically be sized and put centered in the given rectangle. :attr:`Annot.rect` is automatically calculated to fit and will usually be smaller than this parameter. The appearance can be changed using :meth:`Annot.setOpacity` and by setting the "stroke" color (no "fill" color supported).
 
-      .. image :: img-stampannot.jpg
+      .. image :: images/img-stampannot.jpg
          :scale: 80
 
    .. method:: addWidget(widget)
@@ -668,12 +668,12 @@ This is available for PDF documents only. There are basically two groups of meth
 
          * Generated with ``alpha=True``
 
-         .. image:: img-alpha-1.png
+         .. image:: images/img-alpha-1.png
 
 
          * Generated with ``alpha=False``
 
-         .. image:: img-alpha-0.png
+         .. image:: images/img-alpha-0.png
 
 
      :rtype: :ref:`Pixmap`
@@ -755,7 +755,7 @@ This is available for PDF documents only. There are basically two groups of meth
       >>> page.showPDFpage(r2, src, 0, rotate=-90)
       >>> doc.save("show.pdf")
 
-      .. image:: img-showpdfpage.jpg
+      .. image:: images/img-showpdfpage.jpg
          :scale: 70
 
    .. method:: newShape()
