@@ -2,21 +2,21 @@
 Glossary
 ==============
 
-.. data:: matrix-like
+.. data:: matrix_like
 
         A Python sequence of 6 numbers.
 
-.. data:: rect-like
+.. data:: rect_like
 
         A Python sequence of 4 numbers.
 
-.. data:: point-like
+.. data:: point_like
 
         A Python sequence of 2 numbers.
 
-.. data:: quad-like
+.. data:: quad_like
 
-        A Python sequence of 4 :data:`point-like` items.
+        A Python sequence of 4 :data:`point_like` items.
 
 .. data:: contents
 
@@ -80,6 +80,11 @@ Glossary
 
         See :ref:`AdobeManual` p. 60. PyMuPDF supports retrieving stream content via :meth:`Document._getXrefStream`. Use :meth:`Document.isStream` to determine whether an object is of stream type.
 
+.. data:: unitvector
+
+        A mathematical notion meaning a vector of norm ("length") 1 -- usually the Euclidean norm is implied. In PyMuPDF, this term is restricted to :ref:`Point` objects, see :attr:`Point.unit`.
+
 .. data:: xref
 
         Abbreviation for cross-reference number: this is an integer unique identification for objects in a PDF. There exists a cross-reference table (which may consist of several separate segments) in each PDF, which stores the relative position of each object for quick lookup. The cross-reference table is one entry longer than the number of existing object: item zero is reserved and must not be used in any way. Many PyMuPDF classes have an ``xref`` attribute (which is zero for non-PDFs), and one can find out the total number of objects in a PDF via :meth:`Document._getXrefLength`.
+

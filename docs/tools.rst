@@ -5,19 +5,17 @@ Tools
 
 This class is a collection of utility methods and attributes, mainly around memory management. To simplify and speed up its use, it is automatically instantiated under the name ``TOOLS`` when PyMuPDF is imported.
 
-================================ =================================================
+================================== =================================================
 **Method / Attribute**             **Description**
-================================ =================================================
-:meth:`Tools.gen_id`             generate a unique identifyer
-:meth:`Tools.store_shrink`       shrink the storables cache [#f1]_
-:meth:`Tools.fitz_stderr_reset`  empty MuPDF messages on STDERR
-:meth:`Tools.fitz_stdout_reset`  empty MuPDF messages on STDOUT
-:attr:`Tools.fitz_config`        configuration settings of PyMuPDF
-:attr:`Tools.fitz_stderr`        sent to STDERR by MuPDF
-:attr:`Tools.fitz_stdout`        sent to STDOUT by MuPDF
-:attr:`Tools.store_maxsize`      maximum storables cache size
-:attr:`Tools.store_size`         current storables cache size
-================================ =================================================
+================================== =================================================
+:meth:`Tools.gen_id`               generate a unique identifyer
+:meth:`Tools.store_shrink`         shrink the storables cache [#f1]_
+:meth:`Tools.mupdf_warnings`       return the accumulated MuPDF warnings
+:meth:`Tools.reset_mupdf_warnings` empty MuPDF messages on STDOUT
+:attr:`Tools.fitz_config`          configuration settings of PyMuPDF
+:attr:`Tools.store_maxsize`        maximum storables cache size
+:attr:`Tools.store_size`           current storables cache size
+================================== =================================================
 
 **Class API**
 
@@ -25,12 +23,12 @@ This class is a collection of utility methods and attributes, mainly around memo
 
    .. method:: gen_id()
 
-      A convenience method returning a unique positive integer which will increase by 1 with every invocation. Example usages include creating unique keys in databases - its creation should be faster than using timestamps by an order of magnitude.
+      A convenience method returning a unique positive integer which will increase by 1 on every invocation. Example usages include creating unique keys in databases - its creation should be faster than using timestamps by an order of magnitude.
 
       .. note:: MuPDF has dropped support for this in v1.14.0, so we have re-implemented a similar function with the following differences:
-      
+
             * It is not part of MuPDF's global context and not threadsafe (because we do not support threads in PyMuPDF yet).
-            * It is implemented as ``int``. This means that the maximum number is 2\ :sup:`63` - 1 (about 9.223372e+18) on most machines. Should this number ever be exceeded, the counter is reset to 1.
+            * It is implemented as ``int``. This means that the maximum number is ``sys.maxsize``. Should this number ever be exceeded, the counter is reset to 1.
 
       :rtype: int
       :returns: a unique positive integer.
@@ -44,13 +42,13 @@ This class is a collection of utility methods and attributes, mainly around memo
       :rtype: int
       :returns: the new current store size. Depending on the situation, the size reduction may be larger than the requested percentage.
 
-   .. method:: fitz_stderr_reset()
+   .. method:: reset_mupdf_warnings()
 
-      Empty MuPDF messages on STDERR.
+      .. versionadded:: 1.16.0 Empty MuPDF warnings message buffer.
 
-   .. method:: fitz_stdout_reset()
+   .. method:: mupdf_warnings()
 
-      Empty MuPDF messages on STDOUT.
+      .. versionadded:: 1.16.0 Return all MuPDF warnings in the buffer as a string with interspersed ``\n``.
 
    .. attribute:: fitz_config
 
@@ -90,7 +88,7 @@ This class is a collection of utility methods and attributes, mainly around memo
 
        In [1]: import fitz
        In [2]: TOOLS.fitz_config
-       Out[2]: 
+       Out[2]:
        {'plotter-g': True,
         'plotter-rgb': True,
         'plotter-cmyk': True,
@@ -116,20 +114,8 @@ This class is a collection of utility methods and attributes, mainly around memo
         'icc': False,
         'py-memory': True, # (False if Python 2)
         'base14': True}
-      
+
       :rtype: dict
-
-   .. attribute:: fitz_stderr
-
-      Contains all warnings and error messages issued by the underlying C-library MuPDF. Use it as a reference e.g. for diagnostics purposes. More often than not they can safely be ignored.
-
-      :rtype: unicode
-
-   .. attribute:: fitz_stdout
-
-      Contains MuPDF output sent to STDOUT.
-
-      :rtype: unicode
 
    .. attribute:: store_maxsize
 
@@ -174,7 +160,7 @@ Example Session
 >>> doc.close()
 >>> fitz.TOOLS.store_size
 0
->>> 
+>>>
 
 
 .. rubric:: Footnotes

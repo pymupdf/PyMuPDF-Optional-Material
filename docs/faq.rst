@@ -74,11 +74,11 @@ In the above we construct ``clip`` by specifying two diagonally opposite points:
 
 ----------
 
-How to :index:`Suppress <pair: suppress; annotation>` Annotation Images
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Normally, the pixmap of a page also includes the images of any annotations. There currently is now direct way to suppress this.
+How to Create or Suppress Annotation Images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Normally, the pixmap of a page also renders the images of any annotations. Starting with PyMuPDF v1.16.0, you can suppress that via ``page.getPixmap(..., annots=False, ...)``.
 
-But it can be achieved using a little circumvention like in `this <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/show-no-annots.py>`_ script.
+Just like pages, :ref:`Annot` objects have a :meth:`Annot.getPixmap` method. The resulting pixmap has the same dimensions as the annotation rectangle.
 
 ----------
 
@@ -514,7 +514,7 @@ transparency (water marking)   depends on image                      yes
 location / placement           scaled to fit target rectangle        scaled to fit target rectangle
 performance                    automatic prevention of duplicates;   automatic prevention of duplicates;
                                MD5 calculation on every execution    faster than :meth:`Page.insertImage`
-multi-page image support       no                                    yes (non-PDF files after conversion)
+multi-page image support       no                                    yes
 ease of use                    simple, intuitive;                    simple, intuitive;
                                performance considerations apply      usable for **all document types**
                                for multiple insertions of same image (including images!) after conversion to
@@ -1166,9 +1166,8 @@ This script searches for text and marks it::
     # we use "quads", not rectangles because text may be tilted!
     rl = page.searchFor(t, quads = True)
 
-    # loop through the found locations to add a marker
-    for r in rl:
-        page.addSquigglyAnnot(r)
+    # mark all found quads with one annotation
+    page.addSquigglyAnnot(rl)
 
     # save to a new PDF
     doc.save("a-squiggly.pdf")
@@ -1770,69 +1769,149 @@ It features maintaining any metadata, table of contents and links contained in t
     if link_cnti > 0:
         print("Skipped %i named links of a total of %i in input." % (link_skip, link_cnti))
 
-    # now print any MuPDF warnings or errors:
-    errors = fitz.TOOLS.fitz_stderr
-    if errors:                        # any issues?
-        print(errors)
-        fitz.TOOLS.fitz_stderr_reset() # empty the message store
+--------------------------
+
+How to Deal with Messages Issued by MuPDF
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Since PyMuPDF v1.16.0, error messages issued by the underlying MuPDF library are being redirected to the Python standard device ``sys.stderr``. So you can handle them like any other output going to these devices.
+
+We always prefix these messages with an identifying string ``"mupdf:"``.
+
+MuPDF warnings continue to be stored in an internal buffer and can be viewed using :meth:`Tools.mupdf_warnings`. Please note that MuPDF errors may or may not lead to Python exceptions. In other words, you may see error messages from which MuPDF can recover and continue processing.
+
+Example output for a **recoverable error**. We are opening a damaged PDF, but MuPDF is able to repair it and gives us a few information on what happened. Then we illustrate how to find out whether the document can later be saved incrementally:
+
+>>> import fitz
+>>> doc = fitz.open("damaged-file.pdf")  # leads to a sys.stderr message:
+mupdf: cannot find startxref
+>>> print(fitz.TOOLS.mupdf_warnings())  # check if there is more info:
+trying to repair broken xref
+repairing PDF document
+object missing 'endobj' token
+>>> doc.can_save_incrementally()  # this is to be expected:
+False
+>>> # the document has nevertheless been created:
+>>> doc
+fitz.Document('damaged-file.pdf')
+>>> # we now know that any save must occur to a new file
+
+Example output for an **unrecoverable error**:
+
+>>> import fitz
+>>> doc = fitz.open("does-not-exist.pdf")
+mupdf: cannot open does-not-exist.pdf: No such file or directory
+Traceback (most recent call last):
+  File "<pyshell#1>", line 1, in <module>
+    doc = fitz.open("does-not-exist.pdf")
+  File "C:\Users\Jorj\AppData\Local\Programs\Python\Python37\lib\site-packages\fitz\fitz.py", line 2200, in __init__
+    _fitz.Document_swiginit(self, _fitz.new_Document(filename, stream, filetype, rect, width, height, fontsize))
+RuntimeError: cannot open does-not-exist.pdf: No such file or directory
+>>>
 
 --------------------------
 
-How to Access Messages Issued by MuPDF
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+How to Deal with PDF Encryption
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Starting with version 1.16.0, PDF decryption and encryption (using passwords) are fully supported. You can do the following:
 
-For motivation and some theory background see :ref:`RedirectMessages`. Since v1.14.0 we intercept warning and error messages by MuPDF so they no longer appear on the operating system's standard output devices STDOUT, STDERR.
+* Check whether a document is password protected / (still) encrypted (:attr:`Document.needsPass`, :attr:`Document.isEncrypted`).
 
-These messages can be safely ignored in many cases, but occasionally do serve diagnostic purposes, e.g. when a corrputed document has been opened.
+* Gain access authorization to a document (:meth:`Document.authenticate`).
 
-The messages are not necessarily pertaining to any specific document, so we keep them in an independent store as a string object, accessable via the :ref:`Tools` class. Every new message is appended to any existing ones, separated by a newline character.
+* Set encryption details for PDF files using :meth:`Document.save` or :meth:`Document.write` and
 
-Here is an interactive session making use of this message store::
+    - decrypt or encrypt the content
+    - set password(s)
+    - set the encryption method
+    - set permission details
 
-    Python 3.6.7 (default, Oct 22 2018, 11:32:17)
-    [GCC 8.2.0] on linux
-    Type "help", "copyright", "credits" or "license()" for more information.
-    >>> import fitz
-    >>> doc = fitz.open("Acronis.xps")          # open some XPS file
-    >>> print(fitz.TOOLS.fitz_stderr)           # look for any open issues
+.. note:: A PDF document may have two different passwords:
 
-    >>> pdfbytes = doc.convertToPDF()           # convert to a PDF image
-    >>> print(fitz.TOOLS.fitz_stderr)           # look again:
-    warning: freetype getting character advance: invalid glyph index
+   * The **owner password** provides full access rights, including changing passwords, encryption method, or permission detail.
+   * The **user password** provides access to document content according to the established permission details. If present, opening the PDF in a viewer will require providing it.
 
-    >>> fitz.TOOLS.fitz_stderr_reset()          # clear the msg store
-    >>> print(fitz.TOOLS.fitz_stderr)           # prove it worked
+   Method :meth:`Document.authenticate` will automatically establish access rights according to the password used.
 
-    >>> doc = fitz.open("acronis.svg")          # try another: SVG this time
-    >>> print(fitz.TOOLS.fitz_stderr)           # no open issues
+The following snippet creates a new PDF and encrypts it with separate user and owner passwords. Permissions are granted to print, copy and annotate, but no changes are allowed to someone authenticating with the user password::
 
-    >>> pdfbytes = doc.convertToPDF()           # convert this one, too
-    >>> print(fitz.TOOLS.fitz_stderr)           # captured messages:
-    warning: ... repeated 3 times ...
-    warning: push viewport: 0 0 594.75 841.5
-    warning: push viewbox: 0 0 594.75 841.5
-    warning: push viewport: 0 0 594.75 841.5
-    warning: ... repeated 2 times ...
-    warning: push viewport: 0 0 980 71
-    warning: push viewport: 0 0 594.75 841.5
-    warning: ... repeated 2512 times ...
-    warning: push viewport: 0 0 112 33
-    warning: push viewport: 0 0 594.75 841.5
-    warning: ... repeated 2 times ...
-    warning: push viewport: 0 0 181 120
-    warning: push viewport: 0 0 94 54
-    warning: ... repeated 2 times ...
-    warning: push viewport: 0 0 130 88
-    warning: ... repeated 2 times ...
-    warning: push viewport: 0 0 181 115
-    warning: push viewport: 0 0 594.75 841.5
+    import fitz
 
-    >>>
+    text = "some secret information"  # keep this data secret
+    perm = int(
+        fitz.PDF_PERM_ACCESSIBILITY  # always use this
+        | fitz.PDF_PERM_PRINT  # permit printing
+        | fitz.PDF_PERM_COPY  # permit copying
+        | fitz.PDF_PERM_ANNOTATE  # permit annotations
+    )
+    owner_pass = "owner"  # owner password
+    user_pass = "user"  # user password
+    encrypt_meth = fitz.PDF_ENCRYPT_AES_256  # strongest algorithm
+    doc = fitz.open()  # empty pdf
+    page = doc.newPage()  # empty page
+    page.insertText((50, 72), text)  # insert the data
+    doc.save(
+        "secret.pdf",
+        encryption=encrypt_meth,  # set the encryption method
+        owner_pw=owner_pass,  # set the owner password
+        user_pw=user_pass,  # set the user password
+        permissions=perm,  # set permissions
+    )
+
+Opening this document with some viewer (Nitro Reader 5) reflects these settings:
+
+.. image:: images/img-encrypting.jpg
+   :scale: 50
+
+**Decrypting** will automatically happen on save as before when no encryption parameters are provided.
+
+To **keep the encryption method** of a PDF save it using ``encryption=fitz.PDF_ENCRYPT_KEEP``. If ``doc.can_save_incrementally() == True``, an incremental save is also possible.
+
+To **change the encryption method** specify the full range of options above (encryption, owner_pw, user_pw, permissions). An incremental save is **not possible** in this case.
+
 
 --------------------------
 
 Common Issues and their Solutions
 ---------------------------------
+
+Changing Annotations: Unexpected Behaviour
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Problem
+^^^^^^^^^
+There are two scenarios:
+
+1. Updating an annotation, which has been created by some other software, via a PyMuPDF script.
+2. Creating an annotation with PyMuPDF and later changing it using some other PDF application.
+
+In both cases you may experience unintended changes like a different annotation icon or text font, the fill color or line dashing have disappeared, line end symbols have changed their size or even have disappeared too, etc.
+
+Cause
+^^^^^^
+Annotation maintenance is handled differently by each PDF maintenance application (if it is supported at all). For any given PDF application, some annotation types may not be supported at all or only partly, or some details may be handled in a different way than with another application.
+
+Almost always a PDF application also comes with its own icons (file attachments, sticky notes and stamps) and its own set of supported text fonts. For example:
+
+* (Py-) MuPDF only supports these 5 basic fonts for 'FreeText' annotations: Helvetica, Times-Roman, Courier, ZapfDingbats and Symbol -- no italics / no bold variations. When changing a 'FreeText' annotation created by some other app, its font will probably not be recognized nor accepted and be replaced by Helvetica.
+
+* PyMuPDF fully supports the PDF text markers, but these types cannot be updated with Adobe Acrobat Reader.
+
+In most cases there also exists limited support for line dashing which causes existing dashes to be replaced by straight lines. For example:
+
+* PyMuPDF fully supports all line dashing forms, while other viewers only accept a limited subset.
+
+
+Solutions
+^^^^^^^^^^
+Unfortunately there is not much you can do in most of these cases.
+
+1. Stay with the same software for **creating and changing** an annotation.
+2. When using PyMuPDF to change an "alien" annotation, try to **avoid** :meth:`Annot.update`. The following methods **can be used without it** so that the original appearance should be maintained:
+
+  * :meth:`Annot.setRect` (location changes)
+  * :meth:`Annot.setFlags` (annotation behaviour)
+  * :meth:`Annot.setInfo` (meta information, except changes to ``content``)
+  * :meth:`Annot.fileUpd` (file attachment changes)
 
 Misplaced Item Insertions on PDF Pages
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1847,12 +1926,15 @@ Cause
 
 The creator of the PDF has established a non-standard page geometry without keeping it "local" (as they should!). Most commonly, the PDF standard point (0,0) at *bottom-left* has been changed to the *top-left* point. So top and bottom are reversed -- causing your insertion to be misplaced.
 
-The visible image of a PDF page is controlled by commands coded in a special mini-language. For an overview of this language consult "Operator Summary" on pp. 985 of the :ref:`AdobeManual`. These commands are stored in :data:`contents` objects as strings (``bytes`` in PyMuPDF). In order to keep command scopes local, they must be wrapped by the command pair ``q`` ("save graphics state", or "stack") and ``Q`` ("restore graphics state", or "unstack").
+The visible image of a PDF page is controlled by commands coded in a special mini-language. For an overview of this language consult "Operator Summary" on pp. 985 of the :ref:`AdobeManual`. These commands are stored in :data:`contents` objects as strings (``bytes`` in PyMuPDF).
+
+There are commands in that language, which change the coordinate system of the page for all the following commands. In order to limit the scope of such commands local, they must be wrapped by the command pair ``q`` ("save graphics state", or "stack") and ``Q`` ("restore graphics state", or "unstack").
 
 So the PDF creator did this::
 
     stream
-    1 0 0 -1 0 792 cm    % <=== letter page, top / bottom reversed
+    1 0 0 -1 0 792 cm    % <=== change of coordinate system:
+    ...                  % letter page, top / bottom reversed
     ...                  % remains active beyond these lines
     endstream
 
@@ -1861,8 +1943,8 @@ where they should have done this::
     stream
     q                    % put the following in a stack
     1 0 0 -1 0 792 cm    % <=== scope of this is limited by Q command
-    ...
-    Q                    % after this line, standard geometry prevails
+    ...                  % here, a different geometry exists
+    Q                    % after this line, geometry of outer scope prevails
     endstream
 
 .. note::
@@ -1874,7 +1956,9 @@ where they should have done this::
 Solutions
 ^^^^^^^^^^
 
-Pick one of the following:
+Since v1.16.0, there is the property :attr:`Page._isWrapped`, which lets you check whether a page's contents are wrapped in that string pair.
+
+If it is ``False`` or if you want to be on the safe side, pick one of the following:
 
 1. The easiest way: in your script, do a :meth:`Page._cleanContents` before you do your first item insertion.
 2. Pre-process your PDF with the MuPDF command line utility ``mutool clean -c ...`` and work with its output file instead.
@@ -1882,17 +1966,19 @@ Pick one of the following:
 
 **Solutions 1. and 2.** use the same technical basis and **do a lot more** than what is required in this context: they also clean up other inconsistencies or redundancies that may exist, multiple ``/Contents`` objects will be concatenated into one, and much more.
 
-For **incremental saves,** solution 1. has an unpleasant implication: it will bloat the update delta, because it changes so many things. So, if you use :meth:`Page._cleanContents` you should consider **saving to a new file** with ``garbage=3`` at least.
+.. note:: For **incremental saves,** solution 1. has an unpleasant implication: it will bloat the update delta, because it changes so many things and, in addition, stores the **cleaned contents uncompressed**. So, if you use :meth:`Page._cleanContents` you should consider **saving to a new file** with (at least) ``garbage=3`` and ``deflate=True``.
 
 **Solution 3.** is completely under your control and only does the minimum corrective action. There exists a handy low-level utility function which you can use for this. Suggested procedure:
 
-* **Prepend** the missing stacking command by executing ``fitz.TOOLS._insert_contents(page, b"q\n", False)``
-* **Append** an unstacking command by executing ``fitz.TOOLS._insert_contents(page, b"\nQ", True)``
+* **Prepend** the missing stacking command by executing ``fitz.TOOLS._insert_contents(page, b"q\n", False)``.
+* **Append** an unstacking command by executing ``fitz.TOOLS._insert_contents(page, b"\nQ", True)``.
+* Alternatively, just use :meth:`Page._wrapContents`, wich executes the previous two functions.
 
 .. note::
 
    * If small incremental update deltas are a concern, this approach is the most effective.
-   * The utility function creates a new PDF :data:`stream` object and inserts it in the page's array of :data:`contents`. The function's last parameter ("overlay") controls the position of this insertion: ``False`` = prepend, ``True`` = append.
+   * Other contents objects are not touched.
+   * The utility method creates two new PDF :data:`stream` objects and inserts them before, resp. after the page's other :data:`contents`.
 
 --------------------------
 

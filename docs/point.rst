@@ -10,6 +10,7 @@ Point
 **Attribute / Method**       **Description**
 ============================ ============================================
 :meth:`Point.distance_to`    calculate distance to point or rect
+:meth:`Point.norm`           the Euclidean norm
 :meth:`Point.transform`      transform point with a matrix
 :attr:`Point.abs_unit`       same as unit, but positive coordinates
 :attr:`Point.unit`           point coordinates divided by ``abs(point)``
@@ -53,12 +54,15 @@ Point
      :returns: distance to object ``x``.
      :rtype: float
 
+   .. method:: norm()
+
+      .. versionadded:: 1.16.0 Return the Euclidean norm (the length) of the point as a vector. Equals result of function ``abs()``.
+
    .. method:: transform(m)
 
-      Applies matrix ``m`` to the point and replaces it with the result.
+      Apply a matrix to the point and replace it with the result.
 
-     :arg m: The matrix to be applied.
-     :type m: :ref:`Matrix`
+     :arg matrix_like m: The matrix to be applied.
 
      :rtype: :ref:`Point`
 

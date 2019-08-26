@@ -11,23 +11,22 @@ Starting with version 1.4, PDF supports embedding arbitrary files as part ("Embe
 
 In many aspects, this is comparable to concepts also found in ZIP files or the OLE technique in MS Windows. PDF embedded files do, however, *not* support directory structures as does the ZIP format. An embedded file can in turn contain embedded files itself.
 
-Advantages of this concept are that embedded files are under the PDF umbrella, benefitting from its permissions / password protection and integrity aspects: all files a PDF may reference or even be dependent on can be bundled into it and so form a single, consistent unit of information.
+Advantages of this concept are that embedded files are under the PDF umbrella, benefitting from its permissions / password protection and integrity aspects: all data, which a PDF may reference or even may be dependent on, can be bundled into it and so form a single, consistent unit of information.
 
 In addition to embedded files, PDF 1.7 adds *collections* to its support range. This is an advanced way of storing and presenting meta information (i.e. arbitrary and extensible properties) of embedded files.
 
 MuPDF Support
------------------
-MuPDF v1.11 added initial support for embedded files and collections (also called *portfolios*).
+--------------
+After adding initial support for collections (portfolios) and ``/EmbeddedFiles`` in MuPDF version 1.11, this support was dropped again in version 1.15.
 
-The library contains functions to add files to the ``EmbeddedFiles`` name tree and display some information of its entries.
+As a consequence, the cli utility ``mutool`` no longer offers access to embedded files.
 
-Also supported is a full set of functions to maintain collections (advanced metadata maintenance) and their relation to embedded files.
+PyMuPDF -- having implemented an ``/EmbeddedFiles`` API in response in its version 1.11.0 -- was therefore forced to change gears in its version 1.15.0.
+
+We are now maintaining our own code basis supporting embedded files. This code makes use of basic MuPDF functions only (PDF dictionary and array functions).
 
 PyMuPDF Support
 ------------------
-Starting with PyMuPDF v1.11.0 we fully reflect MuPDF's support for embedded files and partly go beyond that scope:
+We continue to support the full old API with respect to embedded files -- with only minor, cosmetic changes.
 
-* We can add, extract **and** delete embedded files.
-* We can display **and** change some meta information (outside collections). Informations available for display are **name**, **filename**, **description**, **length** and compressed **size**. Of these properties, *filename* and *description* can also be changed, after a file has been embedded.
-
-Support of the *collections* feature has been postponed to a later version. We will probably include this ever only on user request.
+There even also is a new function, which delivers a list of all names under which embedded data are resgistered in a PDF.

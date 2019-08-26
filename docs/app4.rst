@@ -8,7 +8,7 @@ Appendix 4: Assorted Technical Information
 
 PDF Base 14 Fonts
 ---------------------
-The following 14 builtin font names **must be supported by every PDF viewer** aplication. They are available as a dictionary, which maps their full names amd their abbreviations in lower case to the full font basename. Whereever a fontname must be given, any key or value from the dictionary may be used::
+The following 14 builtin font names **must be supported by every PDF viewer** application. They are available as a dictionary, which maps their full names amd their abbreviations in lower case to the full font basename. Whereever a **fontname** must be provided in PyMuPDF, any **key or value** from the dictionary may be used::
 
     In [2]: fitz.Base14_fontdict
     Out[2]:
@@ -41,9 +41,9 @@ The following 14 builtin font names **must be supported by every PDF viewer** ap
     'symb': 'Symbol',
     'zadb': 'ZapfDingbats'}
 
-Please note that not all PDF Readers correctly or completely support these fonts -- this is especially true for Symbol and ZapfDingbats. Also the glyph images will be specific to every reader.
+In contrast to their obligation, not all PDF viewers support these fonts correctly and completely -- this is especially true for Symbol and ZapfDingbats. Also, the glyph (visual) images will be specific to every reader.
 
-To see how these fonts can be used -- including the CJK fonts -- look at the table in :meth:`Page.insertFont`.
+To see how these fonts can be used -- including the **CJK built-in** fonts -- look at the table in :meth:`Page.insertFont`.
 
 ------------
 
@@ -97,7 +97,7 @@ array('f', [1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
 >>> np.array(m)
 array([1., 2., 3., 4., 5., 6.])
 
-.. note:: :ref:`Quad` is a Python sequence object as well and has a length of 4. Its items however are point-like -- not numbers. Therefore, the above remarks do not apply.
+.. note:: :ref:`Quad` is a Python sequence object as well and has a length of 4. Its items however are :data:`point_like` -- not numbers. Therefore, the above remarks do not apply.
 
 ------------
 
@@ -217,7 +217,7 @@ This is done using PDF **"Form XObjects"**, see section 4.9 on page 355 of :ref:
         d. The stream of this object contains exactly one fixed statement: ``/fullpage Do``.
 
     3. The :data:`resources` and :data:`contents` objects of the target page are now modified as follows.
-    
+
         a. Add an entry to the ``/XObject`` dictionary of ``/Resources`` with the name ``fzFrm<n>`` (with n chosen such that this entry is unique on the page).
         b. Depending on ``overlay``, prepend or append a new object to the page's ``/Contents`` array, containing the statement ``q /fzFrm<n> Do Q``.
 
@@ -228,7 +228,7 @@ Redirecting Error and Warning Messages
 --------------------------------------------
 In the past, MuPDF error and warning messages unavoidably were sent to the Operating System's files STDOUT or STDERR. Especially for interactive Python sessions, this was annoying, because important diagnostic information could remain unseen.
 
-Another issue -- frequently admonished by our users -- was the occasionally large amount of warning messages spilled out -- partly obscure to the developer, without apparent corrective action being possible or even required. Some examples are ``"warning: freetype getting character advance: invalid glyph index"``, or ``"warning: push viewport: 0 0 181 115"`` -- the only possible comment to these was "so what?". 
+Another issue -- frequently admonished by our users -- was the occasionally large amount of warning messages spilled out -- partly obscure to the developer, without apparent corrective action being possible or even required. Some examples are ``"warning: freetype getting character advance: invalid glyph index"``, or ``"warning: push viewport: 0 0 181 115"`` -- the only possible comment to these was "so what?".
 
 Since v1.14.0 we are capturing (hopefully) all warning and many error messages and store them away internally. A differentiation between warnings and errors is not possible, because MuPDF outputs both categories to ``stderr``.
 

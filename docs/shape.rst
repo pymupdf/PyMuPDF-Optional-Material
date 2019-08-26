@@ -55,13 +55,11 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawLine(p1, p2)
 
-      Draw a line from point-like objects ``p1`` to ``p2``.
+      Draw a line from :data:`point_like` objects ``p1`` to ``p2``.
 
-      :arg p1: starting point
-      :type p1: point-like
+      :arg point_like p1: starting point
 
-      :arg p2: end point
-      :type p2: point-like
+      :arg point_like p2: end point
 
       :rtype: :ref:`Point`
       :returns: the end point, ``p2``.
@@ -71,13 +69,11 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawSquiggle(p1, p2, breadth=2)
 
-      Draw a squiggly (wavy, undulated) line from point-like objects ``p1`` to ``p2``. An integer number of full wave periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted as necessary to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
+      Draw a squiggly (wavy, undulated) line from :data:`point_like` objects ``p1`` to ``p2``. An integer number of full wave periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted as necessary to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
 
-      :arg p1: starting point
-      :type p1: point-like
+      :arg point_like p1: starting point
 
-      :arg p2: end point
-      :type p2: point-like
+      :arg point_like p2: end point
 
       :arg float breadth: the amplitude of each wave. The condition ``2 * breadth < abs(p2 - p1)`` must be true to fit in at least one wave. See the following picture, which shows two points connected by one full period.
 
@@ -97,13 +93,11 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawZigzag(p1, p2, breadth=2)
 
-      Draw a zigzag line from point-like objects ``p1`` to ``p2``. An integer number of full zigzag periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
+      Draw a zigzag line from :data:`point_like` objects ``p1`` to ``p2``. An integer number of full zigzag periods will always be drawn, one period having a length of ``4 * breadth``. The breadth parameter will be adjusted to meet this condition. The drawn line will always turn "left" when leaving ``p1`` and always join ``p2`` from the "right".
 
-      :arg p1: starting point
-      :type p1: point-like
+      :arg point_like p1: starting point
 
-      :arg p2: end point
-      :type p2: point-like
+      :arg point_like p2: end point
 
       :arg float breadth: the amplitude of the movement. The condition ``2 * breadth < abs(p2 - p1)`` must be true to fit in at least one period.
 
@@ -114,7 +108,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Draw several connected lines between points contained in the sequence ``points``. This can be used for creating arbitrary polygons by setting the last item equal to the first one.
 
-      :arg sequence points: a sequence of point-like objects. Its length must at least be 2 (in which case it is equivalent to ``drawLine()``).
+      :arg sequence points: a sequence of :data:`point_like` objects. Its length must at least be 2 (in which case it is equivalent to ``drawLine()``).
 
       :rtype: :ref:`Point`
       :returns: ``points[-1]`` -- the last point in the argument sequence.
@@ -123,17 +117,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Draw a standard cubic Bézier curve from ``p1`` to ``p4``, using ``p2`` and ``p3`` as control points.
 
-      :arg p1: starting point
-      :type p1: point-like
-
-      :arg p2: control point 1
-      :type p2: point-like
-
-      :arg p3: control point 2
-      :type p3: point-like
-
-      :arg p4: end point
-      :type p4: point-like
+      All arguments are :data:`point_like` \s.
 
       :rtype: :ref:`Point`
       :returns: the end point, ``p4``.
@@ -146,29 +130,28 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawOval(tetra)
 
-      Draw an "ellipse" inside the given tetrapod (quadrilateral). If it is a square, a regular circle is drawn, a general rectangle will result in an ellipse. If a quadrilateral is used instead, a plethora of shapes can be the result.
+      Draw an "ellipse" inside the given tetragon (quadrilateral). If it is a square, a regular circle is drawn, a general rectangle will result in an ellipse. If a quadrilateral is used instead, a plethora of shapes can be the result.
 
-      The drawing starts and ends at the middle point of the left rectangle side in a counter-clockwise movement.
+      The drawing starts and ends at the middle point of the line connecting bottom-left and top-left corners in an anti-clockwise movement.
 
-      :arg tetra: a rectangle or a quad.
-      :type tetra: rect-like or quad-like.
+      :arg rect_like,quad_like tetra: :data:`rect_like` or :data:`quad_like`.
 
-          .. versionchanged:: 1.14.5
+          .. versionchanged:: 1.14.5  tetragons are now also supported.
 
       :rtype: :ref:`Point`
-      :returns: the middle point of the left rectangle / quad side. Look at just a few examples here:
+      :returns: the middle point of line from ``rect.bl`` to ``rect.tl``, or from ``quad.ll`` to ``quad.ul``, respectively. Look at just a few examples here, or at the ``quad-show?.py`` scripts in the PyMuPDF-Utilities repository.
 
       .. image:: images/img-drawquad.jpg
          :scale: 50
 
    .. method:: drawCircle(center, radius)
 
-      Draw a circle given its center and radius. The drawing starts and ends at point ``center - (radius, 0)`` in a counter-clockwise movement. This corresponds to the middle point of the enclosing rectangle's left side.
+      Draw a circle given its center and radius. The drawing starts and ends at point ``center - (radius, 0)`` in an anti-clockwise movement. This corresponds to the middle point of the enclosing rectangle's left side.
 
       The method is a shortcut for ``drawSector(center, start, 360, fullSector=False)``. To draw a circle in a clockwise movement, change the sign of the degree.
 
       :arg center: the center of the circle.
-      :type center: point-like
+      :type center: point_like
 
       :arg float radius: the radius of the circle. Must be positive.
 
@@ -182,14 +165,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       A special case of ``drawBezier()``: Draw a cubic Bézier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degrees, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.
 
-      :arg p1: starting point.
-      :type p1: point-like
-
-      :arg p2: helper point.
-      :type p2: point-like
-
-      :arg p3: end point.
-      :type p3: point-like
+      All arguments are :data:`point_like`.
 
       :rtype: :ref:`Point`
       :returns: the end point, ``p3``.
@@ -205,13 +181,11 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Draw a circular sector, optionally connecting the arc to the circle's center (like a piece of pie).
 
-      :arg center: the center of the circle.
-      :type center: point-like
+      :arg point_like center: the center of the circle.
 
-      :arg point: one of the two end points of the pie's arc segment. The other one is calculated from the ``angle``.
-      :type point: point-like
+      :arg point_like point: one of the two end points of the pie's arc segment. The other one is calculated from the ``angle``.
 
-      :arg float angle: the angle of the sector in degrees. Used to calculate the other end point of the arc. Depending on its sign, the arc is drawn counter-clockwise (postive) or clockwise.
+      :arg float angle: the angle of the sector in degrees. Used to calculate the other end point of the arc. Depending on its sign, the arc is drawn anti-clockwise (postive) or clockwise.
 
       :arg bool fullSector: whether to draw connecting lines from the ends of the arc to the circle center. If a fill color is specified, the full "pie" is colored, otherwise just the sector.
 
@@ -227,18 +201,18 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawRect(rect)
 
-      Draw a rectangle. The drawing starts and ends at the top-left corner in a counter-clockwise movement.
+      Draw a rectangle. The drawing starts and ends at the top-left corner in an anti-clockwise movement.
 
-      :arg rect-like rect: where to put the rectangle on the page.
+      :arg rect_like rect: where to put the rectangle on the page.
 
       :rtype: :ref:`Point`
       :returns: top-left corner of the rectangle.
 
    .. method:: drawQuad(quad)
 
-      Draw a quadrilateral. The drawing starts and ends at the top-left corner (:attr:`Quad.ul`) in a counter-clockwise movement. It invokes :meth:`drawPolyline` with the argument ``[ul, ll, lr, ur, ul]``.
+      Draw a quadrilateral. The drawing starts and ends at the top-left corner (:attr:`Quad.ul`) in an anti-clockwise movement. It invokes :meth:`drawPolyline` with the argument ``[ul, ll, lr, ur, ul]``.
 
-      :arg quad-like quad: where to put the tetrapod on the page.
+      :arg quad_like quad: where to put the tetragon on the page.
 
       :rtype: :ref:`Point`
       :returns: :attr:`Quad.ul`.
@@ -259,14 +233,14 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       Insert text lines start at ``point``.
 
-      :arg point-like point: the bottom-left position of the first character of ``text`` in pixels. It is important to understand, how this works in conjunction with the ``rotate`` parameter. Please have a look at the following picture. The small red dots indicate the positions of ``point`` in each of the four possible cases.
+      :arg point_like point: the bottom-left position of the first character of ``text`` in pixels. It is important to understand, how this works in conjunction with the ``rotate`` parameter. Please have a look at the following picture. The small red dots indicate the positions of ``point`` in each of the four possible cases.
 
          .. image:: images/img-inserttext.jpg
             :scale: 33
 
       :arg str/sequence text: the text to be inserted. May be specified as either a string type or as a sequence type. For sequences, or strings containing line breaks ``\n``, several lines will be inserted. No care will be taken if lines are too wide, but the number of inserted lines will be limited by "vertical" space on the page (in the sense of reading direction as established by the ``rotate`` parameter). Any rest of ``text`` is discarded -- the return code however contains the number of inserted lines.
 
-      :arg int rotate: determines whether to rotate the text. Acceptable values are multiples of 90 degrees. Default is 0 (no rotation), meaning horizontal text lines oriented from left to right. 180 means text is shown upside down from **right to left**. 90 means counter-clockwise rotation, text running **upwards**. 270 (or -90) means clockwise rotation, text running **downwards**. In any case, ``point`` specifies the bottom-left coordinates of the first character's rectangle. Multiple lines, if present, always follow the reading direction established by this parameter. So line 2 is located **above** line 1 in case of ``rotate = 180``, etc.
+      :arg int rotate: determines whether to rotate the text. Acceptable values are multiples of 90 degrees. Default is 0 (no rotation), meaning horizontal text lines oriented from left to right. 180 means text is shown upside down from **right to left**. 90 means anti-clockwise rotation, text running **upwards**. 270 (or -90) means clockwise rotation, text running **downwards**. In any case, ``point`` specifies the bottom-left coordinates of the first character's rectangle. Multiple lines, if present, always follow the reading direction established by this parameter. So line 2 is located **above** line 1 in case of ``rotate = 180``, etc.
 
       :rtype: int
       :returns: number of lines inserted.
@@ -291,7 +265,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
       PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, which depends on ``rotate``. Line feeds will be respected as well as multiple spaces will be.
 
-      :arg rect-like rect: the area to use. It must be finite and not empty.
+      :arg rect_like rect: the area to use. It must be finite and not empty.
 
       :arg str/sequence buffer: the text to be inserted. Must be specified as a string or a sequence of strings. Line breaks are respected also when occurring in a sequence entry.
 
@@ -546,9 +520,7 @@ Common Parameters
 
 **render_mode** (*int*)
 
-  .. versionadded:: 1.14.9
-
-  Integer in ``range(8)`` which controls the text appearance (:meth:`Shape.insertText` and :meth:`Shape.insertTextbox`). See page 398 in :ref:`AdobeManual`. New in v1.14.9. These methods now also differentiate between fill and stroke colors.
+  .. versionadded:: 1.14.9 Integer in ``range(8)`` which controls the text appearance (:meth:`Shape.insertText` and :meth:`Shape.insertTextbox`). See page 398 in :ref:`AdobeManual`. New in v1.14.9. These methods now also differentiate between fill and stroke colors.
 
   * For default 0, only the text fill color is used to paint the text. For backward compatibility, using the ``color`` parameter instead also works.
   * For render mode 1, only the border of each glyph (i.e. text character) is drawn with a thickness as set in argument ``border_width``. The color chosen in the ``color`` argument is taken for this, the ``fill`` parameter is ignored.
@@ -587,9 +559,7 @@ Common Parameters
 
 **lineJoin** (*int*)
 
-  Controls the way how line connections look like. This may be either as a sharp edge (0), a rounded join (1), or a cut-off edge (2, "butt").
-
-  .. versionadded:: 1.14.15
+  .. versionadded:: 1.14.15 Controls the way how line connections look like. This may be either as a sharp edge (0), a rounded join (1), or a cut-off edge (2, "butt").
 
 ----
 

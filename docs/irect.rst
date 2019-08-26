@@ -15,6 +15,7 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 :meth:`IRect.getRectArea`      calculate rectangle area
 :meth:`IRect.intersect`        common part with another rectangle
 :meth:`IRect.intersects`       checks for non-empty intersection
+:meth:`IRect.norm`             the Euclidean norm
 :meth:`IRect.normalize`        makes a rectangle finite
 :attr:`IRect.bottom_left`      bottom left point, synonym ``bl``
 :attr:`IRect.bottom_right`     bottom right point, synonym ``br``
@@ -87,16 +88,20 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
    .. method:: intersects(r)
 
       Checks whether the rectangle and ``r`` (``IRect`` or :ref:`Rect`) have a non-empty rectangle in common. This will always be ``False`` if either is infinite or empty.
-      
+
       :arg r: the rectangle to check.
       :type r: :ref:`IRect` or :ref:`Rect`
 
       :rtype: bool
 
+   .. method:: norm()
+
+      .. versionadded:: 1.16.0 Return the Euclidean norm of the rectangle as a vector.
+
    .. method:: normalize()
 
       Make the rectangle finite. This is done by shuffling rectangle corners. After this, the bottom right corner will indeed be south-eastern to the top left one. See :ref:`Rect` for a more details.
-      
+
    .. attribute:: top_left
 
    .. attribute:: tl

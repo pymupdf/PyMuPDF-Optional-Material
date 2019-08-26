@@ -64,7 +64,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
       :arg colorspace: colorspace.
       :type colorspace: :ref:`Colorspace`
 
-      :arg irect-like irect: Tte pixmap's position and dimension.
+      :arg irect_like irect: Tte pixmap's position and dimension.
 
       :arg bool alpha: Specifies whether transparency bytes should be included. Default is ``False``.
 
@@ -89,7 +89,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg float height: desired target height.
 
-      :arg irect-like clip: a region of the source pixmap to take the copy from.
+      :arg irect_like clip: a region of the source pixmap to take the copy from.
 
       .. note:: If width or height are not *de facto* integers (meaning e.g. ``round(width) != width``), then pixmap will be created with ``alpha = 1``.
 
@@ -120,7 +120,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       **From memory:** Create a pixmap from a memory area. All properties are inferred from the input. The origin of the resulting pixmap is ``(0, 0)``.
 
-      :arg bytes|bytearray|BytesIO stream: Data containing a complete, valid image. Could have been created by e.g. ``stream = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only**, because ``bytes == str`` in Python 2 and the method will interpret the stream as a filename.
+      :arg bytes,bytearray,BytesIO stream: Data containing a complete, valid image. Could have been created by e.g. ``stream = bytearray(open('image.file', 'rb').read())``. Type ``bytes`` is supported in **Python 3 only**, because ``bytes == str`` in Python 2 and the method will interpret the stream as a filename.
 
          .. versionchanged:: 1.14.13
             ``io.BytesIO`` is now also supported.
@@ -137,7 +137,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg int height: image height
 
-      :arg bytes|bytearray|BytesIO samples:  an area containing all pixels of the image. Must include alpha values if specified.
+      :arg bytes,bytearray,BytesIO samples:  an area containing all pixels of the image. Must include alpha values if specified.
 
          .. versionchanged:: 1.14.13 (1) ``io.BytesIO`` can now also be used. (2) Data are now **copied** to the pixmap, so may safely be deleted or become unavailable.
 
@@ -164,7 +164,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       :arg int value: if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will be set to 255 (non-transparent) if present. If omitted, then all bytes (including any alpha) are cleared to ``0x00``.
 
-      :arg irect-like irect: the area to be cleared. Omit to clear the whole pixmap. Can only be specified, if ``value`` is also specified.
+      :arg irect_like irect: the area to be cleared. Omit to clear the whole pixmap. Can only be specified, if ``value`` is also specified.
 
    .. method:: tintWith(red, green, blue)
 
@@ -194,9 +194,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: pixel(x, y)
 
-      .. versionadded:: 1.14.5
-
-      Return the value of the pixel at location (x, y) (column, line).
+      .. versionadded:: 1.14.5 Return the value of the pixel at location (x, y) (column, line).
 
       :arg int x: the column number of the pixel. Must be in ``range(pix.width)``.
       :arg int y: the line number of the pixel, Must be in ``range(pix.height)``.
@@ -206,9 +204,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: setPixel(x, y, color)
 
-      .. versionadded:: 1.14.7
-
-      Set the color of the pixel at location (x, y) (column, line).
+      .. versionadded:: 1.14.7 Set the color of the pixel at location (x, y) (column, line).
 
       :arg int x: the column number of the pixel. Must be in ``range(pix.width)``.
       :arg int y: the line number of the pixel. Must be in ``range(pix.height)``.
@@ -216,11 +212,9 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: setRect(irect, color)
 
-      .. versionadded:: 1.14.8
+      .. versionadded:: 1.14.8 Set the pixels of a rectangle to a color.
 
-      Set the pixels of a rectangle to a color.
-
-      :arg irect-like irect: the rectangle to be filled with the color. The actual area is the intersection of this parameter and :attr:`Pixmap.irect`. For an empty intersection (or an invalid parameter), no change will happen.
+      :arg irect_like irect: the rectangle to be filled with the color. The actual area is the intersection of this parameter and :attr:`Pixmap.irect`. For an empty intersection (or an invalid parameter), no change will happen.
       :arg sequence color: the desired color given as a sequence of integers in ``range(256)``. The length of the sequence must equal :attr:`Pixmap.n`, which includes any alpha byte.
 
       :rtype: bool
@@ -235,7 +229,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       Change the alpha values. The pixmap must have an alpha channel.
 
-      :arg bytes|bytearray|BytesIO alphavalues: the new alpha values. If provided, its length must be at least ``width * height``. If omitted, all alpha values are set to 255 (no transparency).
+      :arg bytes,bytearray,BytesIO alphavalues: the new alpha values. If provided, its length must be at least ``width * height``. If omitted, all alpha values are set to 255 (no transparency).
 
          .. versionchanged:: 1.14.13
             ``io.BytesIO`` is now also supported.
@@ -245,7 +239,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
       Invert the color of all pixels in :ref:`IRect` ``irect``. Will have no effect if colorspace is ``None``.
 
-      :arg irect-like irect: The area to be inverted. Omit to invert everything.
+      :arg irect_like irect: The area to be inverted. Omit to invert everything.
 
    .. method:: copyPixmap(source, irect)
 
@@ -258,7 +252,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
       :arg source: source pixmap.
       :type source: :ref:`Pixmap`
 
-      :arg irect-like irect: The area to be copied.
+      :arg irect_like irect: The area to be copied.
 
    .. method:: writeImage(filename, output=None)
 
@@ -275,9 +269,7 @@ Have a look at the :ref:`FAQ` section to see some pixmap usage "at work".
 
    .. method:: getImageData(output="png")
 
-      .. versionadded:: 1.14.5
-
-      Return the pixmap as a ``bytes`` memory object of the specified format -- similar to :meth:`writeImage`.
+      .. versionadded:: 1.14.5 Return the pixmap as a ``bytes`` memory object of the specified format -- similar to :meth:`writeImage`.
 
       :arg str output: The requested image format. The default is "png" for which this function equals :meth:`getPNGData`. For other possible values see :ref:`PixmapOutput`.
 

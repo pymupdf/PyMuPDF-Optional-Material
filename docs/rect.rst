@@ -30,6 +30,7 @@ Hence some useful classification:
 :meth:`Rect.includeRect`      enlarge rectangle to also contain another one
 :meth:`Rect.intersect`        common part with another rectangle
 :meth:`Rect.intersects`       checks for non-empty intersections
+:meth:`Rect.norm`             the Euclidean norm
 :meth:`Rect.normalize`        makes a rectangle finite
 :meth:`Rect.round`            create smallest :ref:`Irect` containing rectangle
 :meth:`Rect.transform`        transform rectangle with a matrix
@@ -76,7 +77,7 @@ Hence some useful classification:
    .. method:: round()
 
       Creates the smallest containing :ref:`IRect` (this is **not** the same as simply rounding the rectangle's edges!).
-      
+
       1. If the rectangle is **infinite**, the "normalized" (finite) version of it will be taken. The result of this method is always a finite ``IRect``.
       2. If the rectangle is **empty**, the result is also empty.
       3. **Possible paradox:** The result may be empty, **even if** the rectangle is **not** empty! In such cases, the result obviously does **not** contain the rectangle. This is because MuPDF's algorithm allows for a small tolerance (1e-3). Example:
@@ -128,7 +129,7 @@ Hence some useful classification:
 
    .. method:: getArea([unit])
 
-      Calculate the area of the rectangle and, with no parameter, equals ``abs(rect)``. Like an empty rectangle, the area of an infinite rectangle is also zero. So, at least one of ``fitz.Rect(p1, p2)`` and ``fitz.Rect(p2, p1)`` has a zero area. 
+      Calculate the area of the rectangle and, with no parameter, equals ``abs(rect)``. Like an empty rectangle, the area of an infinite rectangle is also zero. So, at least one of ``fitz.Rect(p1, p2)`` and ``fitz.Rect(p2, p1)`` has a zero area.
 
       :arg str unit: Specify required unit: respective squares of ``px`` (pixels, default), ``in`` (inches), ``cm`` (centimeters), or ``mm`` (millimeters).
       :rtype: float
@@ -145,11 +146,15 @@ Hence some useful classification:
    .. method:: intersects(r)
 
       Checks whether the rectangle and ``r`` (a ``Rect`` or :ref:`IRect`) have a non-empty rectangle in common. This will always be ``False`` if either is infinite or empty.
-      
+
       :arg r: the rectangle to check.
       :type r: :ref:`IRect` or :ref:`Rect`
 
       :rtype: bool
+
+   .. method:: norm()
+
+      .. versionadded:: 1.16.0 Return the Euclidean norm of the rectangle as a vector. For rectangles, this is different from ``abs()``, which returns the rectangle area!
 
    .. method:: normalize()
 
@@ -343,6 +348,6 @@ Enlarge rectangle by 5 pixels in every direction:
 
 **Example 7 -- inline operations:**
 
-Replace a rectangle with its transformation by the inverse of a matrix-like object:
+Replace a rectangle with its transformation by the inverse of a :data:`matrix_like` object:
 
 >>> r /= (1, 2, 3, 4, 5, 6)

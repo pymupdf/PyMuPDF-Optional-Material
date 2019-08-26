@@ -76,22 +76,57 @@ Constants
     :rtype: tuple
 
 
+.. _PermissionCodes:
+
+Document Permissions
+----------------------------
+
+====================== =======================================================================
+Code                   Permitted Action
+====================== =======================================================================
+PDF_PERM_PRINT         Printing the document
+PDF_PERM_MODIFY        Modifying the document’s contents
+PDF_PERM_COPY          Copying or otherwise extracting text and graphics
+PDF_PERM_ANNOTATE      Adding or modifying text annotations and interactive form fields
+PDF_PERM_FORM          Filling in forms and signing the document
+PDF_PERM_ACCESSIBILITY Obsolete, always permitted
+PDF_PERM_ASSEMBLE      Inserting, rotating, or deleting pages, bookmarks, thumbnail images
+PDF_PERM_PRINT_HQ      High quality printing
+====================== =======================================================================
+
+.. _EncryptionMethods:
+
+PDF encryption method codes
+----------------------------
+
+=================== ====================================================
+Code                Meaning
+=================== ====================================================
+PDF_ENCRYPT_KEEP    do not change
+PDF_ENCRYPT_NONE    remove any encryption
+PDF_ENCRYPT_RC4_40  RC4 40 bit
+PDF_ENCRYPT_RC4_128 RC4 128 bit
+PDF_ENCRYPT_AES_128 *Advanced Encryption Standard* 128 bit
+PDF_ENCRYPT_AES_256 *Advanced Encryption Standard* 256 bit
+PDF_ENCRYPT_UNKNOWN unknown
+=================== ====================================================
+
 .. _FontExtensions:
 
 Font File Extensions
 -----------------------
 The table show file extensions you should use when extracting fonts from a PDF file.
 
-==== =======================================================
+==== ============================================================================
 Ext  Description
-==== =======================================================
+==== ============================================================================
 ttf  TrueType font
 pfa  Postscript for ASCII font (various subtypes)
 cff  Type1C font (compressed font equivalent to Type1)
 cid  character identifier font (postscript format)
 otf  OpenType font
-n/a  one of the :ref:`Base-14-Fonts` (cannot be extracted)
-==== =======================================================
+n/a  one of the built-in fonts (:ref:`Base-14-Fonts`, CJK, cannot be extracted)
+==== ============================================================================
 
 .. _TextAlign:
 
@@ -217,387 +252,144 @@ Link Destination Flags
 
     :rtype: bool
 
-.. _Annotation Types:
+.. _AnnotationTypes:
+
+Annotation Related Constants
+-----------------------------
+See chapter 8.4.5, pp. 615 of the :ref:`AdobeManual` for more details.
+
+**Annotation Types**::
+
+    PDF_ANNOT_TEXT 0
+    PDF_ANNOT_LINK 1
+    PDF_ANNOT_FREETEXT 2
+    PDF_ANNOT_LINE 3
+    PDF_ANNOT_SQUARE 4
+    PDF_ANNOT_CIRCLE 5
+    PDF_ANNOT_POLYGON 6
+    PDF_ANNOT_POLYLINE 7
+    PDF_ANNOT_HIGHLIGHT 8
+    PDF_ANNOT_UNDERLINE 9
+    PDF_ANNOT_SQUIGGLY 10
+    PDF_ANNOT_STRIKEOUT 11
+    PDF_ANNOT_REDACT 12
+    PDF_ANNOT_STAMP 13
+    PDF_ANNOT_CARET 14
+    PDF_ANNOT_INK 15
+    PDF_ANNOT_POPUP 16
+    PDF_ANNOT_FILEATTACHMENT 17
+    PDF_ANNOT_SOUND 18
+    PDF_ANNOT_MOVIE 19
+    PDF_ANNOT_WIDGET 20
+    PDF_ANNOT_SCREEN 21
+    PDF_ANNOT_PRINTERMARK 22
+    PDF_ANNOT_TRAPNET 23
+    PDF_ANNOT_WATERMARK 24
+    PDF_ANNOT_3D 25
+
+
+**Annotation Flag Bits**::
+
+    PDF_ANNOT_IS_Invisible 1 << (1-1)
+    PDF_ANNOT_IS_Hidden 1 << (2-1)
+    PDF_ANNOT_IS_Print 1 << (3-1)
+    PDF_ANNOT_IS_NoZoom 1 << (4-1)
+    PDF_ANNOT_IS_NoRotate 1 << (5-1)
+    PDF_ANNOT_IS_NoView 1 << (6-1)
+    PDF_ANNOT_IS_ReadOnly 1 << (7-1)
+    PDF_ANNOT_IS_Locked 1 << (8-1)
+    PDF_ANNOT_IS_ToggleNoView 1 << (9-1)
+    PDF_ANNOT_IS_LockedContents 1 << (10-1)
+
+**Annotation Line Ending Styles**::
+
+    PDF_ANNOT_LE_NONE 0
+    PDF_ANNOT_LE_SQUARE 1
+    PDF_ANNOT_LE_CIRCLE 2
+    PDF_ANNOT_LE_DIAMOND 3
+    PDF_ANNOT_LE_OPEN_ARROW 4
+    PDF_ANNOT_LE_CLOSED_ARROW 5
+    PDF_ANNOT_LE_BUTT 6
+    PDF_ANNOT_LE_R_OPEN_ARROW 7
+    PDF_ANNOT_LE_R_CLOSED_ARROW 8
+    PDF_ANNOT_LE_SLASH 9
+
+
+Widget Constants
+-----------------
+
+**Widget types** (``field_type``)::
+
+    PDF_WIDGET_TYPE_UNKNOWN 0
+    PDF_WIDGET_TYPE_BUTTON 1
+    PDF_WIDGET_TYPE_CHECKBOX 2
+    PDF_WIDGET_TYPE_COMBOBOX 3
+    PDF_WIDGET_TYPE_LISTBOX 4
+    PDF_WIDGET_TYPE_RADIOBUTTON 5
+    PDF_WIDGET_TYPE_SIGNATURE 6
+    PDF_WIDGET_TYPE_TEXT 7
+
+**Text Widget Subtypes** (``text_format``)::
+
+    PDF_WIDGET_TX_FORMAT_NONE 0
+    PDF_WIDGET_TX_FORMAT_NUMBER 1
+    PDF_WIDGET_TX_FORMAT_SPECIAL 2
+    PDF_WIDGET_TX_FORMAT_DATE 3
+    PDF_WIDGET_TX_FORMAT_TIME 4
+
+
+Widget flags (``field_flags``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Common to all field types**::
+
+    PDF_FIELD_IS_READ_ONLY 1
+    PDF_FIELD_IS_REQUIRED 1 << 1
+    PDF_FIELD_IS_NO_EXPORT 1 << 2
+
+**Text widgets**::
+
+    PDF_TX_FIELD_IS_MULTILINE  1 << 12
+    PDF_TX_FIELD_IS_PASSWORD  1 << 13
+    PDF_TX_FIELD_IS_FILE_SELECT  1 << 20
+    PDF_TX_FIELD_IS_DO_NOT_SPELL_CHECK  1 << 22
+    PDF_TX_FIELD_IS_DO_NOT_SCROLL  1 << 23
+    PDF_TX_FIELD_IS_COMB  1 << 24
+    PDF_TX_FIELD_IS_RICH_TEXT  1 << 25
 
-Annotation Types
----------------------
-Possible values (integer) for PDF annotation types. See chapter 8.4.5, pp. 615 of the :ref:`AdobeManual` for more details.
+**Button widgets**::
 
-.. py:data:: ANNOT_TEXT
+    PDF_BTN_FIELD_IS_NO_TOGGLE_TO_OFF  1 << 14
+    PDF_BTN_FIELD_IS_RADIO  1 << 15
+    PDF_BTN_FIELD_IS_PUSHBUTTON  1 << 16
+    PDF_BTN_FIELD_IS_RADIOS_IN_UNISON  1 << 25
 
-    0 -- Text annotation
+**Choice widgets**::
 
-.. py:data:: ANNOT_LINK
+    PDF_CH_FIELD_IS_COMBO  1 << 17
+    PDF_CH_FIELD_IS_EDIT  1 << 18
+    PDF_CH_FIELD_IS_SORT  1 << 19
+    PDF_CH_FIELD_IS_MULTI_SELECT  1 << 21
+    PDF_CH_FIELD_IS_DO_NOT_SPELL_CHECK  1 << 22
+    PDF_CH_FIELD_IS_COMMIT_ON_SEL_CHANGE  1 << 26
 
-    1 -- Link annotation
-
-.. py:data:: ANNOT_FREETEXT
-
-    2 --  Free text annotation
-
-.. py:data:: ANNOT_LINE
-
-    3 -- Line annotation
-
-.. py:data:: ANNOT_SQUARE
-
-    4 --  Square annotation
-
-.. py:data:: ANNOT_CIRCLE
-
-    5 --  Circle annotation
-
-.. py:data:: ANNOT_POLYGON
-
-    6 -- Polygon annotation
-
-.. py:data:: ANNOT_POLYLINE
-
-    7 -- PolyLine annotation
-
-.. py:data:: ANNOT_HIGHLIGHT
-
-    8 --  Highlight annotation
-
-.. py:data:: ANNOT_UNDERLINE
-
-    9 -- Underline annotation
-
-.. py:data:: ANNOT_SQUIGGLY
-
-    10 --  Squiggly-underline annotation
-
-.. py:data:: ANNOT_STRIKEOUT
-
-    11 -- Strikeout annotation
-
-.. py:data:: ANNOT_STAMP
-
-    12 --  Rubber stamp annotation
-
-.. py:data:: ANNOT_CARET
-
-    13 -- Caret annotation
-
-.. py:data:: ANNOT_INK
-
-    14 --  Ink annotation
-
-.. py:data:: ANNOT_POPUP
-
-    15 --  Pop-up annotation
-
-.. py:data:: ANNOT_FILEATTACHMENT
-
-    16 -- File attachment annotation
-
-.. py:data:: ANNOT_SOUND
-
-    17 -- Sound annotation
-
-.. py:data:: ANNOT_MOVIE
-
-    18 -- Movie annotation
-
-.. py:data:: ANNOT_WIDGET
-
-    19 -- Widget annotation. This annotation comes with the following subtypes:
-
-.. py:data:: ANNOT_WG_NOT_WIDGET
-
-    -1 not a widget
-
-.. py:data:: ANNOT_WG_PUSHBUTTON
-
-    0 PushButtom
-
-.. py:data:: ANNOT_WG_CHECKBOX
-    
-    1 CheckBox
-
-.. py:data:: ANNOT_WG_RADIOBUTTON
-    
-    2 RadioButton 
-
-.. py:data:: ANNOT_WG_TEXT
-
-    3 Text 
-
-.. py:data:: ANNOT_WG_LISTBOX
-
-    4 ListBox
-
-.. py:data:: ANNOT_WG_COMBOBOX
-
-    5 ComboBox
-
-.. py:data:: ANNOT_WG_SIGNATURE
-
-    6 Signature 
-
-.. py:data:: ANNOT_SCREEN
-
-    20 -- Screen annotation
-
-.. py:data:: ANNOT_PRINTERMARK
-
-    21 -- Printers mark annotation
-
-.. py:data:: ANNOT_TRAPNET
-
-    22 -- Trap network annotation
-
-.. py:data:: ANNOT_WATERMARK
-
-    23 -- Watermark annotation
-
-.. py:data:: ANNOT_3D
-
-    24 -- 3D annotation
-
-.. _Annotation Flags:
-
-Annotation Flags
----------------------
-Possible mask values for PDF annotation flags.
-
-.. Note:: Annotation flags is a bit field, so test the truth of its bits with the ``&`` operator. When changing flags for an annotation, use the ``|`` operator to combine several values. The following descriptions were extracted from the :ref:`AdobeManual`, pages 608 pp.
-
-.. py:data:: ANNOT_XF_Invisible
-
-    1 -- If set, do not display the annotation if it does not belong to one of the standard annotation types and no annotation handler is available. If clear, display such an unknown annotation using an appearance stream specified by its appearance dictionary, if any.
-
-.. py:data:: ANNOT_XF_Hidden
-
-    2 -- If set, do not display or print the annotation or allow it to interact with the user, regardless of its annotation type or whether an annotation handler is available. In cases where screen space is limited, the ability to hide and show annotations selectively can be used in combination with appearance streams to display auxiliary pop-up information similar in function to online help systems.
-
-.. py:data:: ANNOT_XF_Print
-
-    4 -- If set, print the annotation when the page is printed. If clear, never print the annotation, regardless of whether it is displayed on the screen. This can be useful, for example, for annotations representing interactive pushbuttons, which would serve no meaningful purpose on the printed page.
-
-.. py:data:: ANNOT_XF_NoZoom
-
-    8 -- If set, do not scale the annotation's appearance to match the magnification of the page. The location of the annotation on the page (defined by the upper-left corner of its annotation rectangle) remains fixed, regardless of the page magnification.
-
-.. py:data:: ANNOT_XF_NoRotate
-
-    16 --  If set, do not rotate the annotation's appearance to match the rotation of the page. The upper-left corner of the annotation rectangle remains in a fixed location on the page, regardless of the page rotation.
-
-.. py:data:: ANNOT_XF_NoView
-
-    32 --  If set, do not display the annotation on the screen or allow it to interact with the user. The annotation may be printed (depending on the setting of the Print flag) but should be considered hidden for purposes of on-screen display and user interaction.
-
-.. py:data:: ANNOT_XF_ReadOnly
-
-    64 -- If set, do not allow the annotation to interact with the user. The annotation may be displayed or printed (depending on the settings of the NoView and Print flags) but should not respond to mouse clicks or change its appearance in response to mouse motions.
-
-.. py:data:: ANNOT_XF_Locked
-
-    128 -- If set, do not allow the annotation to be deleted or its properties (including position and size) to be modified by the user. However, this flag does not restrict changes to the annotation's contents, such as the value of a form field.
-
-.. py:data:: ANNOT_XF_ToggleNoView
-
-    256 -- If set, invert the interpretation of the NoView flag for certain events. A typical use is to have an annotation that appears only when a mouse cursor is held over it.
-
-.. py:data:: ANNOT_XF_LockedContents
-
-    512 -- If set, do not allow the contents of the annotation to be modified by the user. This flag does not restrict deletion of the annotation or changes to other annotation properties, such as position and size.
 
 .. _StampIcons:
 
 Stamp Annotation Icons
 ----------------------------
-MuPDF has defined the following icons for rubber stamp annotations.
-
-.. py:data:: STAMP_Approved
-
-    0 APPROVED
-
-.. py:data:: STAMP_AsIs
-
-    1 AS IS
-
-.. py:data:: STAMP_Confidential
-
-    2 CONFIDENTIAL
-
-.. py:data:: STAMP_Departmental
-
-    3 DEPARTMENTAL
-
-.. py:data:: STAMP_Experimental
-
-    4 EXPERIMENTAL
-
-.. py:data:: STAMP_Expired
-
-    5 EXPIRED
-
-.. py:data:: STAMP_Final
-
-    6 FINAL
-
-.. py:data:: STAMP_ForComment
-
-    7 FOR COMMENT
-
-.. py:data:: STAMP_ForPublicRelease
-
-    8 FOR PUBLIC RELEASE
-
-.. py:data:: STAMP_NotApproved 
-
-	9 NOT APPROVED
-
-.. py:data:: STAMP_NotForPublicRelease
-
-    10 NOT FOR PUBLIC RELEASE
-
-.. py:data:: STAMP_Sold
-
-    11 SOLD
-
-.. py:data:: STAMP_TopSecret
-
-    12 TOP SECRET
-
-.. py:data:: STAMP_Draft
-
-    13 DRAFT
-
-
-.. _Annotation Line Ends:
-
-Annotation Line End Styles
-----------------------------
-The following descriptions are taken from the :ref:`AdobeManual` Table 8.27 on page 630. The visualizations are either dynamically created by PDF viewers, or explicitely hardcoded by the PDF generator software. Only 'FreeText', 'Line', 'PolyLine', and 'Polygon' annotation types can have these properties.
-
-.. py:data:: ANNOT_LE_None
-
-    0 -- No line ending.
-
-.. py:data:: ANNOT_LE_Square
-
-    1 -- A square filled with the annotation's interior color, if any.
-
-.. py:data:: ANNOT_LE_Circle
-
-    2 -- A circle filled with the annotation's interior color, if any.
-
-.. py:data:: ANNOT_LE_Diamond
-
-    3 -- A diamond shape filled with the annotation's interior color, if any.
-
-.. py:data:: ANNOT_LE_OpenArrow
-
-    4 -- Two short lines meeting in an acute angle to form an open arrowhead.
-
-.. py:data:: ANNOT_LE_ClosedArrow
-
-    5 -- Two short lines meeting in an acute angle as in the OpenArrow style (see above) and connected by a third line to form a triangular closed arrowhead filled with the annotation's interior color, if any.
-
-.. py:data:: ANNOT_LE_Butt
-
-    6 -- (PDF 1.5) A short line at the endpoint perpendicular to the line itself.
-
-.. py:data:: ANNOT_LE_ROpenArrow
-
-    7 -- (PDF 1.5) Two short lines in the reverse direction from OpenArrow.
-
-.. py:data:: ANNOT_LE_RClosedArrow
-
-    8 -- (PDF 1.5) A triangular closed arrowhead in the reverse direction from ClosedArrow.
-
-.. py:data:: ANNOT_LE_Slash
-
-    9 -- (PDF 1.6) A short line at the endpoint approximately 30 degrees clockwise from perpendicular to the line itself.
-
-.. _WidgetFieldFlags:
-
-PDF Form Field Flags
-----------------------------
-Bit positions in an integer (called ``/Ff`` in :ref:`AdobeManual`) controlling a wide range of PDF form field ("widget") behaviours.
-
-Common to all field types
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. py:data:: WIDGET_Ff_ReadOnly
-
-    1 content cannot be changed
-
-.. py:data:: WIDGET_Ff_Required
-
-    2 must enter
-
-.. py:data:: WIDGET_Ff_NoExport
-
-    4 not available for export
-
-Text fields
-~~~~~~~~~~~~~
-.. py:data:: WIDGET_Ff_Multiline
-
-    4096 allow for libne breaks
-
-.. py:data:: WIDGET_Ff_Password
-
-    8192 do not show entered text
-
-.. py:data:: WIDGET_Ff_FileSelect
-
-    1048576 file sect field
-
-.. py:data:: WIDGET_Ff_DoNotSpellCheck
-
-    4194304 suppress spell checking
-
-.. py:data:: WIDGET_Ff_DoNotScroll
-
-    8388608 do not scroll screen automatically
-
-.. py:data:: WIDGET_Ff_Comb
-
-    16777216
-
-.. py:data:: WIDGET_Ff_RichText
-
-    33554432 richt text field
-
-Button fields
-~~~~~~~~~~~~~~~~~~
-.. py:data:: WIDGET_Ff_NoToggleToOff
-
-    16384 do not toggle off
-
-.. py:data:: WIDGET_Ff_Radio
-
-    32768 make this a radio button (caution: overrides field type!)
-
-.. py:data:: WIDGET_Ff_Pushbutton
-
-    65536 make this a push button (caution: overrides field type!)
-
-.. py:data:: WIDGET_Ff_RadioInUnison
-
-    33554432 controls multiple radio buttons in a group (unsupported by PyMuPDF)
-
-Choice fields
-~~~~~~~~~~~~~~~~
-.. py:data:: WIDGET_Ff_Combo
-
-    131072 make this combo box (caution: overrides field type!)
-
-.. py:data:: WIDGET_Ff_Edit
-
-    262144 make choice field editable (do not restrict values to value list)
-
-.. py:data:: WIDGET_Ff_Sort
-
-    524288 sort value list for display
-
-.. py:data:: WIDGET_Ff_MultiSelect
-
-    2097152 make multiple choice fields selectable
-
-.. py:data:: WIDGET_Ff_CommitOnSelCHange
-
-    67108864 changing selected choice values counts as data entered
+MuPDF has defined the following icons for **rubber stamp** annotations::
+
+    STAMP_Approved 0
+    STAMP_AsIs 1
+    STAMP_Confidential 2
+    STAMP_Departmental 3
+    STAMP_Experimental 4
+    STAMP_Expired 5
+    STAMP_Final 6
+    STAMP_ForComment 7
+    STAMP_ForPublicRelease 8
+    STAMP_NotApproved 9
+    STAMP_NotForPublicRelease 10
+    STAMP_Sold 11
+    STAMP_TopSecret 12
+    STAMP_Draft 13

@@ -58,7 +58,7 @@ This class represents text and images shown on a document page. All MuPDF docume
 
    .. method:: extractXML
 
-      Extract all text in XML format. This contains complete formatting information about every single character on the page: font, size, line, paragraph, location, etc. Contains no images. You need an XML package to interpret the output in Python.
+      Extract all text in XML format. This contains complete formatting information about every single character on the page: font, size, line, paragraph, location, color, etc. Contains no images. You probably need an XML package to interpret the output in Python.
 
       :rtype: str
 
@@ -84,6 +84,8 @@ This class represents text and images shown on a document page. All MuPDF docume
 
    .. note:: All of the above can be achieved by using the appropriate :meth:`Page.getText` and :meth:`Page.searchFor` methods. Also see further down and in the :ref:`Page` chapter for examples on how to create a valid file format by adding respective headers and trailers.
 
+.. _textpagedict:
+
 Dictionary Structure of :meth:`extractDICT` and :meth:`extractRAWDICT`
 -------------------------------------------------------------------------
 
@@ -93,7 +95,7 @@ Dictionary Structure of :meth:`extractDICT` and :meth:`extractRAWDICT`
 Page Dictionary
 ~~~~~~~~~~~~~~~~~
 =============== ============================================
-Key             Value
+**Key**         **Value**
 =============== ============================================
 width           page width in pixels *(float)*
 height          page height in pixels *(float)*
@@ -107,7 +109,7 @@ Blocks come in two different formats: **image blocks** and **text blocks**.
 **Image block:**
 
 =============== ===============================================================
-Key             Value
+**Key**             **Value**
 =============== ===============================================================
 type            1 = image *(int)*
 bbox            block / image rectangle, formatted as ``tuple(fitz.Rect)``
@@ -119,13 +121,19 @@ image           image content *(bytes/bytearray)*
 
 Possible values of key ``"ext"`` are ``"bmp"``, ``"gif"``, ``"jpeg"``, ``"jpx"`` (JPEG 2000), ``"jxr"`` (JPEG XR), ``"png"``, ``"pnm"``, and ``"tiff"``.
 
-.. note:: All of the above values may be zero or contain empty objects respectively. In an effort to provide complete information we may return entries like ``{'type': 1, 'bbox': [0.0, 0.0, 0.0, 0.0], 'width': 0, 'height': 0, 'ext': 'png', 'image': b''}``.
+.. note::
+
+   1. In some error situations, all of the above values may be zero or contain empty objects respectively. So, please be prepared to cope with items like::
+
+     {'type': 1, 'bbox': (0.0, 0.0, 0.0, 0.0), 'width': 0, 'height': 0, 'ext': 'png', 'image': b''}
+
+   2. For PDF documents, the image blocks returned with this method **may or may not** be exactly the same set as the entries in :meth:`Page.getImageList`. If there are differences, they most probably are caused by so-called "inline" images (see page 352 of the :ref:`AdobeManual`), which are detected by this method, but not by :meth:`Page.getImageList`.
 
 
 **Text block:**
 
 =============== ====================================================
-Key             Value
+**Key**             **Value**
 =============== ====================================================
 type            0 = text *(int)*
 bbox            block rectangle, formatted as ``tuple(fitz.Rect)``
@@ -136,7 +144,7 @@ Line Dictionary
 ~~~~~~~~~~~~~~~~~
 
 =============== =====================================================
-Key             Value
+**Key**             **Value**
 =============== =====================================================
 bbox            line rectangle, formatted as ``tuple(fitz.Rect)``
 wmode           writing mode *(int)*: 0 = horizontal, 1 = vertical
@@ -154,23 +162,26 @@ The values indicate the "relative writing speed" in each direction, such that x\
 Span Dictionary
 ~~~~~~~~~~~~~~~~~
 
-Spans contain the actual text. In contrast to MuPDF versions prior to v1.12, a span no longer includes positioning information. Therefore, to reconstruct the text of a line, the text pieces of all spans must be concatenated. A span since v1.12 also contains font information. A line contains **more than one span only**, if it contains text with different font properties.
+Spans contain the actual text. A line contains **more than one span only**, if it contains text with different font properties.
 
 .. versionchanged:: 1.14.17
     Spans now also have a ``bbox`` key (again).
 
 =============== =====================================================================
-Key             Value
+**Key**             **Value**
 =============== =====================================================================
 bbox            span rectangle, formatted as ``tuple(fitz.Rect)``
 font            font name *(str)*
 size            font size *(float)*
 flags           font characteristics *(int)*
+color           text color in sRGB format *(int)*
 text            (only for :meth:`extractDICT`) text *(str)*
 chars           (only for :meth:`extractRAWDICT`) *list* of character dictionaries
 =============== =====================================================================
 
-``flags`` is an integer, encoding bools of font properties:
+.. versionadded:: 1.16.0 ``"color"`` is the text color encoded in sRGB format, e.g. 0xFF0000 for red.
+
+``"flags"`` is an integer, encoding bools of font properties:
 
 * bit 0: superscripted (2\ :sup:`0`)
 * bit 1: italic (2\ :sup:`1`)
@@ -186,12 +197,11 @@ Test these characteristics like so:
 >>> # etc.
 >>>
 
-
 Character Dictionary for :meth:`extractRAWDICT`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 =============== ========================================================
-Key             Value
+**Key**             **Value**
 =============== ========================================================
 bbox            character rectangle, formatted as ``tuple(fitz.Rect)``
 c               the character (unicode)

@@ -10,57 +10,56 @@ Since version 1.9.0 there exists the alias ``open`` for this class.
 
 For addional details on **embedded files** refer to Appendix 3.
 
-===================================== ==========================================================
-**Method / Attribute**                **Short Description**
-===================================== ==========================================================
-:meth:`Document.authenticate`         decrypt the document
-:meth:`Document.close`                close the document
-:meth:`Document.convertToPDF`         write a PDF version to memory
-:meth:`Document.copyPage`             PDF only: copy a page reference
-:meth:`Document.deletePage`           PDF only: delete a page
-:meth:`Document.deletePageRange`      PDF only: delete a page range
-:meth:`Document.embeddedFileAdd`      PDF only: add a new embedded file from buffer
-:meth:`Document.embeddedFileCount`    PDF only: number of embedded files
-:meth:`Document.embeddedFileDel`      PDF only: delete an embedded file entry
-:meth:`Document.embeddedFileGet`      PDF only: extract an embedded file buffer
-:meth:`Document.embeddedFileInfo`     PDF only: metadata of an embedded file
-:meth:`Document.embeddedFileNames`    PDF only: list of embedded files
-:meth:`Document.embeddedFileUpd`      PDF only: change an embedded file
-:meth:`Document.fullcopyPage`         PDF only: duplicate a page
-:meth:`Document.getPageFontList`      PDF only: make a list of fonts on a page
-:meth:`Document.getPageImageList`     PDF only: make a list of images on a page
-:meth:`Document.getPagePixmap`        create a pixmap of a page by page number
-:meth:`Document.getPageText`          extract the text of a page by page number
-:meth:`Document.getSigFlags`          PDF only: determine signature state
-:meth:`Document.getToC`               create a table of contents
-:meth:`Document.insertPage`           PDF only: insert a new page
-:meth:`Document.insertPDF`            PDF only: insert pages from another PDF
-:meth:`Document.layout`               re-paginate the document (if supported)
-:meth:`Document.loadPage`             read a page
-:meth:`Document.movePage`             PDF only: move a page to another location
-:meth:`Document.newPage`              PDF only: insert a new empty page
-:meth:`Document.save`                 PDF only: save the document
-:meth:`Document.saveIncr`             PDF only: save the document incrementally
-:meth:`Document.searchPageFor`        search for a string on a page
-:meth:`Document.select`               PDF only: select a subset of pages
-:meth:`Document.setMetadata`          PDF only: set the metadata
-:meth:`Document.setToC`               PDF only: set the table of contents (TOC)
-:meth:`Document.write`                PDF only: writes the document to memory
-:attr:`Document.FormFonts`            PDF only: list of existing field fonts
-:attr:`Document.isClosed`             has document been closed?
-:attr:`Document.isEncrypted`          document (still) encrypted?
-:attr:`Document.isFormPDF`            is this a Form PDF?
-:attr:`Document.isPDF`                is this a PDF?
-:attr:`Document.isReflowable`         is this a reflowable document?
-:attr:`Document.metadata`             metadata
-:attr:`Document.name`                 filename of document
-:attr:`Document.needsPass`            require password to access data?
-:attr:`Document.openErrCode`          > 0 if repair occurred during open
-:attr:`Document.openErrMsg`           last error message if openErrCode > 0
-:attr:`Document.outline`              first `Outline` item
-:attr:`Document.pageCount`            number of pages
-:attr:`Document.permissions`          permissions to access the document
-===================================== ==========================================================
+======================================= ==========================================================
+**Method / Attribute**                  **Short Description**
+======================================= ==========================================================
+:meth:`Document.authenticate`           gain access to an encrypted document
+:meth:`Document.can_save_incrementally` check if incremental save is possible
+:meth:`Document.close`                  close the document
+:meth:`Document.convertToPDF`           write a PDF version to memory
+:meth:`Document.copyPage`               PDF only: copy a page reference
+:meth:`Document.deletePage`             PDF only: delete a page
+:meth:`Document.deletePageRange`        PDF only: delete a page range
+:meth:`Document.embeddedFileAdd`        PDF only: add a new embedded file from buffer
+:meth:`Document.embeddedFileCount`      PDF only: number of embedded files
+:meth:`Document.embeddedFileDel`        PDF only: delete an embedded file entry
+:meth:`Document.embeddedFileGet`        PDF only: extract an embedded file buffer
+:meth:`Document.embeddedFileInfo`       PDF only: metadata of an embedded file
+:meth:`Document.embeddedFileNames`      PDF only: list of embedded files
+:meth:`Document.embeddedFileUpd`        PDF only: change an embedded file
+:meth:`Document.fullcopyPage`           PDF only: duplicate a page
+:meth:`Document.getPageFontList`        PDF only: make a list of fonts on a page
+:meth:`Document.getPageImageList`       PDF only: make a list of images on a page
+:meth:`Document.getPagePixmap`          create a pixmap of a page by page number
+:meth:`Document.getPageText`            extract the text of a page by page number
+:meth:`Document.getSigFlags`            PDF only: determine signature state
+:meth:`Document.getToC`                 create a table of contents
+:meth:`Document.insertPage`             PDF only: insert a new page
+:meth:`Document.insertPDF`              PDF only: insert pages from another PDF
+:meth:`Document.layout`                 re-paginate the document (if supported)
+:meth:`Document.loadPage`               read a page
+:meth:`Document.movePage`               PDF only: move a page to another location
+:meth:`Document.newPage`                PDF only: insert a new empty page
+:meth:`Document.save`                   PDF only: save the document
+:meth:`Document.saveIncr`               PDF only: save the document incrementally
+:meth:`Document.searchPageFor`          search for a string on a page
+:meth:`Document.select`                 PDF only: select a subset of pages
+:meth:`Document.setMetadata`            PDF only: set the metadata
+:meth:`Document.setToC`                 PDF only: set the table of contents (TOC)
+:meth:`Document.write`                  PDF only: writes the document to memory
+:attr:`Document.FormFonts`              PDF only: list of existing field fonts
+:attr:`Document.isClosed`               has document been closed?
+:attr:`Document.isEncrypted`            document (still) encrypted?
+:attr:`Document.isFormPDF`              is this a Form PDF?
+:attr:`Document.isPDF`                  is this a PDF?
+:attr:`Document.isReflowable`           is this a reflowable document?
+:attr:`Document.metadata`               metadata
+:attr:`Document.name`                   filename of document
+:attr:`Document.needsPass`              require password to access data?
+:attr:`Document.outline`                first `Outline` item
+:attr:`Document.pageCount`              number of pages
+:attr:`Document.permissions`            permissions to access the document
+======================================= ==========================================================
 
 **Class API**
 
@@ -89,16 +88,16 @@ For addional details on **embedded files** refer to Appendix 3.
       * If ``stream`` is given, then the document is created from memory and either ``filename`` or ``filetype`` must indicate its type.
       * If ``stream`` is ``None``, then a document is created from a file given by ``filename``. Its type is inferred from the extension, which can be overruled by specifying ``filetype``.
 
-      :arg str|pathlib filename: A UTF-8 string or ``pathlib`` object containing a file path (or a file type, see below).
+      :arg str,pathlib filename: A UTF-8 string or ``pathlib`` object containing a file path (or a file type, see below).
 
-      :arg bytes|bytearray|BytesIO stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
+      :arg bytes,bytearray,BytesIO stream: A memory area containing a supported document. Its type **must** be specified by either ``filename`` or ``filetype``.
 
          .. versionchanged:: 1.14.13
             ``io.BytesIO`` is now also supported.
 
       :arg str filetype: A string specifying the type of document. This may be something looking like a filename (e.g. ``"x.pdf"``), in which case MuPDF uses the extension to determine the type, or a mime type like ``application/pdf``. Just using strings like ``"pdf"`` will also work.
 
-      :arg rect-like rect: a rectangle specifying the desired page size. This parameter is only meaningful for documents with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
+      :arg rect_like rect: a rectangle specifying the desired page size. This parameter is only meaningful for documents with a variable page layout ("reflowable" documents), like e-books or HTML, and ignored otherwise. If specified, it must be a non-empty, finite rectangle with top-left coordinates (0, 0). Together with parameter ``fontsize``, each page will be accordingly laid out and hence also determine the number of pages.
 
       :arg float width: may used together with ``height`` as an alternative to ``rect`` to specify layout information.
 
@@ -110,8 +109,8 @@ For addional details on **embedded files** refer to Appendix 3.
 
       >>> # from a file
       >>> doc = fitz.open("some.pdf")
-      >>> doc = fitz.open("some.file", None, "pdf")      # copes with wrong extension
-      >>> doc = fitz.open("some.file", filetype="pdf") # copes with wrong extension
+      >>> doc = fitz.open("some.file", None, "pdf")  # copes with wrong extension
+      >>> doc = fitz.open("some.file", filetype="pdf")  # copes with wrong extension
 
       >>> # from memory
       >>> doc = fitz.open("pdf", mem_area)
@@ -123,16 +122,21 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: authenticate(password)
 
-      Decrypts the document with the string ``password``. If successful, all of the document's data can be accessed (e.g. for rendering).
+      Decrypts the document with the string ``"password"``. If successful, document data can be accessed. For PDF documents, the "owner" and the "user" have different priviledges, and hence different passwords may exist for these authorization levels. The method will automatically establish the appropriate access rights for the provided password.
 
-      :arg str password: The password to be used.
+      :arg str password: owner or user password.
 
       :rtype: int
-      :returns: positive value if decryption was successful, zero otherwise. If successful, indicator ``isEncrypted`` is set to ``False``.
+      :returns: a positive value if successful, zero otherwise. If successful, the indicator ``isEncrypted`` is set to ``False``. Positive return codes carry the following information detail:
+
+        * bit 0 set => no password required -- happens if method was used although :meth:`needsPass` was zero.
+        * bit 1 set => **user** password authenticated
+        * bit 2 set => **owner** password authenticated
+
 
     .. method:: loadPage(pno=0)
 
-      Load a :ref:`Page` for further processing like rendering, text searching, etc.
+      Create a :ref:`Page` object for further processing (like rendering, text searching, etc.).
 
       :arg int pno: page number, zero-based (0 is default and the first page of the document). Any value in ``range(-inf, doc.pageCount)`` is acceptable. If pno is negative, then ``doc.pageCount`` will be added until this is no longer the case. For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
 
@@ -208,13 +212,15 @@ For addional details on **embedded files** refer to Appendix 3.
 
       Creates a pixmap from page ``pno`` (zero-based). Invokes :meth:`Page.getPixmap`.
 
+      :arg int pno: page number, 0-based in ``range(-inf, len(doc))``.
+
       :rtype: :ref:`Pixmap`
 
     .. method:: getPageImageList(pno)
 
       PDF only: Return a list of all image descriptions referenced by a page.
 
-      :arg int pno: page number, 0-based, any value ``< len(doc)``.
+      :arg int pno: page number, 0-based in ``range(-inf, len(doc))``.
 
       :rtype: list
 
@@ -287,7 +293,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       Re-paginate ("reflow") the document based on the given page dimension and fontsize. This only affects some document types like e-books and HTML. Ignored if not supported. Supported documents have ``True`` in property :attr:`isReflowable`.
 
-      :arg rect-like rect: desired page size. Must be finite, not empty and start at point (0, 0).
+      :arg rect_like rect: desired page size. Must be finite, not empty and start at point (0, 0).
       :arg float width: use it together with ``height`` as alternative to ``rect``.
       :arg float height: use it together with ``width`` as alternative to ``rect``.
       :arg float fontsize: the desired default fontsize.
@@ -338,9 +344,13 @@ For addional details on **embedded files** refer to Appendix 3.
       :rtype: int
       :returns: ``outline`` and ``getToC()`` will be updated upon successful execution. The return code will either equal the number of inserted items (``len(toc)``) or the number of deleted items if ``toc`` is an empty sequence.
 
-      .. note:: We currently always set the :ref:`Outline` attribute ``is_open`` to ``False``. This shows all entries below level 1 as collapsed.
+      .. note:: We currently always set the :ref:`Outline` attribute ``is_open`` to ``False``. This shows all entries below level 1 as **collapsed**.
 
-    .. method:: save(outfile, garbage=0, clean=False, deflate=False, incremental=False, ascii=False, expand=0, linear=False, pretty=False, decrypt=True)
+    .. method:: can_save_incrementally()
+
+      .. versionadded:: 1.16.0 Check whether the document can be saved using option ``incremental=True``. Use it to choose the right option without encountering exceptions.
+
+    .. method:: save(outfile, garbage=0, clean=False, deflate=False, incremental=False, ascii=False, expand=0, linear=False, pretty=False, encryption=PDF_ENCRYPT_NONE, permissions=-1, owner_pw=None, user_pw=None)
 
       PDF only: Saves the document in its **current state** under the name ``outfile``.
 
@@ -354,11 +364,11 @@ For addional details on **embedded files** refer to Appendix 3.
        * 3 = in addition to 2, merge duplicate objects
        * 4 = in addition to 3, check object streams for duplication (may be slow)
 
-      :arg bool clean: Clean content streams [#f1]_.
+      :arg bool clean: Clean and sanitize content streams [#f1]_. Corresponds to ``mutool clean`` options ``sc``.
 
       :arg bool deflate: Deflate (compress) uncompressed streams.
 
-      :arg bool incremental: Only save changed objects. Excludes "garbage" and "linear". Cannot be used for decrypted files and for repaired files (``openErrCode > 0``). In these cases saving to a new file is required.
+      :arg bool incremental: Only save changed objects. Excludes "garbage" and "linear". Cannot be used for files that are decrypted or repaired and also in some other cases. To be sure, check :meth:`Document.can_save_incrementally`. If this is false, saving to a new file is required.
 
       :arg bool ascii: Where possible convert binary data to ASCII.
 
@@ -371,26 +381,33 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg bool linear: Save a linearised version of the document. This option creates a file format for improved performance when read via internet connections. Excludes "incremental".
 
-      :arg bool pretty: Prettify the document source for better readability.
+      :arg bool pretty: Prettify the document source for better readability. PDF objects will be reformatted to look like the default output of :meth:`Document._getXrefString`.
 
-      :arg bool decrypt: Save a decrypted copy (the default). If false, the resulting PDF will be encrypted with the same password as the original. Ignored for non-encrypted files.
+      :arg int permissions: .. versionadded:: 1.16.0 Set the desired permission levels. See :ref:`PermissionCodes` for possible values. Default is granting all.
+
+      :arg int encryption: .. versionadded:: 1.16.0 Set the desired encryption method. See :ref:`EncryptionMethods` for possible values.
+
+      :arg str owner_pw: .. versionadded:: 1.16.0 Set the document's owner password.
+
+      :arg str user_pw: .. versionadded:: 1.16.0 Set the document's user password.
 
     .. method:: saveIncr()
 
-      PDF only: saves the document incrementally. This is a convenience abbreviation for ``doc.save(doc.name, incremental=True)``.
+      PDF only: saves the document incrementally. This is a convenience abbreviation for ``doc.save(doc.name, incremental=True, encryption=PDF_ENCRYPT_KEEP)``.
 
-    .. caution:: A PDF may not be encrypted, but still be password protected against changes -- see the ``permissions`` property. Performing incremental saves while ``permissions["edit"] == False`` can lead to unpredictable results. Save to a new file in such a case. We also consider raising an exception under this condition.
+
+    .. method:: write(garbage=0, clean=False, deflate=False, ascii=False, expand=0, linear=False, pretty=False, encryption=PDF_ENCRYPT_NONE, permissions=-1, owner_pw=None, user_pw=None)
+
+      PDF only: Writes the **current content of the document** to a bytes object instead of to a file like ``save()``. Obviously, you should be wary about memory requirements. The meanings of the parameters exactly equal those in :meth:`save`. Chater :ref:`FAQ` contains an example for using this method as a pre-processor to `pdfrw <https://pypi.python.org/pypi/pdfrw/0.3>`_.
+
+      .. versionchanged:: 1.16.0
+
+      :rtype: bytes
+      :returns: a bytes object containing the complete document data.
 
     .. method:: searchPageFor(pno, text, hit_max=16, quads=False)
 
        Search for ``text`` on page number ``pno``. Works exactly like the corresponding :meth:`Page.searchFor`. Any integer ``-inf < pno < len(doc)`` is acceptable.
-
-    .. method:: write(garbage=0, clean=False, deflate=False, ascii=False, expand=0, linear=False, pretty=False, decrypt=True)
-
-      PDF only: Writes the **current content of the document** to a bytes object instead of to a file like ``save()``. Obviously, you should be wary about memory requirements. The meanings of the parameters exactly equal those in :meth:`save`. Cpater :ref:`FAQ` contains an example for using this method as a pre-processor to `pdfrw <https://pypi.python.org/pypi/pdfrw/0.3>`_.
-
-      :rtype: bytes
-      :returns: a bytes object containing the complete document data.
 
     .. index::
        pair: from_page; Document.insertPDF args
@@ -470,7 +487,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: deletePageRange(from_page=-1, to_page=-1)
 
-      PDF only: Delete a range of pages given as 0-based numbers. Any ``-1`` parameter will first be replaced by ``len(doc) - 1`` (ie. last page number). After that, condition ``0 <= from_page <= to_page < len(doc)`` must be true. If the parameters are equal, this is equivalent to :meth:`deletePage``.
+      PDF only: Delete a range of pages given as 0-based numbers. Any ``-1`` parameter will first be replaced by ``len(doc) - 1`` (ie. last page number). After that, condition ``0 <= from_page <= to_page < len(doc)`` must be true. If the parameters are equal, this is equivalent to :meth:`deletePage`.
 
       .. versionchanged:: 1.14.17
 
@@ -515,9 +532,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: fullcopyPage(pno, to=-1)
 
-      PDF only: Make a new copy (duplicate) of a page.
-
-      .. versionadded:: 1.14.17
+      .. versionadded:: 1.14.17 PDF only: Make a new copy (duplicate) of a page.
 
       :arg int pno: the page to be duplicated. Must be in range ``0 <= pno < len(doc)``.
 
@@ -535,7 +550,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: getSigFlags()
 
-      PDF only: Return whether the document contains signatures fields.
+      PDF only: Return whether the document contains signature fields.
 
       :rtype: int
       :returns:
@@ -556,7 +571,7 @@ For addional details on **embedded files** refer to Appendix 3.
          The sequence of positional parameters "name" and "buffer" has been changed to comply with the layout of other functions.
 
       :arg str name: entry identifier, must not already exist.
-      :arg bytes|bytearray|BytesIO buffer: file contents.
+      :arg bytes,bytearray,BytesIO buffer: file contents.
 
          .. versionchanged:: 1.14.13
             ``io.BytesIO`` is now also supported.
@@ -577,7 +592,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Retrieve the content of embedded file by its entry number or name. If the document is not a PDF, or entry cannot be found, an exception is raised.
 
-      :arg int|str item: index or name of entry. An integer must be in ``range(embeddedFileCount())``.
+      :arg int,str item: index or name of entry. An integer must be in ``range(embeddedFileCount())``.
 
       :rtype: bytes
 
@@ -590,7 +605,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int/str item: index or name of entry.
 
-      .. caution:: When specifying an entry name, this function will only **delete the first item** with that name. Be aware that PDFs not created with PyMuPDF may contain duplicate names. So you may want to take appropriate precautions.
+      .. warning:: When specifying an entry name, this function will only **delete the first item** with that name. Be aware that PDFs not created with PyMuPDF may contain duplicate names. So you may want to take appropriate precautions.
 
     .. method:: embeddedFileInfo(item)
 
@@ -610,9 +625,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: embeddedFileNames()
 
-      PDF only: Return a list of embedded file names. The sequence of names equals the physical sequence in the document.
-
-      .. versionadded:: 1.14.16
+      .. versionadded:: 1.14.16 PDF only: Return a list of embedded file names. The sequence of names equals the physical sequence in the document.
 
       :rtype: list
 
@@ -626,7 +639,7 @@ For addional details on **embedded files** refer to Appendix 3.
       PDF only: Change an embedded file given its entry number or name. All parameters are optional. Letting them default leads to a no-operation.
 
       :arg int/str item: index or name of entry. An integer must be in ``range(0, embeddedFileCount())``.
-      :arg bytes|bytearray|BytesIO buffer: the new file content.
+      :arg bytes,bytearray,BytesIO buffer: the new file content.
 
          .. versionchanged:: 1.14.13
             ``io.BytesIO`` is now also supported.
@@ -639,7 +652,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Change embedded file meta information. All parameters are optional. Letting them default will lead to a no-operation.
 
-      :arg int|str n: index or name of entry. An integer must be in ``range(embeddedFileCount())``.
+      :arg int,str n: index or name of entry. An integer must be in ``range(embeddedFileCount())``.
       :arg str filename: sets the filename.
       :arg str ufilename: sets the unicode filename.
       :arg str desc: sets the description.
@@ -682,26 +695,21 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: needsPass
 
-      Contains an indicator showing whether the document is password-protected against any access (``True``) or not (``False``). This indicator remains unchanged -- **even after the document has been authenticated**. Precludes incremental saves if ``True``.
+      Indicates whether the document is password-protected against access. This indicator remains unchanged -- **even after the document has been authenticated**. Precludes incremental saves if true.
 
       :type: bool
 
     .. attribute:: isEncrypted
 
-      This indicator initially equals ``needsPass``. After an authentication, it is set to ``False`` to reflect the situation.
+      This indicator initially equals ``needsPass``. After successful authentication, it is set to ``False`` to reflect the situation.
 
       :type: bool
 
     .. attribute:: permissions
 
-      Shows the permissions to access the document. Contains a dictionary likes this:
+      Contains the permissions to access the document. This is an integer containing bool values in respective bit positions. For example, if ``doc.permissions & fitz.PDF_PERM_MODIFY > 0``, you may change the document. See :ref:`PermissionCodes` for details.
 
-       >>> doc.permissions
-       {'print': True, 'edit': True, 'note': True, 'copy': True}
-
-      The keys have the obvious meanings of permissions to print, change, annotate and copy the document, respectively.
-
-      :type: dict
+      :type: int
 
     .. attribute:: metadata
 
@@ -734,18 +742,6 @@ For addional details on **embedded files** refer to Appendix 3.
       Contains the number of pages of the document. May return 0 for documents with no pages. Function ``len(doc)`` will also deliver this result.
 
       :type: int
-
-    .. Attribute:: openErrCode
-
-      If ``openErrCode > 0``, errors have occurred while opening / parsing the document, which usually means damages like document structure issues. In this case **incremental** save cannot be used. The **document is available** for processing however, potentially with restrictions (depending on damage details).
-
-      :type: int
-
-    .. Attribute:: openErrMsg
-
-      Contains either an empty string or the last open error message if ``openErrCode > 0``. To see all messages, look at :attr:`Tools.fitz_stderr`, e.g. ``print(fitz.TOOLS.fitz_stderr)``.
-
-      :type: str
 
     .. Attribute:: FormFonts
 

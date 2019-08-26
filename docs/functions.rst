@@ -45,6 +45,8 @@ Yet others are handy, general-purpose utilities.
 :meth:`Page.getTextBlocks`           extract text blocks as a Python list
 :meth:`Page.getTextWords`            extract text words as a Python list
 :meth:`Page.run`                     run a page through a device
+:meth:`Page._wrapContents`           wrap contents with stacking commands
+:attr:`Page._isWrapped`              check whether contents wrapping is present
 :meth:`PaperSize`                    return width, height for a known paper format
 :meth:`PaperRect`                    return rectangle for a known paper format
 :attr:`paperSizes`                   dictionary of pre-defined paper formats
@@ -53,7 +55,7 @@ Yet others are handy, general-purpose utilities.
    .. method:: PaperSize(s)
 
       Convenience function to return width and height of a known paper format code. These values are given in pixels for the standard resolution 72 pixels = 1 inch.
-      
+
       Currently defined formats include **'A0'** through **'A10'**, **'B0'** through **'B10'**, **'C0'** through **'C10'**, **'Card-4x6'**, **'Card-5x7'**, **'Commercial'**, **'Executive'**, **'Invoice'**, **'Ledger'**, **'Legal'**, **'Legal-13'**, **'Letter'**, **'Monarch'** and **'Tabloid-Extra'**, each in either portrait or landscape format.
 
       A format name must be supplied as a string (case **in** \sensitive), optionally suffixed with "-L" (landscape) or "-P" (portrait). No suffix defaults to portrait.
@@ -77,7 +79,7 @@ Yet others are handy, general-purpose utilities.
       >>> import fitz
       >>> fitz.PaperRect("letter-l")
       fitz.Rect(0.0, 0.0, 792.0, 612.0)
-      >>> 
+      >>>
 
 -----
 
@@ -98,12 +100,10 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: getTextlength(text, fontname="helv", fontsize=11, encoding=TEXT_ENCODING_LATIN)
 
-      .. versionadded:: 1.14.7
-
-      Calculate the length of text on output with a given **builtin** font, fontsize and encoding.
+      .. versionadded:: 1.14.7 Calculate the length of text on output with a given **builtin** font, fontsize and encoding.
 
       :arg str text: the text string.
-      :arg str fontname: the fontname. Must be one of either the :ref:`Base-14-Fonts` or the CJK fonts, identified by their four-character "reserved" fontnames.
+      :arg str fontname: the fontname. Must be one of either the :ref:`Base-14-Fonts` or the CJK fonts, identified by their "reserved" fontnames (see table in :meth.`Page.insertFont`).
       :arg float fontsize: size of the font.
       :arg int encoding: the encoding to use. Besides 0 = Latin, 1 = Greek and 2 = Cyrillic (Russian) are available. Relevant for Base-14 fonts "Helvetica", "Courier" and "Times" and their variants only. Make sure to use the same value as in the corresponding text insertion.
       :rtype: float
@@ -111,7 +111,7 @@ Yet others are handy, general-purpose utilities.
 
       .. note:: This function will only do the calculation -- neither does it insert the font nor write the text.
 
-      .. caution:: If you use this function to determine the required rectangle width for the (:ref:`Page` or :ref:`Shape`) ``insertTextbox`` methods, be aware that they calculate on a **by-character level**. Because of rounding effects, this will mostly lead to a slightly larger number: ``sum([fitz.getTextlength(c) for c in text]) > fitz.getTextlength(text)``. So either (1) do the same, or (2) use something like ``fitz.getTextlength(text + "'")`` for your calculation.
+      .. warning:: If you use this function to determine the required rectangle width for the (:ref:`Page` or :ref:`Shape`) ``insertTextbox`` methods, be aware that they calculate on a **by-character level**. Because of rounding effects, this will mostly lead to a slightly larger number: ``sum([fitz.getTextlength(c) for c in text]) > fitz.getTextlength(text)``. So either (1) do the same, or (2) use something like ``fitz.getTextlength(text + "'")`` for your calculation.
 
 -----
 
@@ -127,9 +127,8 @@ Yet others are handy, general-purpose utilities.
 -----
 
    .. method:: ImageProperties(image)
-      Return a number of basic properties for an image.
 
-      .. versionadded 1.14.14
+      .. versionadded 1.14.14 Return a number of basic properties for an image.
 
       :arg bytes|bytearray|BytesIO|file image: an image either in memory or an **opened** file. A memory resident image maybe any of the formats ``bytes``, ``bytearray`` or ``io.BytesIO``.
 
@@ -146,12 +145,12 @@ Yet others are handy, general-purpose utilities.
          ext        (str) suggested image file extension for the format
          size       (int) length of the image in bytes
          ========== ====================================================
-      
+
       Example:
 
       >>> fitz.ImageProperties(open("img-clip.jpg","rb"))
       {'bpc': 8, 'format': 9, 'colorspace': 3, 'height': 325, 'width': 244, 'ext': 'jpeg', 'size': 14161}
-      >>> 
+      >>>
 
 
 -----
@@ -184,7 +183,7 @@ Yet others are handy, general-purpose utilities.
 
       :arg int xref: the cross reference number. Must be within the document's valid :data:`xref` range.
 
-      .. caution:: Only use with extreme care: this may make the PDF unreadable.
+      .. warning:: Only use with extreme care: this may make the PDF unreadable.
 
 -----
 
@@ -196,13 +195,9 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document._getTrailerString(compressed=False)
 
-      .. versionadded:: 1.14.9
+      .. versionadded:: 1.14.9 Return the trailer of the PDF (UTF-8), which is usually located at the PDF file's end. If not a PDF or the PDF has no trailer (because of irrecoverable errors), ``None`` is returned.
 
-      Return the trailer of the PDF (UTF-8), which is usually located at the PDF file's end. If not a PDF or the PDF has no trailer (because of irrecoverable errors), ``None`` is returned.
-
-      :arg bool compressed: whether to generate a compressed output or one with nice indentations to ease reading (default).
-
-         .. versionadded:: 1.14.14
+      :arg bool compressed: .. versionadded:: 1.14.14 whether to generate a compressed output or one with nice indentations to ease reading (default).
 
       :returns: a string with the PDF trailer information. This is the analogous method to :meth:`Document._getXrefString` except that the trailer has no identifying :data:`xref` number. As can be seen here, the trailer object points to other important objects:
 
@@ -267,6 +262,20 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
+   .. method:: Page._wrapContents
+
+      Put string pair "q" / "Q" before, resp. after a page's ``/Contents`` object(s) to ensure that any "geometry" changes are **local** only.
+
+      Use this method as an alternative, minimalistic version of :meth:`Page._cleanContents`. Its advantage is a small footprint in terms of processing time and impact on incremental saves.
+
+-----
+
+   .. attribute:: Page._isWrapped
+
+      Indicate whether :meth:`Page._wrapContents` may be required for object insertions in standard PDF geometry. Please note that this is a quick, basic check only: a value of ``False`` may still be a false alarm.
+
+-----
+
    .. method:: Page.getTextBlocks(images=False)
 
       Extract all blocks of the page's :ref:`TextPage` as a Python list. Provides basic positioning information but at a much higher speed than :meth:`TextPage.extractDICT`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
@@ -307,7 +316,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page._getContents()
 
-      Return a list of :data:`xref` numbers of :data:`contents` objects belonging to the page. 
+      Return a list of :data:`xref` numbers of :data:`contents` objects belonging to the page.
 
       :rtype: list
       :returns: a list of :data:`xref` integers.
@@ -318,14 +327,15 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page._setContents(xref)
 
-      PDF only: Set a given object (identified by its :data:`xref`) as the page's one and only :data:`contents` object. Useful for joining mutiple :data:`contents` objects as in the following snippet:
+      PDF only: Set a given object (identified by its :data:`xref`) as the page's one and only :data:`contents` object. Useful for joining mutiple :data:`contents` objects as in the following snippet::
 
-      >>> c = b""
-      >>> xreflist = page._getContents()
-      >>> for xref in xreflist: c += doc._getXrefStream(xref)
-      >>> doc._updateStream(xreflist[0], c)
-      >>> page._setContents(xreflist[0])
-      >>> # doc.save(..., garbage=1) will remove the unused objects
+         >>> c = b""
+         >>> xreflist = page._getContents()
+         >>> for xref in xreflist:
+                 c += doc._getXrefStream(xref)
+         >>> doc._updateStream(xreflist[0], c)
+         >>> page._setContents(xreflist[0])
+         >>> # doc.save(..., garbage=1) will remove the unused objects
 
       :arg int xref: the cross reference number of a :data:`contents` object. An exception is raised if outside the valid :data:`xref` range or not a stream object.
 
@@ -333,10 +343,11 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page._cleanContents()
 
-      Clean all :data:`contents` objects associated with this page (including contents of all annotations on the page). "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. If a page has several contents objects, they will be combined into one. Any discrepancies between :data:`contents` and :data:`resources` objects will also be corrected. Note that the resulting :data:`contents` stream will be stored **uncompressed** (if you do not specify ``deflate`` on save). See :meth:`Page._getContents` for more details.
+      Clean and concatenate all :data:`contents` objects associated with this page. "Cleaning" includes syntactical corrections, standardizations and "pretty printing" of the contents stream. Discrepancies between :data:`contents` and :data:`resources` objects will also be corrected. See :meth:`Page._getContents` for more details.
 
-      :rtype: int
-      :returns: 0 on success.
+      .. versionchanged:: 1.16.0 Annotations are no longer implicitely cleaned by this method. Use :meth:`Annot._cleanContents` separately.
+
+      .. warning:: This is a complex function which changes a large amount of data and generates now unused objects. Using it together with the **incremental save option is therefore not recommended**. Also note that the resulting single new ``/Contents`` object is **uncompressed**. So you should save to a **new file** and use save options ``"deflate=True, garbage=3"``.
 
 -----
 
@@ -344,8 +355,6 @@ Yet others are handy, general-purpose utilities.
 
       Clean the :data:`contents` streams associated with the annotation. This is the same type of action :meth:`Page._cleanContents` performs -- just restricted to this annotation.
 
-      :rtype: int
-      :returns: 0 if successful (exception raised otherwise).
 
 -----
 
@@ -376,9 +385,7 @@ Yet others are handy, general-purpose utilities.
       Return the string ("source code") representing an arbitrary object. For :data:`stream` objects, only the non-stream part is returned. To get the stream data, use :meth:`_getXrefStream`.
 
       :arg int xref: :data:`xref` number.
-      :arg bool compressed: whether to generate a compressed output or one with nice indentations to ease reading (default).
-
-         .. versionadded:: 1.14.14
+      :arg bool compressed: .. versionadded:: 1.14.14 whether to generate a compressed output or one with nice indentations to ease reading or parsing (default).
 
       :rtype: string
       :returns: the string defining the object identified by :data:`xref`. Example:
@@ -422,9 +429,7 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document.isStream(xref)
 
-      PDF only: Check whether the object represented by :data:`xref` is a :data:`stream` type. Return is ``False`` if not a PDF or if the number is outside the valid xref range.
-
-      .. versionadded:: 1.14.14
+      .. versionadded:: 1.14.14 PDF only: Check whether the object represented by :data:`xref` is a :data:`stream` type. Return is ``False`` if not a PDF or if the number is outside the valid xref range.
 
       :arg int xref: :data:`xref` number.
 
@@ -480,7 +485,7 @@ Yet others are handy, general-purpose utilities.
       Return the decompressed stream of the object referenced by ``xref``. For non-stream objects ``None`` is returned.
 
       :arg int xref: :data:`xref` number.
-      
+
       :rtype: bytes
       :returns: the (decompressed) stream of the object.
 
@@ -491,18 +496,18 @@ Yet others are handy, general-purpose utilities.
       Replace the stream of an object identified by ``xref``. If the object has no stream, an exception is raised unless ``new=True`` is used. The function automatically performs a compress operation ("deflate") where beneficial.
 
       :arg int xref: :data:`xref` number.
-      
+
       :arg bytes|bytearray|BytesIO stream: the new content of the stream.
 
          .. versionchanged:: 1.14.13
             ``io.BytesIO`` objects are now also supported.
-      
+
       :arg bool new: whether to force accepting the stream, and thus **turning it into a stream object**.
 
       This method is intended to manipulate streams containing PDF operator syntax (see pp. 985 of the :ref:`AdobeManual`) as it is the case for e.g. page content streams.
-      
+
       If you update a contents stream, you should use save parameter ``clean=True``. This ensures consistency between PDF operator source and the object structure.
-      
+
       Example: Let us assume that you no longer want a certain image appear on a page. This can be achieved by deleting the respective reference in its contents source(s) -- and indeed: the image will be gone after reloading the page. But the page's :data:`resources` object would still show the image as being referenced by the page. This save option will clean up any such mismatches.
 
 -----
@@ -522,7 +527,7 @@ Yet others are handy, general-purpose utilities.
 
       :rtype: dict
       :returns: a dictionary with the following keys
-      
+
         * ``ext`` (*str*) image type (e.g. ``'jpeg'``), usable as image file extension
         * ``smask`` (*int*) :data:`xref` number of a stencil (/SMask) image or zero
         * ``width`` (*int*) image width
@@ -554,19 +559,19 @@ Yet others are handy, general-purpose utilities.
             10.8 ms ± 52.4 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
             In [24]: len(pix.getPNGData())
             Out[24]: 21462
-            
+
             In [25]: %timeit img = doc.extractImage(1268)
             10.8 ms ± 86 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
             In [26]: len(img["image"])
             Out[26]: 21462
-         
+
          * xref 1186 is a JPEG -- :meth:`Document.extractImage` is **thousands of times faster** and produces a **much smaller** output (2.48 MB vs. 0.35 MB)::
 
             In [27]: %timeit pix = fitz.Pixmap(doc, 1186);pix.getPNGData()
             341 ms ± 2.86 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
             In [28]: len(pix.getPNGData())
             Out[28]: 2599433
-            
+
             In [29]: %timeit img = doc.extractImage(1186)
             15.7 µs ± 116 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
             In [30]: len(img["image"])
@@ -594,7 +599,7 @@ Yet others are handy, general-purpose utilities.
       >>> ofile.write(buffer)
       >>> ofile.close()
 
-      .. caution:: The basename is returned unchanged from the PDF. So it may contain characters (such as blanks) which may disqualify it as a filename for your operating system. Take appropriate action.
+      .. warning:: The basename is returned unchanged from the PDF. So it may contain characters (such as blanks) which may disqualify it as a filename for your operating system. Take appropriate action.
 
       .. note: The returned ``basename`` in general is **not** the original file name, but it probably has some similarity.
 

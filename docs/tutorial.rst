@@ -9,17 +9,14 @@ Because MuPDF supports not only PDF, but also XPS, OpenXPS, CBZ, CBR, FB2 and EP
 
 Importing the Bindings
 ==========================
-The Python bindings to MuPDF are made available by this import statement::
+The Python bindings to MuPDF are made available by this import statement:
 
 >>> import fitz
-
-You can check your version by printing the docstring:
-
-    >>> print(fitz.__doc__)
-    PyMuPDF 1.14.20: Python bindings for the MuPDF 1.14.0 library.
-    Version date: 2019-08-10 09:00:32.
-    Built for Python 3.7 on win32 (64-bit).
-    >>>
+>>> print(fitz.__doc__)
+PyMuPDF 1.16.0: Python bindings for the MuPDF 1.16.0 library.
+Version date: 2019-07-28 07:30:14.
+Built for Python 3.7 on win32 (64-bit).
+>>>
 
 Opening a Document
 ======================
@@ -27,7 +24,7 @@ To access a supported document, it must be opened with the following statement:
 
 >>> doc = fitz.open(filename)     # or fitz.Document(filename)
 
-This creates a :ref:`Document` object ``doc``. ``filename`` must be a Python string specifying the name of an existing file.
+This creates the :ref:`Document` object ``doc``. ``filename`` must be a Python string specifying the name of an existing file.
 
 It is also possible to open a document from memory data, or to create a new, empty PDF. See :ref:`Document` for details.
 
@@ -39,10 +36,10 @@ Some :ref:`Document` Methods and Attributes
 =========================== ==========================================
 **Method / Attribute**      **Description**
 =========================== ==========================================
-:attr:`Document.pageCount`  number of pages (*int*)
-:attr:`Document.metadata`   metadata (*dict*)
-:meth:`Document.getToC`     table of contents (*list*)
-:meth:`Document.loadPage`   read a page (:ref:`Page`)
+:attr:`Document.pageCount`  get the number of pages (*int*)
+:attr:`Document.metadata`   get the metadata (*dict*)
+:meth:`Document.getToC`     get the table of contents (*list*)
+:meth:`Document.loadPage`   read a :ref:`Page`
 =========================== ==========================================
 
 Accessing Meta Data
@@ -54,7 +51,7 @@ PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python 
 ============== =================================
 producer       producer (producing software)
 format         format: 'PDF-1.4', 'EPUB', etc.
-encryption     encryption method used
+encryption     encryption method used if any
 author         author
 modDate        date of last modification
 keywords       keywords
@@ -85,10 +82,10 @@ Working with Pages
 :ref:`Page` handling is at the core of MuPDF's functionality.
 
 * You can render a page into a raster or vector (SVG) image, optionally zooming, rotating, shifting or shearing it.
-
 * You can extract a page's text and images in many formats and search for text strings.
+* For PDF documents many more methods are available to add text or images to pages.
 
-First, a page object must be created. This is a method of :ref:`Document`:
+First, a :ref:`Page` must be created. This is a method of :ref:`Document`:
 
 >>> page = doc.loadPage(n)        # represents page n of the document (0-based)
 >>> page = doc[n]                 # short form
@@ -112,7 +109,9 @@ This example creates a **raster** image of a page's content:
 
 >>> pix = page.getPixmap()
 
-``pix`` is a :ref:`Pixmap` object that (in this case) contains an **RGBA** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGB** image (i.e. containing no alpha channel), specify ``pix = page.getPixmap(alpha = False)``.
+``pix`` is a :ref:`Pixmap` object that (in this case) contains an **RGB** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGBA** image (i.e. containing an alpha channel), specify ``pix = page.getPixmap(alpha=True)``.
+
+A :ref:`Pixmap` contains a number of methods and attributes which are referenced below. Among them are the integers *width*, *height* (each in pixels) and *stride* (number of bytes of one horizontal image line). Attribute *samples* represents a rectangular area of bytes representing the image data (a Python ``bytes`` object).
 
 .. note:: You can also create a **vector** image of a page by using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/pymupdf/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
@@ -128,9 +127,9 @@ We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an 
 
 wxPython
 ~~~~~~~~~~~~~
-Consult their documentation for adjustments to RGB pixmaps and, potentially, specifics for your wxPython release.
+Consult their documentation for adjustments to RGB(A) pixmaps and, potentially, specifics for your wxPython release.
 
->>> # if you used alpha=True (or letting default it):
+>>> # if you used alpha=True:
 >>> bitmap = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
 >>>
 >>> # if you used alpha=False:
@@ -154,7 +153,7 @@ The following **avoids using Pillow**:
 >>> imgdata = pix.getImageData("ppm")                  # extremely fast!
 >>> tkimg = tkinter.PhotoImage(data = imgdata)
 
-If you are looking for a complete Tkinter script paging through **any supported** document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ It can also zoom into pages, and it runs under Python 2 or 3. It requires the `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
+If you are looking for a complete Tkinter script paging through **any supported** document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ It can also zoom into pages, and it runs under Python 2 or 3. It requires the extremely handy `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
 
 PyQt4, PyQt5, PySide
 ~~~~~~~~~~~~~~~~~~~~~
@@ -167,7 +166,7 @@ Please also see section 3.16 of the `Pillow documentation <https://Pillow.readth
 >>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
 >>> qtimg = ImageQt.ImageQt(img)
 
-You also can get along **without using PIL** like this:
+Again, you also can get along **without using PIL** if you use the pixmap *stride* property:
 
 >>> from PyQt<x>.QtGui import QImage
 >>> ...
@@ -204,25 +203,19 @@ You can find out, exactly where on a page a certain text string appears:
 
 >>> areas = page.searchFor("mupdf", hit_max = 16)
 
-This delivers a list of up to 16 rectangles (see :ref:`Rect`), each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas or create a cross reference of the document.
+This delivers a list of up to 16 rectangles (see :ref:`Rect`), each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas (PDF only) or create a cross reference of the document.
 
 Please also do have a look at chapter :ref:`cooperation` and at demo programs `demo.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/demo.py>`_ and `demo-lowlevel.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/demo-lowlevel.py>`_. Among other things they contain details on how the :ref:`TextPage`, :ref:`Device` and :ref:`DisplayList` classes can be used for a more direct control, e.g. when performance considerations suggest it.
 
 PDF Maintenance
 ==================
-PDFs are the only document type that can be **modified** using PyMuPDF. Other files are read-only.
+PDFs are the only document type that can be **modified** using PyMuPDF. Other file types are read-only.
 
 However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the result of this conversion. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `pdf-converter.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/pdf-converter.py>`_ which can convert any supported document to PDF.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
-Apart from changes made by you, there are less obvious ways how a PDF may become "modified":
-
-* During open, integrity checks are used to determine the health of the PDF structure. If errors are encountered, the base library goes a long way to correct them and present a readable document. If this is the case, the document is regarded as being modified.
-
-* After a document has been decrypted, the document in memory has also changed and hence also counts as being modified.
-
-In these two cases, :meth:`Document.save` will store a **repaired**, and (optionally) **decrypted** version [#f4]_, and you must specify **a new file**. Otherwise, you have the option to save your changes as update appendices to the original file ("incremental saves" below), which is very much faster in most cases.
+You normally can choose whether to save to a new file, or just append your modifications to the existing one ("incremental save"), which often is very much faster.
 
 The following describes ways how you can manipulate PDF documents. This description is by no means complete: much more can be found in the following chapters.
 
@@ -232,9 +225,9 @@ There are several ways to manipulate the so-called **page tree** (a structure de
 
 :meth:`Document.deletePage` and :meth:`Document.deletePageRange` delete pages.
 
-:meth:`Document.copyPage` and :meth:`Document.movePage` copy or move a page to other locations within the same document.
+:meth:`Document.copyPage`, :meth:`Document.fullcopyPage` and :meth:`Document.movePage` copy or move a page to other locations within the same document.
 
-:meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a sequence [#f3]_ of the page numbers that you want to include. These integers must all be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
+:meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a sequence [#f3]_ of the page numbers that you want to keep. These integers must all be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
 
 So you can easily create new PDFs with
 
@@ -271,7 +264,7 @@ More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner
 Embedding Data
 ---------------
 
-PDFs can be used as containers for abitrary data (exeutables, other PDFs, text files, etc.) much like ZIP archives.
+PDFs can be used as containers for abitrary data (exeutables, other PDFs, text or binary files, etc.) much like ZIP archives.
 
 PyMuPDF fully supports this feature via :ref:`Document` ``embeddedFile*`` methods and attributes. For some detail read :ref:`Appendix 3`, consult the Wiki on `embedding files <https://github.com/pymupdf/PyMuPDF/wiki/Dealing-with-Embedded-Files>`_, or the example scripts `embedded-copy.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-copy.py>`_, `embedded-export.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-export.py>`_, `embedded-import.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-import.py>`_, and `embedded-list.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-list.py>`_.
 
@@ -281,9 +274,9 @@ Saving
 
 As mentioned above, :meth:`Document.save` will **always** save the document in its current state.
 
-You can write changes back to the **original PDF** by specifying ``incremental = True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
+You can write changes back to the **original PDF** by specifying option ``incremental=True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
 
-:meth:`Document.save` supports all options of MuPDF's command line utility ``mutool clean``, see the following table.
+:meth:`Document.save` options correspond to options of MuPDF's command line utility ``mutool clean``, see the following table.
 
 =================== =========== ==================================================
 **Save Option**     **mutool**  **Effect**
@@ -292,15 +285,13 @@ garbage=1           g           garbage collect unused objects
 garbage=2           gg          in addition to 1, compact :data:`xref` tables
 garbage=3           ggg         in addition to 2, merge duplicate objects
 garbage=4           gggg        in addition to 3, skip duplicate streams
-clean=1             c           clean content streams
+clean=1             cs          clean and sanitize content streams
 deflate=1           z           deflate uncompressed streams
 ascii=1             a           convert binary data to ASCII format
 linear=1            l           create a linearized version
 expand=1            i           decompress images
 expand=2            f           decompress fonts
 expand=255          d           decompress all
-incremental=1       n/a         append changes to the original
-decrypt=1           n/a         remove passwords
 =================== =========== ==================================================
 
 For example, ``mutool clean -ggggz file.pdf`` yields excellent compression results. It corresponds to ``doc.save(filename, garbage=4, deflate=1)``.
@@ -324,5 +315,3 @@ This document also contains a :ref:`FAQ`. This chapter has close connection to t
 .. [#f2] :meth:`Page.getText` is a convenience wrapper for several methods of another PyMuPDF class, :ref:`TextPage`. The names of these methods correspond to the argument string passed to :meth:`Page.getText` \:  ``Page.getText("dict")`` is equivalent to ``TextPage.extractDICT()`` \.
 
 .. [#f3] "Sequences" are Python objects conforming to the sequence protocol. These objects implement a method named ``__getitem__()``. Best known examples are Python tuples and lists. But ``array.array``, ``numpy.array`` and PyMuPDF's "geometry" objects (:ref:`Algebra`) are sequences, too. Refer to :ref:`SequenceTypes` for details.
-
-.. [#f4] If the PDF is encrypted, using ``doc.save(..., decrypt=False)`` will again create an encrypted PDF with the same passwords as the original.

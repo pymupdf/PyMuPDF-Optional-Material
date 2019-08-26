@@ -27,6 +27,7 @@ Please note:
 :meth:`Matrix.preTranslate`      perform a translation (shifting)
 :meth:`Matrix.concat`            perform a matrix multiplication
 :meth:`Matrix.invert`            calculate the inverted matrix
+:meth:`Matrix.norm`              the Euclidean norm
 :attr:`Matrix.a`                 zoom factor X direction
 :attr:`Matrix.b`                 shearing effect Y direction
 :attr:`Matrix.c`                 shearing effect X direction
@@ -67,6 +68,10 @@ Please note:
       A "sequence" must be any Python sequence object with exactly 6 float entries (see :ref:`SequenceTypes`).
 
       ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0)`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
+
+   .. method:: norm()
+
+      .. versionadded:: 1.16.0 Return the Euclidean norm of the matrix as a vector.
 
    .. method:: preRotate(deg)
 

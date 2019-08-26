@@ -4,12 +4,24 @@
 Widget
 ================
 
-This class represents the properties of a PDF Form field, a "widget". Fields are a special case of annotations, which allow users with limited permissions to enter information in a PDF. This is usually used for filling out forms.
+This class represents a PDF Form field, also called "widget". Fields are a special case of annotations, which allow users with limited permissions to enter information in a PDF. This is primarily used for filling out forms.
+
+Like annotations, widgets live on PDF pages. Similar to annotations, the first widget on a page is accessible via :attr:`Page.firstWidget` and subsequent widgets can be accessed via the :attr:`Widget.next` property.
+
+.. versionchanged:: 1.16.0 Widgets are no longer mixed with annotations. :attr:`Page.firstAnnot` and :meth:`Annot.next` will deliver non-widget annotations exclusively, and be ``None`` if only form fields exist on a page. Vice versa, :attr:`Page.firstWidget` and :meth:`Widget.next` will only show widgets.
 
 
 **Class API**
 
 .. class:: Widget
+
+    .. attribute:: next
+
+       Point to the next form field on the page.
+
+    .. method:: update
+
+       After any changes to a widget, this method **must be used** to store them in the PDF.
 
     .. attribute:: border_color
 
@@ -29,19 +41,23 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: choice_values
 
-       A mandatory Python sequence of strings defining the valid choices of listboxes and comboboxes. Ignored for other field types. Equals :attr:`Annot.widget_choices`. The sequence must contain at least two items. When updating the widget, always the complete new list of values must be specified.
+       Python sequence of strings defining the valid choices of list boxes and combo boxes. For these widget types the property is mandatory. Ignored for other types. The sequence must contain at least two items. When updating the widget, this sequence will always the complete new list of values must be specified.
 
     .. attribute:: field_name
 
-       A mandatory string defining the field's name. Equals :attr:`Annot.widget_name`. No checking for duplicates takes place.
+       A mandatory string defining the field's name. No checking for duplicates takes place.
+
+    .. attribute:: field_label
+
+       An optional string containing an "alternate" field name. Typically used for any notes, help on field usage, etc. Default is the field name.
 
     .. attribute:: field_value
 
-       The value of the field. Equals :attr:`Annot.widget_value`.
+       The value of the field.
 
     .. attribute:: field_flags
 
-       An integer defining a large amount of proprties of a field. Handle this attribute with care
+       An integer defining a large amount of proprties of a field. Handle this attribute with care.
 
     .. attribute:: field_type
 
@@ -57,7 +73,11 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: button_caption
 
-       For future use: the caption string of a button-type field.
+       The caption string of a button-type field.
+
+    .. attribute:: is_signed
+
+       A bool indicating the status of a signature field, else ``None``.
 
     .. attribute:: rect
 
@@ -77,11 +97,15 @@ This class represents the properties of a PDF Form field, a "widget". Fields are
 
     .. attribute:: text_maxlen
 
-       An integer defining the maximum number of text characters. PDF viewers will (should) not accept larger text amounts.
+       An integer defining the maximum number of text characters. PDF viewers will (should) not accept a longer text.
 
     .. attribute:: text_type
 
        An integer defining acceptable text types (e.g. numeric, date, time, etc.). For reference only for the time being -- will be ignored when creating or updating widgets.
+
+    .. attribute:: xref
+
+       An integer defining the PDF cross reference number of the widget.
 
 
 Standard Fonts for Widgets

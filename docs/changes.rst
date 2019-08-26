@@ -1,6 +1,36 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.0
+---------------------------
+This major new version of MuPDF comes with several nice new or changed features. Some of them imply programming API changes, however. This is a synopsis of what has changed:
+
+* PDF document encryption and decryption is now **fully supported**. This includes setting **permissions**, **passwords** (user and owner passwords) and the desired encryption method.
+* In response to the new encryption features, PyMuPDF returns an integer (ie. a combination of bits) for document permissions, and no longer a dictionary.
+* Redirection of MuPDF errors and warnings is now natively supported. PyMuPDF redirects error messages from MuPDF to ``sys.stderr`` and no longer buffers them. Warnings continue to be buffered and will not be displayed. Functions exist to access and reset the warnings buffer.
+* Annotations are now **only supported for PDF**.
+* Annotations and widgets (form fields) are now **separate object chains** on a page (although widgets technically still **are** PDF annotations). This means, that you will **never encounter widgets** when using :attr:`Page.firstAnnot` or :meth:`Annot.next`. You must use :attr:`Page.firstWidget` and :meth:`Widget.next` to access form fields.
+* As part of MuPDF's changes regarding widgets, only the following four fonts are supported, when **adding** or **changing** form fields: **Courier, Helvetica, Times-Roman** and **ZapfDingBats**.
+
+List of change details:
+
+* **Added** :meth:`Document.can_save_incrementally` which checks conditions that are preventing use of option ``incremental=True`` of :meth:`Document.save`.
+* **Added** :attr:`Page.firstWidget` which points to the first field on a page.
+* **Added** :meth:`Page.getImageBbox` which returns the rectangle occupied by an image shown on the page.
+* **Added** :meth:`Annot.setName` which lets you change the (icon) name field.
+* **Added** outputting the text color in :meth:`Page.getText`: the ``"dict"``, ``"rawdict"`` and ``"xml"`` options now also show the color in sRGB format.
+* **Changed** :attr:`Document.permissions` to now contain an integer of bool indicators -- was a dictionary before.
+* **Changed** :meth:`Document.save`, :meth:`Document.write`, which now fully support password-based decryption and encryption of PDF files.
+* **Changed the names of all Python constants** related to annotations and widgets. Please make sure to consult the **Constants and Enumerations** chapter if your script is dealing with these two classes. This decision goes back to the dropped support for non-PDF annotations. The **old names** (starting with "ANNOT_" or "WIDGET_") will be available as deprecated synonyms.
+* **Changed** font support for widgets: only ``Cour`` (Courier), ``Helv`` (Helvetica, default), ``TiRo`` (Times-Roman) and ``ZaDb`` (ZapfDingBats) are accepted when **adding or changing** form fields. Only the plain versions are possible -- not their italic or bold variations. **Reading** widgets, however will show its original font.
+* **Changed** the name of the warnings buffer to :meth:`Tools.mupdf_warnings` and the function to empty this buffer is now called :meth:`Tools.reset_mupdf_warnings`.
+* **Changed** :meth:`Page.getPixmap`, :meth:`Document.getPagePixmap`: a new bool argument ``annots`` can now be used to **suppress the rendering of annotations** on the page.
+* **Changed** :meth:`Page.addFileAnnot` and :meth:`Page.addTextAnnot` to enable setting an icon.
+* **Removed** widget-related methods and attributes from the :ref:`Annot` object.
+* **Removed** :ref:`Document` attributes ``openErrCode``, ``openErrMsg``, and :ref:`Tools` attributes / methods ``stderr``, ``reset_stderr``, ``stdout``, and ``reset_stdout``.
+* **Removed** **thirdparty zlib** dependency in PyMuPDF: there are now compression functions available in MuPDF.
+
+
 Changes in Version 1.14.20
 ---------------------------
 * **Changed** text marker annotations to support multiple rectangles / quadrilaterals. This fixes issue #341 ("Question : How to addhighlight so that a string spread across more than a line is covered by one highlight?") and similar (#285).
@@ -10,7 +40,7 @@ Changes in Version 1.14.20
 Changes in Version 1.14.19
 ---------------------------
 * **Fixed** issue #319 ("InsertText function error when use custom font").
-* **Added** new method :meth:`Document.getSigFlags` which return information on whether a PDF is signed, resolves issue #326 ("How to detect signature in a form pdf?").
+* **Added** new method :meth:`Document.getSigFlags` which returns information on whether a PDF is signed. Resolves issue #326 ("How to detect signature in a form pdf?").
 
 
 Changes in Version 1.14.17
@@ -95,7 +125,7 @@ Changes in Version 1.14.5
 * **Added** method :meth:`Pixmap.getImageData` which returns a bytes object representing the pixmap in a variety of formats. Previously, this could be done for PNG outputs only (:meth:`Pixmap.getPNGData`).
 * **Changed:** output of methods :meth:`Pixmap.writeImage` and (the new) :meth:`Pixmap.getImageData` may now also be PSD (Adobe Photoshop Document).
 * **Added** method :meth:`Shape.drawQuad` which draws a :ref:`Quad`. This actually is a shorthand for a :meth:`Shape.drawPolyline` with the edges of the quad.
-* **Changed** method :meth:`Shape.drawOval`: the argument can now be **either** a rectangle (rect-like) **or** a quadrilateral (quad-like).
+* **Changed** method :meth:`Shape.drawOval`: the argument can now be **either** a rectangle (:data:`rect_like`) **or** a quadrilateral (:data:`quad_like`).
 
 Changes in Version 1.14.4
 ---------------------------
@@ -139,7 +169,7 @@ To support MuPDF v1.14.0, massive changes were required in PyMuPDF -- most of th
 
 Behind the curtain, we have changed the implementation of geometry objects: they now purely exist in Python and no longer have "shadow" twins on the C-level (in MuPDF). This has improved processing speed in that area by more than a factor of two.
 
-Because of the same reason, most methods involving geometry parameters now also accept the corresponding Python sequence. For example, in method ``"page.showPDFpage(rect, ...)"`` parameter ``rect`` may now be any rect-like sequence.
+Because of the same reason, most methods involving geometry parameters now also accept the corresponding Python sequence. For example, in method ``"page.showPDFpage(rect, ...)"`` parameter ``rect`` may now be any :data:`rect_like` sequence.
 
 We also invested considerable effort to further extend and improve the :ref:`FAQ` chapter.
 
@@ -368,9 +398,9 @@ This is an extension of v1.11.0.
 
 * A new ``Pixmap`` constructor allows creating pixmap copies with an added alpha channel. A new method also allows directly manipulating alpha values.
 
-* Binary algebraic operations with geometry objects (matrices, rectangles and points) now generally also support lists or tuples as the second operand. You can add a tuple ``(x, y)`` of numbers to a :ref:`Point`. In this context, such sequences are called "point-like" (resp. matrix-like, rectangle-like).
+* Binary algebraic operations with geometry objects (matrices, rectangles and points) now generally also support lists or tuples as the second operand. You can add a tuple ``(x, y)`` of numbers to a :ref:`Point`. In this context, such sequences are called ":data:`point_like`" (resp. :data:`matrix_like`, :data:`rect_like`).
 
-* Geometry objects now fully support in-place operators. For example, ``p /= m`` replaces point p with ``p * 1/m`` for a number, or ``p * ~m`` for a matrix-like object ``m``. Similarly, if ``r`` is a rectangle, then ``r |= (3, 4)`` is the new rectangle that also includes ``fitz.Point(3, 4)``, and ``r &= (1, 2, 3, 4)`` is its intersection with ``fitz.Rect(1, 2, 3, 4)``.
+* Geometry objects now fully support in-place operators. For example, ``p /= m`` replaces point p with ``p * 1/m`` for a number, or ``p * ~m`` for a :data:`matrix_like` object ``m``. Similarly, if ``r`` is a rectangle, then ``r |= (3, 4)`` is the new rectangle that also includes ``fitz.Point(3, 4)``, and ``r &= (1, 2, 3, 4)`` is its intersection with ``fitz.Rect(1, 2, 3, 4)``.
 
 Changes in Version 1.11.0
 --------------------------------
