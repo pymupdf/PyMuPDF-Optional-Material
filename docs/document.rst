@@ -415,8 +415,9 @@ For addional details on **embedded files** refer to Appendix 3.
        pair: start_at; Document.insertPDF args
        pair: rotate; Document.insertPDF args
        pair: links; Document.insertPDF args
+       pair: annots; Document.insertPDF args
 
-    .. method:: insertPDF(docsrc, from_page=-1, to_page=-1, start_at=-1, rotate=-1, links=True)
+    .. method:: insertPDF(docsrc, from_page=-1, to_page=-1, start_at=-1, rotate=-1, links=True, annots=True)
 
       PDF only: Copy the page range **[from_page, to_page]** (including both) of PDF document ``docsrc`` into the current one. Inserts will start with page number ``start_at``. Negative values can be used to indicate default values. All pages thus copied will be rotated as specified. Links can be excluded in the target, see below. All page numbers are zero-based.
 
@@ -431,8 +432,9 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg int rotate: All copied pages will be rotated by the provided value (degrees, integer multiple of 90).
 
-      :arg bool links: Choose whether (internal and external) links should be included with the copy. Default is ``True``. An **internal** link is always excluded if its destination is outside the copied page range.
-
+      :arg bool links: Choose whether (internal and external) links should be included in the copy. Default is ``True``. An **internal link is always excluded**, if its destination is not one of the copied pages.
+      :arg bool annots: .. versionadded:: 1.16.1 Choose whether annotations should be included in the copy.
+      
     .. note::
 
        1. If ``from_page > to_page``, pages will be **copied in reverse order**. If ``0 <= from_page == to_page``, then one page will be copied.

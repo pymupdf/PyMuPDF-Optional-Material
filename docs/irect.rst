@@ -4,7 +4,7 @@
 IRect
 ==========
 
-IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corner coordinates are integers. IRect is used to specify an area of pixels, e.g. to receive image data during rendering. Otherwise, many similarities exist, e.g. considerations concerning emptiness and finiteness of rectangles also apply to ``IRects``.
+IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corner coordinates are integers. IRect is used to specify an area of pixels, e.g. to receive image data during rendering. Otherwise, many similarities exist, e.g. considerations concerning emptiness and finiteness of rectangles also apply to ref:`IRect`.
 
 ============================== ===========================================
 **Attribute / Method**          **Short Description**
@@ -49,7 +49,7 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
       If another irect is specified, a **new copy** will be made.
 
-      If sequence is specified, it must be a Python sequence type of 4 integers (see :ref:`SequenceTypes`). Non-integer numbers will be truncated, non-numeric entries will raise an exception.
+      If sequence is specified, it must be a Python sequence type of 4 numbers (see :ref:`SequenceTypes`). Non-integer numbers will be truncated, non-numeric entries will raise an exception.
 
       The other parameters mean integer coordinates.
 
@@ -65,20 +65,19 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
       Calculates the area of the rectangle and, with no parameter, equals ``abs(IRect)``. Like an empty rectangle, the area of an infinite rectangle is also zero.
 
-      :arg str unit: Specify required unit: respective squares of ``px`` (pixels, default), ``in`` (inches), ``cm`` (centimeters), or ``mm`` (millimeters).
+      :arg str unit: Specify required unit: respective squares of "px" (pixels, default), "in" (inches), "cm" (centimeters), or "mm" (millimeters).
 
       :rtype: float
 
    .. method:: intersect(ir)
 
-      The intersection (common rectangular area) of the current rectangle and ``ir`` is calculated and replaces the current rectangle. If either rectangle is empty, the result is also empty. If one of the rectangles is infinite, the other one is taken as the result -- and hence also infinite if both rectangles were infinite.
+      The intersection (common rectangular area) of the current rectangle and ``ir`` is calculated and replaces the current rectangle. If either rectangle is empty, the result is also empty. If either rectangle is infinite, the other one is taken as the result -- and hence also infinite if both rectangles were infinite.
 
-      :arg ir: Second rectangle.
-      :type ir: :ref:`IRect`
+      :arg rect_like ir: Second rectangle.
 
    .. method:: contains(x)
 
-      Checks whether ``x`` is contained in the rectangle. It may be an ``IRect``, ``Rect``,``Point`` or number. If ``x`` is an empty rectangle, this is always true. Conversely, if the rectangle is empty this is always ``False``, if ``x`` is not an empty rectangle and not a number. If ``x`` is a number, it will be checked to be one of the four components. ``x in irect`` and ``irect.contains(x)`` are equivalent.
+      Checks whether ``x`` is contained in the rectangle. It may be :data:`rect_like`, :data:`point_like` or a number. If ``x`` is an empty rectangle, this is always true. Conversely, if the rectangle is empty this is always ``False``, if ``x`` is not an empty rectangle and not a number. If ``x`` is a number, it will be checked to be one of the four components. ``x in irect`` and ``irect.contains(x)`` are equivalent.
 
       :arg x: the object to check.
       :type x: :ref:`IRect` or :ref:`Rect` or :ref:`Point` or int
@@ -96,7 +95,7 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
    .. method:: norm()
 
-      .. versionadded:: 1.16.0 Return the Euclidean norm of the rectangle as a vector.
+      .. versionadded:: 1.16.0 Return the Euclidean norm of the rectangle treated as a vector of four numbers.
 
    .. method:: normalize()
 

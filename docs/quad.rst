@@ -6,11 +6,13 @@ Quad
 
 Represents a four-sided mathematical shape (also called "quadrilateral" or "tetragon") in the plane, defined as a sequence of four :ref:`Point` objects ul, ur, ll, lr (conveniently called upper left, upper right, lower left, lower right).
 
-Quads of can **be obtained** as results of text search methods (:meth:`Page.searchFor`), and they **are used** to define text marker annotations (see e.g. :meth:`Page.addSquigglyAnnot` and friends).
+Quads can **be obtained** as results of text search methods (:meth:`Page.searchFor`), and they **are used** to define text marker annotations (see e.g. :meth:`Page.addSquigglyAnnot` and friends).
 
-.. note:: If ``m`` is a **rotation**, **scale** or a **translation** :ref:`Matrix`, and ``rect`` is a rectangle, then the four points ``rect.tl * m``, ``rect.tr * m``, ``rect.bl * m``,  and ``rect.br * m`` are the corners of a **rectangular quad**. This is **not in general true** -- counter-examples are shear matrices which produce parallelograms.
+.. note::
 
-.. note:: This class provides an attribute to calculate the envelopping rectangle. Vice versa, rectangles now have the attribute :attr:`Rect.quad`, resp. :attr:`IRect.quad` to obtain their respective tetragon versions.
+   * If ``m`` is a **rotation**, **scale** or a **translation** :ref:`Matrix`, and ``rect`` is a rectangle, then the four points ``"rect.tl * m"``, ``"rect.tr * m"``, ``"rect.bl * m"``,  and ``"rect.br * m"`` are the corners of a **rectangular quad**. Property :attr:`Quad.isRectangular` checks whether a quad can be thought of being the result of such a matrix operation. Be aware that e.g. shear matrices produce parallelograms, and non-invertible matrices may deliver degenerate tetragons like triangles or lines.
+
+   * This class has an attribute :attr:`Quad.rect` to obtain the envelopping rectangle. Vice versa, rectangles now have the attribute :attr:`Rect.quad`, resp. :attr:`IRect.quad` to obtain their respective tetragon versions.
 
 ============================= =======================================================
 **Methods / Attributes**      **Short Description**
@@ -20,8 +22,9 @@ Quads of can **be obtained** as results of text search methods (:meth:`Page.sear
 :attr:`Quad.ur`               upper right point
 :attr:`Quad.ll`               lower left point
 :attr:`Quad.lr`               lower right point
-:attr:`Quad.isEmpty`          true if corners define an empty area
-:attr:`Quad.isRectangular`    true if all angles are 90 degrees
+:attr:`Quad.isConvex`         true if quad is a convex set
+:attr:`Quad.isEmpty`          true if quad is an empty set
+:attr:`Quad.isRectangular`    true if quad is a (rotated) rectangle
 :attr:`Quad.rect`             smallest containing :ref:`Rect`
 :attr:`Quad.width`            the longest width value
 :attr:`Quad.height`           the longest height value
@@ -39,7 +42,7 @@ Quads of can **be obtained** as results of text search methods (:meth:`Page.sear
 
    .. method:: __init__(self, sequence)
 
-      Overloaded constructors: ``ul``, ``ur``, ``ll``, ``lr`` stand for :ref:`Point` objects (the 4 corners), "sequence" is a Python sequence type with 4 :ref:`Point` objects.
+      Overloaded constructors: ``ul``, ``ur``, ``ll``, ``lr`` stand for :data:`point_like` objects (the 4 corners), "sequence" is a Python sequence type with 4 :ref:`Point` objects.
 
       If "quad" is specified, the constructor creates a **new copy** of it.
 
@@ -82,6 +85,12 @@ Quads of can **be obtained** as results of text search methods (:meth:`Page.sear
 
       :type: :ref:`Point`
 
+   .. attribute:: isConvex
+
+      .. versionadded:: 1.16.1 True if a line is always contained in the quad if it connects two points of the quad. 
+
+      :type: bool
+
    .. attribute:: isEmpty
 
       True if enclosed area is zero, i.e. all points are on the same line. If this is false, the quad may still not look like a rectangle (but more like a triangle, trapezoid, etc.).
@@ -90,7 +99,7 @@ Quads of can **be obtained** as results of text search methods (:meth:`Page.sear
 
    .. attribute:: isRectangular
 
-      True if all angles are 90 degrees. This also implies that the area is **not empty**.
+      True if all angles are 90 degrees. This also implies that the area is **not empty** and **convex**.
 
       :type: bool
 

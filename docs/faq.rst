@@ -2076,12 +2076,12 @@ If multiple :data:`contents` objects are provided, they must be read and interpr
 
 There are good technical arguments for having multiple :data:`contents` objects:
 
-* It is a lot easier and faster to just add new :data:`contents` objects than maintaining a single big one (which entails reading, decompressing, modifying, recompressing, and rewriting it each time).
+* It is a lot easier and faster to just add new :data:`contents` objects than maintaining a single big one (which entails reading, decompressing, modifying, recompressing, and rewriting it for each change).
 * When working with incremental updates, a modified big :data:`contents` object will bloat the update delta and can thus easily negate the efficiency of incremental saves.
 
 For example, PyMuPDF adds new, small :data:`contents` objects in methods :meth:`Page.insertImage`, :meth:`Page.showPDFpage()` and the :ref:`Shape` methods.
 
-However, there are also situations when a single :data:`contents` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
+However, there are also situations when a **single** :data:`contents` object is beneficial: it is easier to interpret and better compressible than multiple smaller ones.
 
 Here are two ways of combining multiple contents of a page::
 
@@ -2092,24 +2092,20 @@ Here are two ways of combining multiple contents of a page::
             cont = page._getContents()[0]
             # do something with the cleaned, combined contents
 
-    >>> # method 2: self-concatenate multiple contents
+    >>> # method 2: concatenate multiple contents yourself
     >>> for page in doc:
             cont = b""              # initialize contents
             for xref in page._getContents(): # loop through content xrefs
                 cont += doc._getXrefStream(xref)
             # do something with the combined contents
 
-The clean function :meth:`Page._cleanContents` does a lot more than just glueing :data:`contents` objects: it also corrects the PDF operator syntax of the page and also that of **all of its annotations** (each :ref:`Annot` annotation also has its own contents object!).
-
-And of course, :meth:`Page._cleanContents` writes back its results to the PDF: when saving it, it will reflect those changes. The same happens for the complete PDF when you use the ``clean=True`` parameter in :meth:`Document.save`.
-
-This may exceed what you actually wanted to achieve.
+The clean function :meth:`Page._cleanContents` does a lot more than just glueing :data:`contents` objects: it also corrects and optimizes the PDF operator syntax of the page and removes any inconsistencies.
 
 ----------------------------------
 
-How to Access the PDF Catalog Object
+How to Access the PDF Catalog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This is a central ("root") object of a PDF which serves as a starting point to reach important other objects and which also contains some global options for the PDF::
+This is a central ("root") object of a PDF. It serves as a starting point to reach important other objects and it also contains some global options for the PDF::
 
     >>> import fitz
     >>> doc=fitz.open("PyMuPDF.pdf")
@@ -2117,12 +2113,12 @@ This is a central ("root") object of a PDF which serves as a starting point to r
     >>> print(doc._getXrefString(cat))     # print object definition
     <<
         /Type/Catalog                 % object type
-        /Pages 3593 0 R               % points to page object tree
+        /Pages 3593 0 R               % points to page tree
         /OpenAction 225 0 R           % action to perform on open
         /Names 3832 0 R               % points to global names tree
         /PageMode/UseOutlines         % show the TOC initially
         /PageLabels<</Nums[0<</S/D>>2<</S/r>>8<</S/D>>]>> % names given to pages
-        /Outlines 3835 0 R            % points to start of outline tree
+        /Outlines 3835 0 R            % points to outline tree
     >>
 
 .. note:: Indentation, line breaks and comments are inserted here for clarification purposes only and will not normally appear. For more information on the PDF catalogue see section 3.6.1 on page 137 of the :ref:`AdobeManual`.
@@ -2138,7 +2134,7 @@ The trailer of a PDF file is a :data:`dictionary` located towards the end of the
 ======= =========== ===================================================================================
 Size    int         Number of entries in the cross-reference table + 1.
 Prev    int         Offset to previous :data:`xref` section (indicates incremental updates).
-Root    dictionary  (indirect) Pointer to catalog object. See previous section.
+Root    dictionary  (indirect) Pointer to the catalog. See previous section.
 Encrypt dictionary  Pointer to encryption object (encrypted files only).
 Info    dictionary  (indirect) Pointer to information (metadata).
 ID      array       File identifier consisting of two byte strings.
@@ -2160,9 +2156,10 @@ How to Access XML Metadata
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A PDF may contain XML metadata in addition to the standard metadata format. In fact, most PDF reader or modification software adds this type of information when being used to save a PDF (Adobe, Nitro PDF, PDF-XChange, etc.).
 
-PyMuPDF has no way to interpret or change this information directly because it contains no XML features. The XML metadata is however stored as a stream object, so we do provide a way to read the XML stream and, potentially, also write back a modified stream or even delete it::
+PyMuPDF has no way to **interpret or change** this information directly, because it contains no XML features. The XML metadata is however stored as a :data:`stream` object, so we do provide a way to **read the XML** stream and, potentially, also write back a modified stream or even delete it::
 
     >>> metaxref = doc._getXmlMetadataXref()           # get xref of XML metadata
+    >>> # check if metaxref > 0!!!
     >>> doc._getXrefString(metaxref)                   # object definition
     '<</Subtype/XML/Length 3801/Type/Metadata>>'
     >>> xmlmetadata = doc._getXrefStream(metaxref)     # XML data (stream - bytes obj)
@@ -2175,9 +2172,10 @@ PyMuPDF has no way to interpret or change this information directly because it c
     ...
     <?xpacket end="w"?>
 
-Using some XML package, the XML data can be interpreted and / or modified and stored back::
+Using some XML package, the XML data can be interpreted and / or modified and then stored back::
 
     >>> # write back modified XML metadata:
     >>> doc._updateStream(metaxref, xmlmetadata)
+    >>>
     >>> # if these data are not wanted, delete them:
     >>> doc._delXmlMetadata()

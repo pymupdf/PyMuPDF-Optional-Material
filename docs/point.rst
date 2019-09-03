@@ -34,7 +34,7 @@ Point
 
       Without parameters, ``Point(0, 0)`` will be created.
 
-      With another point specified, a **new copy** will be crated, "sequence" must be Python sequence object of 2 floats (see :ref:`SequenceTypes`).
+      With another point specified, a **new copy** will be crated, "sequence" is a Python sequence of 2 numbers (see :ref:`SequenceTypes`).
 
      :arg float x: x coordinate of the point
 
@@ -42,17 +42,18 @@ Point
 
    .. method:: distance_to(x [, unit])
 
-      Calculates the distance to ``x``, which may be a :ref:`Rect`, :ref:`IRect` or :ref:`Point`. The distance is given in units of either ``px`` (pixels, default), ``in`` (inches), ``mm`` (millimeters) or ``cm`` (centimeters).
+      Calculate the distance to ``x``, which may be :data:`point_like` or :data:`rect_like`. The distance is given in units of either pixels (default), inches, centimeters or millimeters.
 
-      .. note:: If ``x`` is a rectangle, the distance is calculated to the finite version of it.
+     :arg point_like,rect_like x: to which to compute the distance.
 
-     :arg x: the object to which the distance is calculated.
-     :type `x`: :ref:`Rect` or :ref:`IRect` or :ref:`Point`
+     :arg str unit: the unit to be measured in. One of "px", "in", "cm", "mm".
 
-     :arg str unit: the unit to be measured in. One of ``px``, ``in``, ``cm``, ``mm``.
-
-     :returns: distance to object ``x``.
      :rtype: float
+     :returns: the distance to ``x``. If this is :data:`rect_like`, then the distance
+
+         * is the length of the shortest line connecting to one of the rectangle sides
+         * is calculated to the **finite version** of it
+         * is zero if it **contains** the point
 
    .. method:: norm()
 
@@ -68,7 +69,7 @@ Point
 
    .. attribute:: unit
 
-      Result of dividing each coordinate by ``abs(point)``, the distance of the point to (0,0). This is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
+      Result of dividing each coordinate by ``norm(point)``, the distance of the point to (0,0). This is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
 
       .. image:: images/img-point-unit.jpg
 

@@ -14,7 +14,7 @@ The following remarks are also valid for :ref:`IRect` objects:
 
 Hence some useful classification:
 
-* A rectangle is called **finite** if ``x0 <= x1`` and ``y0 <= y1`` (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, **only one** is finite (disregarding degenerate cases).
+* A rectangle is called **finite** if ``x0 <= x1`` and ``y0 <= y1`` (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, **only one** is finite (disregarding degenerate cases). Please note however, that this mental picture is applicable for **positive y coordinates** only.
 
 * A rectangle is called **empty** if ``x0 = x1`` or ``y0 = y1``, i.e. if its area is zero.
 
@@ -68,11 +68,11 @@ Hence some useful classification:
 
    .. method:: __init__(self, sequence)
 
-      Overloaded constructors: ``top_left``, ``bottom_right`` stand for :ref:`Point` objects, "sequence" is a Python sequence type with 4 float values (see :ref:`SequenceTypes`), "rect" means another rectangle, while the other parameters mean float coordinates.
+      Overloaded constructors: ``top_left``, ``bottom_right`` stand for :data:`point_like` objects, "sequence" is a Python sequence type of 4 numbers (see :ref:`SequenceTypes`), "rect" means another :data:`rect_like`, while the other parameters mean coordinates.
 
       If "rect" is specified, the constructor creates a **new copy** of it.
 
-      Without parameters, the rectangle ``Rect(0.0, 0.0, 0.0, 0.0)`` is created.
+      Without parameters, the empty rectangle ``Rect(0.0, 0.0, 0.0, 0.0)`` is created.
 
    .. method:: round()
 

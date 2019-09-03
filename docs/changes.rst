@@ -1,6 +1,16 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.1
+---------------------------
+* **Added** property :attr:`Quad.isConvex` to check whether a line is contained in the quad if it connects two points of the quad.
+* **Changed** :meth:`Document.insertPDF` to now allow dropping or including links and annotations independently during the copy. Fixes issue #352 ("Corrupt PDF data and ..."), which seemed to intermittently occur when using the method for some problematic PDF files.
+* **Fixed** a bug which, in matrix division using the syntax ``"m1/m2"``, caused matrix ``"m1"`` to be **replaced** by the result instead of delivering a new matrix.
+* **Fixed** issue #354 ("SyntaxWarning with Python 3.8"). We now always use ``"=="`` for literals (instead of the ``"is"`` Python keyword).
+* **Fixed** issue #353 ("mupdf version check"), to no longer refuse the import when there were only patch level deviations from MuPDF.
+
+
+
 Changes in Version 1.16.0
 ---------------------------
 This major new version of MuPDF comes with several nice new or changed features. Some of them imply programming API changes, however. This is a synopsis of what has changed:
@@ -21,14 +31,14 @@ List of change details:
 * **Added** outputting the text color in :meth:`Page.getText`: the ``"dict"``, ``"rawdict"`` and ``"xml"`` options now also show the color in sRGB format.
 * **Changed** :attr:`Document.permissions` to now contain an integer of bool indicators -- was a dictionary before.
 * **Changed** :meth:`Document.save`, :meth:`Document.write`, which now fully support password-based decryption and encryption of PDF files.
-* **Changed the names of all Python constants** related to annotations and widgets. Please make sure to consult the **Constants and Enumerations** chapter if your script is dealing with these two classes. This decision goes back to the dropped support for non-PDF annotations. The **old names** (starting with "ANNOT_" or "WIDGET_") will be available as deprecated synonyms.
+* **Changed the names of all Python constants** related to annotations and widgets. Please make sure to consult the **Constants and Enumerations** chapter if your script is dealing with these two classes. This decision goes back to the dropped support for non-PDF annotations. The **old names** (starting with "ANNOT_*" or "WIDGET_*") will be available as deprecated synonyms.
 * **Changed** font support for widgets: only ``Cour`` (Courier), ``Helv`` (Helvetica, default), ``TiRo`` (Times-Roman) and ``ZaDb`` (ZapfDingBats) are accepted when **adding or changing** form fields. Only the plain versions are possible -- not their italic or bold variations. **Reading** widgets, however will show its original font.
 * **Changed** the name of the warnings buffer to :meth:`Tools.mupdf_warnings` and the function to empty this buffer is now called :meth:`Tools.reset_mupdf_warnings`.
 * **Changed** :meth:`Page.getPixmap`, :meth:`Document.getPagePixmap`: a new bool argument ``annots`` can now be used to **suppress the rendering of annotations** on the page.
 * **Changed** :meth:`Page.addFileAnnot` and :meth:`Page.addTextAnnot` to enable setting an icon.
 * **Removed** widget-related methods and attributes from the :ref:`Annot` object.
 * **Removed** :ref:`Document` attributes ``openErrCode``, ``openErrMsg``, and :ref:`Tools` attributes / methods ``stderr``, ``reset_stderr``, ``stdout``, and ``reset_stdout``.
-* **Removed** **thirdparty zlib** dependency in PyMuPDF: there are now compression functions available in MuPDF.
+* **Removed** **thirdparty zlib** dependency in PyMuPDF: there are now compression functions available in MuPDF. Source installers of PyMuPDF may now omit this extra installation step.
 
 
 Changes in Version 1.14.20
