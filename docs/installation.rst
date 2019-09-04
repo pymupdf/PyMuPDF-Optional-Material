@@ -23,7 +23,7 @@ Download ``mupdf-x.xx.x-source.tar.gz`` from https://mupdf.com/downloads/archive
 
 On occasion, vital hot fixes or functional enhancements must be applied to MuPDF sources before it is generated.
 
-Any such files are contained in the ``fitz`` directory of the PyMuPDF download -- their names all start with an underscore ``"_"``. Currently (v1.16.x), these files and their copy destinations are the following:
+Any such files are contained in the ``fitz`` directory of the `PyMuPDF homepage <https://github.com/pymupdf/PyMuPDF/tree/master/fitz>`_ -- their names all start with an underscore ``"_"``. Currently (v1.16.x), these files and their copy destinations are the following:
 
 * ``_config.h`` -- PyMuPDF's configuration to control the binary file size and the inclusion of MuPDF features, see next section. This file must renamed and replace MuPDF file ``/include/mupdf/fitz/config.h``. This file controls the size of the PyMuPDF binary by cutting away unneeded fonts from MuPDF.
 

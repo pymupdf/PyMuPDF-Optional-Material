@@ -10,9 +10,9 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
 .. note::
 
-   * If ``m`` is a **rotation**, **scale** or a **translation** :ref:`Matrix`, and ``rect`` is a rectangle, then the four points ``"rect.tl * m"``, ``"rect.tr * m"``, ``"rect.bl * m"``,  and ``"rect.br * m"`` are the corners of a **rectangular quad**. Property :attr:`Quad.isRectangular` checks whether a quad can be thought of being the result of such a matrix operation. Be aware that e.g. shear matrices produce parallelograms, and non-invertible matrices may deliver degenerate tetragons like triangles or lines.
+   * If the corners of a rectangle are transformed with a **rotation**, **scale** or **translation** :ref:`Matrix`, then the resulting quad is **rectangular**, i.e. its corners again enclose angles of 90 degrees. Property :attr:`Quad.isRectangular` checks whether a quad can be thought of being the result of such an operation. This is not true for all matrices: e.g. shear matrices produce parallelograms, and non-invertible matrices deliver "degenerate" tetragons like triangles or lines.
 
-   * This class has an attribute :attr:`Quad.rect` to obtain the envelopping rectangle. Vice versa, rectangles now have the attribute :attr:`Rect.quad`, resp. :attr:`IRect.quad` to obtain their respective tetragon versions.
+   * Attribute :attr:`Quad.rect` obtains the envelopping rectangle. Vice versa, rectangles now have attributes :attr:`Rect.quad`, resp. :attr:`IRect.quad` to obtain their respective tetragon versions.
 
 ============================= =======================================================
 **Methods / Attributes**      **Short Description**
@@ -42,7 +42,7 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
    .. method:: __init__(self, sequence)
 
-      Overloaded constructors: ``ul``, ``ur``, ``ll``, ``lr`` stand for :data:`point_like` objects (the 4 corners), "sequence" is a Python sequence type with 4 :ref:`Point` objects.
+      Overloaded constructors: "ul", "ur", "ll", "lr" stand for :data:`point_like` objects (the four corners), "sequence" is a Python sequence type with four :data:`point_like` objects.
 
       If "quad" is specified, the constructor creates a **new copy** of it.
 
@@ -52,6 +52,8 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
    .. method:: transform(matrix)
 
       Modify the quadrilateral by transforming each of its corners with a matrix.
+
+      :arg matrix_like matrix: the matrix.
 
    .. attribute:: rect
 
@@ -93,7 +95,7 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
    .. attribute:: isEmpty
 
-      True if enclosed area is zero, i.e. all points are on the same line. If this is false, the quad may still not look like a rectangle (but more like a triangle, trapezoid, etc.).
+      True if enclosed area is zero, which means that all four points are on the same line. If this is false, the quad may still be degenerate or not look like a rectangle at all (triangles, parallelograms, trapezoids, ...).
 
       :type: bool
 
