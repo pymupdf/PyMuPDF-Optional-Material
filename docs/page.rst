@@ -608,13 +608,15 @@ This is available for PDF documents only. There are basically two groups of meth
 
          5. The most efficient way to display the same image on multiple pages is another method: :meth:`showPDFpage`. Consult :meth:`Document.convertToPDF` for how to obtain intermediary PDFs usable for that method. Demo script `fitz-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/fitz-logo.py>`_ implements a fairly complete approach.
 
-   .. method:: getText(output="text")
+   .. method:: getText(output="text", flags=None)
 
       Retrieves the content of a page in a variety of formats.
 
       If "text" is specified, plain text is returned **in the order as specified during document creation** (i.e. not necessarily in normal reading order).
 
       :arg str output: A string indicating the requested format, one of "text" (default), "html", "dict", "rawdict", "xml", "xhtml" or "json". A mixture of upper and lower case is supported.
+
+      :arg int flags: .. versionadded:: 1.16.2 indicator bits to control whether to include images or how text should be handled with respect to (white) spaces and ligatures. See :ref:`TextPreserve` for available indicators and :ref:`text_extraction_flags` for default settings.
 
       :rtype: (*str* or *dict*)
       :returns: The page's content as one string or as a dictionary. The information levels of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use "dict", it is more convenient and faster. To see the dictionary structure, have a look at :ref:`textpagedict`.

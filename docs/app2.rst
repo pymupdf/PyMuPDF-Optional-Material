@@ -108,7 +108,11 @@ To address the font issue, you can use a simple utility script to scan through t
 DICT (or JSON)
 ~~~~~~~~~~~~~~~~
 
-DICT (JSON) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` -- boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output. Here is how this looks like::
+DICT (JSON) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` -- boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output.
+
+For a visuallization of the dictionary structure have a look at :ref:`textpagedict`.
+
+Here is how this looks like::
 
  In [2]: doc = fitz.open("pymupdf.pdf")
  In [3]: page = doc[0]
@@ -267,17 +271,25 @@ A variation of TEXT but in HTML format, containing the bare text and images ("se
  <p><b>Dec 13, 2017</b></p>
  </div>
 
+.. _text_extraction_flags:
 
-Further Remarks
-~~~~~~~~~~~~~~~~~
+Text Extraction Flags Defaults
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. versionadded:: 1.16.2 Methods :meth:`Page.getText`, :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` support a keyword parameter ``flags`` *(int)* to control the amount and the quality of extracted data. The following table shows the defaults settings (flags parameter omitted or None) for each extraction variant. A description of the respective bit settings can be found in :ref:`TextPreserve`.
 
-1. We have modified MuPDF's **plain text** extraction: The original prints out every line followed by a newline character. This leads to a rather ragged, space-wasting look. We have combined all lines of a text block into one, separating lines by space characters. We also do not add extra newline characters at the end of blocks.
+========================= ====== ====== ======= ===== ====== ========= ============ =============
+Indicator TEXT_*          "text" "html" "xhtml" "xml" "dict" "rawdict" getTextWords getTextBlocks
+========================= ====== ====== ======= ===== ====== ========= ============ =============
+PRESERVE_LIGATURES         1      1     1        1    1      1          1           1
+PRESERVE_WHITESPACE        1      1     1        1    1      1          1           1
+PRESERVE_IMAGES            n/a    1     1        n/a  1      1          n/a         0
+INHIBIT_SPACES             1      1     1        1    1      1          1           1
+========================= ====== ====== ======= ===== ====== ========= ============ =============
 
-2. The extraction methods each have its own default behavior concerning images: "TEXT" and "XML" do not extract images, while the others do. On occasion it may make sense to **switch off images** for them, too. See chapter :ref:`cooperation` on how to achieve this. To **exclude images**, use an argument of ``3`` when you create the :ref:`TextPage`.
-
-3. Apart from the above "standard" ones, we offer additional extraction methods :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` for performance reasons. They return lists of a page's text blocks, resp. words. Each list item contains text accompanied by its rectangle ("bbox", location on the page). This should help to resolve extraction issues around multi-column or boxed text.
-
-4. For uttermost detail, down to the level of one character, use RAWDICT extraction.
+* String literals above indicate :meth:`Page.getText` parameter specifications.
+* The missing **"json"** entry above is handled exactly like **"dict"** and is hence left out.
+* An "n/a" specification means a value of 0 and setting this bit never has any effect on the output (but an adverse effect on performance).
+* If you are not interested in images when using an output variant which includes them by default, then by all means set the respective bit off: You will experience a better performance and much lower space requirements.
 
 
 Performance

@@ -166,6 +166,10 @@ Options controlling the amount of data a text device parses into a :ref:`TextPag
 
     4 -- If this option is set, then images will be stored in the structured text structure. The default is to ignore all images.
 
+.. py:data:: TEXT_INHIBIT_SPACES
+
+    8 -- If this option is set, we will not try to add missing space characters where there are large gaps between characters.
+
 
 .. _linkDest Kinds:
 

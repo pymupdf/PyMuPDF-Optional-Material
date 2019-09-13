@@ -4,7 +4,7 @@
 Rect
 ==========
 
-``Rect`` represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are viewed as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their intuitive meanings -- read on.
+``Rect`` represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are treated as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their intuitive meanings -- read on.
 
 The following remarks are also valid for :ref:`IRect` objects:
 
@@ -14,7 +14,7 @@ The following remarks are also valid for :ref:`IRect` objects:
 
 Hence some useful classification:
 
-* A rectangle is called **finite** if ``x0 <= x1`` and ``y0 <= y1`` (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, **only one** is finite (disregarding degenerate cases). Please note however, that this mental picture is applicable for **positive y coordinates** only.
+* A rectangle is called **finite** if ``x0 <= x1`` and ``y0 <= y1`` (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, **only one** is finite (disregarding degenerate cases). Please take into account, that in MuPDF's coordinate system the y-axis is oriented from **top to bottom**.
 
 * A rectangle is called **empty** if ``x0 = x1`` or ``y0 = y1``, i.e. if its area is zero.
 
@@ -76,21 +76,22 @@ Hence some useful classification:
 
    .. method:: round()
 
-      Creates the smallest containing :ref:`IRect` (this is **not** the same as simply rounding the rectangle's edges!).
+      Creates the smallest containing :ref:`IRect`, This is **not** the same as simply rounding the rectangle's edges: The top left corner is rounded upwards and left while the bottom right corner is rounded downwards and to the right.
+
+      >>> fitz.Rect(0.5, -0.01, 123.88, 455.123456).round()
+      IRect(0, -1, 124, 456)
 
       1. If the rectangle is **infinite**, the "normalized" (finite) version of it will be taken. The result of this method is always a finite ``IRect``.
       2. If the rectangle is **empty**, the result is also empty.
       3. **Possible paradox:** The result may be empty, **even if** the rectangle is **not** empty! In such cases, the result obviously does **not** contain the rectangle. This is because MuPDF's algorithm allows for a small tolerance (1e-3). Example:
 
       >>> r = fitz.Rect(100, 100, 200, 100.001)
-      >>> r.isEmpty
+      >>> r.isEmpty  # rect is NOT empty
       False
-      >>> r.round()
+      >>> r.round()  # but its irect IS empty!
       fitz.IRect(100, 100, 200, 100)
       >>> r.round().isEmpty
       True
-
-      To reproduce this funny effect on your platform, you may need to adjust the numbers a little after the decimal point.
 
       :rtype: :ref:`IRect`
 
@@ -145,16 +146,15 @@ Hence some useful classification:
 
    .. method:: intersects(r)
 
-      Checks whether the rectangle and ``r`` (a ``Rect`` or :ref:`IRect`) have a non-empty rectangle in common. This will always be ``False`` if either is infinite or empty.
+      Checks whether the rectangle and a :data:`rect_like` "r" contain a common non-empty :ref:`Rect`. This will always be ``False`` if either is infinite or empty.
 
-      :arg r: the rectangle to check.
-      :type r: :ref:`IRect` or :ref:`Rect`
+      :arg rect_like r: the rectangle to check.
 
       :rtype: bool
 
    .. method:: norm()
 
-      .. versionadded:: 1.16.0 Return the Euclidean norm of the rectangle as a vector. For rectangles, this is different from ``abs()``, which returns the rectangle area!
+      .. versionadded:: 1.16.0 Return the Euclidean norm of the rectangle treated as a vector of four numbers.
 
    .. method:: normalize()
 
@@ -250,104 +250,8 @@ Hence some useful classification:
 
       :type: bool
 
-Remark
-------
-This class adheres to the sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
+.. note::
 
-Rect Algebra
------------------
-For a general background, see chapter :ref:`Algebra`.
+   * This class adheres to the Python sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
+   * Rectangles can be used with arithmetic operators -- see chapter :ref:`Algebra`.
 
-Examples
-----------
-
-**Example 1 -- different ways of construction:**
-
->>> p1 = fitz.Point(10, 10)
->>> p2 = fitz.Point(300, 450)
->>>
->>> fitz.Rect(p1, p2)
-fitz.Rect(10.0, 10.0, 300.0, 450.0)
->>>
->>> fitz.Rect(10, 10, 300, 450)
-fitz.Rect(10.0, 10.0, 300.0, 450.0)
->>>
->>> fitz.Rect(10, 10, p2)
-fitz.Rect(10.0, 10.0, 300.0, 450.0)
->>>
->>> fitz.Rect(p1, 300, 450)
-fitz.Rect(10.0, 10.0, 300.0, 450.0)
-
-**Example 2 -- what happens during rounding:**
-
->>> r = fitz.Rect(0.5, -0.01, 123.88, 455.123456)
->>>
->>> r
-fitz.Rect(0.5, -0.009999999776482582, 123.87999725341797, 455.1234436035156)
->>>
->>> r.round()     # = r.irect
-fitz.IRect(0, -1, 124, 456)
-
-**Example 3 -- inclusion and itersection:**
-
->>> m = fitz.Matrix(45)
->>> r = fitz.Rect(10, 10, 410, 610)
->>> r * m
-fitz.Rect(-424.2640686035156, 14.142135620117188, 282.84271240234375, 721.2489013671875)
->>>
->>> r | fitz.Point(5, 5)
-fitz.Rect(5.0, 5.0, 410.0, 610.0)
->>>
->>> r + 5
-fitz.Rect(15.0, 15.0, 415.0, 615.0)
->>>
->>> r & fitz.Rect(0, 0, 15, 15)
-fitz.Rect(10.0, 10.0, 15.0, 15.0)
-
-**Example 4 -- containment:**
-
->>> r = fitz.Rect(...)     # any rectangle
->>> ir = r.irect           # its IRect version
->>> # even though you get ...
->>> ir in r
-True
->>> # ... and ...
->>> r in ir
-True
->>> # ... r and ir are still different types!
->>> r == ir
-False
->>> # corners are always part of non-epmpty rectangles
->>> r.bottom_left in r
-True
->>>
->>> # numbers are checked against coordinates
->>> r.x0 in r
-True
-
-**Example 5 -- create a finite copy:**
-
-Create a copy that is **guarantied to be finite** in two ways:
-
->>> r = fitz.Rect(...)     # any rectangle
->>>
->>> # alternative 1
->>> s = fitz.Rect(r.top_left, r.top_left)   # just a point
->>> s | r.bottom_right     # s is a finite rectangle!
->>>
->>> # alternative 2
->>> s = (+r).normalize()
->>> # r.normalize() changes r itself!
-
-**Example 6 -- adding a Python sequence:**
-
-Enlarge rectangle by 5 pixels in every direction:
-
->>> r  = fitz.Rect(...)
->>> r1 = r + (-5, -5, 5, 5)
-
-**Example 7 -- inline operations:**
-
-Replace a rectangle with its transformation by the inverse of a :data:`matrix_like` object:
-
->>> r /= (1, 2, 3, 4, 5, 6)

@@ -717,11 +717,11 @@ For addional details on **embedded files** refer to Appendix 3.
 
       Contains the document's meta data as a Python dictionary or ``None`` (if ``isEncrypted=True`` and ``needPass=True``). Keys are ``format``, ``encryption``, ``title``, ``author``, ``subject``, ``keywords``, ``creator``, ``producer``, ``creationDate``, ``modDate``. All item values are strings or ``None``.
 
-      Except ``format`` and ``encryption``, the key names correspond in an obvious way to the PDF keys ``/Creator``, ``/Producer``, ``/CreationDate``, ``/ModDate``, ``/Title``, ``/Author``, ``/Subject``, and ``/Keywords`` respectively.
+      Except ``format`` and ``encryption``, for PDF documents, the key names correspond in an obvious way to the PDF keys ``/Creator``, ``/Producer``, ``/CreationDate``, ``/ModDate``, ``/Title``, ``/Author``, ``/Subject``, and ``/Keywords`` respectively.
 
-      - ``format`` contains the PDF version (e.g. 'PDF-1.6').
+      - ``format`` contains the document format (e.g. 'PDF-1.6', 'XPS', 'EPUB').
 
-      - ``encryption`` either contains ``None`` (no encryption), or a string naming an encryption method (e.g. ``'Standard V4 R4 128-bit RC4'``). Note that an encryption method may be specified **even if** ``needsPass=False``. In such cases not all permissions will probably have been granted. Check dictionary ``permissions`` for details.
+      - ``encryption`` either contains ``None`` (no encryption), or a string naming an encryption method (e.g. ``'Standard V4 R4 128-bit RC4'``). Note that an encryption method may be specified **even if** ``needsPass=False``. In such cases not all permissions will probably have been granted. Check :attr:`Document.permissions` for details.
 
       - If the date fields contain valid data (which need not be the case at all!), they are strings in the PDF-specific timestamp format "D:<TS><TZ>", where
 

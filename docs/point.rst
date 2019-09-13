@@ -93,40 +93,8 @@ Point
 
       :type: float
 
-Remark
-------
-This class adheres to the sequence protocol, so components can be manipulated via their index. Also refer to :ref:`SequenceTypes`.
+.. note::
 
-Point Algebra
-------------------
-For a general background, see chapter :ref:`Algebra`.
+   * This class adheres to the Python sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
+   * Rectangles can be used with arithmetic operators -- see chapter :ref:`Algebra`.
 
-Examples
----------
-This should illustrate some basic uses:
-
->>> fitz.Point(1, 2) * fitz.Matrix(90)
-fitz.Point(-2.0, 1.0)
->>>
->>> fitz.Point(1, 2) * 3
-fitz.Point(3.0, 6.0)
->>>
->>> fitz.Point(1, 2) + 3
-fitz.Point(4.0, 5.0)
->>>
->>> fitz.Point(25, 30) + fitz.Point(1, 2)
-fitz.Point(26.0, 32.0)
->>> fitz.Point(25, 30) + (1, 2)
-fitz.Point(26.0, 32.0)
->>>
->>> fitz.Point([1, 2])
-fitz.Point(1.0, 2.0)
->>>
->>> -fitz.Point(1, 2)
-fitz.Point(-1.0, -2.0)
->>>
->>> abs(fitz.Point(25, 30))
-39.05124837953327
->>>
->>> fitz.Point(1, 2) / (1, 2, 3, 4, 5, 6)
-fitz.Point(2.0, -2.0)

@@ -1,13 +1,20 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.2
+---------------------------
+* **Changed** text extraction methods of :ref:`Page` to allow detail control of the amount of extracted data.
+* **Added** :meth:`planishLine` which maps a given line (defined as a pair of points) to the x-axis.
+* **Fixed** an issue (w/o Github number) which brought down the interpreter when encountering certain non-UTF-8 encodable characters while using :meth:`Page.getText` with te "dict" option.
+* **Fixed** issue #362 ("Memory Leak with getText('rawDICT')").
+
 Changes in Version 1.16.1
 ---------------------------
 * **Added** property :attr:`Quad.isConvex` to check whether a line is contained in the quad if it connects two points of the quad.
 * **Changed** :meth:`Document.insertPDF` to now allow dropping or including links and annotations independently during the copy. Fixes issue #352 ("Corrupt PDF data and ..."), which seemed to intermittently occur when using the method for some problematic PDF files.
 * **Fixed** a bug which, in matrix division using the syntax ``"m1/m2"``, caused matrix ``"m1"`` to be **replaced** by the result instead of delivering a new matrix.
 * **Fixed** issue #354 ("SyntaxWarning with Python 3.8"). We now always use ``"=="`` for literals (instead of the ``"is"`` Python keyword).
-* **Fixed** issue #353 ("mupdf version check"), to no longer refuse the import when there were only patch level deviations from MuPDF.
+* **Fixed** issue #353 ("mupdf version check"), to no longer refuse the import when there are only patch level deviations from MuPDF.
 
 
 

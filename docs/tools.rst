@@ -68,7 +68,6 @@ This class is a collection of utility methods and attributes, mainly around memo
       img               IMG documents
       html              HTML documents
       epub              EPUB documents
-      gprf              Ghostscript proofing documents
       jpx               JPEG2000 images
       js                JavaScript
       tofu              all TOFU fonts
@@ -100,7 +99,6 @@ This class is a collection of utility methods and attributes, mainly around memo
         'img': True,
         'html': True,
         'epub': True,
-        'gprf': False,
         'jpx': True,
         'js': True,
         'tofu': False,
@@ -167,4 +165,4 @@ Example Session
 
 .. [#f1] This memory area is internally used by MuPDF, and it serves as a cache for objects that have already been read and interpreted, thus improving performance. The most bulky object types are images and also fonts. When an application starts up the MuPDF library (in our case this happens as part of ``import fitz``), it must specify a maximum size for this area. PyMuPDF's uses the default value (256 MB) to limit memory consumption. Use the methods here to control or investigate store usage. For example: even after a document has been closed and all related objects have been deleted, the store usage may still not drop down to zero. So you might want to enforce that before opening another document.
 
-.. [#f2] Optionally, all dynamic management of memory can be done using Python C-level calls. MuPDF offers a hook to insert user-preferred memory managers. We are using option this for Python version 3 since PyMuPDF v1.13.19.At the same time, all memory allocation in PyMuPDF itself is also routed to Python (i.e. no more direct ``malloc()`` calls in the code). We have seen improved memory usage and slightly reduced runtimes with this option set. If you want to change this, you can set ``#define JM_MEMORY 0`` (uses standard C malloc, or 1 for Python allocation )in file ``fitz.i`` and then generate PyMuPDF.
+.. [#f2] Optionally, all dynamic management of memory can be done using Python C-level calls. MuPDF offers a hook to insert user-preferred memory managers. We are using option this for Python version 3 since PyMuPDF v1.13.19. At the same time, all memory allocation in PyMuPDF itself is also routed to Python (i.e. no more direct ``malloc()`` calls in the code). We have seen improved memory usage and slightly reduced runtimes with this option set. If you want to change this, you can set ``#define JM_MEMORY 0`` (uses standard C malloc, or 1 for Python allocation )in file ``fitz.i`` and then generate PyMuPDF.

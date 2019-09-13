@@ -6,7 +6,7 @@ Quad
 
 Represents a four-sided mathematical shape (also called "quadrilateral" or "tetragon") in the plane, defined as a sequence of four :ref:`Point` objects ul, ur, ll, lr (conveniently called upper left, upper right, lower left, lower right).
 
-Quads can **be obtained** as results of text search methods (:meth:`Page.searchFor`), and they **are used** to define text marker annotations (see e.g. :meth:`Page.addSquigglyAnnot` and friends).
+Quads can **be obtained** as results of text search methods (:meth:`Page.searchFor`), and they **are used** to define text marker annotations (see e.g. :meth:`Page.addSquigglyAnnot` and friends), and in several draw methods (like :meth:`Page.drawQuad` / :meth:`Shape.drawQuad`, :meth:`Page.drawOval`/ :meth`Shape.drawQuad`).
 
 .. note::
 
@@ -42,7 +42,7 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
    .. method:: __init__(self, sequence)
 
-      Overloaded constructors: "ul", "ur", "ll", "lr" stand for :data:`point_like` objects (the four corners), "sequence" is a Python sequence type with four :data:`point_like` objects.
+      Overloaded constructors: "ul", "ur", "ll", "lr" stand for :data:`point_like` objects (the four corners), "sequence" is a Python sequence with four :data:`point_like` objects.
 
       If "quad" is specified, the constructor creates a **new copy** of it.
 
@@ -89,7 +89,7 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
    .. attribute:: isConvex
 
-      .. versionadded:: 1.16.1 True if a line is always contained in the quad if it connects two points of the quad. 
+      .. versionadded:: 1.16.1 True if a line is always contained in the quad if it connects two points belonging to the quad. 
 
       :type: bool
 

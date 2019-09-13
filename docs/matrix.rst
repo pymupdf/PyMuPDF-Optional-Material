@@ -166,46 +166,18 @@ Please note:
 
       :type: bool
 
-Remarks 1
----------
-This class adheres to the sequence protocol, so components can be maintained via their index, too. Also refer to :ref:`SequenceTypes`.
+.. note::
 
-Remarks 2
----------
-Changes of matrix properties and execution of matrix methods can be executed consecutively. This is the same as multiplying the respective matrices.
+   * This class adheres to the Python sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
+   * A matrix can be used with arithmetic operators -- see chapter :ref:`Algebra`.
+   * Changes of matrix properties and execution of matrix methods can be executed consecutively. This is the same as multiplying the respective matrices.
+   * Matrix multiplication is **not commutative** -- changing the execution sequence in general changes the result. So it can quickly become unclear which result a transformation will yield.
 
-Matrix multiplication is **not commutative** -- changing the execution sequence in general changes the result. So it can quickly become unclear which result a transformation will yield.
-
-To keep results foreseeable for a series of transformations, Adobe recommends the following approach (:ref:`AdobeManual`, page 206):
+To keep results foreseeable for a series of matrix operations, Adobe recommends the following approach (:ref:`AdobeManual`, page 206):
 
 1. Shift ("translate")
 2. Rotate
 3. Scale or shear ("skew")
-
-Matrix Algebra
--------------------
-For a general background, see chapter :ref:`Algebra`.
-
-This makes the following operations possible:
-
->>> m45p = fitz.Matrix(45)            # rotate 45 degrees clockwise
->>> m45m = fitz.Matrix(-45)           # rotate 45 degrees counterclockwise
->>> m90p = fitz.Matrix(90)            # rotate 90 degrees clockwise
->>>
->>> abs(m45p * ~m45p - fitz.Identity) # should be (close to) zero:
-8.429369702178807e-08
->>>
->>> abs(m90p - m45p * m45p)           # should be (close to) zero:
-8.429369702178807e-08
->>>
->>> abs(m45p * m45m - fitz.Identity)  # should be (close to) zero:
-2.1073424255447017e-07
->>>
->>> abs(m45p - ~m45m)                 # should be (close to) zero:
-2.384185791015625e-07
->>>
->>> m90p * m90p * m90p * m90p         # should be 360 degrees = fitz.Identity
-fitz.Matrix(1.0, -0.0, 0.0, 1.0, 0.0, 0.0)
 
 
 Examples

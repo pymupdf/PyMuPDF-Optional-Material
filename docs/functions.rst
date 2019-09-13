@@ -47,6 +47,7 @@ Yet others are handy, general-purpose utilities.
 :meth:`Page.run`                     run a page through a device
 :meth:`Page._wrapContents`           wrap contents with stacking commands
 :attr:`Page._isWrapped`              check whether contents wrapping is present
+:meth:`planishLine`                  matrix to map a line to the x-axis
 :meth:`PaperSize`                    return width, height for a known paper format
 :meth:`PaperRect`                    return rectangle for a known paper format
 :attr:`paperSizes`                   dictionary of pre-defined paper formats
@@ -83,6 +84,31 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
+   .. method:: planishLine(p1, p2)
+
+      .. versionadded:: 1.16.2 Return a matrix which maps the line from p1 to p2 to the x-axis such that p1 will become (0,0) and p2 a point with the same distance to (0,0).
+
+      :arg point_like p1: starting point of the line.
+      :arg point_like p2: end point of the line.
+
+      :rtype: :ref:`Matrix`
+      :returns: a matrix which combines a rotation and a translation.
+
+      >>> p1 = fitz.Point(1, 1)
+      >>> p2 = fitz.Point(4, 5)
+      >>> abs(p2 - p1)  # distance of points
+      5.0
+      >>> m = fitz.planishLine(p1, p2)
+      >>> p1 * m
+      Point(0.0, 0.0)
+      >>> p2 * m
+      Point(5.0, -5.960464477539063e-08)
+      >>> # distance of the resulting points
+      >>> abs(p2 * m - p1 * m)
+      5.0
+
+-----
+
    .. attribute:: paperSizes
 
       A dictionary of pre-defines paper formats. Used as basis for :meth:`PaperSize`.
@@ -109,7 +135,7 @@ Yet others are handy, general-purpose utilities.
       :rtype: float
       :returns: the length in points the string will have (e.g. when used in :meth:`Page.insertText`).
 
-      .. note:: This function will only do the calculation -- neither does it insert the font nor write the text.
+      .. note:: This function will only does the calculation -- neither does it insert the font nor write the text.
 
       .. warning:: If you use this function to determine the required rectangle width for the (:ref:`Page` or :ref:`Shape`) ``insertTextbox`` methods, be aware that they calculate on a **by-character level**. Because of rounding effects, this will mostly lead to a slightly larger number: ``sum([fitz.getTextlength(c) for c in text]) > fitz.getTextlength(text)``. So either (1) do the same, or (2) use something like ``fitz.getTextlength(text + "'")`` for your calculation.
 
@@ -276,11 +302,13 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Page.getTextBlocks(images=False)
+   .. method:: Page.getTextBlocks(flags=None)
 
-      Extract all blocks of the page's :ref:`TextPage` as a Python list. Provides basic positioning information but at a much higher speed than :meth:`TextPage.extractDICT`. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
+      Extract all blocks of the page's :ref:`TextPage` as a Python list. Provides basic positioning information but at a much higher speed than :meth:`Page.getText` -- "dict" or "rawdict" output. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
 
-      :arg bool images: also extract image blocks. Default is false. This serves as a means to get complete page layout information. Only image metadata, **not the binary image data** itself is extracted, see below (use the resp. :meth:`Page.getText` versions for accessing full information detail).
+      :arg int flags: .. versionadded:: 1.16.2 indicator bits to control whether to include images or how text should be handled with respect to (white) spaces and ligatures. See :ref:`TextPreserve` for available indicators and :ref:`text_extraction_flags` for default settings.
+
+         .. versionchanged:: 1.16.2 Parameter ``images`` has been removed in favor of this parameter.
 
       :rtype: *list*
       :returns: a list whose items have the following entries.
@@ -292,9 +320,11 @@ Yet others are handy, general-purpose utilities.
 
 -----
 
-   .. method:: Page.getTextWords()
+   .. method:: Page.getTextWords(flags=None)
 
-      Extract all words of the page's :ref:`TextPage` as a Python list. A "word" in this context is any character string surrounded by spaces. Provides positioning information for each word, similar to information contained in :meth:`TextPage.extractDICT` or :meth:`TextPage.extractXML`, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
+      Extract all words of the page's :ref:`TextPage` as a Python list. A "word" in this context is any character string surrounded by spaces. Provides positioning information for each word, similar to information contained in :meth:`Page.getText` -- "dict" output, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
+
+      :arg int flags: .. versionadded:: 1.16.2 indicator bits to control whether to include images or how text should be handled with respect to (white) spaces and ligatures. See :ref:`TextPreserve` for available indicators and :ref:`text_extraction_flags` for default settings.
 
       :rtype: list
       :returns: a list whose items are lists with the following entries:

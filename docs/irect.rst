@@ -4,7 +4,7 @@
 IRect
 ==========
 
-IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corner coordinates are integers. IRect is used to specify an area of pixels, e.g. to receive image data during rendering. Otherwise, many similarities exist, e.g. considerations concerning emptiness and finiteness of rectangles also apply to ref:`IRect`.
+IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corner coordinates are integers. IRect is used to specify an area of pixels, e.g. to receive image data during rendering. Otherwise, many similarities exist, e.g. considerations concerning emptiness and finiteness of rectangles also apply to this class.
 
 ============================== ===========================================
 **Attribute / Method**          **Short Description**
@@ -86,10 +86,9 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
 
    .. method:: intersects(r)
 
-      Checks whether the rectangle and ``r`` (``IRect`` or :ref:`Rect`) have a non-empty rectangle in common. This will always be ``False`` if either is infinite or empty.
+      Checks whether the rectangle and the :data:`rect_like` "r" contain a common non-empty :ref:`IRect`. This will always be ``False`` if either is infinite or empty.
 
-      :arg r: the rectangle to check.
-      :type r: :ref:`IRect` or :ref:`Rect`
+      :arg rect_like r: the rectangle to check.
 
       :rtype: bool
 
@@ -188,56 +187,8 @@ IRect is a rectangular bounding box similar to :ref:`Rect`, except that all corn
       :type: bool
 
 
-Remark
-------
-This class adheres to the sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
+.. note::
 
-IRect Algebra
-------------------
-Algebra provides handy ways to perform inclusion and intersection checks between Rects, IRects and Points. For a general background, see chapter :ref:`Algebra`.
+   * This class adheres to the Python sequence protocol, so components can be accessed via their index, too. Also refer to :ref:`SequenceTypes`.
+   * Rectangles can be used with arithmetic operators -- see chapter :ref:`Algebra`.
 
-Examples
----------
-
-**Example 1:**
-::
-  >>> ir = fitz.IRect(10, 10, 410, 610)
-  >>> ir
-  fitz.IRect(10, 10, 410, 610)
-  >>> ir.height
-  600
-  >>> ir.width
-  400
-  >>> ir.getArea('mm')     # calculate area in square millimeters
-  29868.51852
-
-**Example 2:**
-
->>> m = fitz.Matrix(45)
->>> ir = fitz.IRect(10, 10, 410, 610)
->>> ir * m                          # rotate rectangle by 45 degrees
-fitz.IRect(-425, 14, 283, 722)
->>>
->>> ir | fitz.Point(5, 5)           # enlarge rectangle to contain a point
-fitz.IRect(5, 5, 410, 610)
->>>
->>> ir + 5                          # shift the rect by 5 points
-fitz.IRect(15, 15, 415, 615)
->>>
->>> ir & fitz.Rect(0.0, 0.0, 15.0, 15.0)
-fitz.IRect(10, 10, 15, 15)
->>> ir /= (1, 2, 3, 4, 5, 6)        # divide by a matrix
->>> ir
-fitz.IRect(-14, 0, 4, 8)
-
-
-**Example 3:**
-::
-  >>> # test whether two rectangle are disjoint
-  >>> if not r1.intersects(r2): print("disjoint rectangles")
-  >>>
-  >>> # test whether r2 containes x (x is point-like or rect-like)
-  >>> if r2.contains(x): print("x is contained in r2")
-  >>>
-  >>> # or even simpler:
-  >>> if x in r2: print("x is contained in r2")
