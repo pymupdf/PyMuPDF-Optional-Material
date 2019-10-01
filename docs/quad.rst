@@ -89,7 +89,7 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
    .. attribute:: isConvex
 
-      .. versionadded:: 1.16.1 True if a line is always contained in the quad if it connects two points belonging to the quad. 
+      .. versionadded:: 1.16.1 True if all lines are contained in the quad which connect two points of the quad. 
 
       :type: bool
 

@@ -22,70 +22,70 @@ This is available for PDF documents only. There are basically two groups of meth
 
 2. Methods adding **annotations**. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that manipulating them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
 
-================================ =========================================
-**Method / Attribute**           **Short Description**
-================================ =========================================
-:meth:`Page.addCaretAnnot`       PDF only: add a caret annotation
-:meth:`Page.addCircleAnnot`      PDF only: add a circle annotation
-:meth:`Page.addFileAnnot`        PDF only: add a file attachment annotation
-:meth:`Page.addFreetextAnnot`    PDF only: add a text annotation
-:meth:`Page.addHighlightAnnot`   PDF only: add a "highlight" annotation
-:meth:`Page.addInkAnnot`         PDF only: add an ink annotation
-:meth:`Page.addLineAnnot`        PDF only: add a line annotation
-:meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
-:meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
-:meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
-:meth:`Page.addSquigglyAnnot`    PDF only: add a "squiggly" annotation
-:meth:`Page.addStampAnnot`       PDF only: add a "rubber stamp" annotation
-:meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
-:meth:`Page.addTextAnnot`        PDF only: add a comment
-:meth:`Page.addUnderlineAnnot`   PDF only: add an "underline" annotation
-:meth:`Page.addWidget`           PDF only: add a PDF Form field
-:meth:`Page.bound`               rectangle of the page
-:meth:`Page.deleteAnnot`         PDF only: delete an annotation
-:meth:`Page.deleteLink`          PDF only: delete a link
-:meth:`Page.drawBezier`          PDF only: draw a cubic BÃ©zier curve
-:meth:`Page.drawCircle`          PDF only: draw a circle
-:meth:`Page.drawCurve`           PDF only: draw a special BÃ©zier curve
-:meth:`Page.drawLine`            PDF only: draw a line
-:meth:`Page.drawOval`            PDF only: draw an oval / ellipse
-:meth:`Page.drawPolyline`        PDF only: connect a point sequence
-:meth:`Page.drawRect`            PDF only: draw a rectangle
-:meth:`Page.drawSector`          PDF only: draw a circular sector
-:meth:`Page.drawSquiggle`        PDF only: draw a squiggly line
-:meth:`Page.drawZigzag`          PDF only: draw a zig-zagged line
-:meth:`Page.getFontList`         PDF only: get list of used fonts
-:meth:`Page.getImageBbox`        PDF only: get bbox of inserted image
-:meth:`Page.getImageList`        PDF only: get list of used images
-:meth:`Page.getLinks`            get all links
-:meth:`Page.getPixmap`           create a :ref:`Pixmap`
-:meth:`Page.getSVGimage`         create a page image in SVG format
-:meth:`Page.getText`             extract the page's text
-:meth:`Page.insertFont`          PDF only: insert a font for use by the page
-:meth:`Page.insertImage`         PDF only: insert an image
-:meth:`Page.insertLink`          PDF only: insert a link
-:meth:`Page.insertText`          PDF only: insert text
-:meth:`Page.insertTextbox`       PDF only: insert a text box
-:meth:`Page.loadLinks`           return the first link on a page
-:meth:`Page.newShape`            PDF only: start a new :ref:`Shape`
-:meth:`Page.searchFor`           search for a string
-:meth:`Page.setCropBox`          PDF only: modify the visible page
-:meth:`Page.setRotation`         PDF only: set page rotation
-:meth:`Page.showPDFpage`         PDF only: display PDF page image
-:meth:`Page.updateLink`          PDF only: modify a link
-:attr:`Page.CropBox`             the page's /CropBox
-:attr:`Page.CropBoxPosition`     displacement of the /CropBox
-:attr:`Page.firstAnnot`          first :ref:`Annot` on the page
-:attr:`Page.firstLink`           first :ref:`Link` on the page
-:attr:`Page.firstWidget`         first widget (form field) on the page
-:attr:`Page.MediaBox`            the page's /MediaBox
-:attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
-:attr:`Page.number`              page number
-:attr:`Page.parent`              owning document object
-:attr:`Page.rect`                rectangle (mediabox) of the page
-:attr:`Page.rotation`            PDF only: page rotation
-:attr:`Page.xref`                PDF :data:`xref`
-================================ =========================================
+============================= ================================================
+**Method / Attribute**         **Short Description**
+============================= ================================================
+:meth:`~.addCaretAnnot`       PDF only: add a caret annotation
+:meth:`~.addCircleAnnot`      PDF only: add a circle annotation
+:meth:`~.addFileAnnot`        PDF only: add a file attachment annotation
+:meth:`~.addFreetextAnnot`    PDF only: add a text annotation
+:meth:`~.addHighlightAnnot`   PDF only: add a "highlight" annotation
+:meth:`~.addInkAnnot`         PDF only: add an ink annotation
+:meth:`~.addLineAnnot`        PDF only: add a line annotation
+:meth:`~.addPolygonAnnot`     PDF only: add a polygon annotation
+:meth:`~.addPolylineAnnot`    PDF only: add a multi-line annotation
+:meth:`~.addRectAnnot`        PDF only: add a rectangle annotation
+:meth:`~.addSquigglyAnnot`    PDF only: add a "squiggly" annotation
+:meth:`~.addStampAnnot`       PDF only: add a "rubber stamp" annotation
+:meth:`~.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
+:meth:`~.addTextAnnot`        PDF only: add a comment
+:meth:`~.addUnderlineAnnot`   PDF only: add an "underline" annotation
+:meth:`~.addWidget`           PDF only: add a PDF Form field
+:meth:`~.bound`               rectangle of the page
+:meth:`~.deleteAnnot`         PDF only: delete an annotation
+:meth:`~.deleteLink`          PDF only: delete a link
+:meth:`~.drawBezier`          PDF only: draw a cubic B�zier curve
+:meth:`~.drawCircle`          PDF only: draw a circle
+:meth:`~.drawCurve`           PDF only: draw a special B�zier curve
+:meth:`~.drawLine`            PDF only: draw a line
+:meth:`~.drawOval`            PDF only: draw an oval / ellipse
+:meth:`~.drawPolyline`        PDF only: connect a point sequence
+:meth:`~.drawRect`            PDF only: draw a rectangle
+:meth:`~.drawSector`          PDF only: draw a circular sector
+:meth:`~.drawSquiggle`        PDF only: draw a squiggly line
+:meth:`~.drawZigzag`          PDF only: draw a zig-zagged line
+:meth:`~.getFontList`         PDF only: get list of used fonts
+:meth:`~.getImageBbox`        PDF only: get bbox of inserted image
+:meth:`~.getImageList`        PDF only: get list of used images
+:meth:`~.getLinks`            get all links
+:meth:`~.getPixmap`           create a :ref:`Pixmap`
+:meth:`~.getSVGimage`         create a page image in SVG format
+:meth:`~.getText`             extract the page's text
+:meth:`~.insertFont`          PDF only: insert a font for use by the page
+:meth:`~.insertImage`         PDF only: insert an image
+:meth:`~.insertLink`          PDF only: insert a link
+:meth:`~.insertText`          PDF only: insert text
+:meth:`~.insertTextbox`       PDF only: insert a text box
+:meth:`~.loadLinks`           return the first link on a page
+:meth:`~.newShape`            PDF only: start a new :ref:`Shape`
+:meth:`~.searchFor`           search for a string
+:meth:`~.setCropBox`          PDF only: modify the visible page
+:meth:`~.setRotation`         PDF only: set page rotation
+:meth:`~.showPDFpage`         PDF only: display PDF page image
+:meth:`~.updateLink`          PDF only: modify a link
+:attr:`~.CropBox`             the page's /CropBox
+:attr:`~.CropBoxPosition`     displacement of the /CropBox
+:attr:`~.firstAnnot`          first :ref:`Annot` on the page
+:attr:`~.firstLink`           first :ref:`Link` on the page
+:attr:`~.firstWidget`         first widget (form field) on the page
+:attr:`~.MediaBox`            the page's /MediaBox
+:attr:`~.MediaBoxSize`        bottom-right point of /MediaBox
+:attr:`~.number`              page number
+:attr:`~.parent`              owning document object
+:attr:`~.rect`                rectangle (mediabox) of the page
+:attr:`~.rotation`            PDF only: page rotation
+:attr:`~.xref`                PDF :data:`xref`
+============================= ================================================
 
 **Class API**
 
@@ -610,45 +610,49 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: getText(output="text", flags=None)
 
-      Retrieves the content of a page in a variety of formats.
+      Retrieves the content of a page in a variety of formats. This is a wrapper for :ref:`TextPage` methods by choosing the output parameter as follows:
 
-      If "text" is specified, plain text is returned **in the order as specified during document creation** (i.e. not necessarily in normal reading order).
+      * "text" -- :meth:`TextPage.extractTEXT`, default
+      * "blocks" -- :meth:`TextPage.extractBLOCKS`
+      * "words" -- :meth:`TextPage.extractWORDS`
+      * "html" -- :meth:`TextPage.extractHTML`
+      * "xhtml" -- :meth:`TextPage.extractXHTML`
+      * "xml" -- :meth:`TextPage.extractXML`
+      * "dict" -- :meth:`TextPage.extractDICT`
+      * "json" -- :meth:`TextPage.extractJSON`
+      * "rawdict" -- :meth:`TextPage.extractRAWDICT`
 
-      :arg str output: A string indicating the requested format, one of "text" (default), "html", "dict", "rawdict", "xml", "xhtml" or "json". A mixture of upper and lower case is supported.
+      :arg str output: A string indicating the requested format, one of the above. A mixture of upper and lower case is supported.
+
+         .. versionchanged:: 1.16.3 Values "words" and "blocks" are now also accepted.
 
       :arg int flags: .. versionadded:: 1.16.2 indicator bits to control whether to include images or how text should be handled with respect to (white) spaces and ligatures. See :ref:`TextPreserve` for available indicators and :ref:`text_extraction_flags` for default settings.
 
-      :rtype: (*str* or *dict*)
-      :returns: The page's content as one string or as a dictionary. The information levels of JSON and DICT are exactly equal. In fact, JSON output is created via ``json.dumps(...)`` from DICT. Normally, you probably will use "dict", it is more convenient and faster. To see the dictionary structure, have a look at :ref:`textpagedict`.
+      :rtype: *str, list, dict*
+      :returns: The page's content as a string, list or as a dictionary. Refer to the corresponding :ref:`TextPage` method for details.
 
-      .. note:: You can use this method as a **document conversion tool** from any supported input format (not only PDF!) to one of HTML, XHTML or XML documents. To convert the document into a valid HTML version by wrapping it with appropriate header and trailer strings, see the following snippet. Creating XML or XHTML documents works in exactly the same way. For XML you may also include an arbitrary filename like so: ``fitz.ConversionHeader("xml", filename = doc.name)``. Also see :ref:`HTMLQuality`:
-
-         >>> doc = fitz.open(...)
-         >>> ofile = open(doc.name + ".html", "w")
-         >>> ofile.write(fitz.ConversionHeader("html"))
-         >>> for page in doc:
-                 ofile.write(page.getText("html"))
-         >>> ofile.write(fitz.ConversionTrailer("html"))
-         >>> ofile.close()
+      .. note:: You can use this method as a **document conversion tool** from any supported document type (not only PDF!) to one of HTML, XHTML or XML documents.
 
    .. method:: getFontList()
 
-      PDF only: Return a list of fonts referenced by the page. Same as :meth:`Document.getPageFontList`.
+      PDF only: Return a list of fonts referenced by the page. Wrapper for :meth:`Document.getPageFontList`.
 
    .. method:: getImageList()
 
-      PDF only: Return a list of images referenced by the page. Same as :meth:`Document.getPageImageList`.
+      PDF only: Return a list of images referenced by the page. Wrapper for :meth:`Document.getPageImageList`.
 
    .. method:: getImageBbox(item)
 
-      .. versionadded 1.16.0 PDF only: Return the boundary box of an inserted image.
+      .. versionadded 1.16.0 PDF only: Return the boundary box of an image.
 
-      :arg list,str item: an item of the list :meth:`Page.getImageList`, or just the reference name of the image (item index 7 in that list).
+      :arg list,str item: an item of the list :meth:`Page.getImageList`.
 
       :rtype: :ref:`Rect`
       :returns: the boundary box of the image. This value will be the same as the respective ``"bbox"`` value in dictionary :meth:`Page.getText` and therefore is a way to access the information without using this rather expensive method.
 
       .. warning:: The method internally cleans the page's ``/Contents`` object(s) using :meth:`Page._cleanContents()`. Please consult its description for implications.
+
+      .. note:: Be aware that :meth:`Page.getImageList` may contain "dead" entries, i.e. image references which are contained in the document, but which are not displayed by this page. In this case an exception is raised.
 
    .. index::
       pair: matrix; Page.getSVGimage args
@@ -784,7 +788,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: searchFor(text, hit_max=16, quads=False)
 
-      Searches for ``text`` on a page. Identical to :meth:`TextPage.search`.
+      Searches for ``text`` on a page. Wrapper for :meth:`TextPage.search`.
 
       :arg str text: Text to search for. Upper / lower case is ignored. The string may contain spaces.
 
@@ -793,7 +797,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :rtype: list
 
-      :returns: A list of rectangles (quadrilaterals resp.) each of which surrounds one occurrence of ``text`` -- **normally**. **However:** if the search string spreads across more than one line, then a separate item is recorded in the list for each part of the string per line.
+      :returns: A list of :ref:`Rect` \s (resp. :ref:`Quad` \s) each of which  -- **normally!** -- surrounds one occurrence of ``text``. **However:** if the search string spreads across more than one line, then a separate item is recorded in the list for each part of the string per line. So, if you are looking for "search string" and the two words happen to be located on separate lines, two entries will be recorded in the list: one for "search" and one for "string".
 
         .. note:: In this way, the effect supports multi-line text marker annotations.
 

@@ -121,7 +121,7 @@ We can simply store the image in a PNG file:
 
 >>> pix.writePNG("page-0.png")
 
-Displaying the Image in Dialog Managers
+Displaying the Image in GUIs
 -------------------------------------------
 We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an area of bytes of all the pixels as a Python bytes object. Here are some examples, find more in the `examples <https://github.com/pymupdf/PyMuPDF/tree/master/examples>`_ directory.
 

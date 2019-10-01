@@ -304,34 +304,13 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Page.getTextBlocks(flags=None)
 
-      Extract all blocks of the page's :ref:`TextPage` as a Python list. Provides basic positioning information but at a much higher speed than :meth:`Page.getText` -- "dict" or "rawdict" output. The block sequence is as specified in the document. All lines of a block are concatenated into one string, separated by ``\n``.
-
-      :arg int flags: .. versionadded:: 1.16.2 indicator bits to control whether to include images or how text should be handled with respect to (white) spaces and ligatures. See :ref:`TextPreserve` for available indicators and :ref:`text_extraction_flags` for default settings.
-
-         .. versionchanged:: 1.16.2 Parameter ``images`` has been removed in favor of this parameter.
-
-      :rtype: *list*
-      :returns: a list whose items have the following entries.
-
-                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the block.
-                * ``text``: concatenated text lines in the block *(str)*. If this is an image block, a text like this is contained: ``<image: DeviceRGB, width 511, height 379, bpc 8>`` (original image properties).
-                * ``block_n``: 0-based block number *(int)*.
-                * ``type``: block type *(int)*, 0 = text, 1 = image.
+      Deprecated wrapper for :meth:`TextPage.extractBLOCKS`.
 
 -----
 
    .. method:: Page.getTextWords(flags=None)
 
-      Extract all words of the page's :ref:`TextPage` as a Python list. A "word" in this context is any character string surrounded by spaces. Provides positioning information for each word, similar to information contained in :meth:`Page.getText` -- "dict" output, but more directly and at a much higher speed. The word sequence is as specified in the document. The accompanying bbox coordinates can be used to re-arrange the final text output to your liking. Block and line numbers help keeping track of the original position.
-
-      :arg int flags: .. versionadded:: 1.16.2 indicator bits to control whether to include images or how text should be handled with respect to (white) spaces and ligatures. See :ref:`TextPreserve` for available indicators and :ref:`text_extraction_flags` for default settings.
-
-      :rtype: list
-      :returns: a list whose items are lists with the following entries:
-
-                * ``x0, y0, x1, y1``: 4 floats defining the bbox of the word.
-                * ``word``: the word, spaces stripped off *(str)*. Note that any non-space character is accepted as part of a word -- not only letters. So, ``    Hello   world!   `` will yield the two words ``Hello`` and ``world!``.
-                * ``block_n, line_n, word_n``: 0-based counters for block, line and word *(int)*.
+      Deprecated wrapper for :meth:`TextPage.extractWORDS`.
 
 -----
 
@@ -377,13 +356,13 @@ Yet others are handy, general-purpose utilities.
 
       .. versionchanged:: 1.16.0 Annotations are no longer implicitely cleaned by this method. Use :meth:`Annot._cleanContents` separately.
 
-      .. warning:: This is a complex function which changes a large amount of data and generates now unused objects. Using it together with the **incremental save option is therefore not recommended**. Also note that the resulting single new ``/Contents`` object is **uncompressed**. So you should save to a **new file** and use save options ``"deflate=True, garbage=3"``.
+      .. warning:: This is a complex function which may generate large amounts of new data and render other data unused. It is **not recommended** using it together with the **incremental save** option. Also note that the resulting singleton new ``/Contents`` object is **uncompressed**. So you should save to a **new file** using options ``"deflate=True, garbage=3"``.
 
 -----
 
    .. method:: Annot._cleanContents()
 
-      Clean the :data:`contents` streams associated with the annotation. This is the same type of action :meth:`Page._cleanContents` performs -- just restricted to this annotation.
+      Clean the :data:`contents` streams associated with the annotation. This is the same type of action which :meth:`Page._cleanContents` performs -- just restricted to this annotation.
 
 
 -----

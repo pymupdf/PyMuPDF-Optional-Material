@@ -6,19 +6,25 @@ TextPage
 
 This class represents text and images shown on a document page. All MuPDF document types are supported.
 
-=============================== ==============================================
-**Method**                      **Short Description**
-=============================== ==============================================
-:meth:`TextPage.extractText`    Extract the page's plain text
-:meth:`TextPage.extractTEXT`    synonym of previous
-:meth:`TextPage.extractHTML`    Extract the page's content in HTML format
-:meth:`TextPage.extractJSON`    Extract the page's content in JSON format
-:meth:`TextPage.extractXHTML`   Extract the page's content in XHTML format
-:meth:`TextPage.extractXML`     Extract the page's text in XML format
-:meth:`TextPage.extractDICT`    Extract the page's content in *dict* format
-:meth:`TextPage.extractRAWDICT` Extract the page's content in *dict* format
-:meth:`TextPage.search`         Search for a string in the page
-=============================== ==============================================
+The usual way to create a textpage is :meth:`DisplayList.getTextPage`. Because there is a limited set of methods in this class, there exist higher level shortcut methods in the :ref:`Page` class, which incorporate creating an intermediate :ref:`DisplayList` and then invoke one of the following methods. The last column of this table shows these corresponding :ref:`Page` methods.
+
+For a description of what this class is all about, see Appendix 2.
+
+======================== ================================ ======================
+**Method**               **Description**                  :ref:`Page` method
+======================== ================================ ======================
+:meth:`~.extractText`    extract plain text               ``getText("text")``
+:meth:`~.extractTEXT`    synonym of previous              ``getText("text")``
+:meth:`~.extractBLOCKS`  plain text grouped in blocks     ``getText("blocks")``
+:meth:`~.extractWORDS`   all words with their bbox        ``getText("words")``
+:meth:`~.extractHTML`    page content in HTML format      ``getText("html")``
+:meth:`~.extractJSON`    page content in JSON format      ``getText("json")``
+:meth:`~.extractXHTML`   page content in XHTML format     ``getText("xhtml")``
+:meth:`~.extractXML`     page text in XML format          ``getText("xml")``
+:meth:`~.extractDICT`    page content in *dict* format    ``getText("dict")``
+:meth:`~.extractRAWDICT` page content in *dict* format    ``getText("rawdict")``
+:meth:`~.search`         Search for a string in the page  ``searchFor()``
+======================== ================================ ======================
 
 **Class API**
 
@@ -28,43 +34,69 @@ This class represents text and images shown on a document page. All MuPDF docume
 
    .. method:: extractTEXT
 
-      Extract all text from a ``TextPage`` object. Returns a string of the page's complete text. The text is UTF-8 unicode and in the same sequence as specified at the time of document creation.
+      Return a string of the page's complete text. The text is UTF-8 unicode and in the same sequence as specified at the time of document creation.
 
       :rtype: str
 
+   .. method:: extractBLOCKS
+
+      Textpage content as a list of text lines grouped by block. Each list items looks like this::
+
+         (x0, y0, x1, y1, "lines in blocks", block_type, block_no)
+
+      The first four entries are the block's bbox coordinates, ``block_type`` is 1 for an image block, 0 for text. ``block_no`` is the block sequence number.
+
+      For an image block, its bbox and a text line with image meta information is included -- not the image data itself.
+
+      This is a high-speed method with enough information to rebuild a desired text sequence.
+
+      :rtype: list
+
+   .. method:: extractWORDS
+
+      Textpage content as a list of single words with bbox information. An item of this list looks like this::
+
+         (x0, y0, x1, y1, "word", block_no, line_no, word_no)
+
+      Everything wrapped in spaces is treated as a *"word"* with this method.
+
+      This is a high-speed method which e.g. allows extracting text from within a given rectangle.
+
+      :rtype: list
+
    .. method:: extractHTML
 
-      Extract all text and images in HTML format. This version contains complete formatting and positioning information. Images are included (encoded as base64 strings). You need an HTML package to interpret the output in Python. Your internet browser should be able to adequately display this information, but see :ref:`HTMLQuality`.
+      Textpage content in HTML format. This version contains complete formatting and positioning information. Images are included (encoded as base64 strings). You need an HTML package to interpret the output in Python. Your internet browser should be able to adequately display this information, but see :ref:`HTMLQuality`.
 
       :rtype: str
 
    .. method:: extractDICT
 
-      Extract content as a Python dictionary. Provides same information detail as HTML. See below for the structure.
+      Textpage content as a Python dictionary. Provides same information detail as HTML. See below for the structure.
 
       :rtype: dict
 
    .. method:: extractJSON
 
-      Extract content as a string in JSON format. Created by  ``json.dumps(TextPage.extractDICT())``. It is included only for backlevel compatibility. You will probably use this method ever only for outputting the result in some text file or the like.
+      Textpage content in JSON format. Created by  ``json.dumps(TextPage.extractDICT())``. It is included only for backlevel compatibility. You will probably use this method ever only for outputting the result in some file.
 
       :rtype: str
 
    .. method:: extractXHTML
 
-      Extract all text in XHTML format. Text information detail is comparable with :meth:`extractTEXT`, but also contains images (base64 encoded). This method makes no attempt to re-create the original visual appearance.
+      Textpage content in XHTML format. Text information detail is comparable with :meth:`extractTEXT`, but also contains images (base64 encoded). This method makes no attempt to re-create the original visual appearance.
 
       :rtype: str
 
    .. method:: extractXML
 
-      Extract all text in XML format. This contains complete formatting information about every single character on the page: font, size, line, paragraph, location, color, etc. Contains no images. You probably need an XML package to interpret the output in Python.
+      Textpage content in XML format. This contains complete formatting information about every single character on the page: font, size, line, paragraph, location, color, etc. Contains no images. You probably need an XML package to interpret the output in Python.
 
       :rtype: str
 
    .. method:: extractRAWDICT
 
-      Extract content as a Python dictionary -- technically similar to :meth:`extractDICT`, and it contains that information as a subset (including any images). It provides additional detail down to each character, which makes using XML obsolete in many cases. See below for the structure.
+      Textpage content as a Python dictionary -- technically similar to :meth:`extractDICT`, and it contains that information as a subset (including any images). It provides additional detail down to each character, which makes using XML obsolete in many cases. See below for the structure.
 
       :rtype: dict
 
@@ -72,17 +104,15 @@ This class represents text and images shown on a document page. All MuPDF docume
 
       Search for ``string`` and return a list of found locations.
 
-      :arg str string: the string to search for.
-      :arg int hit_max: maximum number of accepted hits (default 16).
+      :arg str string: the string to search for. Upper / lower cases will all match.
+      :arg int hit_max: maximum number of returned hits (default 16).
       :arg bool quads: return quadrilaterals instead of rectangles.
       :rtype: list
-      :returns: a list of :ref:`Rect` or :ref:`Quad` objects, each surrounding a found ``string`` occurrence.
+      :returns: a list of :ref:`Rect` or :ref:`Quad` objects, each surrounding a found ``string`` occurrence. The search string may contain spaces, it may therefore happen, that its parts are located on different lines. In this case, more than one rectangle (quadrilateral) are returned. The method does **not support hyphenation**, so it will not find "meth-od" when searching for "method".
 
       Example: If the search for string "pymupdf" contains a hit like shown, then the corresponding entry will either be the blue rectangle, or, if ``quads`` was specified, ``Quad(ul, ur, ll, lr)``.
 
       .. image:: images/img-quads.jpg
-
-   .. note:: All of the above can be achieved by using the appropriate :meth:`Page.getText` and :meth:`Page.searchFor` methods. Also see further down and in the :ref:`Page` chapter for examples on how to create a valid file format by adding respective headers and trailers.
 
 .. _textpagedict:
 
@@ -123,11 +153,15 @@ Possible values of key ``"ext"`` are ``"bmp"``, ``"gif"``, ``"jpeg"``, ``"jpx"``
 
 .. note::
 
-   1. In some error situations, all of the above values may be zero or contain empty objects respectively. So, please be prepared to cope with items like::
+   1. In some error situations, all of the above values may be zero or contain empty objects respectively. So, please be prepared to cope with items like
 
-     {'type': 1, 'bbox': (0.0, 0.0, 0.0, 0.0), 'width': 0, 'height': 0, 'ext': 'png', 'image': b''}
+      ``{'type': 1, 'bbox': (0.0, 0.0, 0.0, 0.0), 'width': 0, 'height': 0, 'ext': 'png', 'image': b''}``
 
-   2. For PDF documents, the image blocks returned with this method **may or may not** be exactly the same set as the entries in :meth:`Page.getImageList`. If there are differences, they most probably are caused by so-called "inline" images (see page 352 of the :ref:`AdobeManual`), which are detected by this method, but not by :meth:`Page.getImageList`.
+
+   2. For PDF documents, the image blocks returned with this method **may or may not** be the same set as the entries contained in :meth:`Page.getImageList`. If there are differences, they most probably are caused by one of the following:
+
+       - "inline" images (see page 352 of the :ref:`AdobeManual`) are detected by this method, but **not by** :meth:`Page.getImageList`.
+       - images named in the page :data:`object` definition **always** appear in :meth:`Page.getImageList`. But if a corresponding "display" command in the page's ``/Contents`` is missing (erroneously or on purpose), they will **not appear** as one of the block dictionaries.
 
 
 **Text block:**
@@ -191,20 +225,22 @@ chars           (only for :meth:`extractRAWDICT`) *list* of character dictionari
 
 Test these characteristics like so:
 
->>> if flags & 2**0: print("super")
 >>> if flags & 2**1: print("italic")
->>> if flags & 2**2: print("serif")
 >>> # etc.
->>>
 
 Character Dictionary for :meth:`extractRAWDICT`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+We are currently providing the bbox in :data:`rect_like` format. In a future version, we might change that to :data:`quad_like`. This image shows the relationship between items in the following table: |textpagechar|
 
-=============== ========================================================
+.. |textpagechar| image:: images/img-textpage-char.png
+   :align: top
+   :scale: 66
+
+=============== =========================================================
 **Key**             **Value**
-=============== ========================================================
+=============== =========================================================
+origin          *tuple* coordinates of the character's bottom left point
 bbox            character rectangle, formatted as ``tuple(fitz.Rect)``
 c               the character (unicode)
-origin          *tuple* coordinates of the bottom left point
-=============== ========================================================
+=============== =========================================================
 

@@ -17,9 +17,9 @@ Several draw methods can be executed in a row and each one of them will contribu
 **Method / Attribute**             **Description**
 ================================ =====================================================
 :meth:`Shape.commit`             update the page's contents
-:meth:`Shape.drawBezier`         draw a cubic Bézier curve
+:meth:`Shape.drawBezier`         draw a cubic Bezier curve
 :meth:`Shape.drawCircle`         draw a circle around a point
-:meth:`Shape.drawCurve`          draw a cubic Bézier using one helper point
+:meth:`Shape.drawCurve`          draw a cubic Bezier using one helper point
 :meth:`Shape.drawLine`           draw a line
 :meth:`Shape.drawOval`           draw an ellipse
 :meth:`Shape.drawPolyline`       connect a sequence of points
@@ -115,7 +115,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawBezier(p1, p2, p3, p4)
 
-      Draw a standard cubic Bézier curve from ``p1`` to ``p4``, using ``p2`` and ``p3`` as control points.
+      Draw a standard cubic Bezier curve from ``p1`` to ``p4``, using ``p2`` and ``p3`` as control points.
 
       All arguments are :data:`point_like` \s.
 
@@ -163,7 +163,7 @@ Several draw methods can be executed in a row and each one of them will contribu
 
    .. method:: drawCurve(p1, p2, p3)
 
-      A special case of ``drawBezier()``: Draw a cubic Bézier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degrees, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.
+      A special case of ``drawBezier()``: Draw a cubic Bezier curve from ``p1`` to ``p3``. On each of the two lines from ``p1`` to ``p2`` and from ``p2`` to ``p3`` one control point is generated. This guaranties that the curve's curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degrees, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.
 
       All arguments are :data:`point_like`.
 

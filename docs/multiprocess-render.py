@@ -4,7 +4,7 @@ Demonstrate the use of multiprocessing with PyMuPDF.
 Depending on the  number of CPUs, the document is divided in page ranges.
 Each range is then worked on by one process.
 The type of work would typically be text extraction or page rendering. Each
-rocess must know where to put its results, because this processing pattern
+process must know where to put its results, because this processing pattern
 does not include inter-process communication or data sharing.
 
 Compared to sequential processing, speed improvements in range of 100% (ie.
@@ -17,7 +17,7 @@ import time
 from multiprocessing import Pool, cpu_count
 import fitz
 
-# choose Py version specific the timer function
+# choose a version specific timer function (bytes == str in Python 2)
 mytime = time.clock if str is bytes else time.perf_counter
 
 

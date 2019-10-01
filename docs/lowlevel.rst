@@ -8,6 +8,4 @@ Contains a number of functions and classes for the experienced user. To be used 
 
    functions.rst
    device.rst
-   displaylist.rst
-   textpage.rst
    coop_low.rst

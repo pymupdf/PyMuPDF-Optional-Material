@@ -634,7 +634,23 @@ How to Extract Text in Natural Reading Order
 
 One of the common issues with PDF text extraction is, that text may not appear in any particular reading order.
 
-Responsible for this effect is the PDF creator (software or a human). For example, page headers may have been inserted in a separate step -- after the document had been produced. In such a case, the header text will appear at the end of a page text extraction (allthough it will be correctly shown by PDF viewer software).
+Responsible for this effect is the PDF creator (software or a human). For example, page headers may have been inserted in a separate step -- after the document had been produced. In such a case, the header text will appear at the end of a page text extraction (allthough it will be correctly shown by PDF viewer software). For example, the following snippet will add some header and footer lines to an existing PDF::
+
+    doc = fitz.open("some.pdf")
+    header = "Header"  # text in header
+    footer = "Page %i of %i"  # text in footer
+    for page in doc:
+        page.insertText((50, 50), header)  # insert header
+        page.insertText(  # insert footer 50 points above page bottom
+            (50, page.rect.height - 50),
+            footer % (page.number + 1, len(doc)),
+        )
+
+The text sequence extracted from a page modified in this way will look like this:
+
+1. original text
+2. header line
+3. footer line
 
 PyMuPDF has several means to re-establish some reading sequence or even to re-generate a layout close to the original.
 
@@ -1919,7 +1935,7 @@ Misplaced Item Insertions on PDF Pages
 Problem
 ^^^^^^^^^
 
-You inserted an item on an existing PDF page, but later you find it being placed at a different location than intended. For example an image should be inserted at the top, but it unexpectedly appears near the bottom of the page.
+You inserted an item (like an image, an annotation or some text) on an existing PDF page, but later you find it being placed at a different location than intended. For example an image should be inserted at the top, but it unexpectedly appears near the bottom of the page.
 
 Cause
 ^^^^^^
@@ -1974,11 +1990,11 @@ If it is ``False`` or if you want to be on the safe side, pick one of the follow
 * **Append** an unstacking command by executing ``fitz.TOOLS._insert_contents(page, b"\nQ", True)``.
 * Alternatively, just use :meth:`Page._wrapContents`, wich executes the previous two functions.
 
-.. note::
+.. note:: If small incremental update deltas are a concern, this approach is the most effective. Other contents objects are not touched. The utility method creates two new PDF :data:`stream` objects and inserts them before, resp. after the page's other :data:`contents`. We therefore recommend the following snippet to get this situation under control:
 
-   * If small incremental update deltas are a concern, this approach is the most effective.
-   * Other contents objects are not touched.
-   * The utility method creates two new PDF :data:`stream` objects and inserts them before, resp. after the page's other :data:`contents`.
+    >>> if not page._isWrapped:
+            page._wrapContents()
+    >>> # start inserting text, images or annotations here
 
 --------------------------
 

@@ -28,39 +28,84 @@ A **block** consists of either lines and their characters, or an image.
 
 A **line** consists of spans.
 
-A **span** consists of font information and characters that share a common baseline.
+A **span** consists of adjacent characters with identical font properties: name, size, flags and color.
 
 Plain Text
 ~~~~~~~~~~
 
-This function extracts a page's plain **text in original order** as specified by the creator of the document (which may not equal a natural reading order).
+Function :meth:`TextPage.extractText` (or ``Page.getText("text")``) extracts a page's plain **text in original order** as specified by the creator of the document (which may not equal a natural reading order).
 
 An example output::
 
- PyMuPDF Documentation
- Release 1.12.0
- Jorj X. McKie
- Dec 04, 2017
+    >>> print(page.getText("text"))
+    Some text on first page.
+
+
+BLOCKS
+~~~~~~~~~~
+
+Function :meth:`TextPage.extractBLOCKS` (or ``Page.getText("blocks")``) extracts a page's text blocks as a list of items like::
+
+    (x0, y0, x1, y1, "lines in block", block_type, block_no)
+
+Where the first 4 items are the float coordinates of the block's bbox. The lines within each block are concatenated by a new-line character.
+
+This is a high-speed method with enough information to re-arrange the page's text in natural reading order where required.
+
+Example output::
+
+    >>> print(page.getText("blocks"))
+    [(50.0, 88.17500305175781, 166.1709747314453, 103.28900146484375,
+    'Some text on first page.', 0, 0)]
+
+
+WORDS
+~~~~~~~~~~
+
+Function :meth:`TextPage.extractWORDS` (or ``Page.getText("words")``) extracts a page's text **words** as a list of items like::
+
+    (x0, y0, x1, y1, "word", block_no, line_no, word_no)
+
+Where the first 4 items are the float coordinates of the words's bbox. The last three integers provide some more information on the word's whereabouts.
+
+This is a high-speed method with enough information to extract text contained in a given rectangle.
+
+Example output::
+
+    >>> for word in page.getText("words"):
+            print(word)
+    (50.0, 88.17500305175781, 78.73200225830078, 103.28900146484375,
+    'Some', 0, 0, 0)
+    (81.79000091552734, 88.17500305175781, 99.5219955444336, 103.28900146484375,
+    'text', 0, 0, 1)
+    (102.57999420166016, 88.17500305175781, 114.8119888305664, 103.28900146484375,
+    'on', 0, 0, 2)
+    (117.86998748779297, 88.17500305175781, 135.5909881591797, 103.28900146484375,
+    'first', 0, 0, 3)
+    (138.64898681640625, 88.17500305175781, 166.1709747314453, 103.28900146484375,
+    'page.', 0, 0, 4)
 
 HTML
 ~~~~
 
-HTML output fully reflects the structure of the page's ``TextPage`` -- much like DICT or JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed be an internate browser. Our above example::
+:meth:`TextPage.extractHTML` (or ``Page.getText("html")`` output fully reflects the structure of the page's ``TextPage`` -- much like DICT / JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed by an internate browser. Our above example::
 
- <div style="width:595pt;height:841pt">
- <img style="top:88pt;left:327pt;width:195pt;height:86pt" src="data:image/jpeg;base64,
- /9j/4AAQSkZJRgABAQEAYABgAAD/4Q (... omitted image data ...) ">
- <p style="top:189pt;left:195pt;"><b><span style="font-family:SFSX2488,serif;font-size:24.7871pt;">PyMuPDF Documentation</span></b></p>
- <p style="top:223pt;left:404pt;"><b><i><span style="font-family:SFSO1728,serif;font-size:17.2154pt;">Release 1.12.0</span></i></b></p>
- <p style="top:371pt;left:400pt;"><b><span style="font-family:SFSX1728,serif;font-size:17.2154pt;">Jorj X. McKie</span></b></p>
- <p style="top:637pt;left:448pt;"><b><span style="font-family:SFSX1200,serif;font-size:11.9552pt;">Dec 04, 2017</span></b></p>
- </div>
+    >>> for line in page.getText("html").splitlines():
+            print(line)
+
+    <div id="page0" style="position:relative;width:300pt;height:350pt;
+    background-color:white">
+    <p style="position:absolute;white-space:pre;margin:0;padding:0;top:88pt;
+    left:50pt"><span style="font-family:Helvetica,sans-serif;
+    font-size:11pt">Some text on first page.</span></p>
+    </div>
+
 
 .. _HTMLQuality:
 
 Controlling Quality of HTML Output
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Though HTML output has improved a lot in MuPDF v1.12.0, it currently is not yet bug-free: we have found problems in the areas **font support** and **image positioning**.
+While HTML output has improved a lot in MuPDF v1.12.0, it is not yet bug-free: we have found problems in the areas **font support** and **image positioning**.
 
 * HTML text contains references to the fonts used of the original document. If these are not known to the browser (a fat chance!), it will replace them with his assumptions, which probably will let the result look awkward. This issue varies greatly by browser -- on my Windows machine, MS Edge worked just fine, whereas Firefox looked horrible.
 
@@ -108,211 +153,169 @@ To address the font issue, you can use a simple utility script to scan through t
 DICT (or JSON)
 ~~~~~~~~~~~~~~~~
 
-DICT (JSON) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` -- boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Have a look at `PDF2textJS.py <https://github.com/rk700/PyMuPDF/blob/master/examples/PDF2textJS.py>`_. Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output.
+:meth:`TextPage.extractDICT` (or ``Page.getText("dict")``) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` -- boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output.
 
 For a visuallization of the dictionary structure have a look at :ref:`textpagedict`.
 
 Here is how this looks like::
 
- In [2]: doc = fitz.open("pymupdf.pdf")
- In [3]: page = doc[0]
- In [4]: d = page.getText("dict")
- In [5]: d
- Out[5]: 
- {'width': 612.0,
- 'height': 792.0,
- 'blocks': [{'type': 1,
-   'bbox': [344.25, 88.93597412109375, 540.0, 175.18597412109375],
-   'width': 261,
-   'height': 115,
-   'ext': 'jpeg',
-   'image': b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01 ... <more data> ...'},
-  {'type': 0,
-   'lines': [{'wmode': 0,
-     'dir': (1.0, 0.0),
-     'spans': [{'font': 'ClearSans-Bold',
-       'size': 24.787099838256836,
-       'flags': 20,
-       'text': 'PyMuPDF Documentation'}],
-     'bbox': (251.24600219726562,
-      184.3526153564453,
-      539.9661254882812,
-      218.6648406982422)}],
-   'bbox': (251.24600219726562,
-    184.3526153564453,
-    539.9661254882812,
-    218.6648406982422)},
-  {'type': 0,
-   'lines': [{'wmode': 0,
-     'dir': (1.0, 0.0),
-     'spans': [{'font': 'ClearSans-BoldItalic',
-       'size': 17.21540069580078,
-       'flags': 22,
-       'text': 'Release 1.13.18'}],
-     'bbox': (412.5299987792969,
-      220.4202880859375,
-      540.0100708007812,
-      244.234375)}],
-   'bbox': (412.5299987792969,
-    220.4202880859375,
-    540.0100708007812,
-    244.234375)},
-  {'type': 0,
-   'lines': [{'wmode': 0,
-     'dir': (1.0, 0.0),
-     'spans': [{'font': 'ClearSans-Bold',
-       'size': 17.21540069580078,
-       'flags': 20,
-       'text': 'Jorj X. McKie'}],
-     'bbox': (432.9129943847656,
-      355.5234680175781,
-      534.0018310546875,
-      379.3543701171875)}],
-   'bbox': (432.9129943847656,
-    355.5234680175781,
-    534.0018310546875,
-    379.3543701171875)},
-  {'type': 0,
-   'lines': [{'wmode': 0,
-     'dir': (1.0, 0.0),
-     'spans': [{'font': 'ClearSans-Bold',
-       'size': 11.9552001953125,
-       'flags': 20,
-       'text': 'Aug 23, 2018'}],
-     'bbox': (465.7779846191406,
-      597.5914916992188,
-      539.995849609375,
-      614.1408081054688)}],
-   'bbox': (465.7779846191406,
-    597.5914916992188,
-    539.995849609375,
-    614.1408081054688)}]}
- In [6]: 
+    {
+        "width": 300.0,
+        "height": 350.0,
+        "blocks": [{
+            "type": 0,
+            "bbox": [50.0, 88.17500305175781, 166.1709747314453, 103.28900146484375],
+            "lines": [{
+                "wmode": 0,
+                "dir": [1.0, 0.0],
+                "bbox": [50.0, 88.17500305175781, 166.1709747314453, 103.28900146484375],
+                "spans": [{
+                    "size": 11.0,
+                    "flags": 0,
+                    "font": "Helvetica",
+                    "color": 0,
+                    "text": "Some text on first page.",
+                    "bbox": [50.0, 88.17500305175781, 166.1709747314453, 103.28900146484375]
+                }]
+            }]
+        }]
+    }
 
 RAWDICT
 ~~~~~~~~~~~~~~~~
-This dictionary is an **information superset of DICT** and takes the detail level one step deeper. It looks exactly like the above, except that the ``"text"`` items (*string*) are replaced by ``"chars"`` items (*list*). Each ``"chars"`` entry is a character *dict*. For example, here is what you would see in place of item ``'text': 'PyMuPDF Documentation'`` above::
+:meth:`TextPage.extractRAWDICT` (or ``Page.getText("rawdict")``) is an **information superset of DICT** and takes the detail level one step deeper. It looks exactly like the above, except that the ``"text"`` items (*string*) are replaced by ``"chars"`` items (*list*). Each ``"chars"`` entry is a character *dict*. For example, here is what you would see in place of item ``"text": "Text in black color."`` above::
 
-       'chars': [{'c': 'P',
-         'origin': (251.24600219726562, 211.052001953125),
-         'bbox': (251.24600219726562,
-          184.3526153564453,
-          266.2421875,
-          218.6648406982422)},
-        {'c': 'y',
-         'origin': (266.2421875, 211.052001953125),
-         'bbox': (266.2421875,
-          184.3526153564453,
-          279.3793640136719,
-          218.6648406982422)},
-        {'c': 'M',
-         'origin': (279.3793640136719, 211.052001953125),
-         'bbox': (279.3793640136719,
-          184.3526153564453,
-          299.5560607910156,
-          218.6648406982422)},
-        ... <more character dicts> ...  
-        {'c': 'o',
-         'origin': (510.84130859375, 211.052001953125),
-         'bbox': (510.84130859375,
-          184.3526153564453,
-          525.2426147460938,
-          218.6648406982422)},
-        {'c': 'n',
-         'origin': (525.2426147460938, 211.052001953125),
-         'bbox': (525.2426147460938,
-          184.3526153564453,
-          539.9661254882812,
-          218.6648406982422)}]}]
+    "chars": [{
+        "origin": [50.0, 100.0],
+        "bbox": [50.0, 88.17500305175781, 57.336997985839844, 103.28900146484375],
+        "c": "S"
+    }, {
+        "origin": [57.33700180053711, 100.0],
+        "bbox": [57.33700180053711, 88.17500305175781, 63.4530029296875, 103.28900146484375],
+        "c": "o"
+    }, {
+        "origin": [63.4530029296875, 100.0],
+        "bbox": [63.4530029296875, 88.17500305175781, 72.61600494384766, 103.28900146484375],
+        "c": "m"
+    }, {
+        "origin": [72.61600494384766, 100.0],
+        "bbox": [72.61600494384766, 88.17500305175781, 78.73200225830078, 103.28900146484375],
+        "c": "e"
+    }, {
+        "origin": [78.73200225830078, 100.0],
+        "bbox": [78.73200225830078, 88.17500305175781, 81.79000091552734, 103.28900146484375],
+        "c": " "
+    < ... deleted ... >
+    }, {
+        "origin": [163.11297607421875, 100.0],
+        "bbox": [163.11297607421875, 88.17500305175781, 166.1709747314453, 103.28900146484375],
+        "c": "."
+    }],
 
 
 XML
 ~~~
 
-The XML version extracts text (no images) with the detail level of RAWDICT::
- 
- <page width="595.276" height="841.89">
- <image bbox="327.526 88.936038 523.276 175.18604" />
- <block bbox="195.483 189.04106 523.2428 218.90952">
- <line bbox="195.483 189.04106 523.2428 218.90952" wmode="0" dir="1 0">
- <font name="SFSX2488" size="24.7871">
- <char bbox="195.483 189.04106 214.19727 218.90952" x="195.483" y="211.052" c="P"/>
- <char bbox="214.19727 189.04106 227.75582 218.90952" x="214.19727" y="211.052" c="y"/>
- <char bbox="227.75582 189.04106 253.18738 218.90952" x="227.75582" y="211.052" c="M"/>
- <char bbox="253.18738 189.04106 268.3571 218.90952" x="253.18738" y="211.052" c="u"/>
- (... omitted data ...)
- </font>
- </line>
- </block>
- <block bbox="404.002 223.5048 523.30477 244.49039">
- <line bbox="404.002 223.5048 523.30477 244.49039" wmode="0" dir="1 0">
- <font name="SFSO1728" size="17.2154">
- <char bbox="404.002 223.5048 416.91358 244.49039" x="404.002" y="238.94702" c="R"/>
- (... omitted data ...)
- <char bbox="513.33706 223.5048 523.30477 244.49039" x="513.33706" y="238.94702" c="0"/>
- </font>
- </line>
- </block>
- (... omitted data ...)
- </page>
+The :meth:`TextPage.extractXML` (or ``Page.getText("xml")``) version extracts text (no images) with the detail level of RAWDICT::
+  
+    >>> for line in page.getText("xml").splitlines():
+        print(line)
+
+    <page id="page0" width="300" height="350">
+    <block bbox="50 88.175 166.17098 103.289">
+    <line bbox="50 88.175 166.17098 103.289" wmode="0" dir="1 0">
+    <font name="Helvetica" size="11">
+    <char quad="50 88.175 57.336999 88.175 50 103.289 57.336999 103.289" x="50"
+    y="100" color="#000000" c="S"/>
+    <char quad="57.337 88.175 63.453004 88.175 57.337 103.289 63.453004 103.289" x="57.337"
+    y="100" color="#000000" c="o"/>
+    <char quad="63.453004 88.175 72.616008 88.175 63.453004 103.289 72.616008 103.289" x="63.453004"
+    y="100" color="#000000" c="m"/>
+    <char quad="72.616008 88.175 78.732 88.175 72.616008 103.289 78.732 103.289" x="72.616008"
+    y="100" color="#000000" c="e"/>
+    <char quad="78.732 88.175 81.79 88.175 78.732 103.289 81.79 103.289" x="78.732"
+    y="100" color="#000000" c=" "/>
+
+    ... deleted ...
+
+    <char quad="163.11298 88.175 166.17098 88.175 163.11298 103.289 166.17098 103.289" x="163.11298"
+    y="100" color="#000000" c="."/>
+    </font>
+    </line>
+    </block>
+    </page>
 
 .. note:: We have successfully tested `lxml <https://pypi.org/project/lxml/>`_ to interpret this output.
 
 XHTML
 ~~~~~
-A variation of TEXT but in HTML format, containing the bare text and images ("semantic" output)::
+:meth:`TextPage.extractXHTML` (or ``Page.getText("xhtml")``) is a variation of TEXT but in HTML format, containing the bare text and images ("semantic" output)::
 
- <div>
- <p><img width="195" height="86" src="data:image/jpeg;base64,
- /9j/4AAQSkZJRgABAQEAYABgAAD/4Q (... omitted image data ...)"/></p>
- <p><b>PyMuPDF Documentation</b></p>
- <p><b><i>Release 1.12.0</i></b></p>
- <p><b>Jorj X. McKie</b></p>
- <p><b>Dec 13, 2017</b></p>
- </div>
+    <div id="page0">
+    <p>Some text on first page.</p>
+    </div>
 
 .. _text_extraction_flags:
 
 Text Extraction Flags Defaults
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. versionadded:: 1.16.2 Methods :meth:`Page.getText`, :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords` support a keyword parameter ``flags`` *(int)* to control the amount and the quality of extracted data. The following table shows the defaults settings (flags parameter omitted or None) for each extraction variant. A description of the respective bit settings can be found in :ref:`TextPreserve`.
+.. versionadded:: 1.16.2 Method :meth:`Page.getText` supports a keyword parameter ``flags`` *(int)* to control the amount and the quality of extracted data. The following table shows the defaults settings (flags parameter omitted or None) for each extraction variant. A description of the respective bit settings can be found in :ref:`TextPreserve`.
 
-========================= ====== ====== ======= ===== ====== ========= ============ =============
-Indicator TEXT_*          "text" "html" "xhtml" "xml" "dict" "rawdict" getTextWords getTextBlocks
-========================= ====== ====== ======= ===== ====== ========= ============ =============
-PRESERVE_LIGATURES         1      1     1        1    1      1          1           1
-PRESERVE_WHITESPACE        1      1     1        1    1      1          1           1
-PRESERVE_IMAGES            n/a    1     1        n/a  1      1          n/a         0
-INHIBIT_SPACES             1      1     1        1    1      1          1           1
-========================= ====== ====== ======= ===== ====== ========= ============ =============
+=================== ==== ==== ===== === ==== ======= ===== ======
+Indicator           text html xhtml xml dict rawdict words blocks
+=================== ==== ==== ===== === ==== ======= ===== ======
+preserve ligatures  1    1    1     1   1    1       1     1
+preserve whitespace 1    1    1     1   1    1       1     1
+preserve images     n/a  1    1     n/a 1    1       n/a   0
+inhibit spaces      0    0    0     0   0    0       0     0
+=================== ==== ==== ===== === ==== ======= ===== ======
 
-* String literals above indicate :meth:`Page.getText` parameter specifications.
-* The missing **"json"** entry above is handled exactly like **"dict"** and is hence left out.
+* **"json"** is handled exactly like **"dict"** and is hence left out.
 * An "n/a" specification means a value of 0 and setting this bit never has any effect on the output (but an adverse effect on performance).
 * If you are not interested in images when using an output variant which includes them by default, then by all means set the respective bit off: You will experience a better performance and much lower space requirements.
+
+To show the effect of ``TEXT_INHIBIT_SPACES`` have a look at this example::
+
+    >>> print(page.getText("text"))
+    H a l l o !
+    Mo r e  t e x t
+    i s  f o l l o w i n g
+    i n  E n g l i s h
+    . . .  l e t ' s  s e e
+    w h a t  h a p p e n s .
+    >>> print(page.getText("text", flags=fitz.TEXT_INHIBIT_SPACES))
+    Hallo!
+    More text
+    is following
+    in English
+    ... let's see
+    what happens.
+    >>> 
 
 
 Performance
 ~~~~~~~~~~~~
-The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements. Generally, more information of course means that more processing is required and a higher data volume is generated.
+The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements and runtimes. Generally, more information of course means that more processing is required and a higher data volume is generated.
 
-To begin with, all methods are **very fast** in relation to other products out there in the market. In terms of processing speed, we couldn't find a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1'310 pages of the :ref:`AdobeManual` in less than 9 seconds (simple text needs less than 2 seconds here).
+.. note:: Especially images have a **very significant** impact. Make sure to exclude them (via the ``flags`` parameter) whenever you do not need them. To process the below mentioned 2'700 total pages with default flags settings required 160 seconds across all extraction methods. When all images where excluded, less than 50% of that time (77 seconds) were needed.
 
-Relative to each other, **"RAWDICT"** is about 4.6 times slower than **"TEXT"**, the others range between them. The following table shows **relative runtimes** with **"TEXT"** set to 1, measured across ca. 1550 text-heavy and 250 image-heavy pages.
+To begin with, all methods are **very fast** in relation to other products out there in the market. In terms of processing speed, we are not aware of a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1'310 pages of the :ref:`AdobeManual` in less than 5 seconds (simple text needs less than 2 seconds here).
 
-======= ====== =====================================================================
-Method  Time   Comments
-======= ====== =====================================================================
-TEXT     1.00  no images, plain text, line breaks
-WORDS    1.07  no images, word level text with bboxes
-BLOCKS   1.10  image bboxes (only), block level text with bboxes
-XML      2.30  no images, char level text, layout and font details
-DICT     2.68  **binary** images, span level text, layout and font details
-XHTML    3.51  **base64** images, span level text, no layout info
-HTML     3.60  **base64** images, span level text, layout and font details
-RAWDICT  4.61  **binary** images, char level text, layout and font details
-======= ====== =====================================================================
+The following table shows average relative speeds ("RSpeed", baseline 1.00 is TEXT), taken across ca. 1400 text-heavy and 1300 image-heavy pages.
 
-In versions prior to v1.13.1, JSON was a standalone extraction method. Since we have added the DICT extraction, JSON output is now created from it, using the **json** module contained in Python for serialization. We believe, DICT output is more handy for the programmer's purpose, because all of its information is directly usable -- including images. Previously, for JSON, you had to bsae64-decode images before you could use them. We also have replaced the old "imgtype" dictionary key (an integer bit code) with the key "ext", which contains the appropriate extension string for the image.
+======= ====== ===================================================================== ==========
+Method  RSpeed Comments                                                               no images
+======= ====== ===================================================================== ==========
+TEXT     1.00  no images, **plain** text, line breaks                                 1.00
+BLOCKS   1.00  image bboxes (only), **block** level text with bboxes, line breaks     1.00
+WORDS    1.02  no images, **word** level text with bboxes                             1.02
+XML      2.72  no images, **char** level text, layout and font details                2.72
+XHTML    3.32  **base64** images, **span** level text, no layout info                 1.00
+HTML     3.54  **base64** images, **span** level text, layout and font details        1.01
+DICT     3.93  **binary** images, **span** level text, layout and font details        1.04
+RAWDICT  4.50  **binary** images, **char** level text, layout and font details        1.68
+======= ====== ===================================================================== ==========
 
-Look into the previous chapter **Appendix 1** for more performance information.
+As mentioned: when excluding all images (last column), the relative speeds are changing drastically: except RAWDICT and XML, the other methods are almost equally fast, and RAWDICT requires 40% less execution time than the **now slowest XML**.
+
+Look at chapter **Appendix 1** for more performance information.

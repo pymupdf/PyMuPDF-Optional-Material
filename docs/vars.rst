@@ -84,13 +84,13 @@ Document Permissions
 ====================== =======================================================================
 Code                   Permitted Action
 ====================== =======================================================================
-PDF_PERM_PRINT         Printing the document
-PDF_PERM_MODIFY        Modifying the document’s contents
-PDF_PERM_COPY          Copying or otherwise extracting text and graphics
-PDF_PERM_ANNOTATE      Adding or modifying text annotations and interactive form fields
-PDF_PERM_FORM          Filling in forms and signing the document
+PDF_PERM_PRINT         Print the document
+PDF_PERM_MODIFY        Modify the document's contents
+PDF_PERM_COPY          Copy or otherwise extract text and graphics
+PDF_PERM_ANNOTATE      Add or modify text annotations and interactive form fields
+PDF_PERM_FORM          Fill in forms and sign the document
 PDF_PERM_ACCESSIBILITY Obsolete, always permitted
-PDF_PERM_ASSEMBLE      Inserting, rotating, or deleting pages, bookmarks, thumbnail images
+PDF_PERM_ASSEMBLE      Insert, rotate, or delete pages, bookmarks, thumbnail images
 PDF_PERM_PRINT_HQ      High quality printing
 ====================== =======================================================================
 
@@ -125,7 +125,7 @@ pfa  Postscript for ASCII font (various subtypes)
 cff  Type1C font (compressed font equivalent to Type1)
 cid  character identifier font (postscript format)
 otf  OpenType font
-n/a  one of the built-in fonts (:ref:`Base-14-Fonts`, CJK, cannot be extracted)
+n/a  built-in font (:ref:`Base-14-Fonts` or CJK: cannot be extracted)
 ==== ============================================================================
 
 .. _TextAlign:
@@ -156,19 +156,19 @@ Options controlling the amount of data a text device parses into a :ref:`TextPag
 
 .. py:data:: TEXT_PRESERVE_LIGATURES
 
-    1 -- If this option is activated ligatures are passed through to the application in their original form. If this option is deactivated ligatures are expanded into their constituent parts, e.g. the ligature ffi is expanded into three  eparate characters f, f and i.
+    1 -- If set, ligatures are passed through to the application in their original form. Otherwise ligatures are expanded into their constituent parts, e.g. the ligature ffi is expanded into three  eparate characters f, f and i.
 
 .. py:data:: TEXT_PRESERVE_WHITESPACE
 
-    2 -- If this option is activated whitespace is passed through to the application in its original form. If this option is deactivated any type of horizontal whitespace (including horizontal tabs) will be replaced with space characters of variable width.
+    2 -- If set, whitespace is passed through to the application in its original form. Otherwise any type of horizontal whitespace (including horizontal tabs) will be replaced with space characters of variable width.
 
 .. py:data:: TEXT_PRESERVE_IMAGES
 
-    4 -- If this option is set, then images will be stored in the structured text structure. The default is to ignore all images.
+    4 -- If set, then images will be stored in the structured text structure.
 
 .. py:data:: TEXT_INHIBIT_SPACES
 
-    8 -- If this option is set, we will not try to add missing space characters where there are large gaps between characters.
+    8 -- If set, we will not try to add missing space characters where there are large gaps between characters.
 
 
 .. _linkDest Kinds:

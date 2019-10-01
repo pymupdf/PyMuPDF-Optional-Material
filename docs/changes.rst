@@ -1,6 +1,14 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.3
+---------------------------
+Minor changes compared to version 1.16.2. The performance of the "dict" and "rawdict" variants of :meth:`Page.getText` have been ported to C which has greatly improved their performance. This improvement is mostly noticeable with text-oriented documents, where they now should execute almost two times faster.
+
+* **Fixed** issue #369 ("mupdf: cmsCreateTransform failed") by removing ICC colorspace support.
+* **Changed** :meth:`Page.getText` to accept additional keywords "blocks" and "words". These will deliver the results of :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords`, respectively. So all text extraction methods are now available via a uniform API. Correspondingly, there are now new methods :meth:`TextPage.extractBLOCKS` and :meth:`TextPage.extractWords`.
+* **Changed** :meth:`Page.getText` to default bit indicator ``TEXT_INHIBIT_SPACES`` to **off**. Insertion of additional spaces is **not suppressed** by default.
+
 Changes in Version 1.16.2
 ---------------------------
 * **Changed** text extraction methods of :ref:`Page` to allow detail control of the amount of extracted data.
@@ -10,7 +18,7 @@ Changes in Version 1.16.2
 
 Changes in Version 1.16.1
 ---------------------------
-* **Added** property :attr:`Quad.isConvex` to check whether a line is contained in the quad if it connects two points of the quad.
+* **Added** property :attr:`Quad.isConvex` which checks whether a line is contained in the quad if it connects two points of it.
 * **Changed** :meth:`Document.insertPDF` to now allow dropping or including links and annotations independently during the copy. Fixes issue #352 ("Corrupt PDF data and ..."), which seemed to intermittently occur when using the method for some problematic PDF files.
 * **Fixed** a bug which, in matrix division using the syntax ``"m1/m2"``, caused matrix ``"m1"`` to be **replaced** by the result instead of delivering a new matrix.
 * **Fixed** issue #354 ("SyntaxWarning with Python 3.8"). We now always use ``"=="`` for literals (instead of the ``"is"`` Python keyword).
@@ -47,9 +55,11 @@ List of change details:
 * **Removed** :ref:`Document` attributes ``openErrCode``, ``openErrMsg``, and :ref:`Tools` attributes / methods ``stderr``, ``reset_stderr``, ``stdout``, and ``reset_stdout``.
 * **Removed** **thirdparty zlib** dependency in PyMuPDF: there are now compression functions available in MuPDF. Source installers of PyMuPDF may now omit this extra installation step.
 
+No version published for MuPDF v1.15.0
+------------------------------------------------------
 
-Changes in Version 1.14.20
----------------------------
+Changes in Version 1.14.20 / 1.14.21
+-------------------------------------
 * **Changed** text marker annotations to support multiple rectangles / quadrilaterals. This fixes issue #341 ("Question : How to addhighlight so that a string spread across more than a line is covered by one highlight?") and similar (#285).
 * **Fixed** issue #331 ("Importing PyMuPDF changes warning filtering behaviour globally").
 

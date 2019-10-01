@@ -21,12 +21,12 @@ After adding initial support for collections (portfolios) and ``/EmbeddedFiles``
 
 As a consequence, the cli utility ``mutool`` no longer offers access to embedded files.
 
-PyMuPDF -- having implemented an ``/EmbeddedFiles`` API in response in its version 1.11.0 -- was therefore forced to change gears in its version 1.15.0.
+PyMuPDF -- having implemented an ``/EmbeddedFiles`` API in response in its version 1.11.0 -- was therefore forced to change gears starting with its version 1.16.0 (we never published a MuPDF v1.15.x compatible PyMuPDF).
 
-We are now maintaining our own code basis supporting embedded files. This code makes use of basic MuPDF functions only (PDF dictionary and array functions).
+We are now maintaining our own code basis supporting embedded files. This code makes use of basic MuPDF dictionary and array functions only.
 
 PyMuPDF Support
 ------------------
 We continue to support the full old API with respect to embedded files -- with only minor, cosmetic changes.
 
-There even also is a new function, which delivers a list of all names under which embedded data are resgistered in a PDF.
+There even also is a new function, which delivers a list of all names under which embedded data are resgistered in a PDF, :meth:`Document.embeddedFileNames`.

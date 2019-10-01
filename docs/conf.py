@@ -45,7 +45,7 @@ copyright = u"2015-2019, Jorj X. McKie"
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = "1.16.2"
+release = "1.16.3"
 
 # The short X.Y version.
 s = release.split(".")
@@ -94,17 +94,19 @@ pygments_style = "sphinx"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = "agogo"
-# html_theme = 'sphinxdoc'
+# html_theme = "agogo"
+html_theme = "sphinxdoc"
+# html_theme = "python_docs_theme"
 # html_theme = "sphinx_rtd_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    #'root_name': "",
-    #'root_url': "",
-    # "root_icon": "pymupdf.ico"
+    # "root_name": "",
+    # "root_url": "",
+    # "root_icon": "pymupdf.ico",
+    # "sidebarbgcolor": "gray",
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

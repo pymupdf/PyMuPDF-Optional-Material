@@ -7,6 +7,7 @@ Classes
 
    annot.rst
    colorspace.rst
+   displaylist.rst
    document.rst
    identity.rst
    irect.rst
@@ -20,5 +21,6 @@ Classes
    quad.rst
    rect.rst
    shape.rst
+   textpage.rst
    tools.rst
    widget.rst
