@@ -516,9 +516,9 @@ performance                    automatic prevention of duplicates;   automatic p
                                MD5 calculation on every execution    faster than :meth:`Page.insertImage`
 multi-page image support       no                                    yes
 ease of use                    simple, intuitive;                    simple, intuitive;
-                               performance considerations apply      usable for **all document types**
+                               performance considerations apply      **usable for all document types**
                                for multiple insertions of same image (including images!) after conversion to
-                                                                     PDF with :meth:`Document.convertToPDF`
+                                                                     PDF via :meth:`Document.convertToPDF`
 ============================== ===================================== =========================================
 
 Basic code pattern for :meth:`Page.insertImage`. **Exactly one** of the parameters **filename / stream / pixmap** must be given::
@@ -574,8 +574,10 @@ The output will be plain text as it is coded in the document. No effort is made 
 You have many options to cure this -- see chapter :ref:`Appendix2`. Among them are:
 
 1. Extract text in HTML format and store it as a HTML document, so it can be viewed in any browser.
-2. Extract text as a list of text blocks via :meth:`Page.getTextBlocks`. Each item of this list contains position information for its text, which can be used to establish a convenient reading order.
-3. Extract a list of single words via :meth:`Page.getTextWords`. Its items are words with position information. Use it to determine text contained in a given rectangle -- see next section.
+2. Extract text as a list of text blocks via ``Page.getText("blocks")``. Each item of this list contains position information for its text, which can be used to establish a convenient reading order.
+3. Extract a list of single words via ``Page.getText("words")``. Its items are words with position information. Use it to determine text contained in a given rectangle -- see next section.
+
+See the following two section for examples and further explanations.
 
 
 .. index::
@@ -816,6 +818,22 @@ This script uses :meth:`Page.getTextWords` to look for a string, handed in via c
 .. image:: images/img-markedpdf.jpg
    :scale: 60
 
+----------------------------------------------
+
+How to Analyze Font Characteristics
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To analyze the characteristics of text in a PDF use this elementary script as a starting point:
+
+.. literalinclude:: text-lister.py
+   :language: python
+
+Here is the PDF page and the script output:
+
+.. image:: images/img-pdftext.jpg
+   :scale: 80
+
+-----------------------------------------
+
 How to Insert Text
 ~~~~~~~~~~~~~~~~~~~~
 PyMuPDF provides ways to insert text on new or existing PDF pages with the following features:
@@ -823,6 +841,7 @@ PyMuPDF provides ways to insert text on new or existing PDF pages with the follo
 * choose the font, including built-in fonts and fonts that are available as files
 * choose text characteristics like bold, italic, font size, font color, etc.
 * position the text in multiple ways:
+
     - either as simple line-oriented output starting at a certain point,
     - or fitting text in a box provided as a rectangle, in which case text alignment choices are also available,
     - choose whether text should be put in foreground (overlay existing content),
@@ -831,19 +850,17 @@ PyMuPDF provides ways to insert text on new or existing PDF pages with the follo
 
 All of the above is provided by three basic :ref:`Page`, resp. :ref:`Shape` methods:
 
-* :meth:`Page.insertFont` to install a font for the page, which can afterwards be referenced by the chosen name. The result is reflected in the output of :meth:`Document.getPageFontList`. The font can be:
+* :meth:`Page.insertFont` -- install a font for the page for later reference. The result is reflected in the output of :meth:`Document.getPageFontList`. The font can be:
+
     - provided as a file,
     - already present somewhere in **this or another** PDF, or
     - be a **built-in** font.
 
-* :meth:`Page.insertText` to write some lines of text.
-    Internally, this uses :meth:`Shape.insertText`.
+* :meth:`Page.insertText` -- write some lines of text. Internally, this uses :meth:`Shape.insertText`.
 
-* :meth:`Page.insertTextbox` to fit text in a given rectangle.
-    Here you can choose text alignment features (left, right, centered, justified) and you keep control as to whether text actually fits.
-    Internally, this uses :meth:`Shape.insertTextbox`.
+* :meth:`Page.insertTextbox` -- fit text in a given rectangle. Here you can choose text alignment features (left, right, centered, justified) and you keep control as to whether text actually fits. Internally, this uses :meth:`Shape.insertTextbox`.
 
-.. note:: Both text insertion methods automatically install the font if necessary.
+.. note:: Both text insertion methods automatically install the font as necessary.
 
 How to Write Text Lines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -998,7 +1015,6 @@ The snippet above indeed leads to three different copies of the Helvetica font i
     [6, 'n/a', 'Type1', 'Helvetica', 'helv', 'WinAnsiEncoding']
     [7, 'n/a', 'Type1', 'Helvetica', 'HElv', 'WinAnsiEncoding']
     [8, 'n/a', 'Type1', 'Helvetica', 'HELV', 'WinAnsiEncoding']
-
 
 -----------------------
 
