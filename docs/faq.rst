@@ -1658,6 +1658,11 @@ This deals with splitting up pages of a PDF in arbitrary pieces. For example, yo
              garbage = 3,                       # eliminate duplicate objects
              deflate = True)                    # compress stuff where possible
 
+
+This shows what happens to an input page:
+
+.. image:: images/img-posterize.png
+
 --------------------------
 
 How to Combine Single Pages
@@ -1723,6 +1728,11 @@ This deals with joining PDF pages to form a new PDF with pages each combining tw
 
     # by all means, save new file using garbage collection and compression
     doc.save("4up-" + infile, garbage = 3, deflate = True)
+
+Example effect:
+
+.. image:: images/img-4up.png
+
 
 --------------------------
 
