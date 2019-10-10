@@ -149,19 +149,19 @@ height          original image height *(float)*
 image           image content *(bytes/bytearray)*
 =============== ===============================================================
 
-Possible values of key ``"ext"`` are ``"bmp"``, ``"gif"``, ``"jpeg"``, ``"jpx"`` (JPEG 2000), ``"jxr"`` (JPEG XR), ``"png"``, ``"pnm"``, and ``"tiff"``.
+Possible values of key "ext" are "bmp", "gif", "jpeg", "jpx" (JPEG 2000), "jxr" (JPEG XR), "png", "pnm", and "tiff".
 
 .. note::
 
-   1. In some error situations, all of the above values may be zero or contain empty objects respectively. So, please be prepared to cope with items like
+   1. In some error situations, all of the above values may be zero or contain empty objects. So, please be prepared to digest items like::
 
-      ``{'type': 1, 'bbox': (0.0, 0.0, 0.0, 0.0), 'width': 0, 'height': 0, 'ext': 'png', 'image': b''}``
+      {"type": 1, "bbox": (0.0, 0.0, 0.0, 0.0), "width": 0, "height": 0, "ext": "png", "image": b""}
 
 
-   2. For PDF documents, the image blocks returned with this method **may or may not** be the same set as the entries contained in :meth:`Page.getImageList`. If there are differences, they most probably are caused by one of the following:
+   2. For PDF documents, the image blocks of a textpage **may or may not** be the same as the items of :meth:`Page.getImageList`. Any differences are most probably caused by one of the following:
 
-       - "inline" images (see page 352 of the :ref:`AdobeManual`) are detected by this method, but **not by** :meth:`Page.getImageList`.
-       - images named in the page :data:`object` definition **always** appear in :meth:`Page.getImageList`. But if a corresponding "display" command in the page's ``/Contents`` is missing (erroneously or on purpose), they will **not appear** as one of the block dictionaries.
+       - "inline" images (see page 352 of the :ref:`AdobeManual`) are contained in a textpage, but **not in** :meth:`Page.getImageList`.
+       - images mentioned in the page's :data:`object` definition will **always** appear in :meth:`Page.getImageList`. But if there is no corresponding "display" command in the page's ``/Contents`` (erroneously or by purpose), they will **not appear** in the textpage.
 
 
 **Text block:**
@@ -191,7 +191,7 @@ The value of key ``"dir"`` is a **unit vetor** and should be interpreted as foll
 * ``x``: positive = "left-right", negative = "right-left", 0 = neither
 * ``y``: positive = "top-bottom", negative = "bottom-top", 0 = neither
 
-The values indicate the "relative writing speed" in each direction, such that x\ :sup:`2` + y\ :sup:`2` = 1. In other words ``dir = [cos(beta), sin(beta)]``, where ``beta`` is the writing angle relative to the horizontal.
+The values indicate the "relative writing speed" in each direction, such that :math:`x^2 + y^2 = 1`. In other words ``dir = [cos(beta), sin(beta)]``, where ``beta`` is the writing angle relative to the horizontal.
 
 Span Dictionary
 ~~~~~~~~~~~~~~~~~

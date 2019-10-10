@@ -22,6 +22,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
     "sphinx.ext.ifconfig",
+    "sphinx.ext.imgmath",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -45,7 +46,7 @@ copyright = u"2015-2019, Jorj X. McKie"
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = "1.16.3"
+release = "1.16.4"
 
 # The short X.Y version.
 s = release.split(".")
@@ -95,9 +96,10 @@ pygments_style = "sphinx"
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # html_theme = "agogo"
-html_theme = "sphinxdoc"
+# html_theme = "sphinxdoc"
 # html_theme = "python_docs_theme"
 # html_theme = "sphinx_rtd_theme"
+html_theme = "classic"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

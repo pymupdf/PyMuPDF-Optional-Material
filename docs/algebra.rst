@@ -14,73 +14,66 @@ General Remarks
 -----------------
 1. Operators can be either **binary** (i.e. involving two objects) or **unary**.
 
-2. The resulting type of **binary** operations is either a **new object** of the **left operand's class** or a bool.
+2. The resulting type of **binary** operations is either a **new object of the left operand's class** or a bool.
 
 3. The result of **unary** operations is either a **new object** of the same class, a bool or a float.
 
-4. ``+, -, *, /`` are defined for all classes. They do what you would expect from them.
+4. The binary operators ``+, -, *, /`` are defined for all classes. They *roughly* do what you would expect -- **except, that the second operand ...**
 
-5. Rectangles have two additional binary operators: ``&`` (intersection) and ``|`` (union).
+    - may always be a number which then performs the operation on every component of the first one,
+    - may always be a numeric sequence of the same length (2, 4 or 6) -- we call such sequences :data:`point_like`, :data:`rect_like` or :data:`matrix_like`, respectively.
 
-6. Binary operators fully support in-place operations: if ``"°"`` denotes any binary operator, then ``a °= b`` is the same as ``a = a ° b``.
+5. Rectangles support additional binary operations: **intersection** (operator ``"&"``), **union** (operator ``"|"``) and **containment** checking.
 
-7. For binary operations, the **second** operand may always be a number sequence of the same size as the left one. We allude to this fact by e.g. saying "x-like object" if a number sequence of same length as x is allowed.
+6. Binary operators fully support in-place operations, so expressions like ``"a /= b"`` are valid if b is numeric or "a_like".
+
 
 Unary Operations
 ------------------
 
-+---------+-----------------------------------------------------------------+
-|         | **Result**                                                      |
-+=========+=================================================================+
-| bool(O) | is false exactly if all components of "O" are zero              |
-+---------+-----------------------------------------------------------------+
-| abs(O)  | the rectangle area -- equal to norm(O) for the other tyes       |
-+---------+-----------------------------------------------------------------+
-| norm(O) | square root of the component squares (Euclidean norm)           |
-+---------+-----------------------------------------------------------------+
-| +O      | new copy of "O"                                                 |
-+---------+-----------------------------------------------------------------+
-| -O      | new copy of "O" with negated components                         |
-+---------+-----------------------------------------------------------------+
-| ~m      | inverse of :ref:`Matrix` "m", or the null matrix if not defined |
-+---------+-----------------------------------------------------------------+
-
+=========== ===================================================================
+Oper.       Result
+=========== ===================================================================
+ bool(OBJ)  is false exactly if all components of OBJ are zero
+ abs(OBJ)   the rectangle area -- equal to norm(OBJ) for the other tyes
+ norm(OBJ)  square root of the component squares (Euclidean norm)
+ +OBJ       new copy of OBJ
+ -OBJ       new copy of OBJ with negated components
+ ~m         inverse of :ref:`Matrix` "m", or the null matrix if not defined
+=========== ===================================================================
 
 
 Binary Operations
 ------------------
-For every geometry object "a" and every number "b", the operations "a ° b" and "a °= b" are always defined if "°" is any of the operators ``+, -, *, /``. The respective operation is simply executed for each component of "a". If the second operand is **not a number**, then the following is defined:
+For every geometry object "a" and every number "b", the operations "a ° b" and "a °= b" are always defined for the operators ``+, -, *, /``. The respective operation is simply executed for each component of "a". If the **second operand is not a number**, then the following is defined:
 
-+--------+---------------------------------------------------------------+
-|        | **Result**                                                    |
-+========+===============================================================+
-| a+b,   | component-wise execution, "b" must be "a"-like.               |
-| a-b    |                                                               |
-+--------+---------------------------------------------------------------+
-| a*m,   | "a" can be any geometry object and "m" must be matrix-like.   |
-| a/m    | ``"a/m"`` is always treated as ``"a*~m"``.                    |
-|        | If "a" is a **point** or a **rectangle**, then                |
-|        | ``"a.transform(m)"`` is executed. If "a" is a matrix, then    |
-|        | matrix concatenation takes place.                             |
-+--------+---------------------------------------------------------------+
-| a&b    | **intersection rectangle:** "a" must be a rectangle and       |
-|        | "b" rect-like. Delivers the **largest rectangle**             |
-|        | contained in both operands.                                   |
-+--------+---------------------------------------------------------------+
-| a|b    | **union rectangle:** "a" must be a rectangle, and "b"         |
-|        | may be point-like or rect-like.                               |
-|        | Delivers the **smallest rectangle** containing both operands. |
-+--------+---------------------------------------------------------------+
-| b in a | if "b" is a number, then ``"b in tuple(a)"`` is returned.     |
-|        | If "b" is point-like or rect-like, then "a" must be a         |
-|        | rectangle, and ``"a.contains(b)"`` is returned.               |
-+--------+---------------------------------------------------------------+
-| a==b   | ``True`` if ``bool(a-b)`` is ``False`` ("b" may be "a"-like). |
-+--------+---------------------------------------------------------------+
+========= =======================================================================
+Oper.     Result
+========= =======================================================================
+a+b, a-b  component-wise execution, "b" must be "a-like".
+a*m, a/m  "a" can be a point, rectangle or matrix, but "m" must be
+          :data:`matrix_like`. ``"a/m"`` is treated as ``"a*~m"`` (see note below
+          for non-invertible matrices). If "a" is a **point** or a **rectangle**,
+          then ``"a.transform(m)"`` is executed. If "a" is a matrix, then
+          matrix concatenation takes place.
+a&b       **intersection rectangle:** "a" must be a rectangle and
+          "b" :data:`rect_like`. Delivers the **largest rectangle**
+          contained in both operands.
+a|b       **union rectangle:** "a" must be a rectangle, and "b" may be
+          :data:`point_like` or :data:`rect_like`.
+          Delivers the **smallest rectangle** containing both operands.
+b in a    if "b" is a number, then ``"b in tuple(a)"`` is returned.
+          If "b" is :data:`point_like` or :data:`rect_like`, then "a"
+          must be a rectangle, and ``"a.contains(b)"`` is returned.
+a==b      ``True`` if ``bool(a-b)`` is ``False`` ("b" may be "a-like").
+========= =======================================================================
+
 
 .. note:: Please note an important difference to usual arithmetics:
 
-            Matrix multiplication is **not commutative**, i.e. in general there is ``m * n != n * m`` for two matrices. Also, there are non-zero matrices which have no inverse, for example ``m = Matrix(1, 0, 1, 0, 1, 0)``. If you try to divide by any of these you will receive a ``ZeroDivisionError`` exception using operator ``"/"``, e.g. for ``fitz.Matrix(1, 1) / m``. If you formulate ``fitz.Matrix(1, 1) * ~m``, the result will be ``fitz.Matrix()`` (the null matrix).
+        Matrix multiplication is **not commutative**, i.e. in general there is ``m * n != n * m`` for two matrices. Also, there are non-zero matrices which have no inverse, for example ``m = Matrix(1, 0, 1, 0, 1, 0)``. If you try to divide by any of these you will receive a ``ZeroDivisionError`` exception using operator ``"/"``, e.g. for ``fitz.Identity / m``. But if you formulate ``fitz.Identity * ~m``, the result will be ``fitz.Matrix()`` (the null matrix).
+
+        Admittedly, this represents an inconsistency, and we are considering to remove it. For the time being, you can choose to avoid an exception and check whether ~m is the null matrix, or accept a potential ZeroDivisionError by using ``fitz.Identity / m``.
 
 
 Some Examples

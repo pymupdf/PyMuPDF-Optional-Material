@@ -374,7 +374,7 @@ Several draw methods can be executed in a row and each one of them will contribu
          >>> # assuming ...
          >>> morph = (point, matrix)
          >>> # ... recalculate the shape rectangle like so:
-         >>> img.rect = (img.rect - fitz.Rect(point, point)) * ~matrix + fitz.Rect(point, point)
+         >>> shape.rect = (shape.rect - fitz.Rect(point, point)) * ~matrix + fitz.Rect(point, point)
 
       :type: :ref:`Rect`
 
@@ -392,21 +392,21 @@ Several draw methods can be executed in a row and each one of them will contribu
 
 Usage
 ------
-A drawing object is constructed by ``img = page.newShape()``. After this, as many draw, finish and text insertions methods as required may follow. Each sequence of draws must be finished before the drawing is committed. The overall coding pattern looks like this::
+A drawing object is constructed by ``shape = page.newShape()``. After this, as many draw, finish and text insertions methods as required may follow. Each sequence of draws must be finished before the drawing is committed. The overall coding pattern looks like this::
 
-   >>> img = page.newShape()
-   >>> img.draw1(...)
-   >>> img.draw2(...)
+   >>> shape = page.newShape()
+   >>> shape.draw1(...)
+   >>> shape.draw2(...)
    >>> ...
-   >>> img.finish(width=..., color=..., fill=..., morph=...)
-   >>> img.draw3(...)
-   >>> img.draw4(...)
+   >>> shape.finish(width=..., color=..., fill=..., morph=...)
+   >>> shape.draw3(...)
+   >>> shape.draw4(...)
    >>> ...
-   >>> img.finish(width=..., color=..., fill=..., morph=...)
+   >>> shape.finish(width=..., color=..., fill=..., morph=...)
    >>> ...
-   >>> img.insertText*
+   >>> shape.insertText*
    >>> ...
-   >>> img.commit()
+   >>> shape.commit()
    >>> ....
 
 .. note::
@@ -425,18 +425,18 @@ Examples
 ---------
 1. Create a full circle of pieces of pie in different colors:
 
->>> img  = page.newShape()       # start a new shape
+>>> shape  = page.newShape()       # start a new shape
 >>> cols = (...)                 # a sequence of RGB color triples
 >>> pieces = len(cols)           # number of pieces to draw
 >>> beta = 360. / pieces         # angle of each piece of pie
 >>> center = fitz.Point(...)     # center of the pie
 >>> p0     = fitz.Point(...)     # starting point
 >>> for i in range(pieces):
-        p0 = img.drawSector(center, p0, beta,
+        p0 = shape.drawSector(center, p0, beta,
                             fullSector=True) # draw piece
         # now fill it but do not connect ends of the arc
-        img.finish(fill=cols[i], closePath=False)
->>> img.commit()                 # update the page
+        shape.finish(fill=cols[i], closePath=False)
+>>> shape.commit()                 # update the page
 
 Here is an example for 5 colors:
 
@@ -444,18 +444,18 @@ Here is an example for 5 colors:
 
 2. Create a regular n-edged polygon (fill yellow, red border). We use ``drawSector()`` only to calculate the points on the circumference, and empty the draw command buffer before drawing the polygon:
 
->>> img  = page.newShape()       # start a new shape
+>>> shape  = page.newShape()       # start a new shape
 >>> beta = -360.0 / n            # our angle, drawn clockwise
 >>> center = fitz.Point(...)     # center of circle
 >>> p0     = fitz.Point(...)     # start here (1st edge)
 >>> points = [p0]                # store polygon edges
 >>> for i in range(n):           # calculate the edges
-        p0 = img.drawSector(center, p0, beta)
+        p0 = shape.drawSector(center, p0, beta)
         points.append(p0)
->>> img.draw_cont = ""           # do not draw the circle sectors
->>> img.drawPolyline(points)     # draw the polygon
->>> img.finish(color=(1,0,0), fill=(1,1,0), closePath=False)
->>> img.commit()
+>>> shape.draw_cont = ""           # do not draw the circle sectors
+>>> shape.drawPolyline(points)     # draw the polygon
+>>> shape.finish(color=(1,0,0), fill=(1,1,0), closePath=False)
+>>> shape.commit()
 
 Here is the polygon for n = 7:
 

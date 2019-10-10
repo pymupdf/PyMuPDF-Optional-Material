@@ -22,70 +22,73 @@ This is available for PDF documents only. There are basically two groups of meth
 
 2. Methods adding **annotations**. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that manipulating them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
 
-============================= ================================================
-**Method / Attribute**         **Short Description**
-============================= ================================================
-:meth:`~.addCaretAnnot`       PDF only: add a caret annotation
-:meth:`~.addCircleAnnot`      PDF only: add a circle annotation
-:meth:`~.addFileAnnot`        PDF only: add a file attachment annotation
-:meth:`~.addFreetextAnnot`    PDF only: add a text annotation
-:meth:`~.addHighlightAnnot`   PDF only: add a "highlight" annotation
-:meth:`~.addInkAnnot`         PDF only: add an ink annotation
-:meth:`~.addLineAnnot`        PDF only: add a line annotation
-:meth:`~.addPolygonAnnot`     PDF only: add a polygon annotation
-:meth:`~.addPolylineAnnot`    PDF only: add a multi-line annotation
-:meth:`~.addRectAnnot`        PDF only: add a rectangle annotation
-:meth:`~.addSquigglyAnnot`    PDF only: add a "squiggly" annotation
-:meth:`~.addStampAnnot`       PDF only: add a "rubber stamp" annotation
-:meth:`~.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
-:meth:`~.addTextAnnot`        PDF only: add a comment
-:meth:`~.addUnderlineAnnot`   PDF only: add an "underline" annotation
-:meth:`~.addWidget`           PDF only: add a PDF Form field
-:meth:`~.bound`               rectangle of the page
-:meth:`~.deleteAnnot`         PDF only: delete an annotation
-:meth:`~.deleteLink`          PDF only: delete a link
-:meth:`~.drawBezier`          PDF only: draw a cubic Bézier curve
-:meth:`~.drawCircle`          PDF only: draw a circle
-:meth:`~.drawCurve`           PDF only: draw a special Bézier curve
-:meth:`~.drawLine`            PDF only: draw a line
-:meth:`~.drawOval`            PDF only: draw an oval / ellipse
-:meth:`~.drawPolyline`        PDF only: connect a point sequence
-:meth:`~.drawRect`            PDF only: draw a rectangle
-:meth:`~.drawSector`          PDF only: draw a circular sector
-:meth:`~.drawSquiggle`        PDF only: draw a squiggly line
-:meth:`~.drawZigzag`          PDF only: draw a zig-zagged line
-:meth:`~.getFontList`         PDF only: get list of used fonts
-:meth:`~.getImageBbox`        PDF only: get bbox of inserted image
-:meth:`~.getImageList`        PDF only: get list of used images
-:meth:`~.getLinks`            get all links
-:meth:`~.getPixmap`           create a :ref:`Pixmap`
-:meth:`~.getSVGimage`         create a page image in SVG format
-:meth:`~.getText`             extract the page's text
-:meth:`~.insertFont`          PDF only: insert a font for use by the page
-:meth:`~.insertImage`         PDF only: insert an image
-:meth:`~.insertLink`          PDF only: insert a link
-:meth:`~.insertText`          PDF only: insert text
-:meth:`~.insertTextbox`       PDF only: insert a text box
-:meth:`~.loadLinks`           return the first link on a page
-:meth:`~.newShape`            PDF only: start a new :ref:`Shape`
-:meth:`~.searchFor`           search for a string
-:meth:`~.setCropBox`          PDF only: modify the visible page
-:meth:`~.setRotation`         PDF only: set page rotation
-:meth:`~.showPDFpage`         PDF only: display PDF page image
-:meth:`~.updateLink`          PDF only: modify a link
-:attr:`~.CropBox`             the page's /CropBox
-:attr:`~.CropBoxPosition`     displacement of the /CropBox
-:attr:`~.firstAnnot`          first :ref:`Annot` on the page
-:attr:`~.firstLink`           first :ref:`Link` on the page
-:attr:`~.firstWidget`         first widget (form field) on the page
-:attr:`~.MediaBox`            the page's /MediaBox
-:attr:`~.MediaBoxSize`        bottom-right point of /MediaBox
-:attr:`~.number`              page number
-:attr:`~.parent`              owning document object
-:attr:`~.rect`                rectangle (mediabox) of the page
-:attr:`~.rotation`            PDF only: page rotation
-:attr:`~.xref`                PDF :data:`xref`
-============================= ================================================
+================================ ================================================
+**Method / Attribute**            **Short Description**
+================================ ================================================
+:meth:`Page.addCaretAnnot`       PDF only: add a caret annotation
+:meth:`Page.addCircleAnnot`      PDF only: add a circle annotation
+:meth:`Page.addFileAnnot`        PDF only: add a file attachment annotation
+:meth:`Page.addFreetextAnnot`    PDF only: add a text annotation
+:meth:`Page.addHighlightAnnot`   PDF only: add a "highlight" annotation
+:meth:`Page.addInkAnnot`         PDF only: add an ink annotation
+:meth:`Page.addLineAnnot`        PDF only: add a line annotation
+:meth:`Page.addPolygonAnnot`     PDF only: add a polygon annotation
+:meth:`Page.addPolylineAnnot`    PDF only: add a multi-line annotation
+:meth:`Page.addRectAnnot`        PDF only: add a rectangle annotation
+:meth:`Page.addSquigglyAnnot`    PDF only: add a "squiggly" annotation
+:meth:`Page.addStampAnnot`       PDF only: add a "rubber stamp" annotation
+:meth:`Page.addStrikeoutAnnot`   PDF only: add a "strike-out" annotation
+:meth:`Page.addTextAnnot`        PDF only: add a comment
+:meth:`Page.addUnderlineAnnot`   PDF only: add an "underline" annotation
+:meth:`Page.addWidget`           PDF only: add a PDF Form field
+:meth:`Page.annots`              return a generator over the annots on the page
+:meth:`Page.bound`               rectangle of the page
+:meth:`Page.deleteAnnot`         PDF only: delete an annotation
+:meth:`Page.deleteLink`          PDF only: delete a link
+:meth:`Page.drawBezier`          PDF only: draw a cubic Bezier curve
+:meth:`Page.drawCircle`          PDF only: draw a circle
+:meth:`Page.drawCurve`           PDF only: draw a special Bezier curve
+:meth:`Page.drawLine`            PDF only: draw a line
+:meth:`Page.drawOval`            PDF only: draw an oval / ellipse
+:meth:`Page.drawPolyline`        PDF only: connect a point sequence
+:meth:`Page.drawRect`            PDF only: draw a rectangle
+:meth:`Page.drawSector`          PDF only: draw a circular sector
+:meth:`Page.drawSquiggle`        PDF only: draw a squiggly line
+:meth:`Page.drawZigzag`          PDF only: draw a zig-zagged line
+:meth:`Page.getFontList`         PDF only: get list of used fonts
+:meth:`Page.getImageBbox`        PDF only: get bbox of inserted image
+:meth:`Page.getImageList`        PDF only: get list of used images
+:meth:`Page.getLinks`            get all links
+:meth:`Page.getPixmap`           create a :ref:`Pixmap`
+:meth:`Page.getSVGimage`         create a page image in SVG format
+:meth:`Page.getText`             extract the page's text
+:meth:`Page.insertFont`          PDF only: insert a font for use by the page
+:meth:`Page.insertImage`         PDF only: insert an image
+:meth:`Page.insertLink`          PDF only: insert a link
+:meth:`Page.insertText`          PDF only: insert text
+:meth:`Page.insertTextbox`       PDF only: insert a text box
+:meth:`Page.links`               return a generator of the links on the page
+:meth:`Page.loadLinks`           return the first link on a page
+:meth:`Page.newShape`            PDF only: start a new :ref:`Shape`
+:meth:`Page.searchFor`           search for a string
+:meth:`Page.setCropBox`          PDF only: modify the visible page
+:meth:`Page.setRotation`         PDF only: set page rotation
+:meth:`Page.showPDFpage`         PDF only: display PDF page image
+:meth:`Page.updateLink`          PDF only: modify a link
+:meth:`Page.widgets`             return a generator over the fields on the page
+:attr:`Page.CropBox`             the page's /CropBox
+:attr:`Page.CropBoxPosition`     displacement of the /CropBox
+:attr:`Page.firstAnnot`          first :ref:`Annot` on the page
+:attr:`Page.firstLink`           first :ref:`Link` on the page
+:attr:`Page.firstWidget`         first widget (form field) on the page
+:attr:`Page.MediaBox`            the page's /MediaBox
+:attr:`Page.MediaBoxSize`        bottom-right point of /MediaBox
+:attr:`Page.number`              page number
+:attr:`Page.parent`              owning document object
+:attr:`Page.rect`                rectangle (mediabox) of the page
+:attr:`Page.rotation`            PDF only: page rotation
+:attr:`Page.xref`                PDF :data:`xref`
+================================ ================================================
 
 **Class API**
 
@@ -292,7 +295,35 @@ This is available for PDF documents only. There are basically two groups of meth
       Retrieves **all** links of a page.
 
       :rtype: list
-      :returns: A list of dictionaries. The entries are in the order as specified during PDF generation. For a description of the dictionary entries see below. Always use this method if you intend to make changes to the links of a page.
+      :returns: A list of dictionaries. For a description of the dictionary entries see below. Always use this or the :meth:`Page.links` method if you intend to make changes to the links of a page.
+
+   .. method:: links(kinds=None)
+
+      Return a generator over the page's links. The results equal the entries of :meth:`Page.getLinks`.
+
+      :arg sequence kinds: a sequence of integers to down-select to one or more link kinds. Default is all links. Example: ``kinds=(fitz.LINK_GOTO,)`` will only return internal links.
+
+      :rtype: generator
+      :returns: an entry of :meth:`Page.getLinks()` for each iteration.
+
+   .. method:: annots(types=None)
+
+      Return a generator over the page's annotations.
+
+      :arg sequence types: a sequence of integers to down-select to one or annotation types. Default is all annotations. Example: ``types=(fitz.PDF_ANNOT_FREETEXT, fitz.PDF_ANNOT_TEXT)`` will only return 'FreeText' and 'Text' annotations.
+
+      :rtype: generator
+      :returns: an :ref:`Annot` for each iteration.
+
+   .. method:: widgets(types=None)
+
+      Return a generator over the page's form fields.
+
+      :arg sequence types: a sequence of integers to down-select to one or more widget types. Default is all form fields. Example: ``types=(fitz.PDF_WIDGET_TYPE_TEXT,)`` will only return 'Text' fields.
+
+      :rtype: generator
+      :returns: a :ref:`Widget` for each iteration.
+
 
    .. index::
       pair: overlay; Page.insertText args
@@ -402,9 +433,9 @@ This is available for PDF documents only. There are basically two groups of meth
       pair: fill; Page.drawOval args
       pair: width; Page.drawOval args
 
-   .. method:: drawOval(rect, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
+   .. method:: drawOval(quad, color=None, fill=None, width=1, dashes=None, lineCap=0, lineJoin=0, overlay=True, morph=None)
 
-      PDF only: Draw an oval (ellipse) within the given rectangle (:data:`rect_like`). See :meth:`Shape.drawOval`.
+      PDF only: Draw an oval (ellipse) within the given :data:`rect_like` or :data:`quad_like`. See :meth:`Shape.drawOval`.
 
    .. index::
       pair: overlay; Page.drawSector args
@@ -740,7 +771,7 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg docsrc: source PDF document containing the page. Must be a different document object, but may be the same file.
       :type docsrc: :ref:`Document`
 
-      :arg int pno: page number (0-based, in ``range(-inf, len(docsrc))``) to be shown.
+      :arg int pno: page number (0-based, in :math:`range(- \infty, docsrc.pageCount)`) to be shown.
 
       :arg bool keep_proportion: whether to maintain the width-height-ratio (default). If false, all 4 corners are always positioned on the border of the target rectangle -- whatever the rotation value. In general, this will deliver distorted and /or non-rectangular images.
 

@@ -908,23 +908,23 @@ Here is another example. It inserts 4 text strings using the four different rota
     p3 = fitz.Point(25, page.rect.height - 25)
     p4 = fitz.Point(page.rect.width - 25, page.rect.height - 25)
     # create a Shape to draw on
-    img = page.newShape()
+    shape = page.newShape()
 
     # draw the insertion points as red, filled dots
-    img.drawCircle(p1,1)
-    img.drawCircle(p2,1)
-    img.drawCircle(p3,1)
-    img.drawCircle(p4,1)
-    img.finish(width=0.3, color=red, fill=red)
+    shape.drawCircle(p1,1)
+    shape.drawCircle(p2,1)
+    shape.drawCircle(p3,1)
+    shape.drawCircle(p4,1)
+    shape.finish(width=0.3, color=red, fill=red)
 
     # insert the text strings
-    img.insertText(p1, text1)
-    img.insertText(p3, text2, rotate=90)
-    img.insertText(p2, text3, rotate=-90)
-    img.insertText(p4, text4, rotate=180)
+    shape.insertText(p1, text1)
+    shape.insertText(p3, text2, rotate=90)
+    shape.insertText(p2, text3, rotate=-90)
+    shape.insertText(p4, text4, rotate=180)
 
     # store our work to the page
-    img.commit()
+    shape.commit()
     doc.save(...)
 
 This is the result:
@@ -958,19 +958,19 @@ This script fills 4 different rectangles with text, each time choosing a differe
     """We use a Shape object (something like a canvas) to output the text and
     the rectangles surounding it for demonstration.
     """
-    img = page.newShape()                            # create Shape
-    img.drawRect(r1)                                 # draw rectangles
-    img.drawRect(r2)                                 # giving them
-    img.drawRect(r3)                                 # a yellow background
-    img.drawRect(r4)                                 # and a red border
-    img.finish(width = 0.3, color = red, fill = gold)
+    shape = page.newShape()                            # create Shape
+    shape.drawRect(r1)                                 # draw rectangles
+    shape.drawRect(r2)                                 # giving them
+    shape.drawRect(r3)                                 # a yellow background
+    shape.drawRect(r4)                                 # and a red border
+    shape.finish(width = 0.3, color = red, fill = gold)
     # Now insert text in the rectangles. Font "Helvetica" will be used
     # by default. A return code rc < 0 indicates insufficient space (not checked here).
-    rc = img.insertTextbox(r1, t1, color = blue)
-    rc = img.insertTextbox(r2, t2, color = blue, rotate = 90)
-    rc = img.insertTextbox(r3, t3, color = blue, rotate = -90)
-    rc = img.insertTextbox(r4, t4, color = blue, rotate = 180)
-    img.commit()                                     # write all stuff to page /Contents
+    rc = shape.insertTextbox(r1, t1, color = blue)
+    rc = shape.insertTextbox(r2, t2, color = blue, rotate = 90)
+    rc = shape.insertTextbox(r3, t3, color = blue, rotate = -90)
+    rc = shape.insertTextbox(r4, t4, color = blue, rotate = 180)
+    shape.commit()                                     # write all stuff to page /Contents
     doc.save("...")
 
 Several default values were used above: font "Helvetica", font size 11 and text alignment "left". The result will look like this:
@@ -994,13 +994,13 @@ If you change the fontname just slightly, you can also achieve an **encoding "mi
 
     import fitz
     doc=fitz.open()
-    page=doc.newPage()
-    img=page.newShape()
+    page = doc.newPage()
+    shape = page.newShape()
     t="Sômé tèxt wìth nöñ-Lâtîn characterß."
-    img.insertText((50,70), t, fontname="helv", encoding=fitz.TEXT_ENCODING_LATIN)
-    img.insertText((50,90), t, fontname="HElv", encoding=fitz.TEXT_ENCODING_GREEK)
-    img.insertText((50,110), t, fontname="HELV", encoding=fitz.TEXT_ENCODING_CYRILLIC)
-    img.commit()
+    shape.insertText((50,70), t, fontname="helv", encoding=fitz.TEXT_ENCODING_LATIN)
+    shape.insertText((50,90), t, fontname="HElv", encoding=fitz.TEXT_ENCODING_GREEK)
+    shape.insertText((50,110), t, fontname="HELV", encoding=fitz.TEXT_ENCODING_CYRILLIC)
+    shape.commit()
     doc.save("t.pdf")
 
 The result:
@@ -1319,7 +1319,7 @@ The syntax for such operations is defined in "A Operator Summary" on page 985 of
 
 PyMuPDF implements a large part of the available features via its :ref:`Shape` class, which is comparable to notions like "canvas" in other packages (e.g. `reportlab <https://pypi.org/project/reportlab/>`_).
 
-A shape is always created as a **child of a page**, usually with an instruction like ``img = page.newShape()``. The class defines numerous methods that perform drawing operations on the page's area. For example, ``last_point = img.drawRect(rect)`` draws a rectangle along the borders of a suitably defined ``rect = fitz.Rect(...)``.
+A shape is always created as a **child of a page**, usually with an instruction like ``shape = page.newShape()``. The class defines numerous methods that perform drawing operations on the page's area. For example, ``last_point = shape.drawRect(rect)`` draws a rectangle along the borders of a suitably defined ``rect = fitz.Rect(...)``.
 
 The returned ``last_point`` **always** is the :ref:`Point` where drawing operation ended ("last point"). Every such elementary drawing requires a subsequent :meth:`Shape.finish` to "close" it, but there may be multiple drawings which have one common ``finish()`` method.
 
@@ -1368,15 +1368,15 @@ If you import this script, you can also directly use its graphics as in the foll
 
     doc = fitz.open()                      # create empty PDF
     page = doc.newPage()                   # create an empty page
-    img = page.newShape()                  # start a Shape (canvas)
+    shape = page.newShape()                  # start a Shape (canvas)
 
     for i, r in enumerate(rlist):
-        tlist[i][0](img, rlist[i])         # execute symbol creation
-        img.insertText(rlist[i].br + p,    # insert description text
+        tlist[i][0](shape, rlist[i])         # execute symbol creation
+        shape.insertText(rlist[i].br + p,    # insert description text
                        tlist[i][1], fontsize=r.height/1.2)
 
     # store everything to the page's /Contents object
-    img.commit()
+    shape.commit()
 
     import os
     scriptdir = os.path.dirname(__file__)

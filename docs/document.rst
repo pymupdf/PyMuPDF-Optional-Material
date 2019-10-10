@@ -40,6 +40,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.loadPage`               read a page
 :meth:`Document.movePage`               PDF only: move a page to another location
 :meth:`Document.newPage`                PDF only: insert a new empty page
+:meth:`Document.pages`                  iterator over a page range
 :meth:`Document.save`                   PDF only: save the document
 :meth:`Document.saveIncr`               PDF only: save the document incrementally
 :meth:`Document.searchPageFor`          search for a string on a page
@@ -47,7 +48,7 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.setMetadata`            PDF only: set the metadata
 :meth:`Document.setToC`                 PDF only: set the table of contents (TOC)
 :meth:`Document.write`                  PDF only: writes the document to memory
-:attr:`Document.FormFonts`              PDF only: list of existing field fonts
+:attr:`Document.FormFonts`              PDF only: list of global widget fonts
 :attr:`Document.isClosed`               has document been closed?
 :attr:`Document.isEncrypted`            document (still) encrypted?
 :attr:`Document.isFormPDF`              is this a Form PDF?
@@ -138,11 +139,28 @@ For addional details on **embedded files** refer to Appendix 3.
 
       Create a :ref:`Page` object for further processing (like rendering, text searching, etc.).
 
-      :arg int pno: page number, zero-based (0 is default and the first page of the document). Any value in ``range(-inf, doc.pageCount)`` is acceptable. If pno is negative, then ``doc.pageCount`` will be added until this is no longer the case. For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
+      :arg int pno: page number, zero-based (0 is default and the first page of the document). Any integer :math:`- \infty < pno < pageCount` is acceptable. If pno is negative, then :attr:`pageCount` will be added until this is no longer the case. For example: to load the last page, you can specify ``doc.loadPage(-1)``. After this you have ``page.number == doc.pageCount - 1``.
 
       :rtype: :ref:`Page`
 
-    .. note:: Documents also follow the Python sequence protocol with page numbers as indices: ``doc.loadPage(n) == doc[n]``. Consequently, expressions like ``"for page in doc: ..."`` and ``"for page in reversed(doc): ..."`` will successively yield the document's pages.
+    .. note:: Documents also follow the Python sequence protocol with page numbers as indices: ``doc.loadPage(n) == doc[n]``. Consequently, expressions like ``"for page in doc: ..."`` and ``"for page in reversed(doc): ..."`` will successively yield the document's pages. Refer to :meth:`Document.range`` which allows processing pages as with slicing.
+
+    .. method:: pages(start=None, stop=None, step=None)
+
+      .. versionadded:: 1.16.4 A generator for a given range of pages. Parameters have the same meaning as in the built-in function ``"range()"``. Intended for expressions of the form ``"for page in doc.pages(start, stop, step): ..."``.
+
+      :arg int start: start iteration with this page number. Default is zero, allowed values are :math:`- \infty < start < pageCount`.
+      :arg int stop: stop iteration at this page number. Default is :attr:`pageCount`, possible are :math:`- \infty < stop \leq pageCount`. Larger values are **silently replaced** by the default. As with the built-in ``"range()"``, this is the first page **not** returned.
+      :arg int step: stepping value. Defaults are 1 if start < stop and -1 if start > stop. Zero is not allowed.
+
+      :returns: a generator iterator over the document's pages. Some examples:
+
+         * ``"for page in doc.pages()"`` is the same as ``"for page in doc"``.
+         * ``"for page in doc.pages(4, 9, 2)"`` emits pages 4, 6, 8.
+         * ``"for page in doc.pages(0, None, 2)"`` emits all pages with even numbers.
+         * ``"doc.range(-2)"`` emits the last two pages.
+         * ``"for page in doc.pages(-1, -1)"`` is the same as ``"for page in reversed(doc)"``.
+         * ``"for page in doc.pages(-1, -2)"`` emits pages in reversed sequence starting and ending with the last document page.
 
     .. index::
        pair: from_page; Document.convertToPDF args
@@ -212,7 +230,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       Creates a pixmap from page ``pno`` (zero-based). Invokes :meth:`Page.getPixmap`.
 
-      :arg int pno: page number, 0-based in ``range(-inf, len(doc))``.
+      :arg int pno: page number, 0-based in :math:`- \infty < pno < pageCount`.
 
       :rtype: :ref:`Pixmap`
 
@@ -220,7 +238,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       PDF only: Return a list of all image descriptions referenced by a page.
 
-      :arg int pno: page number, 0-based in ``range(-inf, len(doc))``.
+      :arg int pno: page number, 0-based in :math:`- \infty < pno < pageCount`.
 
       :rtype: list
 
@@ -481,7 +499,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. method:: deletePage(pno=-1)
 
-      PDF only: Delete a page given by its 0-based number in ``range(-inf, len(doc)-1)``.
+      PDF only: Delete a page given by its 0-based number in :math:`- \infty < pno < pageCount - 1`.
 
       .. versionchanged:: 1.14.17
 
@@ -685,9 +703,9 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. attribute:: isFormPDF
 
-      ``True`` if this is a Form PDF document with field count greater zero, else ``False``.
+      ``False`` if this is not a PDF or has no form fields, otherwise the number of root form fields (fields with no ancestors).
 
-      :type: bool
+      :type: bool,int
 
     .. attribute:: isReflowable
 
@@ -747,7 +765,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. Attribute:: FormFonts
 
-      A list of font resource names. Contains ``None`` if not a PDF and ``[]`` if not a Form PDF.
+      A list of form field font names defined in the ``/AcroForm`` object. ``None`` if not a PDF.
 
       :type: int
 

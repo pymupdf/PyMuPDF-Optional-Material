@@ -1,9 +1,20 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.4
+---------------------------
+
+* **Fixed** issue #381 ("TextPage.extractDICT ... failed ... after upgrading ... to 1.16.3")
+* **Added** method :meth:`Document.pages` which delivers a generator iterator over a page range.
+* **Added** method :meth:`Page.links` which delivers a generator iterator over the links of a page.
+* **Added** method :meth:`Page.annots` which delivers a generator iterator over the annotations of a page.
+* **Added** method :meth:`Page.widgets` which delivers a generator iterator over the form fields of a page.
+* **Changed** :attr:`Document.isFormPDF` to now contain the number of widgets, and ``False`` if not a PDF or this number is zero.
+
+
 Changes in Version 1.16.3
 ---------------------------
-Minor changes compared to version 1.16.2. The performance of the "dict" and "rawdict" variants of :meth:`Page.getText` have been ported to C which has greatly improved their performance. This improvement is mostly noticeable with text-oriented documents, where they now should execute almost two times faster.
+Minor changes compared to version 1.16.2. The code of the "dict" and "rawdict" variants of :meth:`Page.getText` has been ported to C which has greatly improved their performance. This improvement is mostly noticeable with text-oriented documents, where they now should execute almost two times faster.
 
 * **Fixed** issue #369 ("mupdf: cmsCreateTransform failed") by removing ICC colorspace support.
 * **Changed** :meth:`Page.getText` to accept additional keywords "blocks" and "words". These will deliver the results of :meth:`Page.getTextBlocks` and :meth:`Page.getTextWords`, respectively. So all text extraction methods are now available via a uniform API. Correspondingly, there are now new methods :meth:`TextPage.extractBLOCKS` and :meth:`TextPage.extractWords`.
