@@ -6,7 +6,7 @@ TextPage
 
 This class represents text and images shown on a document page. All MuPDF document types are supported.
 
-The usual way to create a textpage is :meth:`DisplayList.getTextPage`. Because there is a limited set of methods in this class, there exist higher level shortcut methods in the :ref:`Page` class, which incorporate creating an intermediate :ref:`DisplayList` and then invoke one of the following methods. The last column of this table shows these corresponding :ref:`Page` methods.
+The usual ways to create a textpage are :meth:`DisplayList.getTextPage` and :meth:`Page.getTextPage`. Because there is a limited set of methods in this class, there exist wrappers in the :ref:`Page` class, which incorporate creating an intermediate text page and then invoke one of the following methods. The last column of this table shows these corresponding :ref:`Page` methods.
 
 For a description of what this class is all about, see Appendix 2.
 

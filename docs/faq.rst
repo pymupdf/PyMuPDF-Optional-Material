@@ -61,14 +61,16 @@ You do not always need the full image of a page. This may be the case e.g. when 
 
 Let's assume your GUI window has room to display a full document page, but you now want to fill this room with the bottom right quarter of your page, thus using a four times better resolution.
 
+To achieve this, we define a rectangle equal to the area we want to appear in the GUI and call it "clip". One way of constructing rectangles in PyMuPDF is by providing two diagonally opposite corners, which is what we are doing here.
+
 .. image:: images/img-clip.jpg
    :scale: 80
 
->>> mat = fitz.Matrix(2, 2)                  # zoom factor 2 in each direction
->>> rect = page.rect                         # page rectangle
->>> mp = rect.tl + (rect.br - rect.tl) * 0.5 # center of rect
->>> clip = fitz.Rect(mp, rect.br)            # clipping area we want
->>> pix = page.getPixmap(matrix = mat, clip = clip)
+>>> mat = fitz.Matrix(2, 2)  # zoom factor 2 in each direction
+>>> rect = page.rect  # the page rectangle
+>>> mp = rect.tl + (rect.br - rect.tl) * 0.5  # its middle point
+>>> clip = fitz.Rect(mp, rect.br)  # the area we want
+>>> pix = page.getPixmap(matrix=mat, clip=clip)
 
 In the above we construct ``clip`` by specifying two diagonally opposite points: the middle point ``mp`` of the page rectangle, and its bottom right, ``rect.br``.
 
@@ -76,9 +78,11 @@ In the above we construct ``clip`` by specifying two diagonally opposite points:
 
 How to Create or Suppress Annotation Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Normally, the pixmap of a page also renders the images of any annotations. Starting with PyMuPDF v1.16.0, you can suppress that via ``page.getPixmap(..., annots=False, ...)``.
+Normally, the pixmap of a page also shows the page's annotations. Occasionally, this may not be desireable.
 
-Just like pages, :ref:`Annot` objects have a :meth:`Annot.getPixmap` method. The resulting pixmap has the same dimensions as the annotation rectangle.
+To suppress the annotation images on a rendered page, just specify ``annots=False`` in :meth:`Page.getPixmap`.
+
+You can also render annotations separately: :ref:`Annot` objects have their own :meth:`Annot.getPixmap` method. The resulting pixmap has the same dimensions as the annotation rectangle.
 
 ----------
 
@@ -89,12 +93,14 @@ Just like pages, :ref:`Annot` objects have a :meth:`Annot.getPixmap` method. The
 How to Extract Images: Non-PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You have basically two options:
+In contrast to the previous sections, this section deals with **extracting** images **contained** in documents, so they can be displayed as part of one or more pages.
 
-1. Convert your document to a PDF, and then use any of the PDF-only extraction methods. This snippet will convert a document to PDF::
+If you want recreate the original image in file form or as a memory area, you have basically two options:
 
-    >>> pdfbytes = doc.convertToPDF()
-    >>> pdf = fitz.open("pdf", pdfbytes)
+1. Convert your document to a PDF, and then use one of the PDF-only extraction methods. This snippet will convert a document to PDF::
+
+    >>> pdfbytes = doc.convertToPDF()  # this a bytes object
+    >>> pdf = fitz.open("pdf", pdfbytes)  # open it as a PDF document
     >>> # now use 'pdf' like any PDF document
 
 2. Use :meth:`Page.getText` with the "dict" parameter. This will extract all text and images shown on the page, formatted as a Python dictionary. Every image will occur in an image block, containing meta information and the binary image data. For details of the dictionary's structure, see :ref:`TextPage`. The method works equally well for PDF files. This creates a list of all images shown on a page::
@@ -102,6 +108,10 @@ You have basically two options:
     >>> d = page.getText("dict")
     >>> blocks = d["blocks"]
     >>> imgblocks = [b for b in blocks if b["type"] == 1]
+
+Each item if "imgblocks" is a dictionary which looks like this::
+
+    {"type": 1, "bbox": (x0, y0, x1, y1), "width": w, "height": h, "ext": "png", "image": b"..."}
 
 ----------
 
@@ -112,25 +122,25 @@ You have basically two options:
 How to Extract Images: PDF Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Like any other "object" in a PDF, embedded images are identified by a cross reference number (:data:`xref`, an integer). If you know this number, you have two ways to access the image's data. The following assumes you have opened a PDF under the name "doc":
+Like any other "object" in a PDF, images are identified by a cross reference number (:data:`xref`, an integer). If you know this number, you have two ways to access the image's data:
 
-1. Create a :ref:`Pixmap` of the image with instruction ``pix = fitz.Pixmap(doc, xref)``. This method is **very** fast (single digit micro-seconds). The pixmap's properties (width, height, ...) will reflect the ones of the image. As usual, you can save it as a PNG via method :meth:`Pixmap.writePNG` (or get the corresponding binary data :meth:`Pixmap.getPNGData`). There is no way to tell which image format the embedded original has.
+1. **Create** a :ref:`Pixmap` of the image with instruction ``pix = fitz.Pixmap(doc, xref)``. This method is **very** fast (single digit micro-seconds). The pixmap's properties (width, height, ...) will reflect the ones of the image. In this case there is no way to tell which image format the embedded original has.
 
-2. Extract the image with instruction ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided -- mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store the image. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data are identical). Otherwise, this method is **thousands of times faster**, and the **image data is much smaller**.
+2. **Extract** the image with ``img = doc.extractImage(xref)``. This is a dictionary containing the binary image data as ``img["image"]``. A number of meta data are also provided -- mostly the same as you would find in the pixmap of the image. The major difference is string ``img["ext"]``, which specifies the image format: apart from "png", strings like "jpeg", "bmp", "tiff", etc. can also occur. Use this string as the file extension if you want to store to disk. The execution speed of this method should be compared to the combined speed of the statements ``pix = fitz.Pixmap(doc, xref);pix.getPNGData()``. If the embedded image is in PNG format, the speed of :meth:`Document.extractImage` is about the same (and the binary image data are identical). Otherwise, this method is **thousands of times faster**, and the **image data is much smaller**.
 
-The question remains: **"How do I know those cross reference numbers 'xref' of images?"**. There are two answers to this:
+The question remains: **"How do I know those 'xref' numbers of images?"**. There are two answers to this:
 
-a. **"Inspect the page objects"** Loop through the document's page number list and execute :meth:`Document.getPageImageList` for each page number. The result is a list of list, and its items look like ``[xref, smask, ...]``, containing the :data:`xref` of an image shown on that page. This :data:`xref` can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
-b. **"No need to know"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue -- this :data:`xref` is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose to specify the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
+a. **"Inspect the page objects:"** Loop through the items of :meth:`Page.getImageList`. It is a list of list, and its items look like ``[xref, smask, ...]``, containing the :data:`xref` of an image. This :data:`xref` can then be used with one of the above methods. Use this method for **valid (undamaged)** documents. Be wary however, that the same image may be referenced multiple times (by different pages), so you might want to provide a mechanism avoiding multiple extracts.
+b. **"No need to know:"** Loop through the list of **all xrefs** of the document and perform a :meth:`Document.extractImage` for each one. If the returned dictionary is empty, then continue -- this :data:`xref` is no image. Use this method if the PDF is **damaged (unusable pages)**. Note that a PDF often contains "pseudo-images" ("stencil masks") with the special purpose of defining the transparency of some other image. You may want to provide logic to exclude those from extraction. Also have a look at the next section.
 
 For both extraction approaches, there exist ready-to-use general purpose scripts:
 
-`extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imga.py>`_ extracts images by page:
+`extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imga.py>`_ extracts images page by page:
 
 .. image:: images/img-extract-imga.jpg
    :scale: 80
 
-and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imgb.py>`_ extracts images by cross reference number:
+and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/extract-imgb.py>`_ extracts images by xref table:
 
 .. image:: images/img-extract-imgb.jpg
    :scale: 80
@@ -139,7 +149,7 @@ and `extract-imgb.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master
 
 How to Handle Stencil Masks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Some images in PDFs are accompanied by **stencil masks**. In their simplest form stencil masks represent alpha (transparency) bytes stored as seperate images. In order to reconstruct the original of an image which has a stencil mask, it must be "enriched" with transparency bytes taken from its stencil mask.
+Some images in PDFs are accompanied by **stencil masks**. In their simplest form stencil masks represent alpha (transparency) bytes stored as seperate images. In order to reconstruct the original of an image, which has a stencil mask, it must be "enriched" with transparency bytes taken from its stencil mask.
 
 Whether an image does have such a stencil mask can be recognized in one of two ways in PyMuPDF:
 
@@ -171,31 +181,31 @@ The scripts `extract-imga.py <https://github.com/JorjMcKie/PyMuPDF-Utilities/blo
    pair: embeddedFileAdd;examples
    pair: addFileAnnot;examples
 
-How to Make one PDF of all your Pictures
+How to Make one PDF of all your Pictures (or Files)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 We show here **three scripts** that take a list of (image and other) files and put them all in one PDF.
 
 **Method 1: Inserting Images as Pages**
 
-The first one converts each image to a PDF page with the same dimensions::
+The first one converts each image to a PDF page with the same dimensions. The result will be a PDF with one page per image. It will only work for supported image file formats::
 
  import os, fitz
- import PySimpleGUI as psg                    # for showing progress bar
- doc = fitz.open()                            # PDF with the pictures
- imgdir = "D:/2012_10_05"                     # where the pics are
- imglist = os.listdir(imgdir)                 # list of them
- imgcount = len(imglist)                      # pic count
+ import PySimpleGUI as psg  # for showing a progress bar
+ doc = fitz.open()  # PDF with the pictures
+ imgdir = "D:/2012_10_05"  # where the pics are
+ imglist = os.listdir(imgdir)  # list of them
+ imgcount = len(imglist)  # pic count
 
  for i, f in enumerate(imglist):
-     img = fitz.open(os.path.join(imgdir, f)) # open pic as document
-     rect = img[0].rect                       # pic dimension
-     pdfbytes = img.convertToPDF()            # make a PDF stream
-     img.close()                              # no longer needed
-     imgPDF = fitz.open("pdf", pdfbytes)      # open stream as PDF
-     page = doc.newPage(width = rect.width,   # new page with ...
-                        height = rect.height) # pic dimension
-     page.showPDFpage(rect, imgPDF, 0)        # image fills the page
-     psg.EasyProgressMeter("Import Images",   # show our progress
+     img = fitz.open(os.path.join(imgdir, f))  # open pic as document
+     rect = img[0].rect  # pic dimension
+     pdfbytes = img.convertToPDF()  # make a PDF stream
+     img.close()  # no longer needed
+     imgPDF = fitz.open("pdf", pdfbytes)  # open stream as PDF
+     page = doc.newPage(width = rect.width,  # new page with ...
+                        height = rect.height)  # pic dimension
+     page.showPDFpage(rect, imgPDF, 0)  # image fills the page
+     psg.EasyProgressMeter("Import Images",  # show our progress
          i+1, imgcount)
 
  doc.save("all-my-pics.pdf")
@@ -209,29 +219,29 @@ The above script needed about 1 minute on my machine for 149 pictures with a tot
 
 Look `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-inserted.py>`_ for a more complete source code: it offers a directory selection dialog and skips unsupported files and non-file entries.
 
-.. note:: We could have used :meth:`Page.insertImage` instead of :meth:`Page.showPDFpage`, and the result would have been a similar looking file. However, depending on the image type, it may store **images uncompressed**. Therefore, the save option ``deflate = True`` must be used to achieve a reasonable file size, which hugely increases the runtime for large numbers of images. So this alternative **cannot be recommended** here.
+.. note:: We might have used :meth:`Page.insertImage` instead of :meth:`Page.showPDFpage`, and the result would have been a similar looking file. However, depending on the image type, it may store **images uncompressed**. Therefore, the save option ``deflate = True`` must be used to achieve a reasonable file size, which hugely increases the runtime for large numbers of images. So this alternative **cannot be recommended** here.
 
 **Method 2: Embedding Files**
 
-The second script **embeds** the (image) files. You would need a suitable PDF viewer that can display and / or extract embedded files::
+The second script **embeds** arbitrary files -- not only images. The resulting PDF will have just one (empty) page, required for technical reasons. To later access the embedded files again, you would need a suitable PDF viewer that can display and / or extract embedded files::
 
  import os, fitz
- import PySimpleGUI as psg                    # for showing progress bar
- doc = fitz.open()                            # PDF with the pictures
- imgdir = "D:/2012_10_05"                     # where the pictures are
+ import PySimpleGUI as psg  # for showing progress bar
+ doc = fitz.open()  # PDF with the pictures
+ imgdir = "D:/2012_10_05"  # where my files are
 
- imglist = os.listdir(imgdir)                 # list of pictures
- imgcount = len(imglist)                      # pic count
- imglist.sort()                               # nicely sort them
+ imglist = os.listdir(imgdir)  # list of pictures
+ imgcount = len(imglist)  # pic count
+ imglist.sort()  # nicely sort them
 
  for i, f in enumerate(imglist):
-     img = open(os.path.join(imgdir,f), "rb").read()    # make pic stream
-     doc.embeddedFileAdd(img, f, filename=f,            # and embed it
+     img = open(os.path.join(imgdir,f), "rb").read()  # make pic stream
+     doc.embeddedFileAdd(img, f, filename=f,  # and embed it
                          ufilename=f, desc=f)
-     psg.EasyProgressMeter("Embedding Files", # show our progress
+     psg.EasyProgressMeter("Embedding Files",  # show our progress
          i+1, imgcount)
 
- page = doc.newPage()                         # at least 1 page is needed,
+ page = doc.newPage()  # at least 1 page is needed
 
  doc.save("all-my-pics-embedded.pdf")
 
@@ -244,7 +254,7 @@ This is by far the fastest method, and it also produces the smallest possible ou
 
 A third way to achieve this task is **attaching files** via page annotations see `here <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/all-my-pics-attached.py>`_ for the complete source code.
 
-This has a similar performance as the previous script and it also produces a similar file size. In this example, we have chosen a small page size to demonstrate the automatic generation of "protocol" pages as necessary. Here is the first page:
+This has a similar performance as the previous script and it also produces a similar file size. It will produce PDF pages which show a 'FileAttachment' icon for each attached file.
 
 .. image:: images/img-attach-result.jpg
 
@@ -262,9 +272,9 @@ This has a similar performance as the previous script and it also produces a sim
 
 How to Create Vector Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The usual way to create an image from a document page is :meth:`Page.getPixmap`. A pixmap represents a raster image, so you must decide on its quality (i.e. resolution) at creation time. It cannot be increased later.
+The usual way to create an image from a document page is :meth:`Page.getPixmap`. A pixmap represents a raster image, so you must decide on its quality (i.e. resolution) at creation time. It cannot be changed later.
 
-PyMuPDF also offers a way to create a **vector image** of a page in SVG format (scalable vector graphics, defined in XML syntax). SVG images remain precise across zooming levels -- of course with the exception of any embedded raster graphic elements.
+PyMuPDF also offers a way to create a **vector image** of a page in SVG format (scalable vector graphics, defined in XML syntax). SVG images remain precise across zooming levels (of course with the exception of any raster graphic elements embedded therein).
 
 Instruction ``svg = page.getSVGimage(matrix = fitz.Identity)`` delivers a UTF-8 string ``svg`` which can be stored with extension ".svg".
 
@@ -305,22 +315,18 @@ PAM               PAM                Portable Arbitrary Map
 
 The general scheme is just the following two lines::
 
-    import fitz
-    # ...
-    pix = fitz.Pixmap("input.xxx")      # input.xxx: a file in any of the supported input formats
-    pix.writeImage("output.yyy")        # yyy is any of the supported output formats
+    pix = fitz.Pixmap("input.xxx")  # any supported input format
+    pix.writeImage("output.yyy")  # any supported output format
 
 **Remarks**
 
-1. The **input** argument of ``fitz.Pixmap(arg)`` can be a file or a bytes object containing an image.
+1. The **input** argument of ``fitz.Pixmap(arg)`` can be a file or a bytes / io.BytesIO object containing an image.
 2. Instead of an output **file**, you can also create a bytes object via ``pix.getImageData("yyy")`` and pass this around.
-3. As a matter of course, input and output formats must be compatible in terms of colorspace and transparency. The ``Pixmap`` class has batteries included if additional conversions are needed.
+3. As a matter of course, input and output formats must be compatible in terms of colorspace and transparency. The ``Pixmap`` class has batteries included if adjustments are needed.
 
 .. note::
         **Convert JPEG to Photoshop**::
 
-          import fitz
-          # ...
           pix = fitz.Pixmap("myfamily.jpg")
           pix.writeImage("myfamily.psd")
 
@@ -329,8 +335,6 @@ The general scheme is just the following two lines::
         **Save to JPEG** using PIL/Pillow::
 
           from PIL import Image
-          import fitz
-          # ...
           pix = fitz.Pixmap(...)
           img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
           img.save("output.jpg", "JPEG")
@@ -338,24 +342,20 @@ The general scheme is just the following two lines::
 .. note::
         Convert **JPEG to Tkinter PhotoImage**. Any **RGB / no-alpha** image works exactly the same. Conversion to one of the **Portable Anymap** formats (PPM, PGM, etc.) does the trick, because they are supported by all Tkinter versions::
 
-          import fitz
           if str is bytes:                  # this is Python 2!
               import Tkinter as tk
           else:                             # Python 3 or later!
               import tkinter as tk
-          # ...
           pix = fitz.Pixmap("input.jpg")    # or any RGB / no-alpha image
           tkimg = tk.PhotoImage(data=pix.getImageData("ppm"))
 
 .. note::
         Convert **PNG with alpha** to Tkinter PhotoImage. This requires **removing the alpha bytes**, before we can do the PPM conversion::
 
-          import fitz
           if str is bytes:                  # this is Python 2!
               import Tkinter as tk
           else:                             # Python 3 or later!
               import tkinter as tk
-          # ...
           pix = fitz.Pixmap("input.png")    # may have an alpha channel
           if pix.alpha:                     # we have an alpha channel!
               pix = fitz.Pixmap(pix, 0)     # remove it

@@ -1,6 +1,13 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.5
+---------------------------
+More performance improvements for text extraction.
+
+* **Fixed** second part of issue #381 (see item in v1.16.4).
+* **Added** :meth:`Page.getTextPage`, so it is no longer required to create an intermediate display list for text extractions. All page level text extraction wrappers are now based on this, which should improve performance by ca. 5%.
+
 Changes in Version 1.16.4
 ---------------------------
 

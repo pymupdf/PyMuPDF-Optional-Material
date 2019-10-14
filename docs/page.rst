@@ -62,6 +62,7 @@ This is available for PDF documents only. There are basically two groups of meth
 :meth:`Page.getPixmap`           create a :ref:`Pixmap`
 :meth:`Page.getSVGimage`         create a page image in SVG format
 :meth:`Page.getText`             extract the page's text
+:meth:`Page.getTextPage`         create a TextPage for the page
 :meth:`Page.insertFont`          PDF only: insert a font for use by the page
 :meth:`Page.insertImage`         PDF only: insert an image
 :meth:`Page.insertLink`          PDF only: insert a link
@@ -663,6 +664,14 @@ This is available for PDF documents only. There are basically two groups of meth
       :returns: The page's content as a string, list or as a dictionary. Refer to the corresponding :ref:`TextPage` method for details.
 
       .. note:: You can use this method as a **document conversion tool** from any supported document type (not only PDF!) to one of HTML, XHTML or XML documents.
+
+   .. method:: getTextPage(flags=3)
+
+      .. versionadded:: 1.16.5 Create a :ref:`TextPage` for the page. This method avoids using an intermediate :ref:`DisplayList`.
+
+      :arg in flags: indicator bits controlling the content available for extraction -- see the parameter of :meth:`Page.getText`.
+
+      :returns: :ref:`TextPage`
 
    .. method:: getFontList()
 
