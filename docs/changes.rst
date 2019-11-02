@@ -1,6 +1,12 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.6
+---------------------------
+* **Fixed** issue #390 ("Incomplete deletion of annotations").
+* **Changed** :meth:`Page.searchFor` / :meth:`Document.searchPageFor` to also support the ``flags`` parameter, which controls the data included in a :ref:`TextPage`.
+* **Changed** :meth:`Document.getPageImageList`, :meth:`Document.getPageFontList` and their :ref:`Page` counterparts to support a new parameter ``full``. If true, the returned list items will contain the :data:`xref` of the *Form XObject* wich references the item (font or image).
+
 Changes in Version 1.16.5
 ---------------------------
 More performance improvements for text extraction.

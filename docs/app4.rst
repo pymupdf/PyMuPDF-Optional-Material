@@ -226,13 +226,9 @@ This is done using PDF **"Form XObjects"**, see section 4.9 on page 355 of :ref:
 
 Redirecting Error and Warning Messages
 --------------------------------------------
-In the past, MuPDF error and warning messages unavoidably were sent to the Operating System's files STDOUT or STDERR. Especially for interactive Python sessions, this was annoying, because important diagnostic information could remain unseen.
+Since MuPDF version 1.16 error and warning messages can be redirected via an official plugin.
 
-Another issue -- frequently admonished by our users -- was the occasionally large amount of warning messages spilled out -- partly obscure to the developer, without apparent corrective action being possible or even required. Some examples are ``"warning: freetype getting character advance: invalid glyph index"``, or ``"warning: push viewport: 0 0 181 115"`` -- the only possible comment to these was "so what?".
-
-Since v1.14.0 we are capturing (hopefully) all warning and many error messages and store them away internally. A differentiation between warnings and errors is not possible, because MuPDF outputs both categories to ``stderr``.
-
-You can always empty or check this store of messages. It is kept as a unicode string which can be saved or printed. Look at chapter :ref:`FAQ` for an example.
+PyMuPDF will put error messages to ``sys.stderr`` prefixed with the string "mupdf:". Warnings are internally stored and can be accessed via ``fitz.TOOLS.mupdf_warnings()``. There also is a function to empty this store.
 
 
 .. rubric:: Footnotes

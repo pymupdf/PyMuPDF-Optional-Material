@@ -158,10 +158,13 @@ As a specialty, rectangles support additional binary operations:
 
 Here is an example for creating the smallest rectangle enclosing given points:
 
->>> # first define arbitrary point-likes
+>>> # first define some point-likes
+>>> points = []
 >>> for i in range(10):
         for j in range(10):
             points.append((i, j))
+>>>
+>>> # now create a rectangle containing all these 100 points
 >>> # start with an empty rectangle
 >>> r = fitz.Rect(points[0], points[0])
 >>> for p in points[1:]:  # and include remaining points one by one

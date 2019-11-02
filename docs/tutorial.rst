@@ -9,20 +9,20 @@ Because MuPDF supports not only PDF, but also XPS, OpenXPS, CBZ, CBR, FB2 and EP
 
 Importing the Bindings
 ==========================
-The Python bindings to MuPDF are made available by this import statement:
+The Python bindings to MuPDF are made available by this import statement. We also show here how your version can be checked::
 
->>> import fitz
->>> print(fitz.__doc__)
-PyMuPDF 1.16.0: Python bindings for the MuPDF 1.16.0 library.
-Version date: 2019-07-28 07:30:14.
-Built for Python 3.7 on win32 (64-bit).
->>>
+    >>> import fitz
+    >>> print(fitz.__doc__)
+    PyMuPDF 1.16.0: Python bindings for the MuPDF 1.16.0 library.
+    Version date: 2019-07-28 07:30:14.
+    Built for Python 3.7 on win32 (64-bit).
+
 
 Opening a Document
 ======================
-To access a supported document, it must be opened with the following statement:
+To access a supported document, it must be opened with the following statement::
 
->>> doc = fitz.open(filename)     # or fitz.Document(filename)
+    doc = fitz.open(filename)     # or fitz.Document(filename)
 
 This creates the :ref:`Document` object ``doc``. ``filename`` must be a Python string specifying the name of an existing file.
 
@@ -36,8 +36,8 @@ Some :ref:`Document` Methods and Attributes
 =========================== ==========================================
 **Method / Attribute**      **Description**
 =========================== ==========================================
-:attr:`Document.pageCount`  get the number of pages (*int*)
-:attr:`Document.metadata`   get the metadata (*dict*)
+:attr:`Document.pageCount`  the number of pages (*int*)
+:attr:`Document.metadata`   the metadata (*dict*)
 :meth:`Document.getToC`     get the table of contents (*list*)
 :meth:`Document.loadPage`   read a :ref:`Page`
 =========================== ==========================================
@@ -67,9 +67,9 @@ subject        subject
 
 Working with Outlines
 =========================
-The easiest way to get all outlines (also called "bookmarks") of a document, is by creating a *table of contents*:
+The easiest way to get all outlines (also called "bookmarks") of a document, is by creating a *table of contents*::
 
->>> toc = doc.getToC()
+    toc = doc.getToC()
 
 This will return a Python list of lists ``[[lvl, title, page, ...], ...]`` which looks much like a conventional table of contents found in books.
 
@@ -85,31 +85,59 @@ Working with Pages
 * You can extract a page's text and images in many formats and search for text strings.
 * For PDF documents many more methods are available to add text or images to pages.
 
-First, a :ref:`Page` must be created. This is a method of :ref:`Document`:
+First, a :ref:`Page` must be created. This is a method of :ref:`Document`::
 
->>> page = doc.loadPage(n)        # represents page n of the document (0-based)
->>> page = doc[n]                 # short form
+    page = doc.loadPage(pno)  # loads page number 'pno' of the document (0-based)
+    page = doc[pno]  # the short form
 
-``n`` may be any positive or negative integer less than ``doc.pageCount``. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python sequences.
+Any integer :math:`- \infty < pno < pageCount` is possible here. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python sequences.
 
-Some typical uses of :ref:`Page`\s follow:
+Some more advanced way would be using the document as an **iterator** over its pages::
 
-Inspecting the Links of a Page
-------------------------------------
-Links are shown as "hot areas" when a document is displayed with some software. If you click while your cursor shows a hand symbol, you will usually be taken to the taget that is encoded in that hot area. Here is how to get all links and their types.
+    for page in doc:
+        # do something with 'page'
 
->>> # get all links on a page
->>> links = page.getLinks()
+    # ... or read backwards
+    for page in reversed(doc):
+        # do something with 'page'
+
+    # ... or even use 'slicing'
+    for page in doc.pages(start, stop, step):
+        # do something with 'page'
+
+
+Once you have your page, here is what you would typically do with it:
+
+Inspecting the Links, Annotations or Form Fields of a Page
+-----------------------------------------------------------
+Links are shown as "hot areas" when a document is displayed with some viewer software. If you click while your cursor shows a hand symbol, you will usually be taken to the taget that is encoded in that hot area. Here is how to get all links::
+
+    # get all links on a page
+    links = page.getLinks()
 
 ``links`` is a Python list of dictionaries. For details see :meth:`Page.getLinks`.
 
+You can also use an iterator which emits one link at a time::
+
+    for link in page.links():
+        # do something with 'link'
+
+If dealing with a PDF document page, there may also exist annotations (:ref:`Annot`) or form fields (:ref:`Widget`), each of which have their own iterators::
+
+    for annot in page.annots():
+        # do something with 'annot'
+
+    for field in page.widgets():
+        # do something with 'field'
+
+
 Rendering a Page
 -----------------------
-This example creates a **raster** image of a page's content:
+This example creates a **raster** image of a page's content::
 
->>> pix = page.getPixmap()
+    pix = page.getPixmap()
 
-``pix`` is a :ref:`Pixmap` object that (in this case) contains an **RGB** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGBA** image (i.e. containing an alpha channel), specify ``pix = page.getPixmap(alpha=True)``.
+``pix`` is a :ref:`Pixmap` object which (in this case) contains an **RGB** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGBA** image (i.e. containing an alpha channel), specify ``pix = page.getPixmap(alpha=True)``.
 
 A :ref:`Pixmap` contains a number of methods and attributes which are referenced below. Among them are the integers *width*, *height* (each in pixels) and *stride* (number of bytes of one horizontal image line). Attribute *samples* represents a rectangular area of bytes representing the image data (a Python ``bytes`` object).
 
@@ -117,9 +145,9 @@ A :ref:`Pixmap` contains a number of methods and attributes which are referenced
 
 Saving the Page Image in a File
 -----------------------------------
-We can simply store the image in a PNG file:
+We can simply store the image in a PNG file::
 
->>> pix.writePNG("page-0.png")
+    pix.writeImage("page-%i.png" % page.number)
 
 Displaying the Image in GUIs
 -------------------------------------------
@@ -127,67 +155,70 @@ We can also use it in GUI dialog managers. :attr:`Pixmap.samples` represents an 
 
 wxPython
 ~~~~~~~~~~~~~
-Consult their documentation for adjustments to RGB(A) pixmaps and, potentially, specifics for your wxPython release.
+Consult their documentation for adjustments to RGB(A) pixmaps and, potentially, specifics for your wxPython release::
 
->>> # if you used alpha=True:
->>> bitmap = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
->>>
->>> # if you used alpha=False:
->>> bitmap = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
+    if pix.alpha:
+        bitmap = wx.Bitmap.FromBufferRGBA(pix.width, pix.height, pix.samples)
+    else:
+        bitmap = wx.Bitmap.FromBuffer(pix.width, pix.height, pix.samples)
 
 Tkinter
 ~~~~~~~~~~
-Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
+Please also see section 3.19 of the `Pillow documentation <https://Pillow.readthedocs.io>`_::
 
->>> from PIL import Image, ImageTk
->>>
->>> # set the mode depending on alpha
->>> mode = "RGBA" if pix.alpha else "RGB"
->>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
->>> tkimg = ImageTk.PhotoImage(img)
+    from PIL import Image, ImageTk
 
-The following **avoids using Pillow**:
+    # set the mode depending on alpha
+    mode = "RGBA" if pix.alpha else "RGB"
+    img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
+    tkimg = ImageTk.PhotoImage(img)
 
->>> # remove alpha if present
->>> pix1 = fitz.Pixmap(pix, 0) if pix.alpha else pix   # PPM does not support transparency
->>> imgdata = pix.getImageData("ppm")                  # extremely fast!
->>> tkimg = tkinter.PhotoImage(data = imgdata)
+The following **avoids using Pillow**::
+
+    # remove alpha if present
+    pix1 = fitz.Pixmap(pix, 0) if pix.alpha else pix   # PPM does not support transparency
+    imgdata = pix.getImageData("ppm")                  # extremely fast!
+    tkimg = tkinter.PhotoImage(data = imgdata)
 
 If you are looking for a complete Tkinter script paging through **any supported** document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ It can also zoom into pages, and it runs under Python 2 or 3. It requires the extremely handy `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
 
 PyQt4, PyQt5, PySide
 ~~~~~~~~~~~~~~~~~~~~~
-Please also see section 3.16 of the `Pillow documentation <https://Pillow.readthedocs.io>`_.
+Please also see section 3.16 of the `Pillow documentation <https://Pillow.readthedocs.io>`_::
 
->>> from PIL import Image, ImageQt
->>> ...
->>> # set the mode depending on alpha
->>> mode = "RGBA" if pix.alpha else "RGB"
->>> img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
->>> qtimg = ImageQt.ImageQt(img)
+    from PIL import Image, ImageQt
 
-Again, you also can get along **without using PIL** if you use the pixmap *stride* property:
+    # set the mode depending on alpha
+    mode = "RGBA" if pix.alpha else "RGB"
+    img = Image.frombytes(mode, [pix.width, pix.height], pix.samples)
+    qtimg = ImageQt.ImageQt(img)
 
->>> from PyQt<x>.QtGui import QImage
->>> ...
->>> # set the correct QImage format depending on alpha
->>> fmt = QImage.Format_RGBA8888 if pix.alpha else QImage.Format_RGB888
->>> qtimg = QImage(pix.samples, pix.width, pix.height, pix.stride, fmt)
+Again, you also can get along **without using PIL** if you use the pixmap *stride* property::
+
+    from PyQt<x>.QtGui import QImage
+
+    # set the correct QImage format depending on alpha
+    fmt = QImage.Format_RGBA8888 if pix.alpha else QImage.Format_RGB888
+    qtimg = QImage(pix.samples, pix.width, pix.height, pix.stride, fmt)
 
 
 Extracting Text and Images
 ---------------------------
-We can also extract all text, images and other information of a page in many different forms, and levels of detail:
+We can also extract all text, images and other information of a page in many different forms, and levels of detail::
 
->>> text = page.getText("type")
+    text = page.getText(opt)
 
-Use one of the following strings for ``"type"`` to obtain different formats [#f2]_:
+Use one of the following strings for ``opt`` to obtain different formats [#f2]_:
 
 * ``"text"``: (default) plain text with line breaks. No formatting, no text position details, no images.
 
+* ``"blocks"``: generate a list of text blocks (= paragraphs).
+
+* ``"words"``: generate a list of words (strings not containing spaces).
+
 * ``"html"``: creates a full visual version of the page including any images. This can be displayed with your internet browser.
 
-* ``"dict"``: same information level as HTML, but provided as a Python dictionary. See :meth:`TextPage.extractDICT` for details of its structure.
+* ``"dict"`` / ``"json"``: same information level as HTML, but provided as a Python dictionary or resp. JSON string. See :meth:`TextPage.extractDICT` resp. :meth:`TextPage.extractJSON` for details of its structure.
 
 * ``"rawdict"``: a super-set of :meth:`TextPage.extractDICT`. It additionally provides character detail information like XML. See :meth:`TextPage.extractRAWDICT` for details of its structure.
 
@@ -199,9 +230,9 @@ To give you an idea about the output of these alternatives, we did text example 
 
 Searching for Text
 -------------------
-You can find out, exactly where on a page a certain text string appears:
+You can find out, exactly where on a page a certain text string appears::
 
->>> areas = page.searchFor("mupdf", hit_max = 16)
+    areas = page.searchFor("mupdf", hit_max = 16)
 
 This delivers a list of up to 16 rectangles (see :ref:`Rect`), each of which surrounds one occurrence of the string "mupdf" (case insensitive). You could use this information to e.g. highlight those areas (PDF only) or create a cross reference of the document.
 
@@ -211,7 +242,7 @@ PDF Maintenance
 ==================
 PDFs are the only document type that can be **modified** using PyMuPDF. Other file types are read-only.
 
-However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the result of this conversion. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `pdf-converter.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/pdf-converter.py>`_ which can convert any supported document to PDF.
+However, you can convert **any document** (including images) to a PDF and then apply all PyMuPDF features to the conversion result. Find out more here :meth:`Document.convertToPDF`, and also look at the demo script `pdf-converter.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/pdf-converter.py>`_ which can convert any supported document to PDF.
 
 :meth:`Document.save()` always stores a PDF in its current (potentially modified) state on disk.
 
@@ -247,17 +278,17 @@ Pages themselves can moreover be modified by a range of methods (e.g. page rotat
 Joining and Splitting PDF Documents
 ------------------------------------
 
-Method :meth:`Document.insertPDF` copies pages **between different** PDF documents. Here is a simple **joiner** example (``doc1`` and ``doc2`` being openend PDFs):
+Method :meth:`Document.insertPDF` copies pages **between different** PDF documents. Here is a simple **joiner** example (``doc1`` and ``doc2`` being openend PDFs)::
 
->>> # append complete doc2 to the end of doc1
->>> doc1.insertPDF(doc2)
+    # append complete doc2 to the end of doc1
+    doc1.insertPDF(doc2)
 
-Here is a snippet that **splits** ``doc1``. It creates a new document of its first and its last 10 pages:
+Here is a snippet that **splits** ``doc1``. It creates a new document of its first and its last 10 pages::
 
->>> doc2 = fitz.open()                 # new empty PDF
->>> doc2.insertPDF(doc1, to_page = 9)  # first 10 pages
->>> doc2.insertPDF(doc1, from_page = len(doc1) - 10) # last 10 pages
->>> doc2.save("first-and-last-10.pdf")
+    doc2 = fitz.open()                 # new empty PDF
+    doc2.insertPDF(doc1, to_page = 9)  # first 10 pages
+    doc2.insertPDF(doc1, from_page = len(doc1) - 10) # last 10 pages
+    doc2.save("first-and-last-10.pdf")
 
 More can be found in the :ref:`Document` chapter. Also have a look at `PDFjoiner.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/PDFjoiner.py>`_.
 

@@ -14,13 +14,13 @@ Adding Page Content
 -------------------
 This is available for PDF documents only. There are basically two groups of methods:
 
-1. Methods making **permanent** changes. This group contains ``insertText()``, ``insertTextbox()`` and all ``draw*()`` methods. They provide "stand-alone", shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter. Some remarks on the relationship between the :ref:`Page` and :ref:`Shape` methods:
+1. **Methods making permanent changes.** This group contains ``insertText()``, ``insertTextbox()`` and all ``draw*()`` methods. They provide "stand-alone", shortcut versions for the same-named methods of the :ref:`Shape` class. For detailed descriptions have a look in that chapter. Some remarks on the relationship between the :ref:`Page` and :ref:`Shape` methods:
 
   * In contrast to :ref:`Shape`, the results of page methods are not interconnected: they do not share properties like colors, line width / dashing, morphing, etc.
   * Each page ``draw*()`` method invokes a :meth:`Shape.finish` and then a :meth:`Shape.commit` and consequently accepts the combined arguments of both these methods.
   * Text insertion methods (``insertText()`` and ``insertTextbox()``) do not need :meth:`Shape.finish` and therefore only invoke :meth:`Shape.commit`.
 
-2. Methods adding **annotations**. Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that manipulating them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
+2. **Methods adding annotations.** Annotations can be added, modified and deleted without necessarily having full document permissions. Their effect is **not permanent** in the sense, that manipulating them does not require to rebuild the document. **Adding** and **deleting** annotations are page methods. **Changing** existing annotations is possible via methods of the :ref:`Annot` class.
 
 ================================ ================================================
 **Method / Attribute**            **Short Description**
@@ -267,11 +267,13 @@ This is available for PDF documents only. There are basically two groups of meth
 
       PDF only: Delete the specified annotation from the page and return the next one.
 
+      .. versionchanged:: 1.16.6 The removal will now include any bound 'Popup' or response annotations and related objects.
+
       :arg annot: the annotation to be deleted.
       :type annot: :ref:`Annot`
 
       :rtype: :ref:`Annot`
-      :returns: the annotation following the deleted one.
+      :returns: the annotation following the deleted one. Please remember that physical removal will take place only with saving to a new file with a positive garbage collection option.
 
    .. method:: deleteLink(linkdict)
 
@@ -300,7 +302,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: links(kinds=None)
 
-      Return a generator over the page's links. The results equal the entries of :meth:`Page.getLinks`.
+      .. versionadded:: 1.16.4 Return a generator over the page's links. The results equal the entries of :meth:`Page.getLinks`.
 
       :arg sequence kinds: a sequence of integers to down-select to one or more link kinds. Default is all links. Example: ``kinds=(fitz.LINK_GOTO,)`` will only return internal links.
 
@@ -309,7 +311,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: annots(types=None)
 
-      Return a generator over the page's annotations.
+      .. versionadded:: 1.16.4 Return a generator over the page's annotations.
 
       :arg sequence types: a sequence of integers to down-select to one or annotation types. Default is all annotations. Example: ``types=(fitz.PDF_ANNOT_FREETEXT, fitz.PDF_ANNOT_TEXT)`` will only return 'FreeText' and 'Text' annotations.
 
@@ -318,7 +320,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
    .. method:: widgets(types=None)
 
-      Return a generator over the page's form fields.
+      .. versionadded:: 1.16.4 Return a generator over the page's form fields.
 
       :arg sequence types: a sequence of integers to down-select to one or more widget types. Default is all form fields. Example: ``types=(fitz.PDF_WIDGET_TYPE_TEXT,)`` will only return 'Text' fields.
 
@@ -602,7 +604,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg rect_like rect: where to put the image on the page. Only the rectangle part which is inside the page is used. This intersection must be finite and not empty.
 
-         .. versionchanged:: 1.14.13 The image is now always placed **centered** in the rectangle.
+         .. versionchanged:: 1.14.13 The image is now always placed **centered** in the rectangle, i.e. the center of the image and the rectangle coincide.
 
       :arg str filename: name of an image file (all formats supported by MuPDF -- see :ref:`ImageFiles`). If the same image is to be inserted multiple times, choose one of the other two options to avoid some overhead.
 
@@ -636,13 +638,25 @@ This is available for PDF documents only. There are basically two groups of meth
 
          3. The image may be inserted uncompressed, e.g. if a ``Pixmap`` is used or if the image has an alpha channel. Therefore, consider using ``deflate=True`` when saving the file.
 
-         4. The image is stored in the PDF in its original quality. This may be much better than you ever need for your display. Consider decreasing the image size before inserting it -- e.g. by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
+         4. The image is stored in the PDF in its original quality. This may be much better than you ever need for your display. In this case consider decreasing the image size before inserting it -- e.g. by using the pixmap option and then shrinking it or scaling it down (see :ref:`Pixmap` chapter). The file size savings can be very significant.
 
          5. The most efficient way to display the same image on multiple pages is another method: :meth:`showPDFpage`. Consult :meth:`Document.convertToPDF` for how to obtain intermediary PDFs usable for that method. Demo script `fitz-logo.py <https://github.com/pymupdf/PyMuPDF/blob/master/demo/fitz-logo.py>`_ implements a fairly complete approach.
 
-   .. method:: getText(output="text", flags=None)
+   .. index::
+      pair: flags; Page.getText args
+      pair: text; Page.getText args
+      pair: blocks; Page.getText args
+      pair: words; Page.getText args
+      pair: html; Page.getText args
+      pair: xhtml; Page.getText args
+      pair: xml; Page.getText args
+      pair: json; Page.getText args
+      pair: dict; Page.getText args
+      pair: rawdict; Page.getText args
 
-      Retrieves the content of a page in a variety of formats. This is a wrapper for :ref:`TextPage` methods by choosing the output parameter as follows:
+   .. method:: getText(opt="text", flags=None)
+
+      Retrieves the content of a page in a variety of formats. This is a wrapper for :ref:`TextPage` methods by choosing the output option as follows:
 
       * "text" -- :meth:`TextPage.extractTEXT`, default
       * "blocks" -- :meth:`TextPage.extractBLOCKS`
@@ -654,7 +668,7 @@ This is available for PDF documents only. There are basically two groups of meth
       * "json" -- :meth:`TextPage.extractJSON`
       * "rawdict" -- :meth:`TextPage.extractRAWDICT`
 
-      :arg str output: A string indicating the requested format, one of the above. A mixture of upper and lower case is supported.
+      :arg str opt: A string indicating the requested format, one of the above. A mixture of upper and lower case is supported.
 
          .. versionchanged:: 1.16.3 Values "words" and "blocks" are now also accepted.
 
@@ -663,21 +677,24 @@ This is available for PDF documents only. There are basically two groups of meth
       :rtype: *str, list, dict*
       :returns: The page's content as a string, list or as a dictionary. Refer to the corresponding :ref:`TextPage` method for details.
 
-      .. note:: You can use this method as a **document conversion tool** from any supported document type (not only PDF!) to one of HTML, XHTML or XML documents.
+      .. note:: You can use this method as a **document conversion tool** from any supported document type (not only PDF!) to one of TEXT, HTML, XHTML or XML documents.
+
+   .. index::
+      pair: flags; Page.getTextPage args
 
    .. method:: getTextPage(flags=3)
 
       .. versionadded:: 1.16.5 Create a :ref:`TextPage` for the page. This method avoids using an intermediate :ref:`DisplayList`.
 
-      :arg in flags: indicator bits controlling the content available for extraction -- see the parameter of :meth:`Page.getText`.
+      :arg in flags: indicator bits controlling the content available for subsequent extraction -- see the parameter of :meth:`Page.getText`.
 
       :returns: :ref:`TextPage`
 
-   .. method:: getFontList()
+   .. method:: getFontList(full=False)
 
       PDF only: Return a list of fonts referenced by the page. Wrapper for :meth:`Document.getPageFontList`.
 
-   .. method:: getImageList()
+   .. method:: getImageList(full=False)
 
       PDF only: Return a list of images referenced by the page. Wrapper for :meth:`Document.getPageImageList`.
 
@@ -685,14 +702,17 @@ This is available for PDF documents only. There are basically two groups of meth
 
       .. versionadded 1.16.0 PDF only: Return the boundary box of an image.
 
-      :arg list,str item: an item of the list :meth:`Page.getImageList`.
+      :arg list item: an item of the list :meth:`Page.getImageList` with ``full=True`` specified.
 
       :rtype: :ref:`Rect`
-      :returns: the boundary box of the image. This value will be the same as the respective ``"bbox"`` value in dictionary :meth:`Page.getText` and therefore is a way to access the information without using this rather expensive method.
+      :returns: the boundary box of the image. This value will be the same as the respective ``"bbox"`` value in dictionary :meth:`Page.getText` and therefore is a shortcut way to access this specific information.
 
       .. warning:: The method internally cleans the page's ``/Contents`` object(s) using :meth:`Page._cleanContents()`. Please consult its description for implications.
 
-      .. note:: Be aware that :meth:`Page.getImageList` may contain "dead" entries, i.e. image references which are contained in the document, but which are not displayed by this page. In this case an exception is raised.
+      .. note::
+
+         * Be aware that :meth:`Page.getImageList` may contain "dead" entries, i.e. there may be image references which -- although present in the PDF -- are **not displayed** by this page. In this case an exception is raised.
+         * This function is still somewhat **experimental**: it does not yet cover all possibilities of how an image location might have been coded, but makes some simplifying assumptions in that respect. As a result you occasionally may find the bbox incorrectly calculated. In contrast, image blocks returned by :meth:`Page.getText` ("dict" or "rawdict" options) do contain a correct bbox on the one hand, but on the other hand do **not allow an (easy) identification** of the image as a PDF object. There are however ways to match these information pieces -- please consult the recipes chapter.
 
    .. index::
       pair: matrix; Page.getSVGimage args
@@ -796,7 +816,6 @@ This is available for PDF documents only. There are basically two groups of meth
 
       Example: Show the same source page, rotated by 90 and by -90 degrees:
 
-      >>> import fitz
       >>> doc = fitz.open()  # new empty PDF
       >>> page=doc.newPage()  # new page in A4 format
       >>>
@@ -825,8 +844,9 @@ This is available for PDF documents only. There are basically two groups of meth
    .. index::
       pair: hit_max; Page.searchFor args
       pair: quads; Page.searchFor args
+      pair: flags; Page.searchFor args
 
-   .. method:: searchFor(text, hit_max=16, quads=False)
+   .. method:: searchFor(text, hit_max=16, quads=False, flags=None)
 
       Searches for ``text`` on a page. Wrapper for :meth:`TextPage.search`.
 
@@ -834,6 +854,7 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg int hit_max: Maximum number of occurrences accepted.
       :arg bool quads: Return :ref:`Quad` instead of :ref:`Rect` objects.
+      :arg int flags: Control the data extracted by the underlying :ref:`TextPage`. Default is 0 (ligatures are dissolved, white space is replaced with space and excessive spaces are not suppressed).
 
       :rtype: list
 
@@ -1002,20 +1023,20 @@ This is an overview of homologous methods on the :ref:`Document` and on the :ref
 ``Document.searchPageFor(pno, ...)``   :meth:`Page.searchFor`
 ====================================== =====================================
 
-The page number ``pno`` is 0-based and can be any negative or positive number ``< len(doc)``.
+The page number ``pno`` is a 0-based integer :math:`- \infty < pno < pageCount`.
 
-**Technical Side Note:**
+.. note::
 
-Most document methods (left column) exist for convenience reasons, and are just wrappers for: ``Document[pno].<page method>``. So they **load and discard the page** on each execution.
+   Most document methods (left column) exist for convenience reasons, and are just wrappers for: ``Document[pno].<page method>``. So they **load and discard the page** on each execution.
 
-However, the first two methods work differently. They only need a page's object definition statement - the page itself will not be loaded. So e.g. :meth:`Page.getFontList` is a wrapper the other way round and defined as follows: ``page.getFontList == page.parent.getPageFontList(page.number)``.
+   However, the first two methods work differently. They only need a page's object definition statement - the page itself will **not** be loaded. So e.g. :meth:`Page.getFontList` is a wrapper the other way round and defined as follows: ``page.getFontList == page.parent.getPageFontList(page.number)``.
 
 .. rubric:: Footnotes
 
 .. [#f1] If your existing code already uses the installed base name as a font reference (as it was supported by PyMuPDF versions earlier than 1.14), this will continue to work.
 
-.. [#f2] Not all PDF reader software (including internet browsers and office software) display all of these fonts. And if they do, the difference between the **serifed** and the **non-serifed** version may hardly be noticable. But serifed and non-serifed versions lead to different installed base fonts, thus providing an option to achieve desired results with your specific PDF reader.
+.. [#f2] Not all PDF reader software (including internet browsers and office software) display all of these fonts. And if they do, the difference between the **serifed** and the **non-serifed** version may hardly be noticable. But serifed and non-serifed versions lead to different installed base fonts, thus providing an option to be displayable with your specific PDF viewer.
 
-.. [#f3] Not all PDF readers display these fonts at all. Some do, but use a wrong character spacing, etc.
+.. [#f3] Not all PDF readers display these fonts at all. Some others do, but use a wrong character spacing, etc.
 
 .. [#f4] You are generally free to choose any of the :ref:`mupdficons` you consider adequate.

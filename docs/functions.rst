@@ -17,7 +17,6 @@ Yet others are handy, general-purpose utilities.
 :meth:`ConversionTrailer`            return trailer string for ``getText`` methods
 :meth:`Document._delXmlMetadata`     PDF only: remove XML metadata
 :meth:`Document._deleteObject`       PDF only: delete an object
-:meth:`Document._getGCTXerrmsg`      retrieve C-level exception message
 :meth:`Document._getNewXref`         PDF only: create and return a new :data:`xref` entry
 :meth:`Document._getOLRootNumber`    PDF only: return / create :data:`xref` of ``/Outline``
 :meth:`Document._getPageObjNumber`   PDF only: return :data:`xref` and generation number of a page
@@ -443,15 +442,6 @@ Yet others are handy, general-purpose utilities.
       :arg int xref: :data:`xref` number.
 
       :returns: ``True`` if the object definition is followed by data wrapped in keyword pair ``stream``, ``endstream``.
-
------
-
-   .. method:: Document._getGCTXerrmsg()
-
-      Retrieve exception message text issued by PyMuPDF's low-level code. This in most cases, but not always, are MuPDF messages. This string will never be cleared -- only overwritten as needed. Only rely on it if a ``RuntimeError`` had been raised.
-
-      :rtype: str
-      :returns: last C-level error message on occasion of a ``RuntimeError`` exception.
 
 -----
 

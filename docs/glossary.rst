@@ -10,6 +10,10 @@ Glossary
 
         A Python sequence of 4 numbers.
 
+.. data:: irect_like
+
+        A Python sequence of 4 integers.
+
 .. data:: point_like
 
         A Python sequence of 2 numbers.

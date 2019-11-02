@@ -145,12 +145,12 @@ For addional details on **embedded files** refer to Appendix 3.
 
     .. note:: Documents also follow the Python sequence protocol with page numbers as indices: ``doc.loadPage(n) == doc[n]``. Consequently, expressions like ``"for page in doc: ..."`` and ``"for page in reversed(doc): ..."`` will successively yield the document's pages. Refer to :meth:`Document.range`` which allows processing pages as with slicing.
 
-    .. method:: pages(start=None, stop=None, step=None)
+    .. method:: pages(start=None, [stop=None, [step=None]])
 
       .. versionadded:: 1.16.4 A generator for a given range of pages. Parameters have the same meaning as in the built-in function ``"range()"``. Intended for expressions of the form ``"for page in doc.pages(start, stop, step): ..."``.
 
-      :arg int start: start iteration with this page number. Default is zero, allowed values are :math:`- \infty < start < pageCount`.
-      :arg int stop: stop iteration at this page number. Default is :attr:`pageCount`, possible are :math:`- \infty < stop \leq pageCount`. Larger values are **silently replaced** by the default. As with the built-in ``"range()"``, this is the first page **not** returned.
+      :arg int start: start iteration with this page number. Default is zero, allowed values are :math:`- \infty < start < pageCount`. While this is negative, :attr:`pageCount` is added **before** starting the iteration.
+      :arg int stop: stop iteration at this page number. Default is :attr:`pageCount`, possible are :math:`- \infty < stop \leq pageCount`. Larger values are **silently replaced** by the default. Negative values will cyclically emit the pages in reversed order. As with the built-in ``"range()"``, this is the first page **not** returned.
       :arg int step: stepping value. Defaults are 1 if start < stop and -1 if start > stop. Zero is not allowed.
 
       :returns: a generator iterator over the document's pages. Some examples:
@@ -160,7 +160,7 @@ For addional details on **embedded files** refer to Appendix 3.
          * ``"for page in doc.pages(0, None, 2)"`` emits all pages with even numbers.
          * ``"doc.range(-2)"`` emits the last two pages.
          * ``"for page in doc.pages(-1, -1)"`` is the same as ``"for page in reversed(doc)"``.
-         * ``"for page in doc.pages(-1, -2)"`` emits pages in reversed sequence starting and ending with the last document page.
+         * ``"for page in doc.pages(-1, -10)"`` emits pages in reversed order, starting with the last document page **repeatedly**. For a 4-page document the following page numbers are emitted: 3, 2, 1, 0, 3, 2, 1, 0, 3, 2, 1, 0, 3.
 
     .. index::
        pair: from_page; Document.convertToPDF args
@@ -234,15 +234,16 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :rtype: :ref:`Pixmap`
 
-    .. method:: getPageImageList(pno)
+    .. method:: getPageImageList(pno, full=False)
 
       PDF only: Return a list of all image descriptions referenced by a page.
 
       :arg int pno: page number, 0-based in :math:`- \infty < pno < pageCount`.
+      :arg bool full: whether to also include the :data:`xref` of the *Form /XObject* where the item is referenced. This is zero if the item is part of page's /Resources.
 
       :rtype: list
 
-      :returns: a list of images shown on this page. Each entry looks like ``[xref, smask, width, height, bpc, colorspace, alt. colorspace, name, filter]``. Where
+      :returns: a list of images shown on this page. Each entry looks like ``[xref, smask, width, height, bpc, colorspace, alt. colorspace, name, filter, form_xref]``. Where
 
         * ``xref`` (*int*) is the image object number,
         * ``smask`` (*int* optional) is the object number of its soft-mask image (if present),
@@ -252,27 +253,29 @@ For addional details on **embedded files** refer to Appendix 3.
         * ``alt. colorspace`` (*str* optional) is any alternate colorspace depending on the value of ``colorspace``,
         * ``name`` (*str*) is the symbolic name by which the **page references the image** in its content stream, and
         * ``filter`` (*str* optional) is the decode filter of the image (:ref:`AdobeManual`, pp. 65).
+        * ``form_xref`` (*int* optional) the xref number of the *Form XObject*, which references the item. Zero if directly referenced by the page.
 
       See below how this information can be used to extract PDF images as separate files. Another demonstration:
 
       >>> doc = fitz.open("pymupdf.pdf")
-      >>> doc.getPageImageList(0)
-      [[316, 0, 261, 115, 8, 'DeviceRGB', '', 'Im1', 'DCTDecode']]
-      >>> pix = fitz.Pixmap(doc, 316)      # 316 is the xref of the image
+      >>> doc.getPageImageList(0, full=True)
+      [[316, 0, 261, 115, 8, 'DeviceRGB', '', 'Im1', 'DCTDecode', 0]]
+      >>> pix = fitz.Pixmap(doc, 316)  # 316 is the xref of the image
       >>> pix
       fitz.Pixmap(DeviceRGB, fitz.IRect(0, 0, 261, 115), 0)
 
       .. note:: This list has no duplicate entries: the combination of :data:`xref` and ``name`` is unique. But by themselves, each of the two may occur multiple times. The same image may well be referenced under different names within a page. Duplicate ``name`` entries on the other hand indicate the presence of "Form XObjects" on the page, e.g. generated by :meth:`Page.showPDFpage`.
 
-    .. method:: getPageFontList(pno)
+    .. method:: getPageFontList(pno, full=False)
 
       PDF only: Return a list of all fonts referenced by the page.
 
       :arg int pno: page number, 0-based, any value ``< len(doc)``.
+      :arg bool full: whether to also include the :data:`xref` of the *Form /XObject* where the item is referenced. This is zero if the item is part of page's /Resources.
 
       :rtype: list
 
-      :returns: a list of fonts referenced by this page. Each entry looks like ``[xref, ext, type, basefont, name, encoding]``. Where
+      :returns: a list of fonts referenced by this page. Each entry looks like ``[xref, ext, type, basefont, name, encoding, form_xref]``. Where
 
         * ``xref`` (*int*) is the font object number (may be zero if the PDF uses one of the builtin fonts directly),
         * ``ext`` (*str*) font file extension (e.g. ``ttf``, see :ref:`FontExtensions`),
@@ -280,9 +283,10 @@ For addional details on **embedded files** refer to Appendix 3.
         * ``basefont`` (*str*) is the base font name,
         * ``name`` (*str*) is the reference name (or label), by which **the page references the font** in its contents stream(s), and
         * ``encoding`` (*str* optional) the font's character encoding if different from its built-in encoding (:ref:`AdobeManual`, p. 414):
+        * ``form_xref`` (*int* optional) the xref number of the *Form XObject*, which references the item. Zero if directly referenced by the page.
 
       >>> doc = fitz.open("some.pdf")
-      >>> for f in doc.getPageFontList(0): print(f)
+      >>> for f in doc.getPageFontList(0, full=False): print(f)
       [24, 'ttf', 'TrueType', 'DOKBTG+Calibri', 'R10', '']
       [17, 'ttf', 'TrueType', 'NZNDCL+CourierNewPSMT', 'R14', '']
       [32, 'ttf', 'TrueType', 'FNUUTH+Calibri-Bold', 'R8', '']
@@ -705,6 +709,8 @@ For addional details on **embedded files** refer to Appendix 3.
 
       ``False`` if this is not a PDF or has no form fields, otherwise the number of root form fields (fields with no ancestors).
 
+      .. versionchanged:: 1.16.4 Returns the total number of (root) form fields.
+
       :type: bool,int
 
     .. attribute:: isReflowable
@@ -728,6 +734,8 @@ For addional details on **embedded files** refer to Appendix 3.
     .. attribute:: permissions
 
       Contains the permissions to access the document. This is an integer containing bool values in respective bit positions. For example, if ``doc.permissions & fitz.PDF_PERM_MODIFY > 0``, you may change the document. See :ref:`PermissionCodes` for details.
+
+      .. versionchanged:: 1.16.0:: This is now an integer comprised of bit indicators. Was a dictionary previously.
 
       :type: int
 
@@ -767,9 +775,9 @@ For addional details on **embedded files** refer to Appendix 3.
 
       A list of form field font names defined in the ``/AcroForm`` object. ``None`` if not a PDF.
 
-      :type: int
+      :type: list
 
-.. NOTE:: For methods that change the structure of a PDF (:meth:`insertPDF`, :meth:`select`, :meth:`copyPage`, :meth:`deletePage` and others), be aware that objects or properties in your program may have been invalidated or orphaned. Examples are :ref:`Page` objects and their children (links and annotations), variables holding old page counts, tables of content and the like. Remember to keep such variables up to date or delete orphaned objects.
+.. NOTE:: For methods that change the structure of a PDF (:meth:`insertPDF`, :meth:`select`, :meth:`copyPage`, :meth:`deletePage` and others), be aware that objects or properties in your program may have been invalidated or orphaned. Examples are :ref:`Page` objects and their children (links, annotations, widgets), variables holding old page counts, tables of content and the like. Remember to keep such variables up to date or delete orphaned objects. Also refer to :ref:`ReferenialIntegrity`.
 
 :meth:`setMetadata` Example
 -------------------------------
