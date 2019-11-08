@@ -705,14 +705,15 @@ This is available for PDF documents only. There are basically two groups of meth
       :arg list item: an item of the list :meth:`Page.getImageList` with ``full=True`` specified.
 
       :rtype: :ref:`Rect`
-      :returns: the boundary box of the image. This value will be the same as the respective ``"bbox"`` value in dictionary :meth:`Page.getText` and therefore is a shortcut way to access this specific information.
+      :returns: the boundary box of the image.
+         .. versionchanged:: 1.16.7 If the page in fact does not display this image, an infinite rectangle is returned now. In previous versions, an exception was raised.
 
       .. warning:: The method internally cleans the page's ``/Contents`` object(s) using :meth:`Page._cleanContents()`. Please consult its description for implications.
 
       .. note::
 
          * Be aware that :meth:`Page.getImageList` may contain "dead" entries, i.e. there may be image references which -- although present in the PDF -- are **not displayed** by this page. In this case an exception is raised.
-         * This function is still somewhat **experimental**: it does not yet cover all possibilities of how an image location might have been coded, but makes some simplifying assumptions in that respect. As a result you occasionally may find the bbox incorrectly calculated. In contrast, image blocks returned by :meth:`Page.getText` ("dict" or "rawdict" options) do contain a correct bbox on the one hand, but on the other hand do **not allow an (easy) identification** of the image as a PDF object. There are however ways to match these information pieces -- please consult the recipes chapter.
+         * This function is still somewhat **experimental**: it does not yet cover all possibilities of how an image location might have been coded, but instead makes some simplifying assumptions. As a result you occasionally may find the bbox incorrectly calculated. In contrast, image blocks returned by :meth:`Page.getText` ("dict" or "rawdict" options) do contain a correct bbox on the one hand, but on the other hand do **not allow an (easy) identification** of the image as a PDF object. There are however ways to match these information pieces -- please consult the recipes chapter.
 
    .. index::
       pair: matrix; Page.getSVGimage args

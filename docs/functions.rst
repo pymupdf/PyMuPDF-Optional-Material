@@ -19,9 +19,10 @@ Yet others are handy, general-purpose utilities.
 :meth:`Document._deleteObject`       PDF only: delete an object
 :meth:`Document._getNewXref`         PDF only: create and return a new :data:`xref` entry
 :meth:`Document._getOLRootNumber`    PDF only: return / create :data:`xref` of ``/Outline``
+:meth:`Document._getPDFroot`         PDF only: return the :data:`xref` of the catalog
 :meth:`Document._getPageObjNumber`   PDF only: return :data:`xref` and generation number of a page
 :meth:`Document._getPageXref`        PDF only: same as ``_getPageObjNumber()``
-:meth:`Document._getTrailerString`   PDF only: return the PDF file trailer
+:meth:`Document._getTrailerString`   PDF only: return the PDF file trailer string
 :meth:`Document._getXmlMetadataXref` PDF only: return XML metadata :data:`xref` number
 :meth:`Document._getXrefLength`      PDF only: return length of :data:`xref` table
 :meth:`Document._getXrefStream`      PDF only: return content of a stream object
@@ -105,6 +106,10 @@ Yet others are handy, general-purpose utilities.
       >>> # distance of the resulting points
       >>> abs(p2 * m - p1 * m)
       5.0
+
+      .. image:: images/img-planish.png
+         :scale: 40
+
 
 -----
 
@@ -256,7 +261,10 @@ Yet others are handy, general-purpose utilities.
 
    .. method:: Document._getXmlMetadataXref()
 
-      Return the XML-based metadata object id from the PDF if present -- also refer to :meth:`Document._delXmlMetadata`. You can use it to retrieve the content via :meth:`Document._getXrefStream` and then work with it using some XML software.
+      Return the XML-based metadata :data:`xref` of the PDF if present -- also refer to :meth:`Document._delXmlMetadata`. You can use it to retrieve the content via :meth:`Document._getXrefStream` and then work with it using some XML software.
+
+      :rtype: int
+      :returns: :data:`xref` of PDF file level XML metadata.
 
 -----
 
@@ -272,6 +280,15 @@ Yet others are handy, general-purpose utilities.
 
       :rtype: list
       :returns: :data:`xref` and generation number of page ``pno`` as a list ``[xref, gen]``.
+
+-----
+
+   .. method:: Document._getPDFroot()
+
+       Return the :data:`xref` of the PDF catalog.
+
+      :rtype: int
+      :returns: :data:`xref` of the PDF catalog -- a central :data:`dictionary` pointing to many other PDF information.
 
 -----
 

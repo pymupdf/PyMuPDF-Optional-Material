@@ -2158,12 +2158,12 @@ This is a central ("root") object of a PDF. It serves as a starting point to rea
         /Pages 3593 0 R               % points to page tree
         /OpenAction 225 0 R           % action to perform on open
         /Names 3832 0 R               % points to global names tree
-        /PageMode/UseOutlines         % show the TOC initially
+        /PageMode /UseOutlines        % initially show the TOC
         /PageLabels<</Nums[0<</S/D>>2<</S/r>>8<</S/D>>]>> % names given to pages
         /Outlines 3835 0 R            % points to outline tree
     >>
 
-.. note:: Indentation, line breaks and comments are inserted here for clarification purposes only and will not normally appear. For more information on the PDF catalogue see section 3.6.1 on page 137 of the :ref:`AdobeManual`.
+.. note:: Indentation, line breaks and comments are inserted here for clarification purposes only and will not normally appear. For more information on the PDF catalog see section 3.6.1 on page 137 of the :ref:`AdobeManual`.
 
 ----------------------------------
 

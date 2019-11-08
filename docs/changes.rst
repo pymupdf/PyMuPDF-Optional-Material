@@ -1,18 +1,28 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.7
+---------------------------
+Minor changes to better synchronize the binary image streams of :ref:`TextPage` image blocks and :meth:`Document.extractImage` images.
+
+* **Fixed** issue #394 ("PyMuPDF Segfaults when using TOOLS.mupdf_warnings()").
+* **Changed** redirection of MuPDF error messages: apart from writing them to Python ``sys.stderr``, they are now also stored with the MuPDF warnings.
+* **Changed** :meth:`Tools.mupdf_warnings` to automatically empty the store (if not deactivated via a parameter).
+* **Changed** :meth:`Page.getImageBbox` to return an **infinite rectangle** if the image could not be located on the page -- instead of raising an exception.
+
+
 Changes in Version 1.16.6
 ---------------------------
 * **Fixed** issue #390 ("Incomplete deletion of annotations").
 * **Changed** :meth:`Page.searchFor` / :meth:`Document.searchPageFor` to also support the ``flags`` parameter, which controls the data included in a :ref:`TextPage`.
-* **Changed** :meth:`Document.getPageImageList`, :meth:`Document.getPageFontList` and their :ref:`Page` counterparts to support a new parameter ``full``. If true, the returned list items will contain the :data:`xref` of the *Form XObject* wich references the item (font or image).
+* **Changed** :meth:`Document.getPageImageList`, :meth:`Document.getPageFontList` and their :ref:`Page` counterparts to support a new parameter ``full``. If true, the returned items will contain the :data:`xref` of the *Form XObject* where the font or image is referenced.
 
 Changes in Version 1.16.5
 ---------------------------
 More performance improvements for text extraction.
 
 * **Fixed** second part of issue #381 (see item in v1.16.4).
-* **Added** :meth:`Page.getTextPage`, so it is no longer required to create an intermediate display list for text extractions. All page level text extraction wrappers are now based on this, which should improve performance by ca. 5%.
+* **Added** :meth:`Page.getTextPage`, so it is no longer required to create an intermediate display list for text extractions. Page level wrappers for text extraction and text searching are now based on this, which should improve performance by ca. 5%.
 
 Changes in Version 1.16.4
 ---------------------------

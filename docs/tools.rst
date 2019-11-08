@@ -46,9 +46,13 @@ This class is a collection of utility methods and attributes, mainly around memo
 
       .. versionadded:: 1.16.0 Empty MuPDF warnings message buffer.
 
-   .. method:: mupdf_warnings()
 
-      .. versionadded:: 1.16.0 Return all MuPDF warnings in the buffer as a string with interspersed ``\n``.
+   .. method:: mupdf_warnings(reset=True)
+
+      .. versionadded:: 1.16.0 Return all stored MuPDF messages as a string with interspersed ``\n``.
+
+      :arg bool reset: .. versionadded:: 1.16.7 whether to automatically empty the store.
+
 
    .. attribute:: fitz_config
 

@@ -11,7 +11,7 @@ The usual ways to create a textpage are :meth:`DisplayList.getTextPage` and :met
 For a description of what this class is all about, see Appendix 2.
 
 ======================== ================================ ======================
-**Method**               **Description**                  :ref:`Page` method
+**Method**               **Description**                  :ref:`Page` wrapper
 ======================== ================================ ======================
 :meth:`~.extractText`    extract plain text               ``getText("text")``
 :meth:`~.extractTEXT`    synonym of previous              ``getText("text")``
@@ -78,7 +78,7 @@ For a description of what this class is all about, see Appendix 2.
 
    .. method:: extractJSON
 
-      Textpage content in JSON format. Created by  ``json.dumps(TextPage.extractDICT())``. It is included only for backlevel compatibility. You will probably use this method ever only for outputting the result in some file.
+      Textpage content in JSON format. Created by  ``json.dumps(TextPage.extractDICT())``. It is included for backlevel compatibility. You will probably use this method ever only for outputting the result in some file. The  method detects binary image data, like ``bytearray`` and ``bytes`` (Python 3 only) and converts them to base64 encoded strings on JSON output.
 
       :rtype: str
 
@@ -108,7 +108,7 @@ For a description of what this class is all about, see Appendix 2.
       :arg int hit_max: maximum number of returned hits (default 16).
       :arg bool quads: return quadrilaterals instead of rectangles.
       :rtype: list
-      :returns: a list of :ref:`Rect` or :ref:`Quad` objects, each surrounding a found ``string`` occurrence. The search string may contain spaces, it may therefore happen, that its parts are located on different lines. In this case, more than one rectangle (quadrilateral) are returned. The method does **not support hyphenation**, so it will not find "meth-od" when searching for "method".
+      :returns: a list of :ref:`Rect` or :ref:`Quad` objects, each surrounding a found ``string`` occurrence. The search string may contain spaces, it may therefore happen, that its parts are located on different lines. In this case, more than one rectangle (resp. quadrilateral) are returned. The method does **not support hyphenation**, so it will not find "meth-od" when searching for "method".
 
       Example: If the search for string "pymupdf" contains a hit like shown, then the corresponding entry will either be the blue rectangle, or, if ``quads`` was specified, ``Quad(ul, ur, ll, lr)``.
 
@@ -143,25 +143,30 @@ Blocks come in two different formats: **image blocks** and **text blocks**.
 =============== ===============================================================
 type            1 = image *(int)*
 bbox            block / image rectangle, formatted as ``tuple(fitz.Rect)``
-ext             image type *(str)*, as its file extension, see below
-width           original image width *(float)*
-height          original image height *(float)*
-image           image content *(bytes/bytearray)*
+ext             image type *(str)*, as file extension, see below
+width           original image width *(int)*
+height          original image height *(int)*
+colorspace      colorspace.n *(int)*
+xres            resolution in x-direction *(int)*
+yres            resolution in y-direction *(int)*
+bpc             bits per component *(int)*
+image           image content *(bytes or bytearray)*
 =============== ===============================================================
 
 Possible values of key "ext" are "bmp", "gif", "jpeg", "jpx" (JPEG 2000), "jxr" (JPEG XR), "png", "pnm", and "tiff".
 
 .. note::
 
-   1. In some error situations, all of the above values may be zero or contain empty objects. So, please be prepared to digest items like::
+   1. In some error situations, all of the above values may be zero or empty. So, please be prepared to digest items like::
 
-      {"type": 1, "bbox": (0.0, 0.0, 0.0, 0.0), "width": 0, "height": 0, "ext": "png", "image": b""}
+      {"type": 1, "bbox": (0.0, 0.0, 0.0, 0.0), ..., "image": b""}
 
 
-   2. For PDF documents, the image blocks of a textpage **may or may not** be the same as the items of :meth:`Page.getImageList`. Any differences are most probably caused by one of the following:
+   2. :ref:`TextPage` and corresponding method :meth:`Page.getText`` are **available for all document types**. Only for PDF documents, methods :meth:`Document.getPageImageList` / :meth`Page.getImageList` offer some overlapping functionality as far as image lists are concerned. But both lists **may or may not** contain the same items. Any differences are most probably caused by one of the following:
 
-       - "inline" images (see page 352 of the :ref:`AdobeManual`) are contained in a textpage, but **not in** :meth:`Page.getImageList`.
-       - images mentioned in the page's :data:`object` definition will **always** appear in :meth:`Page.getImageList`. But if there is no corresponding "display" command in the page's ``/Contents`` (erroneously or by purpose), they will **not appear** in the textpage.
+       - "Inline" images (see page 352 of the :ref:`AdobeManual`) of a PDF page are contained in a textpage, but **not in** :meth:`Page.getImageList`.
+       - Image blocks in a textpage are generated for **every** image location -- whether or not there are any duplicates. This is in contrast to :meth:`Page.getImageList`, which will contain each image only once.
+       - Images mentioned in the page's :data:`object` definition will **always** appear in :meth:`Page.getImageList` [#f1]_. But it may happen, that there is no "display" command in the page's :data:`contents` (erroneously or on purpose). In this case the image will **not appear** in the textpage.
 
 
 **Text block:**
@@ -244,3 +249,6 @@ bbox            character rectangle, formatted as ``tuple(fitz.Rect)``
 c               the character (unicode)
 =============== =========================================================
 
+.. rubric:: Footnotes
+
+.. [#f1] Image specifications for a PDF page are done in the page's sub-dictionary ``/Resources``. Being a text format specification, PDF does not prevent one from having arbitrary image entries in this dictionary -- whether actually in use by the page or not. On top of this, resource dictionaries can be **inherited** from the page's parent object -- like a node of the PDF's :data:`pagetree` or the :data:`catalog` object. So the PDF creator may e.g. define one file level ``/Resources`` naming all images and fonts ever used by any page. In this case, :meth:`Page.getImageList` and :meth:`Page.getFontList` will always return the same lists for all pages.

@@ -23,6 +23,7 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.ifconfig",
     "sphinx.ext.imgmath",
+    "rst2pdf.pdfbuilder",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -46,7 +47,7 @@ copyright = u"2015-2019, Jorj X. McKie"
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = "1.16.6"
+release = "1.16.7"
 
 # The short X.Y version.
 s = release.split(".")
@@ -216,3 +217,36 @@ latex_show_urls = "footnote"
 # If false, no module index is generated.
 latex_domain_indices = True
 
+# -- Options for PDF output --------------------------------------------------
+
+# Grouping the document tree into PDF files. List of tuples
+# (source start file, target name, title, author).
+pdf_documents = [("index", u"PyMuPDF", u"PyMuPDF Title", u"Jorj McKie")]
+
+# A comma-separated list of custom stylesheets. Example:
+pdf_stylesheets = ["sphinx"]
+
+# Create a compressed PDF
+# Use True/False or 1/0
+# Example: compressed=True
+# pdf_compressed=False
+
+# A colon-separated list of folders to search for fonts. Example:
+# pdf_font_path=['/usr/share/fonts', '/usr/share/texmf-dist/fonts/']
+
+# Language to be used for hyphenation support
+pdf_language = "en_US"
+
+# If false, no index is generated.
+pdf_use_index = True
+
+# If false, no modindex is generated.
+pdf_use_modindex = True
+
+# If false, no coverpage is generated.
+pdf_use_coverpage = True
+
+pdf_break_level = 2
+
+pdf_verbosity = 0
+pdf_invariant = True

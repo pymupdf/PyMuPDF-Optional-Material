@@ -22,13 +22,17 @@ Glossary
 
         A Python sequence of 4 :data:`point_like` items.
 
+.. data:: catalog
+
+        A central PDF :data:`dictionary` containing pointers to many other information.
+
 .. data:: contents
 
-        "A **content stream** is a PDF :data:`stream` :data:`object` whose data consists of a sequence of instructions describing the graphical elements to be painted on a page." (:ref:`AdobeManual` p. 151). For an overview of the mini-language used in these streams see chapter "Operator Summary" on page 985 of the :ref:`AdobeManual`. A PDF :data:`page` can have none to many contents objects. If it has none, the page is empty. If it has several, they will be interpreted in sequence as if their instructions had been present in one such object (i.e. like in a concatenated string). It should be noted that there are more stream object types which use the same syntax: e.g. appearance dictionaries associated with annotations and Form XObjects.
+        "A **content stream** is a PDF :data:`stream` :data:`object` whose data consists of a sequence of instructions describing the graphical elements to be painted on a page." (:ref:`AdobeManual` p. 151). For an overview of the mini-language used in these streams see chapter "Operator Summary" on page 985 of the :ref:`AdobeManual`. A PDF :data:`page` can have none to many contents objects. If it has none, the page is empty (but still may show annotations). If it has several, they will be interpreted in sequence as if their instructions had been present in one such object (i.e. like in a concatenated string). It should be noted that there are more stream object types which use the same syntax: e.g. appearance dictionaries associated with annotations and Form XObjects.
 
 .. data:: resources
 
-        A :data:`dictionary` containing any resources required by a PDF :data:`page` (required, inheritable, :ref:`AdobeManual` p. 145) and certain other objects (Form XObjects).
+        A :data:`dictionary` containing references to any resources (like images or fonts) required by a PDF :data:`page` (required, inheritable, :ref:`AdobeManual` p. 145) and certain other objects (Form XObjects). This dictionary appears as a sub-dictionary in the object definition under the key ``/Resources``. Being an inheritable object type, there may exist "global" resources for all pages or certain subsets of pages.
 
 .. data:: dictionary
 
@@ -77,10 +81,14 @@ Glossary
 
         A PDF :data:`object` type which is a sequence of bytes, similar to a string. "However, a PDF application can read a stream incrementally, while a string must be read in its entirety. Furthermore, a stream can be of unlimited length, whereas a string is subject to an implementation limit. For this reason, objects with potentially large amounts of data, such as images and page descriptions, are represented as streams." "A stream consists of a :data:`dictionary` followed by zero or more bytes bracketed between the keywords *stream* and *endstream*"::
 
-            dictionary
+            nnn 0 obj
+            <<
+               dictionary definition
+            >>
             stream
             … zero or more bytes …
             endstream
+            endobj
 
         See :ref:`AdobeManual` p. 60. PyMuPDF supports retrieving stream content via :meth:`Document._getXrefStream`. Use :meth:`Document.isStream` to determine whether an object is of stream type.
 
