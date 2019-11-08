@@ -23,7 +23,6 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.ifconfig",
     "sphinx.ext.imgmath",
-    "rst2pdf.pdfbuilder",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
