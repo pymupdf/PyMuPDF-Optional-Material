@@ -1,6 +1,13 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.8
+---------------------------
+* **Added** several new methods to the :ref:`Document` class, which make dealing with PDF low-level structures easier. I also decided to provide them as "normal" methods (as opposed to private ones starting with an underscore "_"). These are :meth:`Document.xrefObject`, :meth:`Document.xrefStream`, :meth:`Document.xrefStreamRaw`, :meth:`Document.PDFTrailer`, :meth:`Document.PDFCatalog`, :meth:`Document.metadataXML`, :meth:`Document.updateObject`, :meth:`Document.updateStream`.
+* **Added** :meth:`Tools.mupdf_disply_errors` which sets the display of mupdf errors on ``sys.stderr``.
+* **Added** a commandline facility. This a major new feature: you can now invoke several utility functions via ``"python -m fitz ..."``. It should obsolete the need for many of the most trivial scripts. Please refer to :ref:`Module`.
+
+
 Changes in Version 1.16.7
 ---------------------------
 Minor changes to better synchronize the binary image streams of :ref:`TextPage` image blocks and :meth:`Document.extractImage` images.

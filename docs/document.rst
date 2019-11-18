@@ -38,16 +38,24 @@ For addional details on **embedded files** refer to Appendix 3.
 :meth:`Document.insertPDF`              PDF only: insert pages from another PDF
 :meth:`Document.layout`                 re-paginate the document (if supported)
 :meth:`Document.loadPage`               read a page
+:meth:`Document.metadataXML`            PDF only: :data:`xref` of XML metadata
 :meth:`Document.movePage`               PDF only: move a page to another location
 :meth:`Document.newPage`                PDF only: insert a new empty page
 :meth:`Document.pages`                  iterator over a page range
+:meth:`Document.PDFCatalog`             PDF only: :data:`xref` of catalog (root)
+:meth:`Document.PDFTrailer`             PDF only: trailer source
 :meth:`Document.save`                   PDF only: save the document
 :meth:`Document.saveIncr`               PDF only: save the document incrementally
 :meth:`Document.searchPageFor`          search for a string on a page
 :meth:`Document.select`                 PDF only: select a subset of pages
 :meth:`Document.setMetadata`            PDF only: set the metadata
 :meth:`Document.setToC`                 PDF only: set the table of contents (TOC)
+:meth:`Document.updateObject`           PDF only: replace object source
+:meth:`Document.updateStream`           PDF only: replace stream source
 :meth:`Document.write`                  PDF only: writes the document to memory
+:meth:`Document.xrefObject`             PDF only: object source at the :data:`xref`
+:meth:`Document.xrefStream`             PDF only: stream source at the :data:`xref`
+:meth:`Document.xrefStreamRaw`          PDF only: raw stream source at the :data:`xref`
 :attr:`Document.FormFonts`              PDF only: list of global widget fonts
 :attr:`Document.isClosed`               has document been closed?
 :attr:`Document.isEncrypted`            document (still) encrypted?
@@ -143,7 +151,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :rtype: :ref:`Page`
 
-    .. note:: Documents also follow the Python sequence protocol with page numbers as indices: ``doc.loadPage(n) == doc[n]``. Consequently, expressions like ``"for page in doc: ..."`` and ``"for page in reversed(doc): ..."`` will successively yield the document's pages. Refer to :meth:`Document.range`` which allows processing pages as with slicing.
+    .. note:: Documents also follow the Python sequence protocol with page numbers as indices: ``doc.loadPage(n) == doc[n]``. Consequently, expressions like ``"for page in doc: ..."`` and ``"for page in reversed(doc): ..."`` will successively yield the document's pages. Refer to :meth:`Document.pages` which allows processing pages as with slicing.
 
     .. method:: pages(start=None, [stop=None, [step=None]])
 
@@ -686,6 +694,40 @@ For addional details on **embedded files** refer to Appendix 3.
     .. method:: close()
 
       Release objects and space allocations associated with the document. If created from a file, also closes ``filename`` (releasing control to the OS).
+
+    .. method:: xrefObject(xref, compressed=False, ascii=False)
+
+      .. versionadded:: 1.16.8 PDF only: Return the definition of a PDF object. For details please refer to :meth:`Document._getXrefString``.
+  
+    .. method:: PDFCatalog()
+      .. versionadded:: 1.16.8 PDF only: Return the :data:`xref` of the PDF catalog (or root) object. For details please refer to :meth:`Document._getPDFroot`.
+
+
+    .. method:: PDFTrailer(compressed=False)
+
+      .. versionadded:: 1.16.8 PDF only: Return the trailer of the PDF (UTF-8), which is usually located at the PDF file's end. For details please refer to :meth:`Document._getTrailerString`.
+
+
+    .. method:: metadataXML()
+
+      .. versionadded:: 1.16.8 PDF only: Return the :data:`xref` of the document's XML metadata. For details please refer to :meth:`Document._getXmlMetadataXref`.
+
+    .. method:: xrefStream(xref)
+
+      .. versionadded:: 1.16.8 PDF only: Return the **decompressed** contents of the :data:`xref` stream object. For details please refer to :meth:`Document._getXrefStream`.
+
+    .. method:: xrefStreamRaw(xref)
+
+      .. versionadded:: 1.16.8 PDF only: Return the **unmodified** contents of the :data:`xref` stream object. Otherwise equal to :meth:`Document.xrefStream`.
+ 
+    .. method:: updateObject(xref, obj_str, page=None)
+
+      .. versionadded:: 1.16.8 PDF only: Update object at :data:`xref`. For details please refer to :meth:`Document._updateObject`.
+
+    .. method:: updateStream(xref, data, new=False)
+
+      .. versionadded:: 1.16.8 PDF only: Repleace the stream at :data`xref`. For details please refer to :meth:`Document._updateStream`.
+
 
     .. attribute:: outline
 

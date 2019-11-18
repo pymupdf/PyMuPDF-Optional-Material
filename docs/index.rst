@@ -8,6 +8,7 @@
    installation.rst
    tutorial.rst
    faq.rst
+   module.rst
    classes.rst
    algebra.rst
    lowlevel.rst

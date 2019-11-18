@@ -11,6 +11,7 @@ This class is a collection of utility methods and attributes, mainly around memo
 :meth:`Tools.gen_id`               generate a unique identifyer
 :meth:`Tools.store_shrink`         shrink the storables cache [#f1]_
 :meth:`Tools.mupdf_warnings`       return the accumulated MuPDF warnings
+:meth:`Tools.mupdf_display_errors` return the accumulated MuPDF warnings
 :meth:`Tools.reset_mupdf_warnings` empty MuPDF messages on STDOUT
 :attr:`Tools.fitz_config`          configuration settings of PyMuPDF
 :attr:`Tools.store_maxsize`        maximum storables cache size
@@ -45,6 +46,15 @@ This class is a collection of utility methods and attributes, mainly around memo
    .. method:: reset_mupdf_warnings()
 
       .. versionadded:: 1.16.0 Empty MuPDF warnings message buffer.
+
+
+   .. method:: reset_mupdf_display_errors(value=None)
+
+      .. versionadded:: 1.16.8 Show and set whether MuPDF errors should be displayed.
+
+      :arg bool value: if not a bool, the current setting is returned. If true, MuPDF errors will be shown on ``sys.stderr``, otherwise suppressed. In any case, messages continue to be stored in the warnings store. Changes remain in effect. Upon import of PyMuPDF this value is ``True``.
+
+      :returns: ``True`` or ``False``
 
 
    .. method:: mupdf_warnings(reset=True)
