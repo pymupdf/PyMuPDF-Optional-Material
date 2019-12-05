@@ -1039,137 +1039,11 @@ How to Add and Modify Annotations
 
 In PyMuPDF, new annotations are added via :ref:`Page` methods. To keep code duplication effort small, we only offer a minimal set of options here. For example, to add a 'Circle' annotation, only the containing rectangle can be specified. The result is a circle (or ellipsis) with white interior, black border and a line width of 1, exactly fitting into the rectangle. To adjust the annot's appearance, :ref:`Annot` methods must then be used. After having made all required changes, the annot's :meth:`Annot.update` methods must be invoked to finalize all your changes.
 
-As an overview for these capabilities, look at the following script that fills a PDF page with most of the available annotations. Look in the next sections for more special situations::
+As an overview for these capabilities, look at the following script that fills a PDF page with most of the available annotations. Look in the next sections for more special situations:
 
-    # -*- coding: utf-8 -*-
-    from __future__ import print_function
-    import sys
-    print("Python", sys.version, "on", sys.platform, "\n")
-    import fitz
-    print(fitz.__doc__, "\n")
+.. literalinclude:: new-annots.py
+   :language: python
 
-    text = "text in line\ntext in line\ntext in line\ntext in line"
-    red    = (1, 0, 0)
-    blue   = (0, 0, 1)
-    gold   = (1, 1, 0)
-    colors = {"stroke": blue, "fill": gold}
-    colors2 = {"fill": blue, "stroke": gold}
-    border = {"width": 0.3, "dashes": [2]}
-    displ = fitz.Rect(0, 50, 0, 50)
-    r = fitz.Rect(50, 100, 220, 135)
-    t1 = u"têxt üsès Lätiñ charß,\nEUR: €, mu: µ, super scripts: ²³!"
-
-    def print_descr(rect, annot):
-        """Print a short description to the right of an annot rect."""
-        annot.parent.insertText(rect.br + (10, 0),
-                        "'%s' annotation" % annot.type[1], color = red)
-
-    def rect_from_quad(q):
-        """Create a rect envelopping a quad (= rotated rect)."""
-        return fitz.Rect(q[0], q[1]) | q[2] | q[3]
-
-    doc = fitz.open()
-    page = doc.newPage()
-    annot = page.addFreetextAnnot(r, t1, rotate = 90)
-    annot.setBorder(border)
-    annot.update(fontsize = 10, border_color=red, fill_color=gold, text_color=blue)
-
-    print_descr(annot.rect, annot)
-    r = annot.rect + displ
-    print("added 'FreeText'")
-
-    annot = page.addTextAnnot(r.tl, t1)
-    annot.setColors(colors2)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'Sticky Note'")
-
-    pos = annot.rect.tl + displ.tl
-
-    # first insert 4 text lines, rotated clockwise by 15 degrees
-    page.insertText(pos, text, fontsize=11, morph = (pos, fitz.Matrix(-15)))
-    # now search text to get the quads
-    rl = page.searchFor("text in line", quads = True)
-    r0 = rl[0]
-    r1 = rl[1]
-    r2 = rl[2]
-    r3 = rl[3]
-    annot = page.addHighlightAnnot(r0)
-    # need to convert quad to rect for descriptive text ...
-    print_descr(rect_from_quad(r0), annot)
-    print("added 'HighLight'")
-
-    annot = page.addStrikeoutAnnot(r1)
-    print_descr(rect_from_quad(r1), annot)
-    print("added 'StrikeOut'")
-
-    annot = page.addUnderlineAnnot(r2)
-    print_descr(rect_from_quad(r2), annot)
-    print("added 'Underline'")
-
-    annot = page.addSquigglyAnnot(r3)
-    print_descr(rect_from_quad(r3), annot)
-    print("added 'Squiggly'")
-
-    r = rect_from_quad(r3) + displ
-    annot = page.addPolylineAnnot([r.bl, r.tr, r.br, r.tl])
-    annot.setBorder(border)
-    annot.setColors(colors)
-    annot.setLineEnds(fitz.ANNOT_LE_Diamond, fitz.ANNOT_LE_Circle)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'PolyLine'")
-
-    r+= displ
-    annot = page.addPolygonAnnot([r.bl, r.tr, r.br, r.tl])
-    annot.setBorder(border)
-    annot.setColors(colors)
-    annot.setLineEnds(fitz.ANNOT_LE_Diamond, fitz.ANNOT_LE_Circle)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'Polygon'")
-
-    r+= displ
-    annot = page.addLineAnnot(r.tr, r.bl)
-    annot.setBorder(border)
-    annot.setColors(colors)
-    annot.setLineEnds(fitz.ANNOT_LE_Diamond, fitz.ANNOT_LE_Circle)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'Line'")
-
-    r+= displ
-    annot = page.addRectAnnot(r)
-    annot.setBorder(border)
-    annot.setColors(colors)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'Square'")
-
-    r+= displ
-    annot = page.addCircleAnnot(r)
-    annot.setBorder(border)
-    annot.setColors(colors)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'Circle'")
-
-    r+= displ
-    annot = page.addFileAnnot(r.tl, b"just anything for testing", "testdata.txt")
-    annot.setColors(colors2)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'FileAttachment'")
-
-    r+= displ
-    annot = page.addStampAnnot(r, stamp = 0)
-    annot.setColors(colors)
-    annot.setOpacity(0.5)
-    annot.update()
-    print_descr(annot.rect, annot)
-    print("added 'Stamp'")
-
-    doc.save("new-annots.pdf", expand=255)
 
 This script should lead to the following output:
 
@@ -1240,7 +1114,7 @@ This script shows a couple of possibilities for 'FreeText' annotations::
     a1 = page.addFreetextAnnot(r1, t, color=red)
     a2 = page.addFreetextAnnot(r2, t, fontname="Ti", color=blue)
     a3 = page.addFreetextAnnot(r3, t, fontname="Co", color=blue, rotate=90)
-    a3.setBorder({"width":0.0})
+    a3.setBorder(width=0)
     a3.update(fontsize=8, fill_color=gold)
 
     # save the PDF
@@ -1294,12 +1168,11 @@ The following script creates an ink annotation with two mathematical curves (sin
     #------------------------------------------------------------------------------
     annot = page.addInkAnnot((sin_points, cos_points))
     # let it look a little nicer
-    annot.setBorder({"width":0.3, "dashes":[1]})# line thickness, some dashing
-    annot.setColors({"stroke":(0,0,1)})         # make the lines blue
-    annot.update()                              # update the appearance
+    annot.setBorder(width=0.3, dashes=[1,])  # line thickness, some dashing
+    annot.setColors(stroke=(0,0,1))  # make the lines blue
+    annot.update()  # update the appearance
 
-    # expendable, only shows that we actually hit the rectangle
-    page.drawRect(rect, width = 0.3)            # only to demonstrate we did OK
+    page.drawRect(rect, width=0.3)  # only to demonstrate we did OK
 
     doc.save("a-inktest.pdf")
 
@@ -2039,11 +1912,11 @@ How to Iterate through the :data:`xref` Table
 A PDF's :data:`xref` table is a list of all objects defined in the file. This table may easily contain many thousand entries -- the manual :ref:`AdobeManual` for example has over 330'000 objects. Table entry "0" is reserved and must not be touched.
 The following script loops through the :data:`xref` table and prints each object's definition::
 
-    >>> xreflen = doc._getXrefLength()  # number of objects in file
+    >>> xreflen = doc.xrefLength()  # length of objects table
     >>> for xref in range(1, xreflen):  # skip item 0!
             print("")
             print("object %i (stream: %s)" % (xref, doc.isStream(xref)))
-            print(doc._getXrefString(i, compressed=False))
+            print(doc.xrefObject(i, compressed=False))
 
 This produces the following output::
 
@@ -2092,19 +1965,19 @@ How to Handle Object Streams
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Some object types contain additional data apart from their object definition. Examples are images, fonts, embedded files or commands describing the appearance of a page.
 
-Objects of these types are called "stream objects". PyMuPDF allows reading an object's stream via method :meth:`Document._getXrefStream` with the object's :data:`xref` as an argument. And it is also possible to write back a modified version of a stream using :meth:`Document._updateStream`.
+Objects of these types are called "stream objects". PyMuPDF allows reading an object's stream via method :meth:`Document.xrefStream` with the object's :data:`xref` as an argument. And it is also possible to write back a modified version of a stream using :meth:`Document.updatefStream`.
 
 Assume that the following snippet wants to read all streams of a PDF for whatever reason::
 
-    >>> xreflen = doc._getXrefLength() # number of objects in file
+    >>> xreflen = doc.xrefLength() # number of objects in file
     >>> for xref in range(1, xreflen): # skip item 0!
-            stream = doc._getXrefStream(xref)
+            stream = doc.xrefStream(xref)
             # do something with it (it is a bytes object or None)
             # e.g. just write it back:
             if stream:
-                doc._updateStream(xref, stream)
+                doc.updatefStream(xref, stream)
 
-:meth:`Document._getXrefStream` automatically returns a stream decompressed as a bytes object -- and :meth:`Document._updateStream` automatically compresses it (where beneficial).
+:meth:`Document.xrefStream` automatically returns a stream decompressed as a bytes object -- and :meth:`Document.updatefStream` automatically compresses it (where beneficial).
 
 ----------------------------------
 
@@ -2138,7 +2011,7 @@ Here are two ways of combining multiple contents of a page::
     >>> for page in doc:
             cont = b""              # initialize contents
             for xref in page._getContents(): # loop through content xrefs
-                cont += doc._getXrefStream(xref)
+                cont += doc.xrefStream(xref)
             # do something with the combined contents
 
 The clean function :meth:`Page._cleanContents` does a lot more than just glueing :data:`contents` objects: it also corrects and optimizes the PDF operator syntax of the page and removes any inconsistencies.
@@ -2152,7 +2025,7 @@ This is a central ("root") object of a PDF. It serves as a starting point to rea
     >>> import fitz
     >>> doc=fitz.open("PyMuPDF.pdf")
     >>> cat = doc._getPDFroot()            # get xref of the /Catalog
-    >>> print(doc._getXrefString(cat))     # print object definition
+    >>> print(doc.xrefObject(cat))     # print object definition
     <<
         /Type/Catalog                 % object type
         /Pages 3593 0 R               % points to page tree
@@ -2202,9 +2075,9 @@ PyMuPDF has no way to **interpret or change** this information directly, because
 
     >>> metaxref = doc._getXmlMetadataXref()           # get xref of XML metadata
     >>> # check if metaxref > 0!!!
-    >>> doc._getXrefString(metaxref)                   # object definition
+    >>> doc.xrefObject(metaxref)                   # object definition
     '<</Subtype/XML/Length 3801/Type/Metadata>>'
-    >>> xmlmetadata = doc._getXrefStream(metaxref)     # XML data (stream - bytes obj)
+    >>> xmlmetadata = doc.xrefStream(metaxref)     # XML data (stream - bytes obj)
     >>> print(xmlmetadata.decode("utf8"))              # print str version of bytes
     <?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>
     <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="3.1-702">
@@ -2217,7 +2090,7 @@ PyMuPDF has no way to **interpret or change** this information directly, because
 Using some XML package, the XML data can be interpreted and / or modified and then stored back::
 
     >>> # write back modified XML metadata:
-    >>> doc._updateStream(metaxref, xmlmetadata)
+    >>> doc.updatefStream(metaxref, xmlmetadata)
     >>>
     >>> # if these data are not wanted, delete them:
     >>> doc._delXmlMetadata()

@@ -64,6 +64,8 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :rtype: :ref:`Pixmap`
 
+      .. note:: If the annotation has just been created or modified
+
    .. method:: setInfo(d)
 
       Changes the info dictionary. This includes dates, contents, subject and author (title). Changes for ``name`` will be ignored.
@@ -100,11 +102,17 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :arg rect_like rect: the new rectangle of the annotation (finite and not empty). E.g. using a value of ``annot.rect + (5, 5, 5, 5)`` will shift the annot position 5 pixels to the right and downwards.
 
-   .. method:: setBorder(border)
+   .. method:: setBorder(border=None, width=0, style=None, dashes=None)
 
-      Change border width and dashing properties.
+      PDF only: Change border width and dashing properties.
 
-      :arg dict border: a dictionary with keys ``"width"`` (*float*), ``"style"`` (*str*) and ``"dashes"`` (*sequence*). Omitted keys will leave the resp. property unchanged. To e.g. remove dashing use: ``"dashes": []``. If dashes is not an empty sequence, "style" will automatically set to "D" (dashed).
+      .. versionchanged:: 1.16.9 Allow specification without using a dictionary. The direct parameters are used if ``border`` is not a dictionary.
+
+      :arg dict border: a dictionary as returned by the :attr:`border` property, with keys ``"width"`` (*float*), ``"style"`` (*str*) and ``"dashes"`` (*sequence*). Omitted keys will leave the resp. property unchanged. To e.g. remove dashing use: ``"dashes": []``. If dashes is not an empty sequence, "style" will automatically be set to "D" (dashed).
+
+      :arg float width: see above.
+      :arg str style: see above.
+      :arg sequence dashes: see above.
 
    .. method:: setFlags(flags)
 
@@ -112,11 +120,15 @@ There is a parent-child relationship between an annotation and its page. If the 
 
       :arg int flags: an integer specifying the required flags.
 
-   .. method:: setColors(d)
+   .. method:: setColors(colors=None, stroke=None, fill=None)
 
       Changes the "stroke" and "fill" colors for supported annotation types.
 
-      :arg dict d: a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the ``colors`` property and then modify this dictionary as required.
+      .. versionchanged:: 1.16.9 Allow colors to be directly set. These parameters are used if ``colors`` is not a dictionary.
+
+      :arg dict colors: a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the ``colors`` property and then modify this dictionary as required.
+      :arg sequence stroke: see above.
+      :arg sequence fill: see above.
 
 
    .. index::
@@ -133,7 +145,7 @@ There is a parent-child relationship between an annotation and its page. If the 
       You can safely omit this method only for the following changes:
 
          * :meth:`setRect`
-         * :meth:`setFlasgs`
+         * :meth:`setFlags`
          * :meth:`fileUpd`
          * :meth:`setInfo` (except changes to ``"content"``)
 

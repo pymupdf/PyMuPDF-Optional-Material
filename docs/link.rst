@@ -11,6 +11,7 @@ There is a parent-child relationship between a link and its page. If the page ob
 **Attribute**             **Short Description**
 ========================= ============================================
 :meth:`Link.setBorder`    modify border properties
+:meth:`Link.setColors`    modify color properties
 :attr:`Link.border`       border characteristics
 :attr:`Link.colors`       border line color
 :attr:`Link.dest`         points to link destination details
@@ -25,11 +26,28 @@ There is a parent-child relationship between a link and its page. If the page ob
 
 .. class:: Link
 
-   .. method:: setBorder(border)
+   .. method:: setBorder(border=None, width=0, style=None, dashes=None)
 
       PDF only: Change border width and dashing properties.
 
-      :arg dict border: a dictionary as returned by the :attr:`border` property, with keys ``"width"`` (*float*), ``"style"`` (*str*) and ``"dashes"`` (*sequence*). Omitted keys will leave the resp. property unchanged. To e.g. remove dashing use: ``"dashes": []``. If dashes is not an empty sequence, "style" will automatically set to "D" (dashed).
+      .. versionchanged:: 1.16.9 Allow specification without using a dictionary. The direct parameters are used if ``border`` is not a dictionary.
+
+      :arg dict border: a dictionary as returned by the :attr:`border` property, with keys ``"width"`` (*float*), ``"style"`` (*str*) and ``"dashes"`` (*sequence*). Omitted keys will leave the resp. property unchanged. To e.g. remove dashing use: ``"dashes": []``. If dashes is not an empty sequence, "style" will automatically be set to "D" (dashed).
+
+      :arg float width: see above.
+      :arg str style: see above.
+      :arg sequence dashes: see above.
+
+   .. method:: setColors(colors=None, stroke=None, fill=None)
+
+      Changes the "stroke" and "fill" colors.
+
+      .. versionchanged:: 1.16.9 Allow colors to be directly set. These parameters are used if ``colors`` is not a dictionary.
+
+      :arg dict colors: a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the ``colors`` property and then modify this dictionary as required.
+      :arg sequence stroke: see above.
+      :arg sequence fill: see above.
+
 
    .. attribute:: colors
 

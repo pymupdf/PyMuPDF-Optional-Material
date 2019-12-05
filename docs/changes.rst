@@ -1,6 +1,13 @@
 Change Logs
 ===============
 
+Changes in Version 1.16.9
+---------------------------
+* **Fixed** #412 ("Feature Request: Allow controlling whether TOC entries should be collapsed")
+* **Fixed** #411 ("Seg Fault with page.firstWidget")
+* **Fixed** #407 ("Annot.setOpacity trouble")
+* **Changed** methods :meth:`Annot.setBorder`, :meth:`Annot.setColors`, :meth:`Link.setBorder`, and :meth:`Link.setColors` to also accept direct parameters, and not just cumbersome dictionaries.
+
 Changes in Version 1.16.8
 ---------------------------
 * **Added** several new methods to the :ref:`Document` class, which make dealing with PDF low-level structures easier. I also decided to provide them as "normal" methods (as opposed to private ones starting with an underscore "_"). These are :meth:`Document.xrefObject`, :meth:`Document.xrefStream`, :meth:`Document.xrefStreamRaw`, :meth:`Document.PDFTrailer`, :meth:`Document.PDFCatalog`, :meth:`Document.metadataXML`, :meth:`Document.updateObject`, :meth:`Document.updateStream`.

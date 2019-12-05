@@ -249,7 +249,12 @@ This is available for PDF documents only. There are basically two groups of meth
 
       :arg int stamp: id number of the stamp text. For available stamps see :ref:`StampIcons`.
 
-      .. note::  The stamp's text (e.g. "APPROVED") and its border line will automatically be sized and put centered in the given rectangle. :attr:`Annot.rect` is automatically calculated to fit and will usually be smaller than this parameter. The appearance can be changed using :meth:`Annot.setOpacity` and by setting the "stroke" color (no "fill" color supported).
+      .. note::
+
+         * The stamp's text (e.g. "APPROVED") and its border line will automatically be sized and put centered in the given rectangle. :attr:`Annot.rect` is automatically calculated to fit and will usually be smaller than this parameter. The appearance can be changed using :meth:`Annot.setOpacity` and by setting the "stroke" color (no "fill" color supported).
+         
+         * This can conveniently be used to create watermark images: on a temporary PDF page create a stamp annotation with a low opacity value, make a pixmap from it with ``alpha=True`` (and potentially also rotate it), discard the temporary PDF page and use the pixmap with :meth:`insertImage` for your target PDF.
+
 
       .. image :: images/img-stampannot.jpg
          :scale: 80

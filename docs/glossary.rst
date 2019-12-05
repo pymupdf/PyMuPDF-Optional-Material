@@ -24,7 +24,7 @@ Glossary
 
 .. data:: catalog
 
-        A central PDF :data:`dictionary` containing pointers to many other information.
+        A central PDF :data:`dictionary` -- also called "root" -- containing pointers to many other information.
 
 .. data:: contents
 
@@ -32,11 +32,11 @@ Glossary
 
 .. data:: resources
 
-        A :data:`dictionary` containing references to any resources (like images or fonts) required by a PDF :data:`page` (required, inheritable, :ref:`AdobeManual` p. 145) and certain other objects (Form XObjects). This dictionary appears as a sub-dictionary in the object definition under the key ``/Resources``. Being an inheritable object type, there may exist "global" resources for all pages or certain subsets of pages.
+        A :data:`dictionary` containing references to any resources (like images or fonts) required by a PDF :data:`page` (required, inheritable, :ref:`AdobeManual` p. 145) and certain other objects (Form XObjects). This dictionary appears as a sub-dictionary in the object definition under the key ``/Resources``. Being an inheritable object type, there may exist "parent" resources for all pages or certain subsets of pages.
 
 .. data:: dictionary
 
-        A PDF :data:`object` type, which is somewhat comparable to the same-named Python notion: "A dictionary object is an associative table containing pairs of objects, known as the dictionary’s entries. The first element of each entry is the key and the second element is the value. The key must be a name (...). The value can be any kind of object, including another dictionary. A dictionary entry whose value is null (...) is equivalent to an absent entry." (:ref:`AdobeManual` p. 59).
+        A PDF :data:`object` type, which is somewhat comparable to the same-named Python notion: "A dictionary object is an associative table containing pairs of objects, known as the dictionary's entries. The first element of each entry is the key and the second element is the value. The key must be a name (...). The value can be any kind of object, including another dictionary. A dictionary entry whose value is null (...) is equivalent to an absent entry." (:ref:`AdobeManual` p. 59).
 
         Dictionaries are the most important :data:`object` type in PDF. Here is an example (describing a :data:`page`)::
 
@@ -63,7 +63,7 @@ Glossary
 
 .. data:: page
 
-        A PDF page is a :data:`dictionary` object which defines one page in the document, see :ref:`AdobeManual` p. 145.
+        A PDF page is a :data:`dictionary` object which defines one page in a PDF, see :ref:`AdobeManual` p. 145.
 
 .. data:: pagetree
 
@@ -75,7 +75,7 @@ Glossary
 
 .. data:: object
 
-        Similar to Python, PDF supports the notion *object*, which can come in eight basic types: boolean values, integer and real numbers, strings, names, arrays, dictionaries, streams, and the null object (:ref:`AdobeManual` p. 51). Objects can be made identifyable by assigning a label. This label is then called *indirect* object. PyMuPDF supports retrieving definitions of indirect objects via their label (the cross reference number) via :meth:`Document._getXrefString`.
+        Similar to Python, PDF supports the notion *object*, which can come in eight basic types: boolean values, integer and real numbers, strings, names, arrays, dictionaries, streams, and the null object (:ref:`AdobeManual` p. 51). Objects can be made identifyable by assigning a label. This label is then called *indirect* object. PyMuPDF supports retrieving definitions of indirect objects via their cross reference number via :meth:`Document.xrefObject`.
 
 .. data:: stream
 
@@ -86,11 +86,11 @@ Glossary
                dictionary definition
             >>
             stream
-            … zero or more bytes …
+            (zero or more bytes)
             endstream
             endobj
 
-        See :ref:`AdobeManual` p. 60. PyMuPDF supports retrieving stream content via :meth:`Document._getXrefStream`. Use :meth:`Document.isStream` to determine whether an object is of stream type.
+        See :ref:`AdobeManual` p. 60. PyMuPDF supports retrieving stream content via :meth:`Document.xrefStream`. Use :meth:`Document.isStream` to determine whether an object is of stream type.
 
 .. data:: unitvector
 
@@ -98,5 +98,5 @@ Glossary
 
 .. data:: xref
 
-        Abbreviation for cross-reference number: this is an integer unique identification for objects in a PDF. There exists a cross-reference table (which may consist of several separate segments) in each PDF, which stores the relative position of each object for quick lookup. The cross-reference table is one entry longer than the number of existing object: item zero is reserved and must not be used in any way. Many PyMuPDF classes have an ``xref`` attribute (which is zero for non-PDFs), and one can find out the total number of objects in a PDF via :meth:`Document._getXrefLength`.
+        Abbreviation for cross-reference number: this is an integer unique identification for objects in a PDF. There exists a cross-reference table (which may physically consist of several separate segments) in each PDF, which stores the relative position of each object for quick lookup. The cross-reference table is one entry longer than the number of existing object: item zero is reserved and must not be used in any way. Many PyMuPDF classes have an ``xref`` attribute (which is zero for non-PDFs), and one can find out the total number of objects in a PDF via :meth:`Document.xrefLength` ``- 1``.
 

@@ -349,7 +349,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg dict m: A dictionary with the same keys as ``metadata`` (see below). All keys are optional. A PDF's format and encryption method cannot be set or changed and will be ignored. If any value should not contain data, do not specify its key or set the value to ``None``. If you use ``{}`` all metadata information will be cleared to the string ``"none"``. If you want to selectively change only some values, modify a copy of ``doc.metadata`` and use it as the argument. Arbitrary unicode values are possible if specified as UTF-8-encoded.
 
-    .. method:: setToC(toc)
+    .. method:: setToC(toc, collapse=1)
 
       PDF only: Replaces the **complete current outline** tree (table of contents) with the new one provided as the argument. After successful execution, the new outline tree can be accessed as usual via method ``getToC()`` or via property ``outline``. Like with other output-oriented methods, changes become permanent only via ``save()`` (incremental save supported). Internally, this method consists of the following two steps. For a demonstration see example below.
 
@@ -359,7 +359,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg sequence toc:
 
-          A Python nested sequence with **all bookmark entries** that should form the new table of contents. Each entry is a list with the following format. Output variants of method ``getToC()`` are also acceptable as input.
+          A Python sequence (list or tuple) with **all bookmark entries** that should form the new table of contents. Each entry is a list with the following format. Output variants of method ``getToC()`` are also acceptable input. To completely remove the table of contents specify ``toc=()`` or ``toc=None``.
 
           * ``[lvl, title, page, dest]``, where
 
@@ -369,12 +369,13 @@ For addional details on **embedded files** refer to Appendix 3.
 
             - ``page`` (int) is the target page number **(attention: 1-based to support getToC()-output)**, must be in valid page range if positive. Set this to ``-1`` if there is no target, or the target is external.
 
-            - ``dest`` (optional) is a dictionary or a number. If a number, it will be interpreted as the desired height (in points) this entry should point to on ``page`` in the current document. Use a dictionary (like the one given as output by ``getToC(simple=False)``) if you want to store destinations that are either "named", or reside outside this documennt (other files, internet resources, etc.).
+            - ``dest`` (optional) is a dictionary or a number. If a number, it will be interpreted as the desired height (in points) this entry should point to on ``page``. Use a dictionary (like the one given as output by ``getToC(simple=False)``) if you want to store destinations that are either "named", or reside outside this document (other files, internet resources, etc.).
+
+      :arg int collapse: .. versionadded:: 1.16.9 controls the hierarchy level beyond which outline entries should initially show up collapsed. The default 1 will hence only display level 1, higher levels must be expanded in the PDF viewer. To suppress all collapsing specify either a large enough integer, or ``collapse=0``, or ``collapse=None``.
 
       :rtype: int
       :returns: ``outline`` and ``getToC()`` will be updated upon successful execution. The return code will either equal the number of inserted items (``len(toc)``) or the number of deleted items if ``toc`` is an empty sequence.
 
-      .. note:: We currently always set the :ref:`Outline` attribute ``is_open`` to ``False``. This shows all entries below level 1 as **collapsed**.
 
     .. method:: can_save_incrementally()
 
@@ -411,7 +412,7 @@ For addional details on **embedded files** refer to Appendix 3.
 
       :arg bool linear: Save a linearised version of the document. This option creates a file format for improved performance when read via internet connections. Excludes "incremental".
 
-      :arg bool pretty: Prettify the document source for better readability. PDF objects will be reformatted to look like the default output of :meth:`Document._getXrefString`.
+      :arg bool pretty: Prettify the document source for better readability. PDF objects will be reformatted to look like the default output of :meth:`Document.xrefObject`.
 
       :arg int permissions: .. versionadded:: 1.16.0 Set the desired permission levels. See :ref:`PermissionCodes` for possible values. Default is granting all.
 

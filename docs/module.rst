@@ -1,44 +1,50 @@
 .. _Module:
 
-====================
-"fitz" as a Module
-====================
+============================
+Using ``fitz`` as a Module
+============================
 
 .. highlight:: text
 
 .. versionadded:: 1.16.8
 
-PyMuPDF can also be used in the command line as a **module** to perform several basic utility functions.
+PyMuPDF can also be used in the command line as a **module** to perform basic utility functions.
 
+Commands are currently dealing with PDF documents only. This may change in the next version.
 
-Only PDF documents are currently supported.
-
-This is work in progress and subject to extensions and, potentially, changes. We provide this feature in the hope that our users no longer need to write some of their most trivial scripts.
+This is work in progress and subject to changes. We provide this feature in the hope that our users no longer need to write some of their most basic scripts. As a guideline we are using the feature set of MuPDF command line tools.
 
 Invocation
 -----------
 
 Invoke PyMuPDF as a module like this::
 
-    python -m fitz <command> <parameters ...>
+    python -m fitz command parameters
 
-As is customary, you can request help via ``"fitz -h"`` and resp. ``"fitz <command> -h"``.
+General remarks:
 
-The following **commands** are implemented.
+* Request help via ``"-h"``, resp. ``"command -h"``.
+* Parameters may be abbreviated as long as the result is not ambiguous (Python 3.5 or later only).
+* Parameters ``-pages`` and ``-xrefs`` are intended for down-selection. Please note that:
 
-.. note::
-    * All parameters may be abbreviated as long as the result is not ambiguous (Python 3.5 or later only).
-    * Parameters ``-pages`` and ``-xrefs`` are intended for down-selection. Please note that:
-    
-        - page numbers for this utility must be given **1-based**.
-        - valid :data:`xref` numbers start at 1.
-        - Specify either single integers or integer ranges, separated by one comma each. A range is a pair of integers separated by one hyphen "-". Integers must not exceed the maximum page number or resp. :data:`xref` number. To specify that maximum, the symbolic variable "N" may be used instead of a number. You may enter numbers and ranges several times and in any sequence and ranges may overlap each other. If in a range the first number is greater than the second one, the respective items will be processed in reversed order. 
+    - page numbers for this utility must be given **1-based**.
+    - valid :data:`xref` numbers start at 1.
+    - Specify either single integers or integer ranges, separated by one comma each. A range is a pair of integers separated by one hyphen "-". Integers must not exceed the maximum page number or resp. :data:`xref` number. To specify that maximum, the symbolic variable "N" may be used instead of a number. You may enter numbers and ranges several times and in any sequence and ranges may overlap each other. If in a range the first number is greater than the second one, the respective items will be processed in reversed order.
+
+* You can also use the fitz module inside your script:
+
+>>> from fitz.__main__ import main as fitz_command
+>>> cmd = "clean input.pdf output.pdf -pages 1,N".split()  # prepare command
+>>> saved_parms = sys.argv[1:]  # save original parameters
+>>> sys.argv[1:] = cmd  # store command
+>>> fitz_command()  # execute command
+>>> sys.argv[1:] = saved_parms  # restore original parameters
 
 
 Cleaning and Copying
 ----------------------
 
-This command will optimize the PDF and store the result in a new file. You can use it also for encryption, decryption and creating sub documents. It is mostly similar to the MuPDF commandline utility ``"mutool clean"``::
+This command will optimize the PDF and store the result in a new file. You can use it also for encryption, decryption and creating sub documents. It is mostly similar to the MuPDF command line utility ``"mutool clean"``::
 
     python -m fitz clean -h
     usage: fitz clean [-h] [-password PASSWORD]
@@ -58,7 +64,7 @@ This command will optimize the PDF and store the result in a new file. You can u
     -h, --help            show this help message and exit
     -password PASSWORD    password
     -encryption {keep,none,rc4-40,rc4-128,aes-128,aes-256}
-                            encryption method
+                          encryption method
     -owner OWNER          owner password
     -user USER            user password
     -garbage {0,1,2,3,4}  garbage collection level
@@ -66,18 +72,18 @@ This command will optimize the PDF and store the result in a new file. You can u
     -ascii                ASCII encode binary data
     -linear               format for fast web display
     -permission PERMISSION
-                          permission levels
+                          integer with permission levels
     -san, --sanitize      sanitize / clean contents
     -pretty               prettify PDF structure
-    -pages PAGES          output selected pages pages, format: 1,5-7,50-N
+    -pages PAGES          output selected pages, format: 1,5-7,50-N
 
-If you specify ``-pages``, be aware that in fact only objects related to these pages will be copied, i.e. none of any document level items like e.g. embedded files.
+If you specify ``-pages``, be aware that in fact only objects related to these pages will be copied, i.e. **no document level items** like e.g. embedded files.
 
 Please consult :meth:`Document.save` for the parameter meanings.
 
 
-Font and Image Extraction
---------------------------
+Extracting Fonts and Images
+----------------------------
 Extract fonts or images from selected PDF pages to a desired directory::
 
     python -m fitz extract -h
@@ -98,7 +104,7 @@ Extract fonts or images from selected PDF pages to a desired directory::
     -password PASSWORD    password
     -pages PAGES          only consider these pages, format: 1,5-7,50-N
 
-**Image filenames** are built according to the following scheme: ``img-xref.ext``, where "ext" is the extension associated with the image.
+**Image filenames** are built according to the scheme: ``img-xref.ext``, where "ext" is the extension associated with the image and "xref" the :data:`xref` of the image PDF object.
 
 **Font filenames** consist of the fontname and the associated extension. Any spaces in the fontname are replaced with hyphens "-".
 
@@ -107,8 +113,8 @@ The output directory must already exist.
 .. note:: Except for output directory creation, this feature is **functionally equivalent** to and obsoletes `this script <https://github.com/pymupdf/PyMuPDF-Utilities/blob/master/extract-imga.py>`_.
 
 
-Join PDF Documents
---------------------
+Joining PDF Documents
+-----------------------
 To join several PDF files specify::
 
     python -m fitz join -h
@@ -128,14 +134,15 @@ To join several PDF files specify::
 
 .. note::
 
-    1. Password specification is required if the ``pages`` entry is used. If the PDF needs no password, specify nothing or any string, but the comma is required.
-    2. The ``pages`` format is the same as explained at the top of this chapter
+    0. Each input must be entered as ``"filename,password,pages"``. Password and pages are optional.
+    1. Password specification is required if the ``"pages"`` entry is used. If the PDF needs no password, specify any string or nothing, but the comma is required.
+    2. The ``"pages"`` format is the same as explained at the top of this section.
 
 Example: Join the following files
 
-1. file1.pdf: all pages, but back to front, no password
-2. file2.pdf: last page, first page, password: "secret"
-3. file3.pdf: pages 5 to last, no password
+1. **file1.pdf:** all pages, back to front, no password
+2. **file2.pdf:** last page, first page, password: "secret"
+3. **file3.pdf:** pages 5 to last, no password
 
 ::
 
@@ -217,7 +224,7 @@ Examples::
 Embedded Files Commands
 ------------------------
 
-The following commands deal with embedded files -- which is a feature completely removed from MuPDF after v1.14, and hence from all its commandline utilities. So PyMuPDF uniquely offers them via commandline.
+The following commands deal with embedded files -- which is a feature completely removed from MuPDF after v1.14, and hence from all its command line tools.
 
 Information
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -235,7 +242,7 @@ Show the embedded file names (long or short format)::
     optional arguments:
     -h, --help          show this help message and exit
     -name NAME          if given, report only this one
-    -detail             detail information
+    -detail             show detail information
     -password PASSWORD  password
 
 Example::
@@ -369,7 +376,7 @@ Use this method to change meta-information of the file -- just omit the ``"PATH"
 
 Copying
 ~~~~~~~~~~~~~~~~~~~~~~~
-Copy embedded files from one PDF to another::
+Copy embedded files between PDFs::
 
     python -m fitz embed-copy -h
     usage: fitz embed-copy [-h] [-password PASSWORD] [-output OUTPUT] -source
@@ -389,7 +396,7 @@ Copy embedded files from one PDF to another::
     -source SOURCE        copy embedded files from here
     -pwdsource PWDSOURCE  password of 'source' PDF
     -name [NAME [NAME ...]]
-                          copy these entries, or all if omitted
+                          restrict copy to these entries
 
 
 .. highlight:: python
