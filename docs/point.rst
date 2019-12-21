@@ -4,7 +4,7 @@
 Point
 ================
 
-``Point`` represents a point in the plane, defined by its x and y coordinates.
+*Point* represents a point in the plane, defined by its x and y coordinates.
 
 ============================ ============================================
 **Attribute / Method**       **Description**
@@ -13,7 +13,7 @@ Point
 :meth:`Point.norm`           the Euclidean norm
 :meth:`Point.transform`      transform point with a matrix
 :attr:`Point.abs_unit`       same as unit, but positive coordinates
-:attr:`Point.unit`           point coordinates divided by ``abs(point)``
+:attr:`Point.unit`           point coordinates divided by *abs(point)*
 :attr:`Point.x`              the X-coordinate
 :attr:`Point.y`              the Y-coordinate
 ============================ ============================================
@@ -32,7 +32,7 @@ Point
 
       Overloaded constructors.
 
-      Without parameters, ``Point(0, 0)`` will be created.
+      Without parameters, *Point(0, 0)* will be created.
 
       With another point specified, a **new copy** will be crated, "sequence" is a Python sequence of 2 numbers (see :ref:`SequenceTypes`).
 
@@ -42,14 +42,14 @@ Point
 
    .. method:: distance_to(x [, unit])
 
-      Calculate the distance to ``x``, which may be :data:`point_like` or :data:`rect_like`. The distance is given in units of either pixels (default), inches, centimeters or millimeters.
+      Calculate the distance to *x*, which may be :data:`point_like` or :data:`rect_like`. The distance is given in units of either pixels (default), inches, centimeters or millimeters.
 
      :arg point_like,rect_like x: to which to compute the distance.
 
      :arg str unit: the unit to be measured in. One of "px", "in", "cm", "mm".
 
      :rtype: float
-     :returns: the distance to ``x``. If this is :data:`rect_like`, then the distance
+     :returns: the distance to *x*. If this is :data:`rect_like`, then the distance
 
          * is the length of the shortest line connecting to one of the rectangle sides
          * is calculated to the **finite version** of it
@@ -57,7 +57,9 @@ Point
 
    .. method:: norm()
 
-      .. versionadded:: 1.16.0 Return the Euclidean norm (the length) of the point as a vector. Equals result of function ``abs()``.
+      *(New in version 1.16.0)*
+      
+      Return the Euclidean norm (the length) of the point as a vector. Equals result of function *abs()*.
 
    .. method:: transform(m)
 
@@ -69,7 +71,7 @@ Point
 
    .. attribute:: unit
 
-      Result of dividing each coordinate by ``norm(point)``, the distance of the point to (0,0). This is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
+      Result of dividing each coordinate by *norm(point)*, the distance of the point to (0,0). This is a vector of length 1 pointing in the same direction as the point does. Its x, resp. y values are equal to the cosine, resp. sine of the angle this vector (and the point itself) has with the x axis.
 
       .. image:: images/img-point-unit.jpg
 

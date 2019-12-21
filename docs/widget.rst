@@ -8,7 +8,7 @@ This class represents a PDF Form field, also called "widget". Fields are a speci
 
 Like annotations, widgets live on PDF pages. Similar to annotations, the first widget on a page is accessible via :attr:`Page.firstWidget` and subsequent widgets can be accessed via the :attr:`Widget.next` property.
 
-.. versionchanged:: 1.16.0 Widgets are no longer mixed with annotations. :attr:`Page.firstAnnot` and :meth:`Annot.next` will deliver non-widget annotations exclusively, and be ``None`` if only form fields exist on a page. Vice versa, :attr:`Page.firstWidget` and :meth:`Widget.next` will only show widgets.
+*(Changed in version 1.16.0)* Widgets are no longer mixed with annotations. :attr:`Page.firstAnnot` and :meth:`Annot.next` will deliver non-widget annotations exclusively, and be *None* if only form fields exist on a page. Vice versa, :attr:`Page.firstWidget` and :meth:`Widget.next` will only show widgets.
 
 
 **Class API**
@@ -25,7 +25,7 @@ Like annotations, widgets live on PDF pages. Similar to annotations, the first w
 
     .. attribute:: border_color
 
-       A list of up to 4 floats defining the field's border. Default value is ``None`` which causes border style and border width to be ignored.
+       A list of up to 4 floats defining the field's border. Default value is *None* which causes border style and border width to be ignored.
 
     .. attribute:: border_style
 
@@ -37,7 +37,7 @@ Like annotations, widgets live on PDF pages. Similar to annotations, the first w
 
     .. attribute:: border_dashes
 
-       A list of integers defining the dash properties of the border line. This is only meaningful if ``border_style == "D"`` and :attr:`border_color` is provided.
+       A list of integers defining the dash properties of the border line. This is only meaningful if *border_style == "D"* and :attr:`border_color` is provided.
 
     .. attribute:: choice_values
 
@@ -77,7 +77,7 @@ Like annotations, widgets live on PDF pages. Similar to annotations, the first w
 
     .. attribute:: is_signed
 
-       A bool indicating the status of a signature field, else ``None``.
+       A bool indicating the status of a signature field, else *None*.
 
     .. attribute:: rect
 
@@ -89,7 +89,7 @@ Like annotations, widgets live on PDF pages. Similar to annotations, the first w
 
     .. attribute:: text_font
 
-       A string defining the font to be used. Default and replacement for invalid values is ``"Helv"``. For valid font reference names see the table below.
+       A string defining the font to be used. Default and replacement for invalid values is *"Helv"*. For valid font reference names see the table below.
 
     .. attribute:: text_fontsize
 
@@ -110,7 +110,7 @@ Like annotations, widgets live on PDF pages. Similar to annotations, the first w
 
 Standard Fonts for Widgets
 ----------------------------------
-Widgets use their own resources object ``/DR``. A widget resources object must at least contain a ``/Font`` object. Widget fonts are independent from page fonts. We currently support the 14 PDF base fonts using the following fixed reference names, or any name of an already existing field font. When specifying a text font for new or changed widgets, **either** choose one in the first table column (upper and lower case supported), **or** one of the already existing form fonts. In the latter case, spelling must exactly match.
+Widgets use their own resources object */DR*. A widget resources object must at least contain a */Font* object. Widget fonts are independent from page fonts. We currently support the 14 PDF base fonts using the following fixed reference names, or any name of an already existing field font. When specifying a text font for new or changed widgets, **either** choose one in the first table column (upper and lower case supported), **or** one of the already existing form fonts. In the latter case, spelling must exactly match.
 
 To find out already existing field fonts, inspect the list :attr:`Document.FormFonts`.
 
@@ -133,4 +133,4 @@ TiRo          Times-Roman
 ZaDb          ZapfDingbats
 ============= =======================
 
-You are generally free to use any font for every widget. However, we recommend using ``ZaDb`` ("ZapfDingbats") and fontsize 0 for check boxes: typical viewers will put a correctly sized tickmark in the field's rectangle, when it is clicked.
+You are generally free to use any font for every widget. However, we recommend using *ZaDb* ("ZapfDingbats") and fontsize 0 for check boxes: typical viewers will put a correctly sized tickmark in the field's rectangle, when it is clicked.

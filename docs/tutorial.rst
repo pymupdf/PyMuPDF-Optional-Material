@@ -3,6 +3,9 @@
 =========
 Tutorial
 =========
+
+.. highlight:: python
+
 This tutorial will show you the use of PyMuPDF, MuPDF in Python, step by step.
 
 Because MuPDF supports not only PDF, but also XPS, OpenXPS, CBZ, CBR, FB2 and EPUB formats, so does PyMuPDF [#f1]_. Nevertheless, for the sake of brevity we will only talk about PDF files. At places where indeed only PDF files are supported, this will be mentioned explicitely.
@@ -24,7 +27,7 @@ To access a supported document, it must be opened with the following statement::
 
     doc = fitz.open(filename)     # or fitz.Document(filename)
 
-This creates the :ref:`Document` object ``doc``. ``filename`` must be a Python string specifying the name of an existing file.
+This creates the :ref:`Document` object *doc*. *filename* must be a Python string specifying the name of an existing file.
 
 It is also possible to open a document from memory data, or to create a new, empty PDF. See :ref:`Document` for details.
 
@@ -44,7 +47,7 @@ Some :ref:`Document` Methods and Attributes
 
 Accessing Meta Data
 ========================
-PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may always contain data. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings or ``None`` if not otherwise indicated. Also be aware that not all of them always contain meaningful data -- even if they are not ``None``.
+PyMuPDF fully supports standard metadata. :attr:`Document.metadata` is a Python dictionary with the following keys. It is available for **all document types**, though not all entries may always contain data. For details of their meanings and formats consult the respective manuals, e.g. :ref:`AdobeManual` for PDF. Further information can also be found in chapter :ref:`Document`. The meta data fields are strings or *None* if not otherwise indicated. Also be aware that not all of them always contain meaningful data -- even if they are not *None*.
 
 ============== =================================
 **Key**        **Value**
@@ -67,13 +70,13 @@ subject        subject
 
 Working with Outlines
 =========================
-The easiest way to get all outlines (also called "bookmarks") of a document, is by creating a *table of contents*::
+The easiest way to get all outlines (also called "bookmarks") of a document, is by loading its *table of contents*::
 
     toc = doc.getToC()
 
-This will return a Python list of lists ``[[lvl, title, page, ...], ...]`` which looks much like a conventional table of contents found in books.
+This will return a Python list of lists *[[lvl, title, page, ...], ...]* which looks much like a conventional table of contents found in books.
 
-``lvl`` is the hierarchy level of the entry (starting from 1), ``title`` is the entry's title, and ``page`` the page number (1-based!). Other parameters describe details of the bookmark target.
+*lvl* is the hierarchy level of the entry (starting from 1), *title* is the entry's title, and *page* the page number (1-based!). Other parameters describe details of the bookmark target.
 
 .. note:: There are two utility scripts in the repository that `import (PDF only) <https://github.com/pymupdf/PyMuPDF/blob/master/examples/csv2toc.py>`_ resp. `export <https://github.com/pymupdf/PyMuPDF/blob/master/examples/toc2csv.py>`_ table of contents from resp. to CSV files.
 
@@ -90,7 +93,7 @@ First, a :ref:`Page` must be created. This is a method of :ref:`Document`::
     page = doc.loadPage(pno)  # loads page number 'pno' of the document (0-based)
     page = doc[pno]  # the short form
 
-Any integer :math:`- \infty < pno < pageCount` is possible here. Negative numbers count backwards from the end, so ``doc[-1]`` is the last page, like with Python sequences.
+Any integer *-inf < pno < pageCount* is possible here. Negative numbers count backwards from the end, so *doc[-1]* is the last page, like with Python sequences.
 
 Some more advanced way would be using the document as an **iterator** over its pages::
 
@@ -115,7 +118,7 @@ Links are shown as "hot areas" when a document is displayed with some viewer sof
     # get all links on a page
     links = page.getLinks()
 
-``links`` is a Python list of dictionaries. For details see :meth:`Page.getLinks`.
+*links* is a Python list of dictionaries. For details see :meth:`Page.getLinks`.
 
 You can also use an iterator which emits one link at a time::
 
@@ -137,9 +140,9 @@ This example creates a **raster** image of a page's content::
 
     pix = page.getPixmap()
 
-``pix`` is a :ref:`Pixmap` object which (in this case) contains an **RGB** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGBA** image (i.e. containing an alpha channel), specify ``pix = page.getPixmap(alpha=True)``.
+*pix* is a :ref:`Pixmap` object which (in this case) contains an **RGB** image of the page, ready to be used for many purposes. Method :meth:`Page.getPixmap` offers lots of variations for controlling the image: resolution, colorspace (e.g. to produce a grayscale image or an image with a subtractive color scheme), transparency, rotation, mirroring, shifting, shearing, etc. For example: to create an **RGBA** image (i.e. containing an alpha channel), specify *pix = page.getPixmap(alpha=True)*.
 
-A :ref:`Pixmap` contains a number of methods and attributes which are referenced below. Among them are the integers *width*, *height* (each in pixels) and *stride* (number of bytes of one horizontal image line). Attribute *samples* represents a rectangular area of bytes representing the image data (a Python ``bytes`` object).
+A :ref:`Pixmap` contains a number of methods and attributes which are referenced below. Among them are the integers *width*, *height* (each in pixels) and *stride* (number of bytes of one horizontal image line). Attribute *samples* represents a rectangular area of bytes representing the image data (a Python *bytes* object).
 
 .. note:: You can also create a **vector** image of a page by using :meth:`Page.getSVGimage`. Refer to this `Wiki <https://github.com/pymupdf/PyMuPDF/wiki/Vector-Image-Support>`_ for details.
 
@@ -176,8 +179,8 @@ Please also see section 3.19 of the `Pillow documentation <https://Pillow.readth
 The following **avoids using Pillow**::
 
     # remove alpha if present
-    pix1 = fitz.Pixmap(pix, 0) if pix.alpha else pix   # PPM does not support transparency
-    imgdata = pix1.getImageData("ppm")                 # extremely fast!
+    pix1 = fitz.Pixmap(pix, 0) if pix.alpha else pix  # PPM does not support transparency
+    imgdata = pix1.getImageData("ppm")  # extremely fast!
     tkimg = tkinter.PhotoImage(data = imgdata)
 
 If you are looking for a complete Tkinter script paging through **any supported** document, `here it is! <https://github.com/JorjMcKie/PyMuPDF-Utilities/blob/master/doc-browser.py>`_ It can also zoom into pages, and it runs under Python 2 or 3. It requires the extremely handy `PySimpleGUI <https://pypi.org/project/PySimpleGUI/>`_ pure Python package.
@@ -208,23 +211,23 @@ We can also extract all text, images and other information of a page in many dif
 
     text = page.getText(opt)
 
-Use one of the following strings for ``opt`` to obtain different formats [#f2]_:
+Use one of the following strings for *opt* to obtain different formats [#f2]_:
 
-* ``"text"``: (default) plain text with line breaks. No formatting, no text position details, no images.
+* *"text"*: (default) plain text with line breaks. No formatting, no text position details, no images.
 
-* ``"blocks"``: generate a list of text blocks (= paragraphs).
+* *"blocks"*: generate a list of text blocks (= paragraphs).
 
-* ``"words"``: generate a list of words (strings not containing spaces).
+* *"words"*: generate a list of words (strings not containing spaces).
 
-* ``"html"``: creates a full visual version of the page including any images. This can be displayed with your internet browser.
+* *"html"*: creates a full visual version of the page including any images. This can be displayed with your internet browser.
 
-* ``"dict"`` / ``"json"``: same information level as HTML, but provided as a Python dictionary or resp. JSON string. See :meth:`TextPage.extractDICT` resp. :meth:`TextPage.extractJSON` for details of its structure.
+* *"dict"* / *"json"*: same information level as HTML, but provided as a Python dictionary or resp. JSON string. See :meth:`TextPage.extractDICT` resp. :meth:`TextPage.extractJSON` for details of its structure.
 
-* ``"rawdict"``: a super-set of :meth:`TextPage.extractDICT`. It additionally provides character detail information like XML. See :meth:`TextPage.extractRAWDICT` for details of its structure.
+* *"rawdict"*: a super-set of :meth:`TextPage.extractDICT`. It additionally provides character detail information like XML. See :meth:`TextPage.extractRAWDICT` for details of its structure.
 
-* ``"xhtml"``: text information level as the TEXT version but includes images. Can also be displayed by internet browsers.
+* *"xhtml"*: text information level as the TEXT version but includes images. Can also be displayed by internet browsers.
 
-* ``"xml"``: contains no images, but full position and font information down to each single text character. Use an XML module to interpret.
+* *"xml"*: contains no images, but full position and font information down to each single text character. Use an XML module to interpret.
 
 To give you an idea about the output of these alternatives, we did text example extracts. See :ref:`Appendix2`.
 
@@ -258,7 +261,7 @@ There are several ways to manipulate the so-called **page tree** (a structure de
 
 :meth:`Document.copyPage`, :meth:`Document.fullcopyPage` and :meth:`Document.movePage` copy or move a page to other locations within the same document.
 
-:meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a sequence [#f3]_ of the page numbers that you want to keep. These integers must all be in range ``0 <= i < pageCount``. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
+:meth:`Document.select` shrinks a PDF down to selected pages. Parameter is a sequence [#f3]_ of the page numbers that you want to keep. These integers must all be in range *0 <= i < pageCount*. When executed, all pages **missing** in this list will be deleted. Remaining pages will occur **in the sequence and as many times (!) as you specify them**.
 
 So you can easily create new PDFs with
 
@@ -278,12 +281,12 @@ Pages themselves can moreover be modified by a range of methods (e.g. page rotat
 Joining and Splitting PDF Documents
 ------------------------------------
 
-Method :meth:`Document.insertPDF` copies pages **between different** PDF documents. Here is a simple **joiner** example (``doc1`` and ``doc2`` being openend PDFs)::
+Method :meth:`Document.insertPDF` copies pages **between different** PDF documents. Here is a simple **joiner** example (*doc1* and *doc2* being openend PDFs)::
 
     # append complete doc2 to the end of doc1
     doc1.insertPDF(doc2)
 
-Here is a snippet that **splits** ``doc1``. It creates a new document of its first and its last 10 pages::
+Here is a snippet that **splits** *doc1*. It creates a new document of its first and its last 10 pages::
 
     doc2 = fitz.open()                 # new empty PDF
     doc2.insertPDF(doc1, to_page = 9)  # first 10 pages
@@ -297,7 +300,7 @@ Embedding Data
 
 PDFs can be used as containers for abitrary data (exeutables, other PDFs, text or binary files, etc.) much like ZIP archives.
 
-PyMuPDF fully supports this feature via :ref:`Document` ``embeddedFile*`` methods and attributes. For some detail read :ref:`Appendix 3`, consult the Wiki on `embedding files <https://github.com/pymupdf/PyMuPDF/wiki/Dealing-with-Embedded-Files>`_, or the example scripts `embedded-copy.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-copy.py>`_, `embedded-export.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-export.py>`_, `embedded-import.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-import.py>`_, and `embedded-list.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-list.py>`_.
+PyMuPDF fully supports this feature via :ref:`Document` *embeddedFile** methods and attributes. For some detail read :ref:`Appendix 3`, consult the Wiki on `embedding files <https://github.com/pymupdf/PyMuPDF/wiki/Dealing-with-Embedded-Files>`_, or the example scripts `embedded-copy.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-copy.py>`_, `embedded-export.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-export.py>`_, `embedded-import.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-import.py>`_, and `embedded-list.py <https://github.com/pymupdf/PyMuPDF/blob/master/examples/embedded-list.py>`_.
 
 
 Saving
@@ -305,9 +308,9 @@ Saving
 
 As mentioned above, :meth:`Document.save` will **always** save the document in its current state.
 
-You can write changes back to the **original PDF** by specifying option ``incremental=True``. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
+You can write changes back to the **original PDF** by specifying option *incremental=True*. This process is (usually) **extremely fast**, since changes are **appended to the original file** without completely rewriting it.
 
-:meth:`Document.save` options correspond to options of MuPDF's command line utility ``mutool clean``, see the following table.
+:meth:`Document.save` options correspond to options of MuPDF's command line utility *mutool clean*, see the following table.
 
 =================== =========== ==================================================
 **Save Option**     **mutool**  **Effect**
@@ -325,7 +328,7 @@ expand=2            f           decompress fonts
 expand=255          d           decompress all
 =================== =========== ==================================================
 
-For example, ``mutool clean -ggggz file.pdf`` yields excellent compression results. It corresponds to ``doc.save(filename, garbage=4, deflate=1)``.
+For example, *mutool clean -ggggz file.pdf* yields excellent compression results. It corresponds to *doc.save(filename, garbage=4, deflate=1)*.
 
 Closing
 =========
@@ -343,6 +346,6 @@ This document also contains a :ref:`FAQ`. This chapter has close connection to t
 
 .. [#f1] PyMuPDF lets you also open several image file types just like normal documents. See section :ref:`ImageFiles` in chapter :ref:`Pixmap` for more comments.
 
-.. [#f2] :meth:`Page.getText` is a convenience wrapper for several methods of another PyMuPDF class, :ref:`TextPage`. The names of these methods correspond to the argument string passed to :meth:`Page.getText` \:  ``Page.getText("dict")`` is equivalent to ``TextPage.extractDICT()`` \.
+.. [#f2] :meth:`Page.getText` is a convenience wrapper for several methods of another PyMuPDF class, :ref:`TextPage`. The names of these methods correspond to the argument string passed to :meth:`Page.getText` \:  *Page.getText("dict")* is equivalent to *TextPage.extractDICT()* \.
 
-.. [#f3] "Sequences" are Python objects conforming to the sequence protocol. These objects implement a method named ``__getitem__()``. Best known examples are Python tuples and lists. But ``array.array``, ``numpy.array`` and PyMuPDF's "geometry" objects (:ref:`Algebra`) are sequences, too. Refer to :ref:`SequenceTypes` for details.
+.. [#f3] "Sequences" are Python objects conforming to the sequence protocol. These objects implement a method named *__getitem__()*. Best known examples are Python tuples and lists. But *array.array*, *numpy.array* and PyMuPDF's "geometry" objects (:ref:`Algebra`) are sequences, too. Refer to :ref:`SequenceTypes` for details.

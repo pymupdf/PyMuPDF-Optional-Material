@@ -33,7 +33,7 @@ A **span** consists of adjacent characters with identical font properties: name,
 Plain Text
 ~~~~~~~~~~
 
-Function :meth:`TextPage.extractText` (or ``Page.getText("text")``) extracts a page's plain **text in original order** as specified by the creator of the document (which may not equal a natural reading order).
+Function :meth:`TextPage.extractText` (or *Page.getText("text")*) extracts a page's plain **text in original order** as specified by the creator of the document (which may not equal a natural reading order).
 
 An example output::
 
@@ -44,7 +44,7 @@ An example output::
 BLOCKS
 ~~~~~~~~~~
 
-Function :meth:`TextPage.extractBLOCKS` (or ``Page.getText("blocks")``) extracts a page's text blocks as a list of items like::
+Function :meth:`TextPage.extractBLOCKS` (or *Page.getText("blocks")*) extracts a page's text blocks as a list of items like::
 
     (x0, y0, x1, y1, "lines in block", block_type, block_no)
 
@@ -62,7 +62,7 @@ Example output::
 WORDS
 ~~~~~~~~~~
 
-Function :meth:`TextPage.extractWORDS` (or ``Page.getText("words")``) extracts a page's text **words** as a list of items like::
+Function :meth:`TextPage.extractWORDS` (or *Page.getText("words")*) extracts a page's text **words** as a list of items like::
 
     (x0, y0, x1, y1, "word", block_no, line_no, word_no)
 
@@ -88,7 +88,7 @@ Example output::
 HTML
 ~~~~
 
-:meth:`TextPage.extractHTML` (or ``Page.getText("html")`` output fully reflects the structure of the page's ``TextPage`` -- much like DICT / JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed by an internate browser. Our above example::
+:meth:`TextPage.extractHTML` (or *Page.getText("html")* output fully reflects the structure of the page's *TextPage* -- much like DICT / JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed by an internate browser. Our above example::
 
     >>> for line in page.getText("html").splitlines():
             print(line)
@@ -109,7 +109,7 @@ While HTML output has improved a lot in MuPDF v1.12.0, it is not yet bug-free: w
 
 * HTML text contains references to the fonts used of the original document. If these are not known to the browser (a fat chance!), it will replace them with his assumptions, which probably will let the result look awkward. This issue varies greatly by browser -- on my Windows machine, MS Edge worked just fine, whereas Firefox looked horrible.
 
-* For PDFs with a complex structure, images may not be positioned and / or sized correctly. This seems to be the case for rotated pages and pages, where the various possible page bbox variants do not coincide (e.g. ``MediaBox != CropBox``). We do not know yet, how to address this -- we filed a bug at MuPDF's site.
+* For PDFs with a complex structure, images may not be positioned and / or sized correctly. This seems to be the case for rotated pages and pages, where the various possible page bbox variants do not coincide (e.g. *MediaBox != CropBox*). We do not know yet, how to address this -- we filed a bug at MuPDF's site.
 
 To address the font issue, you can use a simple utility script to scan through the HTML file and replace font references. Here is a little example that replaces all fonts with one of the :ref:`Base-14-Fonts`: serifed fonts will become "Times", non-serifed "Helvetica" and monospaced will become "Courier". Their respective variations for "bold", "italic", etc. are hopefully done correctly by your browser::
 
@@ -153,7 +153,7 @@ To address the font issue, you can use a simple utility script to scan through t
 DICT (or JSON)
 ~~~~~~~~~~~~~~~~
 
-:meth:`TextPage.extractDICT` (or ``Page.getText("dict")``) output fully reflects the structure of a ``TextPage`` and provides image content and position details (``bbox`` -- boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Images are stored as ``bytes`` (``bytearray`` in Python 2) for DICT output and base64 encoded strings for JSON output.
+:meth:`TextPage.extractDICT` (or *Page.getText("dict")*) output fully reflects the structure of a *TextPage* and provides image content and position details (*bbox* -- boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Images are stored as *bytes* (*bytearray* in Python 2) for DICT output and base64 encoded strings for JSON output.
 
 For a visuallization of the dictionary structure have a look at :ref:`textpagedict`.
 
@@ -183,7 +183,7 @@ Here is how this looks like::
 
 RAWDICT
 ~~~~~~~~~~~~~~~~
-:meth:`TextPage.extractRAWDICT` (or ``Page.getText("rawdict")``) is an **information superset of DICT** and takes the detail level one step deeper. It looks exactly like the above, except that the ``"text"`` items (*string*) are replaced by ``"chars"`` items (*list*). Each ``"chars"`` entry is a character *dict*. For example, here is what you would see in place of item ``"text": "Text in black color."`` above::
+:meth:`TextPage.extractRAWDICT` (or *Page.getText("rawdict")*) is an **information superset of DICT** and takes the detail level one step deeper. It looks exactly like the above, except that the *"text"* items (*string*) are replaced by *"chars"* items (*list*). Each *"chars"* entry is a character *dict*. For example, here is what you would see in place of item *"text": "Text in black color."* above::
 
     "chars": [{
         "origin": [50.0, 100.0],
@@ -216,7 +216,7 @@ RAWDICT
 XML
 ~~~
 
-The :meth:`TextPage.extractXML` (or ``Page.getText("xml")``) version extracts text (no images) with the detail level of RAWDICT::
+The :meth:`TextPage.extractXML` (or *Page.getText("xml")*) version extracts text (no images) with the detail level of RAWDICT::
   
     >>> for line in page.getText("xml").splitlines():
         print(line)
@@ -249,7 +249,7 @@ The :meth:`TextPage.extractXML` (or ``Page.getText("xml")``) version extracts te
 
 XHTML
 ~~~~~
-:meth:`TextPage.extractXHTML` (or ``Page.getText("xhtml")``) is a variation of TEXT but in HTML format, containing the bare text and images ("semantic" output)::
+:meth:`TextPage.extractXHTML` (or *Page.getText("xhtml")*) is a variation of TEXT but in HTML format, containing the bare text and images ("semantic" output)::
 
     <div id="page0">
     <p>Some text on first page.</p>
@@ -259,7 +259,7 @@ XHTML
 
 Text Extraction Flags Defaults
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. versionadded:: 1.16.2 Method :meth:`Page.getText` supports a keyword parameter ``flags`` *(int)* to control the amount and the quality of extracted data. The following table shows the defaults settings (flags parameter omitted or None) for each extraction variant. A description of the respective bit settings can be found in :ref:`TextPreserve`.
+*(New in version 1.16.2)* Method :meth:`Page.getText` supports a keyword parameter *flags* *(int)* to control the amount and the quality of extracted data. The following table shows the defaults settings (flags parameter omitted or None) for each extraction variant. A description of the respective bit settings can be found in :ref:`TextPreserve`.
 
 =================== ==== ==== ===== === ==== ======= ===== ======
 Indicator           text html xhtml xml dict rawdict words blocks
@@ -274,7 +274,7 @@ inhibit spaces      0    0    0     0   0    0       0     0
 * An "n/a" specification means a value of 0 and setting this bit never has any effect on the output (but an adverse effect on performance).
 * If you are not interested in images when using an output variant which includes them by default, then by all means set the respective bit off: You will experience a better performance and much lower space requirements.
 
-To show the effect of ``TEXT_INHIBIT_SPACES`` have a look at this example::
+To show the effect of *TEXT_INHIBIT_SPACES* have a look at this example::
 
     >>> print(page.getText("text"))
     H a l l o !
@@ -297,7 +297,7 @@ Performance
 ~~~~~~~~~~~~
 The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements and runtimes. Generally, more information of course means that more processing is required and a higher data volume is generated.
 
-.. note:: Especially images have a **very significant** impact. Make sure to exclude them (via the ``flags`` parameter) whenever you do not need them. To process the below mentioned 2'700 total pages with default flags settings required 160 seconds across all extraction methods. When all images where excluded, less than 50% of that time (77 seconds) were needed.
+.. note:: Especially images have a **very significant** impact. Make sure to exclude them (via the *flags* parameter) whenever you do not need them. To process the below mentioned 2'700 total pages with default flags settings required 160 seconds across all extraction methods. When all images where excluded, less than 50% of that time (77 seconds) were needed.
 
 To begin with, all methods are **very fast** in relation to other products out there in the market. In terms of processing speed, we are not aware of a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1'310 pages of the :ref:`AdobeManual` in less than 5 seconds (simple text needs less than 2 seconds here).
 

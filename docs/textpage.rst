@@ -10,21 +10,21 @@ The usual ways to create a textpage are :meth:`DisplayList.getTextPage` and :met
 
 For a description of what this class is all about, see Appendix 2.
 
-======================== ================================ ======================
-**Method**               **Description**                  :ref:`Page` wrapper
-======================== ================================ ======================
-:meth:`~.extractText`    extract plain text               ``getText("text")``
-:meth:`~.extractTEXT`    synonym of previous              ``getText("text")``
-:meth:`~.extractBLOCKS`  plain text grouped in blocks     ``getText("blocks")``
-:meth:`~.extractWORDS`   all words with their bbox        ``getText("words")``
-:meth:`~.extractHTML`    page content in HTML format      ``getText("html")``
-:meth:`~.extractJSON`    page content in JSON format      ``getText("json")``
-:meth:`~.extractXHTML`   page content in XHTML format     ``getText("xhtml")``
-:meth:`~.extractXML`     page text in XML format          ``getText("xml")``
-:meth:`~.extractDICT`    page content in *dict* format    ``getText("dict")``
-:meth:`~.extractRAWDICT` page content in *dict* format    ``getText("rawdict")``
-:meth:`~.search`         Search for a string in the page  ``searchFor()``
-======================== ================================ ======================
+======================== ================================ =============================
+**Method**               **Description**                  page getText or search method
+======================== ================================ =============================
+:meth:`~.extractText`    extract plain text               "text"
+:meth:`~.extractTEXT`    synonym of previous              "text"
+:meth:`~.extractBLOCKS`  plain text grouped in blocks     "blocks"
+:meth:`~.extractWORDS`   all words with their bbox        "words"
+:meth:`~.extractHTML`    page content in HTML format      "html"
+:meth:`~.extractJSON`    page content in JSON format      "json"
+:meth:`~.extractXHTML`   page content in XHTML format     "xhtml"
+:meth:`~.extractXML`     page text in XML format          "xml"
+:meth:`~.extractDICT`    page content in *dict* format    "dict"
+:meth:`~.extractRAWDICT` page content in *dict* format    "rawdict"
+:meth:`~.search`         Search for a string in the page  searchFor()
+======================== ================================ =============================
 
 **Class API**
 
@@ -44,7 +44,7 @@ For a description of what this class is all about, see Appendix 2.
 
          (x0, y0, x1, y1, "lines in blocks", block_type, block_no)
 
-      The first four entries are the block's bbox coordinates, ``block_type`` is 1 for an image block, 0 for text. ``block_no`` is the block sequence number.
+      The first four entries are the block's bbox coordinates, *block_type* is 1 for an image block, 0 for text. *block_no* is the block sequence number.
 
       For an image block, its bbox and a text line with image meta information is included -- not the image data itself.
 
@@ -78,7 +78,7 @@ For a description of what this class is all about, see Appendix 2.
 
    .. method:: extractJSON
 
-      Textpage content in JSON format. Created by  ``json.dumps(TextPage.extractDICT())``. It is included for backlevel compatibility. You will probably use this method ever only for outputting the result in some file. The  method detects binary image data, like ``bytearray`` and ``bytes`` (Python 3 only) and converts them to base64 encoded strings on JSON output.
+      Textpage content in JSON format. Created by  *json.dumps(TextPage.extractDICT())*. It is included for backlevel compatibility. You will probably use this method ever only for outputting the result in some file. The  method detects binary image data, like *bytearray* and *bytes* (Python 3 only) and converts them to base64 encoded strings on JSON output.
 
       :rtype: str
 
@@ -102,15 +102,15 @@ For a description of what this class is all about, see Appendix 2.
 
    .. method:: search(string, hit_max = 16, quads = False)
 
-      Search for ``string`` and return a list of found locations.
+      Search for *string* and return a list of found locations.
 
       :arg str string: the string to search for. Upper / lower cases will all match.
       :arg int hit_max: maximum number of returned hits (default 16).
       :arg bool quads: return quadrilaterals instead of rectangles.
       :rtype: list
-      :returns: a list of :ref:`Rect` or :ref:`Quad` objects, each surrounding a found ``string`` occurrence. The search string may contain spaces, it may therefore happen, that its parts are located on different lines. In this case, more than one rectangle (resp. quadrilateral) are returned. The method does **not support hyphenation**, so it will not find "meth-od" when searching for "method".
+      :returns: a list of :ref:`Rect` or :ref:`Quad` objects, each surrounding a found *string* occurrence. The search string may contain spaces, it may therefore happen, that its parts are located on different lines. In this case, more than one rectangle (resp. quadrilateral) are returned. The method does **not support hyphenation**, so it will not find "meth-od" when searching for "method".
 
-      Example: If the search for string "pymupdf" contains a hit like shown, then the corresponding entry will either be the blue rectangle, or, if ``quads`` was specified, ``Quad(ul, ur, ll, lr)``.
+      Example: If the search for string "pymupdf" contains a hit like shown, then the corresponding entry will either be the blue rectangle, or, if *quads* was specified, *Quad(ul, ur, ll, lr)*.
 
       .. image:: images/img-quads.jpg
 
@@ -142,7 +142,7 @@ Blocks come in two different formats: **image blocks** and **text blocks**.
 **Key**             **Value**
 =============== ===============================================================
 type            1 = image *(int)*
-bbox            block / image rectangle, formatted as ``tuple(fitz.Rect)``
+bbox            block / image rectangle, formatted as *tuple(fitz.Rect)*
 ext             image type *(str)*, as file extension, see below
 width           original image width *(int)*
 height          original image height *(int)*
@@ -162,7 +162,7 @@ Possible values of key "ext" are "bmp", "gif", "jpeg", "jpx" (JPEG 2000), "jxr" 
       {"type": 1, "bbox": (0.0, 0.0, 0.0, 0.0), ..., "image": b""}
 
 
-   2. :ref:`TextPage` and corresponding method :meth:`Page.getText`` are **available for all document types**. Only for PDF documents, methods :meth:`Document.getPageImageList` / :meth`Page.getImageList` offer some overlapping functionality as far as image lists are concerned. But both lists **may or may not** contain the same items. Any differences are most probably caused by one of the following:
+   2. :ref:`TextPage` and corresponding method :meth:`Page.getText` are **available for all document types**. Only for PDF documents, methods :meth:`Document.getPageImageList` / :meth:`Page.getImageList` offer some overlapping functionality as far as image lists are concerned. But both lists **may or may not** contain the same items. Any differences are most probably caused by one of the following:
 
        - "Inline" images (see page 352 of the :ref:`AdobeManual`) of a PDF page are contained in a textpage, but **not in** :meth:`Page.getImageList`.
        - Image blocks in a textpage are generated for **every** image location -- whether or not there are any duplicates. This is in contrast to :meth:`Page.getImageList`, which will contain each image only once.
@@ -175,7 +175,7 @@ Possible values of key "ext" are "bmp", "gif", "jpeg", "jpx" (JPEG 2000), "jxr" 
 **Key**             **Value**
 =============== ====================================================
 type            0 = text *(int)*
-bbox            block rectangle, formatted as ``tuple(fitz.Rect)``
+bbox            block rectangle, formatted as *tuple(fitz.Rect)*
 lines           *list* of text line dictionaries
 =============== ====================================================
 
@@ -185,31 +185,30 @@ Line Dictionary
 =============== =====================================================
 **Key**             **Value**
 =============== =====================================================
-bbox            line rectangle, formatted as ``tuple(fitz.Rect)``
+bbox            line rectangle, formatted as *tuple(fitz.Rect)*
 wmode           writing mode *(int)*: 0 = horizontal, 1 = vertical
-dir             writing direction *(list of floats)*: ``[x, y]``
+dir             writing direction *(list of floats)*: *[x, y]*
 spans           *list* of span dictionaries
 =============== =====================================================
 
-The value of key ``"dir"`` is a **unit vetor** and should be interpreted as follows:
+The value of key *"dir"* is a **unit vetor** and should be interpreted as follows:
 
-* ``x``: positive = "left-right", negative = "right-left", 0 = neither
-* ``y``: positive = "top-bottom", negative = "bottom-top", 0 = neither
+* *x*: positive = "left-right", negative = "right-left", 0 = neither
+* *y*: positive = "top-bottom", negative = "bottom-top", 0 = neither
 
-The values indicate the "relative writing speed" in each direction, such that :math:`x^2 + y^2 = 1`. In other words ``dir = [cos(beta), sin(beta)]``, where ``beta`` is the writing angle relative to the horizontal.
+The values indicate the "relative writing speed" in each direction, such that x\ :sup:`2` + y\ :sup:`2` = 1. In other words *dir = [cos(beta), sin(beta)]*, where *beta* is the writing angle relative to the horizontal.
 
 Span Dictionary
 ~~~~~~~~~~~~~~~~~
 
 Spans contain the actual text. A line contains **more than one span only**, if it contains text with different font properties.
 
-.. versionchanged:: 1.14.17
-    Spans now also have a ``bbox`` key (again).
+*(Changed in version 1.14.17)* Spans now also have a *bbox* key (again).
 
 =============== =====================================================================
 **Key**             **Value**
 =============== =====================================================================
-bbox            span rectangle, formatted as ``tuple(fitz.Rect)``
+bbox            span rectangle, formatted as *tuple(fitz.Rect)*
 font            font name *(str)*
 size            font size *(float)*
 flags           font characteristics *(int)*
@@ -218,9 +217,11 @@ text            (only for :meth:`extractDICT`) text *(str)*
 chars           (only for :meth:`extractRAWDICT`) *list* of character dictionaries
 =============== =====================================================================
 
-.. versionadded:: 1.16.0 ``"color"`` is the text color encoded in sRGB format, e.g. 0xFF0000 for red.
+*(New in version 1.16.0)*
 
-``"flags"`` is an integer, encoding bools of font properties:
+*"color"* is the text color encoded in sRGB format, e.g. 0xFF0000 for red.
+
+*"flags"* is an integer, encoding bools of font properties:
 
 * bit 0: superscripted (2\ :sup:`0`)
 * bit 1: italic (2\ :sup:`1`)
@@ -245,10 +246,10 @@ We are currently providing the bbox in :data:`rect_like` format. In a future ver
 **Key**             **Value**
 =============== =========================================================
 origin          *tuple* coordinates of the character's bottom left point
-bbox            character rectangle, formatted as ``tuple(fitz.Rect)``
+bbox            character rectangle, formatted as *tuple(fitz.Rect)*
 c               the character (unicode)
 =============== =========================================================
 
 .. rubric:: Footnotes
 
-.. [#f1] Image specifications for a PDF page are done in the page's sub-dictionary ``/Resources``. Being a text format specification, PDF does not prevent one from having arbitrary image entries in this dictionary -- whether actually in use by the page or not. On top of this, resource dictionaries can be **inherited** from the page's parent object -- like a node of the PDF's :data:`pagetree` or the :data:`catalog` object. So the PDF creator may e.g. define one file level ``/Resources`` naming all images and fonts ever used by any page. In this case, :meth:`Page.getImageList` and :meth:`Page.getFontList` will always return the same lists for all pages.
+.. [#f1] Image specifications for a PDF page are done in the page's sub-dictionary */Resources*. Being a text format specification, PDF does not prevent one from having arbitrary image entries in this dictionary -- whether actually in use by the page or not. On top of this, resource dictionaries can be **inherited** from the page's parent object -- like a node of the PDF's :data:`pagetree` or the :data:`catalog` object. So the PDF creator may e.g. define one file level */Resources* naming all images and fonts ever used by any page. In this case, :meth:`Page.getImageList` and :meth:`Page.getFontList` will always return the same lists for all pages.

@@ -8,7 +8,7 @@ Introduction
 
 MuPDF can access files in PDF, XPS, OpenXPS, CBZ (comic book archive), FB2 and EPUB (e-book) formats.
 
-These are files with extensions ``*.pdf``, ``*.xps``, ``*.oxps``, ``*.cbz``, ``*.fb2``  or ``*.epub`` (so in essence, with this binding you can develop **e-book viewers in Python** ...).
+These are files with extensions *.pdf*, *.xps*, *.oxps*, *.cbz*, *.fb2*  or *.epub* (so you can develop **e-book viewers in Python** ...).
 
 PyMuPDF provides access to many important functions of MuPDF from within a Python environment, and we are continuously seeking to expand this function set.
 
@@ -24,13 +24,13 @@ PyMuPDF is hosted on `GitHub <https://github.com/pymupdf/PyMuPDF>`_. We also are
 
 For MS Windows and popular Python versions on Mac OSX and Linux we have created wheels. So installation should be convenient enough for hopefully most of our users: just issue
 
-``pip install --upgrade pymupdf``
+*pip install --upgrade pymupdf*
 
 If your platform is not among those supported with a wheel, your installation consists of two separate steps:
 
-1. Installation of MuPDF: this involves downloading the source from their website and then compiling it on your machine. Adjust ``setup.py`` to point to the right directories (next step), before you try generating PyMuPDF.
+1. Installation of MuPDF: this involves downloading the source from their website and then compiling it on your machine. Adjust *setup.py* to point to the right directories (next step), before you try generating PyMuPDF.
 
-2. Installation of PyMuPDF: this step is normal Python procedure. Usually you will have to adapt the ``setup.py`` to point to correct ``include`` and ``lib`` directories of your generated MuPDF.
+2. Installation of PyMuPDF: this step is normal Python procedure. Usually you will have to adapt the *setup.py* to point to correct *include* and *lib* directories of your generated MuPDF.
 
 For installation details check out the respective chapter.
 
@@ -38,13 +38,13 @@ There exist several `demo <https://github.com/pymupdf/PyMuPDF/tree/master/demo>`
 
 Interesting **PDF manipulation and generation** functions have been added over time, including metadata and bookmark maintenance, document restructuring, annotation / link handling and document or page creation.
 
-Note on the Name ``fitz``
+Note on the Name *fitz*
 --------------------------
-The standard Python import statement for this library is ``import fitz``. This has a historical reason:
+The standard Python import statement for this library is *import fitz*. This has a historical reason:
 
-The original rendering library for MuPDF was called ``Libart``.
+The original rendering library for MuPDF was called *Libart*.
 
-*"After Artifex Software acquired the MuPDF project, the development focus shifted on writing a new modern graphics library called ``Fitz``. Fitz was originally intended as an R&D project to replace the aging Ghostscript graphics library, but has instead become the rendering engine powering MuPDF."* (Quoted from `Wikipedia <https://en.wikipedia.org/wiki/MuPDF>`_).
+*"After Artifex Software acquired the MuPDF project, the development focus shifted on writing a new modern graphics library called *Fitz*. Fitz was originally intended as an R&D project to replace the aging Ghostscript graphics library, but has instead become the rendering engine powering MuPDF."* (Quoted from `Wikipedia <https://en.wikipedia.org/wiki/MuPDF>`_).
 
 License
 --------

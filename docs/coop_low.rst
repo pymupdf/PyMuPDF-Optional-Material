@@ -41,7 +41,7 @@ Extract Text
 ----------------
 With the same :ref:`TextPage` object from above, we can now immediately use any or all of the 5 text extraction methods.
 
-.. note:: Above, we have created our text page without argument. This leads to a default argument of ``3 = fitz.TEXT_PRESERVE_LIGATURES | fitz.TEXT_PRESERVE_WHITESPACE``, IAW images will **not** be extracted -- see below.
+.. note:: Above, we have created our text page without argument. This leads to a default argument of 3 (ligatures and white-space are preserved), IAW images will **not** be extracted -- see below.
 
 >>> txt  = tp.extractText()                  # plain text format
 >>> json = tp.extractJSON()                  # json format
@@ -55,7 +55,7 @@ Pixmap
 ~~~~~~~
 As explained in the :ref:`Page` chapter:
 
-If you do not need transparency set ``alpha = 0`` when creating pixmaps. This will save 25% memory (if RGB, the most common case) and possibly 5% execution time (depending on the GUI software).
+If you do not need transparency set *alpha = 0* when creating pixmaps. This will save 25% memory (if RGB, the most common case) and possibly 5% execution time (depending on the GUI software).
 
 TextPage
 ~~~~~~~~~

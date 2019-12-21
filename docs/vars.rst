@@ -1,7 +1,7 @@
 ===============================
 Constants and Enumerations
 ===============================
-Constants and enumerations of MuPDF as implemented by PyMuPDF. Each of the following variables is accessible as ``fitz.variable``.
+Constants and enumerations of MuPDF as implemented by PyMuPDF. Each of the following variables is accessible as *fitz.variable*.
 
 
 Constants
@@ -15,19 +15,19 @@ Constants
 
 .. py:data:: csRGB
 
-    Predefined RGB colorspace ``fitz.Colorspace(fitz.CS_RGB)``.
+    Predefined RGB colorspace *fitz.Colorspace(fitz.CS_RGB)*.
 
     :rtype: :ref:`Colorspace`
 
 .. py:data:: csGRAY
 
-    Predefined GRAY colorspace ``fitz.Colorspace(fitz.CS_GRAY)``.
+    Predefined GRAY colorspace *fitz.Colorspace(fitz.CS_GRAY)*.
 
     :rtype: :ref:`Colorspace`
 
 .. py:data:: csCMYK
 
-    Predefined CMYK colorspace ``fitz.Colorspace(fitz.CS_CMYK)``.
+    Predefined CMYK colorspace *fitz.Colorspace(fitz.CS_CMYK)*.
 
     :rtype: :ref:`Colorspace`
 
@@ -63,15 +63,15 @@ Constants
 
 .. py:data:: VersionDate
 
-    ISO timestamp ``YYYY-MM-DD HH:MM:SS`` when these bindings were built.
+    ISO timestamp *YYYY-MM-DD HH:MM:SS* when these bindings were built.
 
     :rtype: string
 
-.. Note:: The docstring of ``fitz`` contains information of the above which can be retrieved like so: ``print(fitz.__doc__)``, and should look like: ``PyMuPDF 1.10.0: Python bindings for the MuPDF 1.10 library, built on 2016-11-30 13:09:13``.
+.. Note:: The docstring of *fitz* contains information of the above which can be retrieved like so: *print(fitz.__doc__)*, and should look like: *PyMuPDF 1.10.0: Python bindings for the MuPDF 1.10 library, built on 2016-11-30 13:09:13*.
 
 .. py:data:: version
 
-    (VersionBind, VersionFitz, timestamp) -- combined version information where ``timestamp`` is the generation point in time formatted as "YYYYMMDDhhmmss".
+    (VersionBind, VersionFitz, timestamp) -- combined version information where *timestamp* is the generation point in time formatted as "YYYYMMDDhhmmss".
 
     :rtype: tuple
 
@@ -212,7 +212,7 @@ Possible values of :attr:`linkDest.kind` (link destination kind). For details co
 Link Destination Flags
 -------------------------
 
-.. Note:: The rightmost byte of this integer is a bit field, so test the truth of these bits with the ``&`` operator.
+.. Note:: The rightmost byte of this integer is a bit field, so test the truth of these bits with the *&* operator.
 
 .. py:data:: LINK_FLAG_L_VALID
 
@@ -322,7 +322,7 @@ See chapter 8.4.5, pp. 615 of the :ref:`AdobeManual` for more details.
 Widget Constants
 -----------------
 
-**Widget types** (``field_type``)::
+**Widget types** (*field_type*)::
 
     PDF_WIDGET_TYPE_UNKNOWN 0
     PDF_WIDGET_TYPE_BUTTON 1
@@ -333,7 +333,7 @@ Widget Constants
     PDF_WIDGET_TYPE_SIGNATURE 6
     PDF_WIDGET_TYPE_TEXT 7
 
-**Text Widget Subtypes** (``text_format``)::
+**Text Widget Subtypes** (*text_format*)::
 
     PDF_WIDGET_TX_FORMAT_NONE 0
     PDF_WIDGET_TX_FORMAT_NUMBER 1
@@ -342,7 +342,7 @@ Widget Constants
     PDF_WIDGET_TX_FORMAT_TIME 4
 
 
-Widget flags (``field_flags``)
+Widget flags (*field_flags*)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Common to all field types**::
 

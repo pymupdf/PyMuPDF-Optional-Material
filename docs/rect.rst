@@ -4,7 +4,7 @@
 Rect
 ==========
 
-``Rect`` represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are treated as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their intuitive meanings -- read on.
+*Rect* represents a rectangle defined by four floating point numbers x0, y0, x1, y1. They are treated as being coordinates of two diagonally opposite points. The first two numbers are regarded as the "top left" corner P\ :sub:`x0,y0` and P\ :sub:`x1,y1` as the "bottom right" one. However, these two properties need not coincide with their intuitive meanings -- read on.
 
 The following remarks are also valid for :ref:`IRect` objects:
 
@@ -14,9 +14,9 @@ The following remarks are also valid for :ref:`IRect` objects:
 
 Hence some useful classification:
 
-* A rectangle is called **finite** if ``x0 <= x1`` and ``y0 <= y1`` (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, **only one** is finite (disregarding degenerate cases). Please take into account, that in MuPDF's coordinate system the y-axis is oriented from **top to bottom**.
+* A rectangle is called **finite** if *x0 <= x1* and *y0 <= y1* (i.e. the bottom right point is "south-eastern" to the top left one), otherwise **infinite**. Of the four alternatives above, **only one** is finite (disregarding degenerate cases). Please take into account, that in MuPDF's coordinate system the y-axis is oriented from **top to bottom**.
 
-* A rectangle is called **empty** if ``x0 = x1`` or ``y0 = y1``, i.e. if its area is zero.
+* A rectangle is called **empty** if *x0 = x1* or *y0 = y1*, i.e. if its area is zero.
 
 .. note:: It sounds like a paradox: a rectangle can be both, infinite **and** empty ...
 
@@ -34,14 +34,14 @@ Hence some useful classification:
 :meth:`Rect.normalize`        makes a rectangle finite
 :meth:`Rect.round`            create smallest :ref:`Irect` containing rectangle
 :meth:`Rect.transform`        transform rectangle with a matrix
-:attr:`Rect.bottom_left`      bottom left point, synonym ``bl``
-:attr:`Rect.bottom_right`     bottom right point, synonym ``br``
+:attr:`Rect.bottom_left`      bottom left point, synonym *bl*
+:attr:`Rect.bottom_right`     bottom right point, synonym *br*
 :attr:`Rect.height`           rectangle height
-:attr:`Rect.irect`            equals result of method ``round()``
+:attr:`Rect.irect`            equals result of method *round()*
 :attr:`Rect.isEmpty`          whether rectangle is empty
 :attr:`Rect.isInfinite`       whether rectangle is infinite
-:attr:`Rect.top_left`         top left point, synonym ``tl``
-:attr:`Rect.top_right`        top_right point, synonym ``tr``
+:attr:`Rect.top_left`         top left point, synonym *tl*
+:attr:`Rect.top_right`        top_right point, synonym *tr*
 :attr:`Rect.quad`             :ref:`Quad` made from rectangle corners
 :attr:`Rect.width`            rectangle width
 :attr:`Rect.x0`               top left corner's X-coordinate
@@ -68,11 +68,11 @@ Hence some useful classification:
 
    .. method:: __init__(self, sequence)
 
-      Overloaded constructors: ``top_left``, ``bottom_right`` stand for :data:`point_like` objects, "sequence" is a Python sequence type of 4 numbers (see :ref:`SequenceTypes`), "rect" means another :data:`rect_like`, while the other parameters mean coordinates.
+      Overloaded constructors: *top_left*, *bottom_right* stand for :data:`point_like` objects, "sequence" is a Python sequence type of 4 numbers (see :ref:`SequenceTypes`), "rect" means another :data:`rect_like`, while the other parameters mean coordinates.
 
       If "rect" is specified, the constructor creates a **new copy** of it.
 
-      Without parameters, the empty rectangle ``Rect(0.0, 0.0, 0.0, 0.0)`` is created.
+      Without parameters, the empty rectangle *Rect(0.0, 0.0, 0.0, 0.0)* is created.
 
    .. method:: round()
 
@@ -81,7 +81,7 @@ Hence some useful classification:
       >>> fitz.Rect(0.5, -0.01, 123.88, 455.123456).round()
       IRect(0, -1, 124, 456)
 
-      1. If the rectangle is **infinite**, the "normalized" (finite) version of it will be taken. The result of this method is always a finite ``IRect``.
+      1. If the rectangle is **infinite**, the "normalized" (finite) version of it will be taken. The result of this method is always a finite *IRect*.
       2. If the rectangle is **empty**, the result is also empty.
       3. **Possible paradox:** The result may be empty, **even if** the rectangle is **not** empty! In such cases, the result obviously does **not** contain the rectangle. This is because MuPDF's algorithm allows for a small tolerance (1e-3). Example:
 
@@ -102,26 +102,26 @@ Hence some useful classification:
       :arg m: The matrix for the transformation.
       :type m: :ref:`Matrix`
 
-      :rtype: ``Rect``
+      :rtype: *Rect*
       :returns: the smallest rectangle that contains the transformed original.
 
    .. method:: intersect(r)
 
-      The intersection (common rectangular area) of the current rectangle and ``r`` is calculated and **replaces the current** rectangle. If either rectangle is empty, the result is also empty. If ``r`` is infinite, this is a no-operation.
+      The intersection (common rectangular area) of the current rectangle and *r* is calculated and **replaces the current** rectangle. If either rectangle is empty, the result is also empty. If *r* is infinite, this is a no-operation.
 
       :arg r: Second rectangle
       :type r: :ref:`Rect`
 
    .. method:: includeRect(r)
 
-      The smallest rectangle containing the current one and ``r`` is calculated and **replaces the current** one. If either rectangle is infinite, the result is also infinite. If one is empty, the other one will be taken as the result.
+      The smallest rectangle containing the current one and *r* is calculated and **replaces the current** one. If either rectangle is infinite, the result is also infinite. If one is empty, the other one will be taken as the result.
 
       :arg r: Second rectangle
       :type r: :ref:`Rect`
 
    .. method:: includePoint(p)
 
-      The smallest rectangle containing the current one and point ``p`` is calculated and **replaces the current** one. **Infinite rectangles remain unchanged.** To create a rectangle containing a series of points, start with (the empty) ``fitz.Rect(p1, p1)`` and successively perform ``includePoint`` operations for the other points.
+      The smallest rectangle containing the current one and point *p* is calculated and **replaces the current** one. **Infinite rectangles remain unchanged.** To create a rectangle containing a series of points, start with (the empty) *fitz.Rect(p1, p1)* and successively perform *includePoint* operations for the other points.
 
       :arg p: Point to include.
       :type p: :ref:`Point`
@@ -130,14 +130,14 @@ Hence some useful classification:
 
    .. method:: getArea([unit])
 
-      Calculate the area of the rectangle and, with no parameter, equals ``abs(rect)``. Like an empty rectangle, the area of an infinite rectangle is also zero. So, at least one of ``fitz.Rect(p1, p2)`` and ``fitz.Rect(p2, p1)`` has a zero area.
+      Calculate the area of the rectangle and, with no parameter, equals *abs(rect)*. Like an empty rectangle, the area of an infinite rectangle is also zero. So, at least one of *fitz.Rect(p1, p2)* and *fitz.Rect(p2, p1)* has a zero area.
 
-      :arg str unit: Specify required unit: respective squares of ``px`` (pixels, default), ``in`` (inches), ``cm`` (centimeters), or ``mm`` (millimeters).
+      :arg str unit: Specify required unit: respective squares of *px* (pixels, default), *in* (inches), *cm* (centimeters), or *mm* (millimeters).
       :rtype: float
 
    .. method:: contains(x)
 
-      Checks whether ``x`` is contained in the rectangle. It may be an ``IRect``, ``Rect``, ``Point`` or number. If ``x`` is an empty rectangle, this is always true. If the rectangle is empty this is always ``False`` for all non-empty rectangles and for all points. If ``x`` is a number, it will be checked against the four components. ``x in rect`` and ``rect.contains(x)`` are equivalent.
+      Checks whether *x* is contained in the rectangle. It may be an *IRect*, *Rect*, *Point* or number. If *x* is an empty rectangle, this is always true. If the rectangle is empty this is always *False* for all non-empty rectangles and for all points. If *x* is a number, it will be checked against the four components. *x in rect* and *rect.contains(x)* are equivalent.
 
       :arg x: the object to check.
       :type x: :ref:`IRect` or :ref:`Rect` or :ref:`Point` or number
@@ -146,7 +146,7 @@ Hence some useful classification:
 
    .. method:: intersects(r)
 
-      Checks whether the rectangle and a :data:`rect_like` "r" contain a common non-empty :ref:`Rect`. This will always be ``False`` if either is infinite or empty.
+      Checks whether the rectangle and a :data:`rect_like` "r" contain a common non-empty :ref:`Rect`. This will always be *False* if either is infinite or empty.
 
       :arg rect_like r: the rectangle to check.
 
@@ -154,7 +154,9 @@ Hence some useful classification:
 
    .. method:: norm()
 
-      .. versionadded:: 1.16.0 Return the Euclidean norm of the rectangle treated as a vector of four numbers.
+      *(New in version 1.16.0)*
+      
+      Return the Euclidean norm of the rectangle treated as a vector of four numbers.
 
    .. method:: normalize()
 
@@ -162,13 +164,13 @@ Hence some useful classification:
 
    .. attribute:: irect
 
-      Equals result of method ``round()``.
+      Equals result of method *round()*.
 
    .. attribute:: top_left
 
    .. attribute:: tl
 
-      Equals ``Point(x0, y0)``.
+      Equals *Point(x0, y0)*.
 
       :type: :ref:`Point`
 
@@ -176,7 +178,7 @@ Hence some useful classification:
 
    .. attribute:: tr
 
-      Equals ``Point(x1, y0)``.
+      Equals *Point(x1, y0)*.
 
       :type: :ref:`Point`
 
@@ -184,7 +186,7 @@ Hence some useful classification:
 
    .. attribute:: bl
 
-      Equals ``Point(x0, y1)``.
+      Equals *Point(x0, y1)*.
 
       :type: :ref:`Point`
 
@@ -192,25 +194,25 @@ Hence some useful classification:
 
    .. attribute:: br
 
-      Equals ``Point(x1, y1)``.
+      Equals *Point(x1, y1)*.
 
       :type: :ref:`Point`
 
    .. attribute:: quad
 
-      The quadrilateral ``Quad(rect.tl, rect.tr, rect.bl, rect.br)``.
+      The quadrilateral *Quad(rect.tl, rect.tr, rect.bl, rect.br)*.
 
       :type: :ref:`Quad`
 
    .. attribute:: width
 
-      Width of the rectangle. Equals ``abs(x1 - x0)``.
+      Width of the rectangle. Equals *abs(x1 - x0)*.
 
       :rtype: float
 
    .. attribute:: height
 
-      Height of the rectangle. Equals ``abs(y1 - y0)``.
+      Height of the rectangle. Equals *abs(y1 - y0)*.
 
       :rtype: float
 
@@ -240,13 +242,13 @@ Hence some useful classification:
 
    .. attribute:: isInfinite
 
-      ``True`` if rectangle is infinite, ``False`` otherwise.
+      *True* if rectangle is infinite, *False* otherwise.
 
       :type: bool
 
    .. attribute:: isEmpty
 
-      ``True`` if rectangle is empty, ``False`` otherwise.
+      *True* if rectangle is empty, *False* otherwise.
 
       :type: bool
 

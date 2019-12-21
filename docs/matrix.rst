@@ -9,7 +9,7 @@ Matrix is a row-major 3x3 matrix used by image transformations in MuPDF (which c
 
 .. |matrix| image:: images/img-matrix.png
 
-Since all points or pixels live in a two-dimensional space, one column vector of that matrix is a constant unit vector, and only the remaining six elements are used for manipulations. These six elements are usually represented by ``[a, b, c, d, e, f]``. Here is how they are positioned in the matrix:
+Since all points or pixels live in a two-dimensional space, one column vector of that matrix is a constant unit vector, and only the remaining six elements are used for manipulations. These six elements are usually represented by *[a, b, c, d, e, f]*. Here is how they are positioned in the matrix:
 
 |matrix|
 
@@ -57,9 +57,9 @@ Please note:
 
       Overloaded constructors.
 
-      Without parameters, the zero matrix ``Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)`` will be created.
+      Without parameters, the zero matrix *Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)* will be created.
 
-      ``zoom-*`` and ``shear-*`` specify zoom or shear values (float) and create a zoom or shear matrix, respectively.
+      *zoom-** and *shear-** specify zoom or shear values (float) and create a zoom or shear matrix, respectively.
 
       For "matrix" a **new copy** of another matrix will be made.
 
@@ -67,47 +67,49 @@ Please note:
 
       A "sequence" must be any Python sequence object with exactly 6 float entries (see :ref:`SequenceTypes`).
 
-      ``fitz.Matrix(1, 1)``, ``fitz.Matrix(0.0)`` and ``fitz.Matrix(fitz.Identity)`` create modifyable versions of the :ref:`Identity` matrix, which looks like ``[1, 0, 0, 1, 0, 0]``.
+      *fitz.Matrix(1, 1)*, *fitz.Matrix(0.0)* and *fitz.Matrix(fitz.Identity)* create modifyable versions of the :ref:`Identity` matrix, which looks like *[1, 0, 0, 1, 0, 0]*.
 
    .. method:: norm()
 
-      .. versionadded:: 1.16.0 Return the Euclidean norm of the matrix as a vector.
+      *(New in version 1.16.0)*
+      
+      Return the Euclidean norm of the matrix as a vector.
 
    .. method:: preRotate(deg)
 
-      Modify the matrix to perform a counter-clockwise rotation for positive ``deg`` degrees, else clockwise. The matrix elements of an identity matrix will change in the following way:
+      Modify the matrix to perform a counter-clockwise rotation for positive *deg* degrees, else clockwise. The matrix elements of an identity matrix will change in the following way:
 
-      ``[1, 0, 0, 1, 0, 0] -> [cos(deg), sin(deg), -sin(deg), cos(deg), 0, 0]``.
+      *[1, 0, 0, 1, 0, 0] -> [cos(deg), sin(deg), -sin(deg), cos(deg), 0, 0]*.
 
       :arg float deg: The rotation angle in degrees (use conventional notation based on Pi = 180 degrees).
 
    .. method:: preScale(sx, sy)
 
-      Modify the matrix to scale by the zoom factors sx and sy. Has effects on attributes ``a`` thru ``d`` only: ``[a, b, c, d, e, f] -> [a*sx, b*sx, c*sy, d*sy, e, f]``.
+      Modify the matrix to scale by the zoom factors sx and sy. Has effects on attributes *a* thru *d* only: *[a, b, c, d, e, f] -> [a*sx, b*sx, c*sy, d*sy, e, f]*.
 
-      :arg float sx: Zoom factor in X direction. For the effect see description of attribute ``a``.
+      :arg float sx: Zoom factor in X direction. For the effect see description of attribute *a*.
 
-      :arg float sy: Zoom factor in Y direction. For the effect see description of attribute ``d``.
+      :arg float sy: Zoom factor in Y direction. For the effect see description of attribute *d*.
 
    .. method:: preShear(sx, sy)
 
-      Modify the matrix to perform a shearing, i.e. transformation of rectangles into parallelograms (rhomboids). Has effects on attributes ``a`` thru ``d`` only: ``[a, b, c, d, e, f] -> [c*sy, d*sy, a*sx, b*sx, e, f]``.
+      Modify the matrix to perform a shearing, i.e. transformation of rectangles into parallelograms (rhomboids). Has effects on attributes *a* thru *d* only: *[a, b, c, d, e, f] -> [c*sy, d*sy, a*sx, b*sx, e, f]*.
 
-      :arg float sx: Shearing effect in X direction. See attribute ``c``.
+      :arg float sx: Shearing effect in X direction. See attribute *c*.
 
-      :arg float sy: Shearing effect in Y direction. See attribute ``b``.
+      :arg float sy: Shearing effect in Y direction. See attribute *b*.
 
    .. method:: preTranslate(tx, ty)
 
-      Modify the matrix to perform a shifting / translation operation along the x and / or y axis. Has effects on attributes ``e`` and ``f`` only: ``[a, b, c, d, e, f] -> [a, b, c, d, tx*a + ty*c, tx*b + ty*d]``.
+      Modify the matrix to perform a shifting / translation operation along the x and / or y axis. Has effects on attributes *e* and *f* only: *[a, b, c, d, e, f] -> [a, b, c, d, tx*a + ty*c, tx*b + ty*d]*.
 
-      :arg float tx: Translation effect in X direction. See attribute ``e``.
+      :arg float tx: Translation effect in X direction. See attribute *e*.
 
-      :arg float ty: Translation effect in Y direction. See attribute ``f``.
+      :arg float ty: Translation effect in Y direction. See attribute *f*.
 
    .. method:: concat(m1, m2)
 
-      Calculate the matrix product ``m1 * m2`` and store the result in the current matrix. Any of ``m1`` or ``m2`` may be the current matrix. Be aware that matrix multiplication is not commutative. So the sequence of ``m1``, ``m2`` is important.
+      Calculate the matrix product *m1 * m2* and store the result in the current matrix. Any of *m1* or *m2* may be the current matrix. Be aware that matrix multiplication is not commutative. So the sequence of *m1*, *m2* is important.
 
       :arg m1: First (left) matrix.
       :type m1: :ref:`Matrix`
@@ -117,7 +119,7 @@ Please note:
 
    .. method:: invert(m = None)
 
-      Calculate the matrix inverse of ``m`` and store the result in the current matrix. Returns ``1`` if ``m`` is not invertible ("degenerate"). In this case the current matrix **will not change**. Returns ``0`` if ``m`` is invertible, and the current matrix is replaced with the inverted ``m``.
+      Calculate the matrix inverse of *m* and store the result in the current matrix. Returns *1* if *m* is not invertible ("degenerate"). In this case the current matrix **will not change**. Returns *0* if *m* is invertible, and the current matrix is replaced with the inverted *m*.
 
       :arg m: Matrix to be inverted. If not provided, the current matrix will be used.
       :type m: :ref:`Matrix`
@@ -132,13 +134,13 @@ Please note:
 
    .. attribute:: b
 
-      Causes a shearing effect: each ``Point(x, y)`` will become ``Point(x, y - b*x)``. Therefore, looking from left to right, e.g. horizontal lines will be "tilt" -- downwards if b > 0, upwards otherwise (b is the tangens of the tilting angle).
+      Causes a shearing effect: each *Point(x, y)* will become *Point(x, y - b*x)*. Therefore, looking from left to right, e.g. horizontal lines will be "tilt" -- downwards if b > 0, upwards otherwise (b is the tangens of the tilting angle).
 
       :type: float
 
    .. attribute:: c
 
-      Causes a shearing effect: each ``Point(x, y)`` will become ``Point(x - c*y, y)``. Therefore, looking upwards, vertical lines will be "tilt" -- to the left if c > 0, to the right otherwise (c ist the tangens of the tilting angle).
+      Causes a shearing effect: each *Point(x, y)* will become *Point(x - c*y, y)*. Therefore, looking upwards, vertical lines will be "tilt" -- to the left if c > 0, to the right otherwise (c ist the tangens of the tilting angle).
 
       :type: float
 
@@ -150,13 +152,13 @@ Please note:
 
    .. attribute:: e
 
-      Causes a horizontal shift effect: Each ``Point(x, y)`` will become ``Point(x + e, y)``. Positive (negative) values of ``e`` will shift right (left).
+      Causes a horizontal shift effect: Each *Point(x, y)* will become *Point(x + e, y)*. Positive (negative) values of *e* will shift right (left).
 
       :type: float
 
    .. attribute:: f
 
-      Causes a vertical shift effect: Each ``Point(x, y)`` will become ``Point(x, y - f)``. Positive (negative) values of ``f`` will shift down (up).
+      Causes a vertical shift effect: Each *Point(x, y)* will become *Point(x, y - f)*. Positive (negative) values of *f* will shift down (up).
 
       :type: float
 
@@ -194,13 +196,13 @@ Shifting
 ------------
 .. |e100| image:: images/img-e-is-100.png
 
-We transform it with a matrix where ``e = 100`` (right shift by 100 pixels).
+We transform it with a matrix where *e = 100* (right shift by 100 pixels).
 
 |e100|
 
 .. |f100| image:: images/img-f-is-100.png
 
-Next we do a down shift by 100 pixels: ``f = 100``.
+Next we do a down shift by 100 pixels: *f = 100*.
 
 |f100|
 
@@ -208,13 +210,13 @@ Flipping
 --------------
 .. |aminus1| image:: images/img-a-is--1.png
 
-Flip the page left-right (``a = -1``).
+Flip the page left-right (*a = -1*).
 
 |aminus1|
 
 .. |dminus1| image:: images/img-d-is--1.png
 
-Flip up-down (``d = -1``).
+Flip up-down (*d = -1*).
 
 |dminus1|
 
@@ -222,13 +224,13 @@ Shearing
 ----------------
 .. |bnull5| image:: images/img-b-is-0.5.png
 
-First a shear in Y direction (``b = 0.5``).
+First a shear in Y direction (*b = 0.5*).
 
 |bnull5|
 
 .. |cnull5| image:: images/img-c-is-0.5.png
 
-Second a shear in X direction (``c = 0.5``).
+Second a shear in X direction (*c = 0.5*).
 
 |cnull5|
 
@@ -236,6 +238,6 @@ Rotating
 ---------
 .. |rot60| image:: images/img-rot-60.png
 
-Finally a rotation by 30 clockwise degrees (``preRotate(-30)``).
+Finally a rotation by 30 clockwise degrees (*preRotate(-30)*).
 
 |rot60|

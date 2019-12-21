@@ -17,11 +17,11 @@ In addition to embedded files, PDF 1.7 adds *collections* to its support range. 
 
 MuPDF Support
 --------------
-After adding initial support for collections (portfolios) and ``/EmbeddedFiles`` in MuPDF version 1.11, this support was dropped again in version 1.15.
+After adding initial support for collections (portfolios) and */EmbeddedFiles* in MuPDF version 1.11, this support was dropped again in version 1.15.
 
-As a consequence, the cli utility ``mutool`` no longer offers access to embedded files.
+As a consequence, the cli utility *mutool* no longer offers access to embedded files.
 
-PyMuPDF -- having implemented an ``/EmbeddedFiles`` API in response in its version 1.11.0 -- was therefore forced to change gears starting with its version 1.16.0 (we never published a MuPDF v1.15.x compatible PyMuPDF).
+PyMuPDF -- having implemented an */EmbeddedFiles* API in response in its version 1.11.0 -- was therefore forced to change gears starting with its version 1.16.0 (we never published a MuPDF v1.15.x compatible PyMuPDF).
 
 We are now maintaining our own code basis supporting embedded files. This code makes use of basic MuPDF dictionary and array functions only.
 

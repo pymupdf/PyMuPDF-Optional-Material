@@ -28,7 +28,7 @@ Class representing the `dest` property of an outline entry or a link. Describes 
 
    .. attribute:: dest
 
-      Target destination name if :attr:`linkDest.kind` is :data:`LINK_GOTOR` and :attr:`linkDest.page` is ``-1``.
+      Target destination name if :attr:`linkDest.kind` is :data:`LINK_GOTOR` and :attr:`linkDest.page` is *-1*.
 
       :type: str
 
@@ -70,7 +70,7 @@ Class representing the `dest` property of an outline entry or a link. Describes 
 
    .. attribute:: named
 
-      This destination refers to some named action to perform (e.g. a javascript, see :ref:`AdobeManual`). Standard actions provided are ``NextPage``, ``PrevPage``, ``FirstPage``,  and ``LastPage``.
+      This destination refers to some named action to perform (e.g. a javascript, see :ref:`AdobeManual`). Standard actions provided are *NextPage*, *PrevPage*, *FirstPage*,  and *LastPage*.
 
       :type: str
 
@@ -82,7 +82,7 @@ Class representing the `dest` property of an outline entry or a link. Describes 
 
    .. attribute:: page
 
-      The page number (in this or the target document) this destination points to. Only set if :attr:`linkDest.kind` is :data:`LINK_GOTOR` or :data:`LINK_GOTO`. May be ``-1`` if :attr:`linkDest.kind` is :data:`LINK_GOTOR`. In this case :attr:`linkDest.dest` contains the **name** of a destination in the target document.
+      The page number (in this or the target document) this destination points to. Only set if :attr:`linkDest.kind` is :data:`LINK_GOTOR` or :data:`LINK_GOTO`. May be *-1* if :attr:`linkDest.kind` is :data:`LINK_GOTOR`. In this case :attr:`linkDest.dest` contains the **name** of a destination in the target document.
 
       :type: int
 

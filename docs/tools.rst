@@ -3,7 +3,7 @@
 Tools
 ================
 
-This class is a collection of utility methods and attributes, mainly around memory management. To simplify and speed up its use, it is automatically instantiated under the name ``TOOLS`` when PyMuPDF is imported.
+This class is a collection of utility methods and attributes, mainly around memory management. To simplify and speed up its use, it is automatically instantiated under the name *TOOLS* when PyMuPDF is imported.
 
 ================================== =================================================
 **Method / Attribute**             **Description**
@@ -29,7 +29,7 @@ This class is a collection of utility methods and attributes, mainly around memo
       .. note:: MuPDF has dropped support for this in v1.14.0, so we have re-implemented a similar function with the following differences:
 
             * It is not part of MuPDF's global context and not threadsafe (because we do not support threads in PyMuPDF yet).
-            * It is implemented as ``int``. This means that the maximum number is ``sys.maxsize``. Should this number ever be exceeded, the counter is reset to 1.
+            * It is implemented as *int*. This means that the maximum number is *sys.maxsize*. Should this number ever be exceeded, the counter is reset to 1.
 
       :rtype: int
       :returns: a unique positive integer.
@@ -45,23 +45,29 @@ This class is a collection of utility methods and attributes, mainly around memo
 
    .. method:: reset_mupdf_warnings()
 
-      .. versionadded:: 1.16.0 Empty MuPDF warnings message buffer.
+      *(New in version 1.16.0)*
+      
+      Empty MuPDF warnings message buffer.
 
 
    .. method:: reset_mupdf_display_errors(value=None)
 
-      .. versionadded:: 1.16.8 Show and set whether MuPDF errors should be displayed.
+      *(New in version 1.16.8)*
+      
+      Show and set whether MuPDF errors should be displayed.
 
-      :arg bool value: if not a bool, the current setting is returned. If true, MuPDF errors will be shown on ``sys.stderr``, otherwise suppressed. In any case, messages continue to be stored in the warnings store. Changes remain in effect. Upon import of PyMuPDF this value is ``True``.
+      :arg bool value: if not a bool, the current setting is returned. If true, MuPDF errors will be shown on *sys.stderr*, otherwise suppressed. In any case, messages continue to be stored in the warnings store. Changes remain in effect. Upon import of PyMuPDF this value is *True*.
 
-      :returns: ``True`` or ``False``
+      :returns: *True* or *False*
 
 
    .. method:: mupdf_warnings(reset=True)
 
-      .. versionadded:: 1.16.0 Return all stored MuPDF messages as a string with interspersed ``\n``.
+      *(New in version 1.16.0)*
+      
+      Return all stored MuPDF messages as a string with interspersed *\n*.
 
-      :arg bool reset: .. versionadded:: 1.16.7 whether to automatically empty the store.
+      :arg bool reset: *(new in version 1.16.7)* whether to automatically empty the store.
 
 
    .. attribute:: fitz_config
@@ -144,39 +150,42 @@ This class is a collection of utility methods and attributes, mainly around memo
 Example Session
 ----------------
 
->>> import fitz
-# print the maximum and current cache sizes
->>> fitz.TOOLS.store_maxsize
-268435456
->>> fitz.TOOLS.store_size
-0
->>> doc = fitz.open("demo1.pdf")
-# pixmap creation puts lots of object in cache (text, images, fonts),
-# apart from the pixmap itself
->>> pix = doc[0].getPixmap(alpha=False)
->>> fitz.TOOLS.store_size
-454519
-# release (at least) 50% of the storage
->>> fitz.TOOLS.store_shrink(50)
-13471
->>> fitz.TOOLS.store_size
-13471
-# get a few unique numbers
->>> fitz.TOOLS.gen_id()
-1
->>> fitz.TOOLS.gen_id()
-2
->>> fitz.TOOLS.gen_id()
-3
-# close document and see how much cache is still in use
->>> doc.close()
->>> fitz.TOOLS.store_size
-0
->>>
+.. highlight:: python
+
+::
+   >>> import fitz
+   # print the maximum and current cache sizes
+   >>> fitz.TOOLS.store_maxsize
+   268435456
+   >>> fitz.TOOLS.store_size
+   0
+   >>> doc = fitz.open("demo1.pdf")
+   # pixmap creation puts lots of object in cache (text, images, fonts),
+   # apart from the pixmap itself
+   >>> pix = doc[0].getPixmap(alpha=False)
+   >>> fitz.TOOLS.store_size
+   454519
+   # release (at least) 50% of the storage
+   >>> fitz.TOOLS.store_shrink(50)
+   13471
+   >>> fitz.TOOLS.store_size
+   13471
+   # get a few unique numbers
+   >>> fitz.TOOLS.gen_id()
+   1
+   >>> fitz.TOOLS.gen_id()
+   2
+   >>> fitz.TOOLS.gen_id()
+   3
+   # close document and see how much cache is still in use
+   >>> doc.close()
+   >>> fitz.TOOLS.store_size
+   0
+   >>>
 
 
 .. rubric:: Footnotes
 
-.. [#f1] This memory area is internally used by MuPDF, and it serves as a cache for objects that have already been read and interpreted, thus improving performance. The most bulky object types are images and also fonts. When an application starts up the MuPDF library (in our case this happens as part of ``import fitz``), it must specify a maximum size for this area. PyMuPDF's uses the default value (256 MB) to limit memory consumption. Use the methods here to control or investigate store usage. For example: even after a document has been closed and all related objects have been deleted, the store usage may still not drop down to zero. So you might want to enforce that before opening another document.
+.. [#f1] This memory area is internally used by MuPDF, and it serves as a cache for objects that have already been read and interpreted, thus improving performance. The most bulky object types are images and also fonts. When an application starts up the MuPDF library (in our case this happens as part of *import fitz*), it must specify a maximum size for this area. PyMuPDF's uses the default value (256 MB) to limit memory consumption. Use the methods here to control or investigate store usage. For example: even after a document has been closed and all related objects have been deleted, the store usage may still not drop down to zero. So you might want to enforce that before opening another document.
 
-.. [#f2] Optionally, all dynamic management of memory can be done using Python C-level calls. MuPDF offers a hook to insert user-preferred memory managers. We are using option this for Python version 3 since PyMuPDF v1.13.19. At the same time, all memory allocation in PyMuPDF itself is also routed to Python (i.e. no more direct ``malloc()`` calls in the code). We have seen improved memory usage and slightly reduced runtimes with this option set. If you want to change this, you can set ``#define JM_MEMORY 0`` (uses standard C malloc, or 1 for Python allocation )in file ``fitz.i`` and then generate PyMuPDF.
+.. [#f2] Optionally, all dynamic management of memory can be done using Python C-level calls. MuPDF offers a hook to insert user-preferred memory managers. We are using option this for Python version 3 since PyMuPDF v1.13.19. At the same time, all memory allocation in PyMuPDF itself is also routed to Python (i.e. no more direct *malloc()* calls in the code). We have seen improved memory usage and slightly reduced runtimes with this option set. If you want to change this, you can set *#define JM_MEMORY 0* (uses standard C malloc, or 1 for Python allocation )in file *fitz.i* and then generate PyMuPDF.

@@ -32,7 +32,7 @@ Glossary
 
 .. data:: resources
 
-        A :data:`dictionary` containing references to any resources (like images or fonts) required by a PDF :data:`page` (required, inheritable, :ref:`AdobeManual` p. 145) and certain other objects (Form XObjects). This dictionary appears as a sub-dictionary in the object definition under the key ``/Resources``. Being an inheritable object type, there may exist "parent" resources for all pages or certain subsets of pages.
+        A :data:`dictionary` containing references to any resources (like images or fonts) required by a PDF :data:`page` (required, inheritable, :ref:`AdobeManual` p. 145) and certain other objects (Form XObjects). This dictionary appears as a sub-dictionary in the object definition under the key */Resources*. Being an inheritable object type, there may exist "parent" resources for all pages or certain subsets of pages.
 
 .. data:: dictionary
 
@@ -57,9 +57,9 @@ Glossary
             /Annots[55 0 R]                   % value: array, one entry (indirect object)
             >>
 
-        ``/Contents``, ``/Type``, ``/MediaBox``, etc. are **keys**, ``40 0 R``, ``/Page``, ``[0 0 595.32 841.92]``, etc. are the respective **values**. The strings ``<<`` and ``>>`` are used to enclose object definitions.
+        */Contents*, */Type*, */MediaBox*, etc. are **keys**, *40 0 R*, */Page*, *[0 0 595.32 841.92]*, etc. are the respective **values**. The strings *<<* and *>>* are used to enclose object definitions.
 
-        This example also shows the syntax of **nested** dictionary values: ``/Resources`` has an object as its value, which in turn is a dictionary with keys like ``/ExtGState`` (with the value ``<</R7 26 0 R>>``, which is another dictionary), etc.
+        This example also shows the syntax of **nested** dictionary values: */Resources* has an object as its value, which in turn is a dictionary with keys like */ExtGState* (with the value *<</R7 26 0 R>>*, which is another dictionary), etc.
 
 .. data:: page
 
@@ -98,5 +98,5 @@ Glossary
 
 .. data:: xref
 
-        Abbreviation for cross-reference number: this is an integer unique identification for objects in a PDF. There exists a cross-reference table (which may physically consist of several separate segments) in each PDF, which stores the relative position of each object for quick lookup. The cross-reference table is one entry longer than the number of existing object: item zero is reserved and must not be used in any way. Many PyMuPDF classes have an ``xref`` attribute (which is zero for non-PDFs), and one can find out the total number of objects in a PDF via :meth:`Document.xrefLength` ``- 1``.
+        Abbreviation for cross-reference number: this is an integer unique identification for objects in a PDF. There exists a cross-reference table (which may physically consist of several separate segments) in each PDF, which stores the relative position of each object for quick lookup. The cross-reference table is one entry longer than the number of existing object: item zero is reserved and must not be used in any way. Many PyMuPDF classes have an *xref* attribute (which is zero for non-PDFs), and one can find out the total number of objects in a PDF via :meth:`Document.xrefLength` *- 1*.
 

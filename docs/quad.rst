@@ -46,7 +46,7 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
       If "quad" is specified, the constructor creates a **new copy** of it.
 
-      Without parameters, a quad consisting of 4 copies of ``Point(0, 0)`` is created.
+      Without parameters, a quad consisting of 4 copies of *Point(0, 0)* is created.
 
 
    .. method:: transform(matrix)
@@ -89,7 +89,9 @@ Quads can **be obtained** as results of text search methods (:meth:`Page.searchF
 
    .. attribute:: isConvex
 
-      .. versionadded:: 1.16.1 True if all lines are contained in the quad which connect two points of the quad. 
+      *(New in version 1.16.1)*
+      
+      True if all lines are contained in the quad which connect two points of the quad. 
 
       :type: bool
 
