@@ -31,7 +31,7 @@ The script works as a command line tool which expects the filename being supplie
         pix = page.getPixmap(alpha = False)  # render page to an image
         pix.writePNG("page-%i.png" % page.number)  # store image as a PNG
 
-The script directory will now contain PNG image files named *page-0.png*, *page-1.png*, etc. Pictures have the dimension of their pages, e.g. 596 x 842 pixels for an A4 portrait sized page. They will have a resolution of 96 dpi in x and y dimension and have no transparency. You can change all that -- for how to do do this, read the next sections.
+The script directory will now contain PNG image files named *page-0.png*, *page-1.png*, etc. Pictures have the dimension of their pages, e.g. 595 x 842 pixels for an A4 portrait sized page. They will have a resolution of 72 dpi in x and y dimension and have no transparency. You can change all that -- for how to do do this, read the next sections.
 
 ----------
 
