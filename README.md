@@ -11,9 +11,7 @@ Please note, that we no longer provide binary files in zip format. If you prefer
 ## Directory ``doc``
 Contains pre-generated documentation files:
 
-* Zipped HTML ``html.zip``. Unzip it and start browsing with ``index.html``.
 * Windows help file ``PyMuPDF.chm``.
-* PDF-based help file ``PyMuPDF.pdf``.
 
 This material is subject to copyright of (c) 2016-2020 Jorj X. McKie.
 
