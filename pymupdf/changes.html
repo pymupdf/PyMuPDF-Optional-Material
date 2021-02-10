@@ -1,0 +1,1193 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Change Logs &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Deprecated Names" href="znames.html" />
+    <link rel="prev" title="Appendix 4: Assorted Technical Information" href="app4.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="znames.html" title="Deprecated Names"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="app4.html" title="Appendix 4: Assorted Technical Information"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Change Logs</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="change-logs">
+<h1>Change Logs<a class="headerlink" href="#change-logs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="changes-in-version-1-18-9">
+<h2>Changes in Version 1.18.9<a class="headerlink" href="#changes-in-version-1-18-9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/885">#885</a>. Pixmap creation now also works with filenames given as <code class="docutils literal notranslate"><span class="pre">pathlib.Paths</span></code>.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#Document.subset_fonts" title="Document.subset_fonts"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.subset_fonts()</span></code></a>: Now only the subsettable fonts are replaced by smaller binaries. Text is <strong>not rewritten</strong> any more and should therefore <strong>retain all its properties</strong> – like being hidden or controlled by Optional Content rules.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-18-8">
+<h2>Changes in Version 1.18.8<a class="headerlink" href="#changes-in-version-1-18-8" title="Permalink to this headline">¶</a></h2>
+<p>This is a bug fix version only. We are publishing early because of the potentially widely used functions.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/881">#881</a>. Fixed a memory leak in <a class="reference internal" href="page.html#Page.insert_image" title="Page.insert_image"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insert_image()</span></code></a> when inserting images from files or memory.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/878">#878</a>. <code class="docutils literal notranslate"><span class="pre">pathlib.Path</span></code> objects should now correctly handle file path hierarchies.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-18-7">
+<h2>Changes in Version 1.18.7<a class="headerlink" href="#changes-in-version-1-18-7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> an experimental <a class="reference internal" href="document.html#Document.subset_fonts" title="Document.subset_fonts"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.subset_fonts()</span></code></a> which reduces the size of eligible fonts based on their use by text in the PDF. Implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/discussions/855">#855</a>.</p></li>
+<li><p><strong>Implemented</strong> request <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/pull/870">#870</a>: <a class="reference internal" href="document.html#Document.convert_to_pdf" title="Document.convert_to_pdf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.convert_to_pdf()</span></code></a> now also supports PDF documents.</p></li>
+<li><p><strong>Renamed</strong> <code class="docutils literal notranslate"><span class="pre">Document.write</span></code> to <a class="reference internal" href="document.html#Document.tobytes" title="Document.tobytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.tobytes()</span></code></a> for greater clarity. But the deprecated name remains available for some time.</p></li>
+<li><p><strong>Implemented</strong> request <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/Discussions/843">#843</a>: <a class="reference internal" href="document.html#Document.tobytes" title="Document.tobytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.tobytes()</span></code></a> now supports linearized PDF output. <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a> now also supports writing to Python <strong>file objects</strong>. In addition, the open function now also supports Python file objects.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/844">#844</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/838">#838</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/823">#823</a>. More logic for better support of OCR-ed text output (Tesseract, ABBYY).</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/818">#818</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/814">#814</a>.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="document.html#Document.get_page_labels" title="Document.get_page_labels"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_page_labels()</span></code></a> which returns a list of page label definitions of a PDF.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="document.html#Document.has_annots" title="Document.has_annots"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.has_annots()</span></code></a> and <a class="reference internal" href="document.html#Document.has_links" title="Document.has_links"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.has_links()</span></code></a> to check whether these object types are present anywhere in a PDF.</p></li>
+<li><p><strong>Added</strong> expert low-level functions to simplify inquiry and modification of PDF object sources: <a class="reference internal" href="document.html#Document.xref_get_keys" title="Document.xref_get_keys"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xref_get_keys()</span></code></a> lists the keys of object <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a>, <a class="reference internal" href="document.html#Document.xref_get_key" title="Document.xref_get_key"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xref_get_key()</span></code></a> returns type and content of a key, and <a class="reference internal" href="document.html#Document.xref_set_key" title="Document.xref_set_key"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xref_set_key()</span></code></a> modifies the key’s value.</p></li>
+<li><p><strong>Added</strong> parameter <code class="docutils literal notranslate"><span class="pre">thumbnails</span></code> to <a class="reference internal" href="document.html#Document.scrub" title="Document.scrub"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.scrub()</span></code></a> to also allow removing page thumbnail images.</p></li>
+<li><p><strong>Improved</strong> documentation for how to add valid text marker annotations for non-horizontal text.</p></li>
+</ul>
+<p>We continued the process of renaming methods and properties from <em>“mixedCase”</em> to <em>“snake_case”</em>. Documentation usually mentions the new names only, but old, deprecated names remain available for some time.</p>
+</div>
+<div class="section" id="changes-in-version-1-18-6">
+<h2>Changes in Version 1.18.6<a class="headerlink" href="#changes-in-version-1-18-6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/812">#812</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/793">#793</a>. Invalid document metadata previously prevented opening some documents at all. This error has been removed.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/792">#792</a>. Text search and text extraction will make no rectangle containment checks at all if the default <code class="docutils literal notranslate"><span class="pre">clip=None</span></code> is used.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/785">#785</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/780">#780</a>. Corrected a parameter check error.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/779">#779</a>. Fixed typo</p></li>
+<li><p><strong>Added</strong> an option to set the desired line height for text boxes. Implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/804">#804</a>.</p></li>
+<li><p><strong>Changed</strong> text position retrieval to better cope with Tesseract’s glyphless font. Implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/803">#803</a>.</p></li>
+<li><p><strong>Added</strong> an option to choose the prefix of new annotations, fields and links for providing unique annotation ids. Implements request <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/807">#807</a>.</p></li>
+<li><p><strong>Added</strong> getting and setting color and text properties for Table of Contents items for PDFs. Implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/779">#779</a>.</p></li>
+<li><p><strong>Added</strong> PDF page label handling: <a class="reference internal" href="page.html#Page.get_label" title="Page.get_label"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.get_label()</span></code></a> returns the page label, <a class="reference internal" href="document.html#Document.get_page_numbers" title="Document.get_page_numbers"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_page_numbers()</span></code></a> return all page numbers having a specified label, and <a class="reference internal" href="document.html#Document.set_page_labels" title="Document.set_page_labels"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.set_page_labels()</span></code></a> adds or updates a PDF’s page label definition.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This version introduces <strong>Python type hinting</strong>. The goal is to provide each parameter and the return value of all functions and methods with type information. This still is work in progress although the majority of functions has already been handled.</p>
+</div>
+</div>
+<div class="section" id="changes-in-version-1-18-5">
+<h2>Changes in Version 1.18.5<a class="headerlink" href="#changes-in-version-1-18-5" title="Permalink to this headline">¶</a></h2>
+<p>Apart from several fixes, this version also focusses on several minor, but important feature improvements. Among the latter is a more precise computation of proper line heights and insertion points for writing / inserting text. As opposed to using font-agnostic constants, these values are now taken from the font’s properties.</p>
+<p>Also note that this is the first version which does no longer provide pregenerated wheels for Python versions older than 3.6. PIP also discontinues support for these by end of this year 2020.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/771">#771</a>. By using “small glyph heights” option, the full page text can be extracted.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/768">#768</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/750">#750</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/739">#739</a>. The “dict”, “rawdict” and corresponding JSON output variants now have two new <em>span</em> keys: <code class="docutils literal notranslate"><span class="pre">&quot;ascender&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;descender&quot;</span></code>. These floats represent special font properties which can be used to compute bboxes of spans or characters of <strong>exactly fontsize height</strong> (as opposed to the default line height). An example algorithm is shown in section “Span Dictionary” <a class="reference external" href="https://pymupdf.readthedocs.io/en/latest/textpage.html#dictionary-structure-of-extractdict-and-extractrawdict">here</a>. Also improved the detection and correction of ill-specified ascender / descender values encountered in some fonts.</p></li>
+<li><p><strong>Added</strong> a new, experimental <a class="reference internal" href="tools.html#Tools.set_small_glyph_heights" title="Tools.set_small_glyph_heights"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.set_small_glyph_heights()</span></code></a> – also in response to issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/739">#739</a>. This method sets or unsets a global parameter to <strong>always compute bboxes with fontsize height</strong>. If “on”, text searching and all text extractions will returned rectangles, bboxes and quads with a smaller height.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/728">#728</a>.</p></li>
+<li><p><strong>Changed</strong> fill color logic of ‘Polyline’ annotations: this parameter now only pertains to line end symbols – the annotation itself can no longer have a fill color. Also addresses issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/727">#727</a>.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getImageBbox()</span></code> to also compute the bbox if the image is contained in an XObject.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insertTextbox()</span></code>, resp. <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertTextbox()</span></code>, resp. <code class="xref py py-meth docutils literal notranslate"><span class="pre">TextWriter.fillTextbox()</span></code> to respect font’s properties “ascender” / “descender” when computing line height and insertion point. This should no longer lead to line overlaps for multi-line output. These methods used to ignore font specifics and used constant values instead.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-18-4">
+<h2>Changes in Version 1.18.4<a class="headerlink" href="#changes-in-version-1-18-4" title="Permalink to this headline">¶</a></h2>
+<p>This version adds several features to support PDF Optional Content. Among other things, this includes OCMDs (Optional Content Membership Dictionaries) with the full scope of <em>“visibility expressions”</em> (PDF key <code class="docutils literal notranslate"><span class="pre">/VE</span></code>), text insertions (including the <a class="reference internal" href="textwriter.html#textwriter"><span class="std std-ref">TextWriter</span></a> class) and drawings.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/727">#727</a>. Freetext annotations now support an uncolored rectangle when <code class="docutils literal notranslate"><span class="pre">fill_color=None</span></code>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/726">#726</a>. UTF-8 encoding errors are now handled for HTML / XML <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> output.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/724">#724</a>. Empty values are no longer stored in the PDF /Info metadata dictionary.</p></li>
+<li><p><strong>Added</strong> new methods <a class="reference internal" href="document.html#Document.set_oc" title="Document.set_oc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.set_oc()</span></code></a> and <a class="reference internal" href="document.html#Document.get_oc" title="Document.get_oc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_oc()</span></code></a> to set or get optional content references for <strong>existing</strong> image and form XObjects. These methods are similar to the same-named methods of <a class="reference internal" href="annot.html#annot"><span class="std std-ref">Annot</span></a>.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="document.html#Document.set_ocmd" title="Document.set_ocmd"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.set_ocmd()</span></code></a>, <a class="reference internal" href="document.html#Document.get_ocmd" title="Document.get_ocmd"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_ocmd()</span></code></a> for handling OCMDs.</p></li>
+<li><p><strong>Added</strong> <strong>Optional Content</strong> support for text insertion and drawing.</p></li>
+<li><p><strong>Added</strong> new method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.deleteWidget()</span></code>, which deletes a form field from a page. This is analogous to deleting annotations.</p></li>
+<li><p><strong>Added</strong> support for Popup annotations. This includes defining the Popup rectangle and setting the Popup to open or closed. Methods / attributes <a class="reference internal" href="annot.html#Annot.set_popup" title="Annot.set_popup"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.set_popup()</span></code></a>, <a class="reference internal" href="annot.html#Annot.set_open" title="Annot.set_open"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.set_open()</span></code></a>, <a class="reference internal" href="annot.html#Annot.has_popup" title="Annot.has_popup"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.has_popup</span></code></a>, <a class="reference internal" href="annot.html#Annot.is_open" title="Annot.is_open"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.is_open</span></code></a>, <a class="reference internal" href="annot.html#Annot.popup_rect" title="Annot.popup_rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.popup_rect</span></code></a>, <a class="reference internal" href="annot.html#Annot.popup_xref" title="Annot.popup_xref"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.popup_xref</span></code></a>.</p></li>
+</ul>
+<p>Other changes:</p>
+<ul>
+<li><p>The <strong>naming of methods and attributes</strong> in PyMuPDF is far from being satisfactory: we have <em>CamelCases</em>, <em>mixedCases</em> and <em>lower_case_with_underscores</em> all over the place. With the <a class="reference internal" href="annot.html#annot"><span class="std std-ref">Annot</span></a> as the first candidate, we have started an activity to clean this up step by step, converting to lower case with underscores for methods and attributes while keeping UPPERCASE for the constants.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Old names will remain available to prevent code breaks, but they will no longer be mentioned in the documentation.</p></li>
+<li><p>New methods and attributes of all classes will be named according to the new standard.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-18-3">
+<h2>Changes in Version 1.18.3<a class="headerlink" href="#changes-in-version-1-18-3" title="Permalink to this headline">¶</a></h2>
+<p>As a major new feature, this version introduces support for PDF’s <strong>Optional Content</strong> concept.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/714">#714</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/711">#711</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/707">#707</a>: if a PDF user password, but no owner password is supplied nor present, then the user password is also used as the owner password.</p></li>
+<li><p><strong>Fixed</strong> <code class="docutils literal notranslate"><span class="pre">expand</span></code> and <code class="docutils literal notranslate"><span class="pre">deflate</span></code> parameters of methods <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.write()</span></code>. Individual image and font compression should now finally work. Addresses issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/713">#713</a>.</p></li>
+<li><p><strong>Added</strong> a support of PDF optional content. This includes several new <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> methods for inquiring and setting optional content status and adding optional content configurations and groups. In addition, images, form XObjects and annotations now can be bound to optional content specifications. <strong>Resolved</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/709">#709</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-18-2">
+<h2>Changes in Version 1.18.2<a class="headerlink" href="#changes-in-version-1-18-2" title="Permalink to this headline">¶</a></h2>
+<p>This version contains some interesting improvements for text searching: any number of search hits is now returned and the <strong>hit_max</strong> parameter was removed. The new <strong>clip</strong> parameter in addition allows to restrict the search area. Searching now detects hyphenations at line breaks and accordingly finds hyphenated words.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/575">#575</a>: if using <code class="docutils literal notranslate"><span class="pre">quads=False</span></code> in text searching, then overlapping rectangles on the same line are joined. Previously, parts of the search string, which belonged to different “marked content” items, each generated their own rectangle – just as if occurring on separate lines.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-attr docutils literal notranslate"><span class="pre">Document.isRepaired</span></code>, which is true if the PDF was repaired on open.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.setXmlMetadata()</span></code> which either updates or creates PDF XML metadata. Implements issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/691">#691</a>.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getXmlMetadata()</span></code> returns PDF XML metadata.</p></li>
+<li><p><strong>Changed</strong> creation of PDF documents: they will now always carry a PDF identification (<code class="docutils literal notranslate"><span class="pre">/ID</span></code> field) in the document trailer. Implements issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/691">#691</a>.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.searchFor()</span></code>: a new parameter <code class="docutils literal notranslate"><span class="pre">clip</span></code> is accepted to restrict the search to this rectangle. Correspondingly, the attribute <a class="reference internal" href="textpage.html#TextPage.rect" title="TextPage.rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">TextPage.rect</span></code></a> is now respected by <a class="reference internal" href="textpage.html#TextPage.search" title="TextPage.search"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.search()</span></code></a>.</p></li>
+<li><p><strong>Changed</strong> parameter <code class="docutils literal notranslate"><span class="pre">hit_max</span></code> in <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.searchFor()</span></code> and <a class="reference internal" href="textpage.html#TextPage.search" title="TextPage.search"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.search()</span></code></a> is now obsolete: methods will return all hits.</p></li>
+<li><p><strong>Changed</strong> character <strong>selection criteria</strong> in <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code>: a character is now considered to be part of a <code class="docutils literal notranslate"><span class="pre">clip</span></code> if its bbox is fully contained. Before this, a non-empty intersection was sufficient.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#Document.scrub" title="Document.scrub"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.scrub()</span></code></a> to support a new option <cite>redact_images</cite>. This addresses issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/697">#697</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-18-1">
+<h2>Changes in Version 1.18.1<a class="headerlink" href="#changes-in-version-1-18-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/692">#692</a>. PyMuPDF now detects and recovers from more cyclic resource dependencies in PDF pages and for the first time reports them in the MuPDF warnings store.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/686">#686</a>.</p></li>
+<li><p><strong>Added</strong> opacity options for the <a class="reference internal" href="shape.html#shape"><span class="std std-ref">Shape</span></a> class: Stroke and fill colors can now be set to some transparency value. This means that all <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> draw methods, methods <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertText()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertTextbox()</span></code>, <a class="reference internal" href="shape.html#Shape.finish" title="Shape.finish"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.finish()</span></code></a>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insertText()</span></code>, and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insertTextbox()</span></code> support two new parameters: <em>stroke_opacity</em> and <em>fill_opacity</em>.</p></li>
+<li><p><strong>Added</strong> new parameter <code class="docutils literal notranslate"><span class="pre">mask</span></code> to <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertImage()</span></code> for optionally providing an external image mask. Resolves issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/685">#685</a>.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.soundGet()</span></code> for extracting the sound of an audio annotation.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-18-0">
+<h2>Changes in Version 1.18.0<a class="headerlink" href="#changes-in-version-1-18-0" title="Permalink to this headline">¶</a></h2>
+<p>This is the first PyMuPDF version supporting MuPDF v1.18. The focus here is on extending PyMuPDF’s own functionality – apart from bug fixing. Subsequent PyMuPDF patches may address features new in MuPDF.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/519">#519</a>. This upstream bug occurred occasionally for some pages only and seems to be fixed now: page layout should no longer be ruined in these cases.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/675">#675</a>.</p>
+<ul>
+<li><p>Unsuccessful storage allocations should now always lead to exceptions (circumvention of an upstream bug intermittently crashing the interpreter).</p></li>
+<li><p><a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> size is now based on <code class="docutils literal notranslate"><span class="pre">size_t</span></code> instead of <code class="docutils literal notranslate"><span class="pre">int</span></code> in C and should be correct even for extremely large pixmaps.</p></li>
+</ul>
+</li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/668">#668</a>. Specification of dashes for PDF drawing insertion should now correctly reflect the PDF spec.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/669">#669</a>. A major source of memory leakage in <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insert_pdf()</span></code> has been removed.</p></li>
+<li><p><strong>Added</strong> keyword <em>“images”</em> to <a class="reference internal" href="page.html#Page.apply_redactions" title="Page.apply_redactions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.apply_redactions()</span></code></a> for fine-controlling the handling of images.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.getText()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.getTextbox()</span></code>, which offer the same functionality as the <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> versions.</p></li>
+<li><p><strong>Added</strong> key <em>“number”</em> to the block dictionaries of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> / <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.getText()</span></code> for options “dict” and “rawdict”.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="functions.html#glyph_name_to_unicode" title="glyph_name_to_unicode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">glyph_name_to_unicode()</span></code></a> and <a class="reference internal" href="functions.html#unicode_to_glyph_name" title="unicode_to_glyph_name"><code class="xref py py-meth docutils literal notranslate"><span class="pre">unicode_to_glyph_name()</span></code></a>. Both functions do not really connect to a specific font and are now independently available, too. The data are now based on the <a class="reference external" href="https://github.com/adobe-type-tools/agl-aglfn/blob/master/glyphlist.txt">Adobe Glyph List</a>.</p></li>
+<li><p><strong>Added</strong> convenience functions <a class="reference internal" href="functions.html#adobe_glyph_names" title="adobe_glyph_names"><code class="xref py py-meth docutils literal notranslate"><span class="pre">adobe_glyph_names()</span></code></a> and <a class="reference internal" href="functions.html#adobe_glyph_unicodes" title="adobe_glyph_unicodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">adobe_glyph_unicodes()</span></code></a> which return the respective available data.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getDrawings()</span></code> which returns details of drawing operations on a document page. Works for all document types.</p></li>
+<li><p>Improved performance of <a class="reference internal" href="document.html#Document.insert_pdf" title="Document.insert_pdf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.insert_pdf()</span></code></a>. Multiple object copies are now also suppressed across multiple separate insertions from the same source. This saves time, memory and target file size. Previously this mechanism was only active within each single method execution. The feature can also be suppressed with the new method bool parameter <em>final=1</em>, which is the default.</p></li>
+<li><p>For PNG images created from pixmaps, the resolution (dpi) is now automatically set from the respective <a class="reference internal" href="pixmap.html#Pixmap.xres" title="Pixmap.xres"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.xres</span></code></a> and <a class="reference internal" href="pixmap.html#Pixmap.yres" title="Pixmap.yres"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.yres</span></code></a> values.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-17-7">
+<h2>Changes in Version 1.17.7<a class="headerlink" href="#changes-in-version-1-17-7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/651">#651</a>. An upstream bug causing interpreter crashes in corner case redaction processings was fixed by backporting MuPDF changes from their development repo.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/645">#645</a>. Pixmap top-left coordinates can be set (again) by their own method, <a class="reference internal" href="pixmap.html#Pixmap.setOrigin" title="Pixmap.setOrigin"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setOrigin()</span></code></a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/622">#622</a>. <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertImage()</span></code> again accepts a <a class="reference internal" href="glossary.html#rect_like" title="rect_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">rect_like</span></code></a> parameter.</p></li>
+<li><p><strong>Added</strong> severeal new methods to improve and speed-up table of contents (TOC) handling. Among other things, TOC items can now changed or deleted individually – without always replacing the complete TOC. Furthermore, access to some PDF page attributes is now possible without first <strong>loading</strong> the page. This has a very significant impact on the performance of TOC manipulation.</p></li>
+<li><p><strong>Added</strong> an option to <a class="reference internal" href="document.html#Document.insert_pdf" title="Document.insert_pdf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.insert_pdf()</span></code></a> which allows displaying progress messages. Adresses <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/640">#640</a>.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTextbox()</span></code> which extracts text contained in a rectangle. In many cases, this should obsolete writing your own script for this type of thing.</p></li>
+<li><p><strong>Added</strong> new <code class="docutils literal notranslate"><span class="pre">clip</span></code> parameter to <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> to simplify and speed up text extraction of page sub areas.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="textwriter.html#TextWriter.appendv" title="TextWriter.appendv"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextWriter.appendv()</span></code></a> to add text in <strong>vertical write mode</strong>. Addresses issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/653">#653</a></p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-17-6">
+<h2>Changes in Version 1.17.6<a class="headerlink" href="#changes-in-version-1-17-6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/605">#605</a></p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/600">#600</a> – text should now be correctly positioned also for pages with a CropBox smaller than MediaBox.</p></li>
+<li><p><strong>Added</strong> text span dictionary key <code class="docutils literal notranslate"><span class="pre">origin</span></code> which contains the lower left coordinate of the first character in that span.</p></li>
+<li><p><strong>Added</strong> attribute <a class="reference internal" href="font.html#Font.buffer" title="Font.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Font.buffer</span></code></a>, a <em>bytes</em> copy of the font file.</p></li>
+<li><p><strong>Added</strong> parameter <em>sanitize</em> to <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.cleanContents()</span></code>. Allows switching of sanitization, so only syntax cleaning will be done.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-17-5">
+<h2>Changes in Version 1.17.5<a class="headerlink" href="#changes-in-version-1-17-5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/561">#561</a> – second go: certain <a class="reference internal" href="textwriter.html#textwriter"><span class="std std-ref">TextWriter</span></a> usages with many alternating fonts did not work correctly.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/566">#566</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/568">#568</a>.</p></li>
+<li><p><strong>Fixed</strong> – opacity is now correctly taken from the <a class="reference internal" href="textwriter.html#textwriter"><span class="std std-ref">TextWriter</span></a> object, if not given in <code class="xref py py-meth docutils literal notranslate"><span class="pre">TextWriter.writeText()</span></code>.</p></li>
+<li><p><strong>Added</strong> a new global attribute <a class="reference internal" href="functions.html#fitz_fontdescriptors" title="fitz_fontdescriptors"><code class="xref py py-attr docutils literal notranslate"><span class="pre">fitz_fontdescriptors</span></code></a>. Contains information about usable fonts from repository <a class="reference external" href="https://github.com/pymupdf/pymupdf-fonts">pymupdf-fonts</a>.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="font.html#Font.valid_codepoints" title="Font.valid_codepoints"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Font.valid_codepoints()</span></code></a> which returns an array of unicode codepoints for which the font has a glyph.</p></li>
+<li><p><strong>Added</strong> option <code class="docutils literal notranslate"><span class="pre">text_as_path</span></code> to <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getSVGimage()</span></code>. this implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/580">#580</a>. Generates much smaller SVG files with parseable text if set to <em>False</em>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-17-4">
+<h2>Changes in Version 1.17.4<a class="headerlink" href="#changes-in-version-1-17-4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/561">#561</a>. Handling of more than 10 <a class="reference internal" href="font.html#font"><span class="std std-ref">Font</span></a> objects on one page should now work correctly.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/562">#562</a>. Annotation pixmaps are no longer derived from the page pixmap, thus avoiding unintended inclusion of page content.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/559">#559</a>. This <strong>MuPDF</strong> bug is being temporarily fixed with a pre-version of MuPDF’s next release.</p></li>
+<li><p><strong>Added</strong> utility function <code class="xref py py-meth docutils literal notranslate"><span class="pre">repair_mono_font()</span></code> for correcting displayed character spacing for some mono-spaced fonts.</p></li>
+<li><p><strong>Added</strong> utility method <a class="reference internal" href="document.html#Document.need_appearances" title="Document.need_appearances"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.need_appearances()</span></code></a> for fine-controlling Form PDF behavior. Addresses issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/563">#563</a>.</p></li>
+<li><p><strong>Added</strong> utility function <a class="reference internal" href="functions.html#sRGB_to_pdf" title="sRGB_to_pdf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sRGB_to_pdf()</span></code></a> to recover the PDF color triple for a given color integer in sRGB format.</p></li>
+<li><p><strong>Added</strong> utility function <a class="reference internal" href="functions.html#sRGB_to_rgb" title="sRGB_to_rgb"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sRGB_to_rgb()</span></code></a> to recover the (R, G, B) color triple for a given color integer in sRGB format.</p></li>
+<li><p><strong>Added</strong> utility function <a class="reference internal" href="functions.html#make_table" title="make_table"><code class="xref py py-meth docutils literal notranslate"><span class="pre">make_table()</span></code></a> which delivers table cells for a given rectangle and desired numbers of columns and rows.</p></li>
+<li><p><strong>Added</strong> support for optional fonts in repository <a class="reference external" href="https://github.com/pymupdf/pymupdf-fonts">pymupdf-fonts</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-17-3">
+<h2>Changes in Version 1.17.3<a class="headerlink" href="#changes-in-version-1-17-3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> an undocumented issue, which prevented fully cleaning a PDF page when using <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.cleanContents()</span></code>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/540">#540</a>. Text extraction for EPUB should again work correctly.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/548">#548</a>. Documentation now includes <code class="docutils literal notranslate"><span class="pre">LINK_NAMED</span></code>.</p></li>
+<li><p><strong>Added</strong> new parameter to control start of text in <code class="xref py py-meth docutils literal notranslate"><span class="pre">TextWriter.fillTextbox()</span></code>. Implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/549">#549</a>.</p></li>
+<li><p><strong>Changed</strong> documentation of <a class="reference internal" href="page.html#Page.addRedactAnnot" title="Page.addRedactAnnot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.addRedactAnnot()</span></code></a> to explain the usage of non-builtin fonts.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-17-2">
+<h2>Changes in Version 1.17.2<a class="headerlink" href="#changes-in-version-1-17-2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/533">#533</a>.</p></li>
+<li><p><strong>Added</strong> options to modify ‘Redact’ annotation appearance. Implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/535">#535</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-17-1">
+<h2>Changes in Version 1.17.1<a class="headerlink" href="#changes-in-version-1-17-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/520">#520</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/525">#525</a>. Vertices for ‘Ink’ annots should now be correct.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/524">#524</a>. It is now possible to query and set rotation for applicable annotation types.</p></li>
+</ul>
+<p>Also significantly improved inline documentation for better support of interactive help.</p>
+</div>
+<div class="section" id="changes-in-version-1-17-0">
+<h2>Changes in Version 1.17.0<a class="headerlink" href="#changes-in-version-1-17-0" title="Permalink to this headline">¶</a></h2>
+<p>This version is based on MuPDF v1.17. Following are highlights of new and changed features:</p>
+<ul class="simple">
+<li><p><strong>Added</strong> extended language support for annotations and widgets: a mixture of Latin, Greece, Russian, Chinese, Japanese and Korean characters can now be used in ‘FreeText’ annotations and text widgets. No special arrangement is required to use it.</p></li>
+<li><p>Faster page access is implemented for documents supporting a “chapter” structure. This applies to EPUB documents currently. This comes with several new <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> methods and changes for <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.loadPage()</span></code> and the “indexed” page access <em>doc[n]</em>: In addition to specifying a page number as before, a tuple <em>(chaper, pno)</em> can be specified to identify the desired page.</p></li>
+<li><p><strong>Changed:</strong> Improved support of redaction annotations: images overlapped by redactions are <strong>permanantly modified</strong> by erasing the overlap areas. Also links are removed if overlapped by redactions. This is now fully in sync with PDF specifications.</p></li>
+</ul>
+<p>Other changes:</p>
+<ul class="simple">
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">TextWriter.writeText()</span></code> to support the <em>“morph”</em> parameter.</p></li>
+<li><p><strong>Added</strong> methods <a class="reference internal" href="rect.html#Rect.morph" title="Rect.morph"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Rect.morph()</span></code></a>, <a class="reference internal" href="irect.html#IRect.morph" title="IRect.morph"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.morph()</span></code></a>, and <a class="reference internal" href="quad.html#Quad.morph" title="Quad.morph"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Quad.morph()</span></code></a>, which return a new <a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a>.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="page.html#Page.addFreetextAnnot" title="Page.addFreetextAnnot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.addFreetextAnnot()</span></code></a> to support text alignment via a new <em>“align”</em> parameter.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/508">#508</a>. Improved image rectangle calculation to hopefully deliver correct values in most if not all cases.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/502">#502</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/500">#500</a>. <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.convertToPDF()</span></code> should no longer cause memory leaks.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/496">#496</a>. Annotations and widgets / fields are now added or modified using the coordinates of the <strong>unrotated page</strong>. This behavior is now in sync with other methods modifying PDF pages.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.rotationMatrix</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.derotationMatrix</span></code> to support coordinate transformations between the rotated and the original versions of a PDF page.</p></li>
+</ul>
+<p>Potential code breaking changes:</p>
+<ul class="simple">
+<li><p>The private method <code class="docutils literal notranslate"><span class="pre">Page._getTransformation()</span></code> has been removed. Use the public <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.transformationMattrix</span></code> instead.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-18">
+<h2>Changes in Version 1.16.18<a class="headerlink" href="#changes-in-version-1-16-18" title="Permalink to this headline">¶</a></h2>
+<p>This version introduces several new features around PDF text output. The motivation is to simplify this task, while at the same time offering extending features.</p>
+<p>One major achievement is using MuPDF’s capabilities to dynamically choosing fallback fonts whenever a character cannot be found in the current one. This seemlessly works for Base-14 fonts in combination with CJK fonts (China, Japan, Korea). So a text may contain <strong>any combination of characters</strong> from the Latin, Greek, Russian, Chinese, Japanese and Korean languages.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/493">#493</a>. <code class="docutils literal notranslate"><span class="pre">Pixmap(doc,</span> <span class="pre">xref)</span></code> should now again correctly resemble the loaded image object.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/488">#488</a>. Widget names are now modifyable.</p></li>
+<li><p><strong>Added</strong> new class <a class="reference internal" href="font.html#font"><span class="std std-ref">Font</span></a> which represents a font.</p></li>
+<li><p><strong>Added</strong> new class <a class="reference internal" href="textwriter.html#textwriter"><span class="std std-ref">TextWriter</span></a> which serves as a container for text to be written on a page.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.writeText()</span></code> to write one or more <a class="reference internal" href="textwriter.html#textwriter"><span class="std std-ref">TextWriter</span></a> objects to the page.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-17">
+<h2>Changes in Version 1.16.17<a class="headerlink" href="#changes-in-version-1-16-17" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/479">#479</a>. PyMuPDF should now more correctly report image resolutions. This applies to both, images (either from images files or extracted from PDF documents) and pixmaps created from images.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="pixmap.html#Pixmap.setResolution" title="Pixmap.setResolution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setResolution()</span></code></a> which sets the image resolution in x and y directions.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-16">
+<h2>Changes in Version 1.16.16<a class="headerlink" href="#changes-in-version-1-16-16" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/477">#477</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/476">#476</a>.</p></li>
+<li><p><strong>Changed</strong> annotation line end symbol coloring and fixed an error coloring the interior of ‘Polyline’ /’Polygon’ annotations.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-14">
+<h2>Changes in Version 1.16.14<a class="headerlink" href="#changes-in-version-1-16-14" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> text marker annotations to accept parameters beyond just quadrilaterals such that now <strong>text lines between two given points can be marked</strong>.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="document.html#Document.scrub" title="Document.scrub"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.scrub()</span></code></a> which <strong>removes potentially sensitive data</strong> from a PDF. Implements <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/453">#453</a>.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.blendMode()</span></code> which returns the <strong>blend mode</strong> of annotations.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.setBlendMode()</span></code> to set the annotation’s blend mode. This resolves issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/416">#416</a>.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="annot.html#Annot.update" title="Annot.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.update()</span></code></a> to accept additional parameters for setting blend mode and opacity.</p></li>
+<li><p><strong>Added</strong> advanced graphics features to <strong>control the anti-aliasing values</strong>, <a class="reference internal" href="tools.html#Tools.set_aa_level" title="Tools.set_aa_level"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.set_aa_level()</span></code></a>. Resolves <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/467">#467</a></p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/474">#474</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/466">#466</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-13">
+<h2>Changes in Version 1.16.13<a class="headerlink" href="#changes-in-version-1-16-13" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getPageXObjectList()</span></code> which returns a list of <strong>Form XObjects</strong> of the page.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.setMediaBox()</span></code> for changing the physical PDF page size.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> methods which have been internal before: <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.cleanContents()</span></code> (= <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page._cleanContents()</span></code>), <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getContents()</span></code> (= <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page._getContents()</span></code>), <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTransformation()</span></code> (= <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page._getTransformation()</span></code>).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-12">
+<h2>Changes in Version 1.16.12<a class="headerlink" href="#changes-in-version-1-16-12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/447">#447</a></p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/461">#461</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/397">#397</a>.</p></li>
+<li><p><strong>Fixed</strong> issue <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/463">#463</a>.</p></li>
+<li><p><strong>Added</strong> JavaScript support to PDF form fields, thereby fixing <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/454">#454</a>.</p></li>
+<li><p><strong>Added</strong> a new annotation method <a class="reference internal" href="annot.html#Annot.delete_responses" title="Annot.delete_responses"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.delete_responses()</span></code></a>, which removes ‘Popup’ and response annotations referring to the current one. Mainly serves data protection purposes.</p></li>
+<li><p><strong>Added</strong> a new form field method <a class="reference internal" href="widget.html#Widget.reset" title="Widget.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Widget.reset()</span></code></a>, which resets the field value to its default.</p></li>
+<li><p><strong>Changed</strong> and extended handling of redactions: images and XObjects are removed if <em>contained</em> in a redaction rectangle. Any partial only overlaps will just be covered by the redaction background color. Now an <em>overlay</em> text can be specified to be inserted in the rectangle area to <strong>take the place the deleted original</strong> text. This resolves <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/434">#434</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-11">
+<h2>Changes in Version 1.16.11<a class="headerlink" href="#changes-in-version-1-16-11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> Support for redaction annotations via method <a class="reference internal" href="page.html#Page.addRedactAnnot" title="Page.addRedactAnnot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.addRedactAnnot()</span></code></a> and <a class="reference internal" href="page.html#Page.apply_redactions" title="Page.apply_redactions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.apply_redactions()</span></code></a>.</p></li>
+<li><p><strong>Fixed</strong> issue #426 (“PolygonAnnotation in 1.16.10 version”).</p></li>
+<li><p><strong>Fixed</strong> documentation only issues <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/443">#443</a> and <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/444">#444</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-10">
+<h2>Changes in Version 1.16.10<a class="headerlink" href="#changes-in-version-1-16-10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #421 (“annot.setRect(rect) has no effect on text Annotation”)</p></li>
+<li><p><strong>Fixed</strong> issue #417 (“Strange behavior for page.deleteAnnot on 1.16.9 compare to 1.13.20”)</p></li>
+<li><p><strong>Fixed</strong> issue #415 (“Annot.setOpacity throws mupdf warnings”)</p></li>
+<li><p><strong>Changed</strong> all “add annotation / widget” methods to store a unique name in the <em>/NM</em> PDF key.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.setInfo()</span></code> to also accept direct parameters in addition to a dictionary.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="annot.html#Annot.info" title="Annot.info"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.info</span></code></a> to now also show the annotation’s unique id (<em>/NM</em> PDF key) if present.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="page.html#Page.annot_names" title="Page.annot_names"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.annot_names()</span></code></a> which returns a list of all annotation names (<em>/NM</em> keys).</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="page.html#Page.load_annot" title="Page.load_annot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.load_annot()</span></code></a> which loads an annotation given its unique id (<em>/NM</em> key).</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="document.html#Document.reload_page" title="Document.reload_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.reload_page()</span></code></a> which provides a new copy of a page after finishing any pending updates to it.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-9">
+<h2>Changes in Version 1.16.9<a class="headerlink" href="#changes-in-version-1-16-9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> #412 (“Feature Request: Allow controlling whether TOC entries should be collapsed”)</p></li>
+<li><p><strong>Fixed</strong> #411 (“Seg Fault with page.firstWidget”)</p></li>
+<li><p><strong>Fixed</strong> #407 (“Annot.setOpacity trouble”)</p></li>
+<li><p><strong>Changed</strong> methods <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.setBorder()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.setColors()</span></code>, <a class="reference internal" href="link.html#Link.setBorder" title="Link.setBorder"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Link.setBorder()</span></code></a>, and <a class="reference internal" href="link.html#Link.setColors" title="Link.setColors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Link.setColors()</span></code></a> to also accept direct parameters, and not just cumbersome dictionaries.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-8">
+<h2>Changes in Version 1.16.8<a class="headerlink" href="#changes-in-version-1-16-8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> several new methods to the <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> class, which make dealing with PDF low-level structures easier. I also decided to provide them as “normal” methods (as opposed to private ones starting with an underscore “_”). These are <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xrefObject()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xrefStream()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xrefStreamRaw()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.PDFTrailer()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.PDFCatalog()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.metadataXML()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.updateObject()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.updateStream()</span></code>.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.mupdf_disply_errors()</span></code> which sets the display of mupdf errors on <em>sys.stderr</em>.</p></li>
+<li><p><strong>Added</strong> a commandline facility. This a major new feature: you can now invoke several utility functions via <em>“python -m fitz …”</em>. It should obsolete the need for many of the most trivial scripts. Please refer to <a class="reference internal" href="module.html#module"><span class="std std-ref">Using fitz as a Module</span></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-7">
+<h2>Changes in Version 1.16.7<a class="headerlink" href="#changes-in-version-1-16-7" title="Permalink to this headline">¶</a></h2>
+<p>Minor changes to better synchronize the binary image streams of <a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a> image blocks and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.extractImage()</span></code> images.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #394 (“PyMuPDF Segfaults when using TOOLS.mupdf_warnings()”).</p></li>
+<li><p><strong>Changed</strong> redirection of MuPDF error messages: apart from writing them to Python <em>sys.stderr</em>, they are now also stored with the MuPDF warnings.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="tools.html#Tools.mupdf_warnings" title="Tools.mupdf_warnings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.mupdf_warnings()</span></code></a> to automatically empty the store (if not deactivated via a parameter).</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getImageBbox()</span></code> to return an <strong>infinite rectangle</strong> if the image could not be located on the page – instead of raising an exception.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-6">
+<h2>Changes in Version 1.16.6<a class="headerlink" href="#changes-in-version-1-16-6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #390 (“Incomplete deletion of annotations”).</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.searchFor()</span></code> / <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.searchPageFor()</span></code> to also support the <em>flags</em> parameter, which controls the data included in a <a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a>.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getPageImageList()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getPageFontList()</span></code> and their <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> counterparts to support a new parameter <em>full</em>. If true, the returned items will contain the <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> of the <em>Form XObject</em> where the font or image is referenced.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-5">
+<h2>Changes in Version 1.16.5<a class="headerlink" href="#changes-in-version-1-16-5" title="Permalink to this headline">¶</a></h2>
+<p>More performance improvements for text extraction.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> second part of issue #381 (see item in v1.16.4).</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTextPage()</span></code>, so it is no longer required to create an intermediate display list for text extractions. Page level wrappers for text extraction and text searching are now based on this, which should improve performance by ca. 5%.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-4">
+<h2>Changes in Version 1.16.4<a class="headerlink" href="#changes-in-version-1-16-4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #381 (“TextPage.extractDICT … failed … after upgrading … to 1.16.3”)</p></li>
+<li><p><strong>Added</strong> method <a class="reference internal" href="document.html#Document.pages" title="Document.pages"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.pages()</span></code></a> which delivers a generator iterator over a page range.</p></li>
+<li><p><strong>Added</strong> method <a class="reference internal" href="page.html#Page.links" title="Page.links"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.links()</span></code></a> which delivers a generator iterator over the links of a page.</p></li>
+<li><p><strong>Added</strong> method <a class="reference internal" href="page.html#Page.annots" title="Page.annots"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.annots()</span></code></a> which delivers a generator iterator over the annotations of a page.</p></li>
+<li><p><strong>Added</strong> method <a class="reference internal" href="page.html#Page.widgets" title="Page.widgets"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.widgets()</span></code></a> which delivers a generator iterator over the form fields of a page.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#Document.is_form_pdf" title="Document.is_form_pdf"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Document.is_form_pdf</span></code></a> to now contain the number of widgets, and <em>False</em> if not a PDF or this number is zero.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-3">
+<h2>Changes in Version 1.16.3<a class="headerlink" href="#changes-in-version-1-16-3" title="Permalink to this headline">¶</a></h2>
+<p>Minor changes compared to version 1.16.2. The code of the “dict” and “rawdict” variants of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> has been ported to C which has greatly improved their performance. This improvement is mostly noticeable with text-oriented documents, where they now should execute almost two times faster.</p>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #369 (“mupdf: cmsCreateTransform failed”) by removing ICC colorspace support.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> to accept additional keywords “blocks” and “words”. These will deliver the results of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTextBlocks()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTextWords()</span></code>, respectively. So all text extraction methods are now available via a uniform API. Correspondingly, there are now new methods <a class="reference internal" href="textpage.html#TextPage.extractBLOCKS" title="TextPage.extractBLOCKS"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractBLOCKS()</span></code></a> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractWords()</span></code>.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> to default bit indicator <em>TEXT_INHIBIT_SPACES</em> to <strong>off</strong>. Insertion of additional spaces is <strong>not suppressed</strong> by default.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-2">
+<h2>Changes in Version 1.16.2<a class="headerlink" href="#changes-in-version-1-16-2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> text extraction methods of <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> to allow detail control of the amount of extracted data.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="functions.html#planishLine" title="planishLine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">planishLine()</span></code></a> which maps a given line (defined as a pair of points) to the x-axis.</p></li>
+<li><p><strong>Fixed</strong> an issue (w/o Github number) which brought down the interpreter when encountering certain non-UTF-8 encodable characters while using <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> with te “dict” option.</p></li>
+<li><p><strong>Fixed</strong> issue #362 (“Memory Leak with getText(‘rawDICT’)”).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-1">
+<h2>Changes in Version 1.16.1<a class="headerlink" href="#changes-in-version-1-16-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> property <a class="reference internal" href="quad.html#Quad.isConvex" title="Quad.isConvex"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Quad.isConvex</span></code></a> which checks whether a line is contained in the quad if it connects two points of it.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#Document.insert_pdf" title="Document.insert_pdf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.insert_pdf()</span></code></a> to now allow dropping or including links and annotations independently during the copy. Fixes issue #352 (“Corrupt PDF data and …”), which seemed to intermittently occur when using the method for some problematic PDF files.</p></li>
+<li><p><strong>Fixed</strong> a bug which, in matrix division using the syntax <em>“m1/m2”</em>, caused matrix <em>“m1”</em> to be <strong>replaced</strong> by the result instead of delivering a new matrix.</p></li>
+<li><p><strong>Fixed</strong> issue #354 (“SyntaxWarning with Python 3.8”). We now always use <em>“==”</em> for literals (instead of the <em>“is”</em> Python keyword).</p></li>
+<li><p><strong>Fixed</strong> issue #353 (“mupdf version check”), to no longer refuse the import when there are only patch level deviations from MuPDF.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-16-0">
+<h2>Changes in Version 1.16.0<a class="headerlink" href="#changes-in-version-1-16-0" title="Permalink to this headline">¶</a></h2>
+<p>This major new version of MuPDF comes with several nice new or changed features. Some of them imply programming API changes, however. This is a synopsis of what has changed:</p>
+<ul class="simple">
+<li><p>PDF document encryption and decryption is now <strong>fully supported</strong>. This includes setting <strong>permissions</strong>, <strong>passwords</strong> (user and owner passwords) and the desired encryption method.</p></li>
+<li><p>In response to the new encryption features, PyMuPDF returns an integer (ie. a combination of bits) for document permissions, and no longer a dictionary.</p></li>
+<li><p>Redirection of MuPDF errors and warnings is now natively supported. PyMuPDF redirects error messages from MuPDF to <em>sys.stderr</em> and no longer buffers them. Warnings continue to be buffered and will not be displayed. Functions exist to access and reset the warnings buffer.</p></li>
+<li><p>Annotations are now <strong>only supported for PDF</strong>.</p></li>
+<li><p>Annotations and widgets (form fields) are now <strong>separate object chains</strong> on a page (although widgets technically still <strong>are</strong> PDF annotations). This means, that you will <strong>never encounter widgets</strong> when using <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.firstAnnot</span></code> or <a class="reference internal" href="annot.html#Annot.next" title="Annot.next"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.next()</span></code></a>. You must use <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.firstWidget</span></code> and <a class="reference internal" href="widget.html#Widget.next" title="Widget.next"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Widget.next()</span></code></a> to access form fields.</p></li>
+<li><p>As part of MuPDF’s changes regarding widgets, only the following four fonts are supported, when <strong>adding</strong> or <strong>changing</strong> form fields: <strong>Courier, Helvetica, Times-Roman</strong> and <strong>ZapfDingBats</strong>.</p></li>
+</ul>
+<p>List of change details:</p>
+<ul class="simple">
+<li><p><strong>Added</strong> <a class="reference internal" href="document.html#Document.can_save_incrementally" title="Document.can_save_incrementally"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.can_save_incrementally()</span></code></a> which checks conditions that are preventing use of option <em>incremental=True</em> of <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a>.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.firstWidget</span></code> which points to the first field on a page.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getImageBbox()</span></code> which returns the rectangle occupied by an image shown on the page.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.setName()</span></code> which lets you change the (icon) name field.</p></li>
+<li><p><strong>Added</strong> outputting the text color in <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code>: the <em>“dict”</em>, <em>“rawdict”</em> and <em>“xml”</em> options now also show the color in sRGB format.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#Document.permissions" title="Document.permissions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Document.permissions</span></code></a> to now contain an integer of bool indicators – was a dictionary before.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.write()</span></code>, which now fully support password-based decryption and encryption of PDF files.</p></li>
+<li><p><strong>Changed the names of all Python constants</strong> related to annotations and widgets. Please make sure to consult the <strong>Constants and Enumerations</strong> chapter if your script is dealing with these two classes. This decision goes back to the dropped support for non-PDF annotations. The <strong>old names</strong> (starting with “ANNOT_*” or “WIDGET_*”) will be available as deprecated synonyms.</p></li>
+<li><p><strong>Changed</strong> font support for widgets: only <em>Cour</em> (Courier), <em>Helv</em> (Helvetica, default), <em>TiRo</em> (Times-Roman) and <em>ZaDb</em> (ZapfDingBats) are accepted when <strong>adding or changing</strong> form fields. Only the plain versions are possible – not their italic or bold variations. <strong>Reading</strong> widgets, however will show its original font.</p></li>
+<li><p><strong>Changed</strong> the name of the warnings buffer to <a class="reference internal" href="tools.html#Tools.mupdf_warnings" title="Tools.mupdf_warnings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.mupdf_warnings()</span></code></a> and the function to empty this buffer is now called <a class="reference internal" href="tools.html#Tools.reset_mupdf_warnings" title="Tools.reset_mupdf_warnings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.reset_mupdf_warnings()</span></code></a>.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getPixmap()</span></code>, <a class="reference internal" href="document.html#Document.get_page_pixmap" title="Document.get_page_pixmap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_page_pixmap()</span></code></a>: a new bool argument <em>annots</em> can now be used to <strong>suppress the rendering of annotations</strong> on the page.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="page.html#Page.addFileAnnot" title="Page.addFileAnnot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.addFileAnnot()</span></code></a> and <a class="reference internal" href="page.html#Page.addTextAnnot" title="Page.addTextAnnot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.addTextAnnot()</span></code></a> to enable setting an icon.</p></li>
+<li><p><strong>Removed</strong> widget-related methods and attributes from the <a class="reference internal" href="annot.html#annot"><span class="std std-ref">Annot</span></a> object.</p></li>
+<li><p><strong>Removed</strong> <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> attributes <em>openErrCode</em>, <em>openErrMsg</em>, and <a class="reference internal" href="tools.html#tools"><span class="std std-ref">Tools</span></a> attributes / methods <em>stderr</em>, <em>reset_stderr</em>, <em>stdout</em>, and <em>reset_stdout</em>.</p></li>
+<li><p><strong>Removed</strong> <strong>thirdparty zlib</strong> dependency in PyMuPDF: there are now compression functions available in MuPDF. Source installers of PyMuPDF may now omit this extra installation step.</p></li>
+</ul>
+</div>
+<div class="section" id="no-version-published-for-mupdf-v1-15-0">
+<h2>No version published for MuPDF v1.15.0<a class="headerlink" href="#no-version-published-for-mupdf-v1-15-0" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="changes-in-version-1-14-20-1-14-21">
+<h2>Changes in Version 1.14.20 / 1.14.21<a class="headerlink" href="#changes-in-version-1-14-20-1-14-21" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> text marker annotations to support multiple rectangles / quadrilaterals. This fixes issue #341 (“Question : How to addhighlight so that a string spread across more than a line is covered by one highlight?”) and similar (#285).</p></li>
+<li><p><strong>Fixed</strong> issue #331 (“Importing PyMuPDF changes warning filtering behaviour globally”).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-19">
+<h2>Changes in Version 1.14.19<a class="headerlink" href="#changes-in-version-1-14-19" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #319 (“InsertText function error when use custom font”).</p></li>
+<li><p><strong>Added</strong> new method <a class="reference internal" href="document.html#Document.get_sigflags" title="Document.get_sigflags"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_sigflags()</span></code></a> which returns information on whether a PDF is signed. Resolves issue #326 (“How to detect signature in a form pdf?”).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-17">
+<h2>Changes in Version 1.14.17<a class="headerlink" href="#changes-in-version-1-14-17" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.fullcopyPage()</span></code> to make full page copies within a PDF (not just copied references as <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.copyPage()</span></code> does).</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getPixmap()</span></code>, <a class="reference internal" href="document.html#Document.get_page_pixmap" title="Document.get_page_pixmap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_page_pixmap()</span></code></a> now use <em>alpha=False</em> as default.</p></li>
+<li><p><strong>Changed</strong> text extraction: the span dictionary now (again) contains its rectangle under the <em>bbox</em> key.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.movePage()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.copyPage()</span></code> to use direct functions instead of wrapping <a class="reference internal" href="document.html#Document.select" title="Document.select"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.select()</span></code></a> – similar to <a class="reference internal" href="document.html#Document.delete_page" title="Document.delete_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.delete_page()</span></code></a> in v1.14.16.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-16">
+<h2>Changes in Version 1.14.16<a class="headerlink" href="#changes-in-version-1-14-16" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> methods around PDF <em>/EmbeddedFiles</em> to no longer use MuPDF’s “portfolio” functions. That support will be dropped in MuPDF v1.15 – therefore another solution was required.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_Count()</span></code> to be a function (was an attribute).</p></li>
+<li><p><strong>Added</strong> new method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_Names()</span></code> which returns a list of names of embedded files.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="document.html#Document.delete_page" title="Document.delete_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.delete_page()</span></code></a> and <a class="reference internal" href="document.html#Document.delete_pages" title="Document.delete_pages"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.delete_pages()</span></code></a> to internally no longer use <a class="reference internal" href="document.html#Document.select" title="Document.select"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.select()</span></code></a>, but instead use functions to perform the deletion directly. As it has turned out, the <a class="reference internal" href="document.html#Document.select" title="Document.select"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.select()</span></code></a> method yields invalid outline trees (tables of content) for very complex PDFs and sophisticated use of annotations.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-15">
+<h2>Changes in Version 1.14.15<a class="headerlink" href="#changes-in-version-1-14-15" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issues #301 (“Line cap and Line join”), #300 (“How to draw a shape without outlines”) and #298 (“utils.updateRect exception”). These bugs pertain to drawing shapes with PyMuPDF. Drawing shapes without any border is fully supported. Line cap styles and line line join style are now differentiated and support all possible PDF values (0, 1, 2) instead of just being a bool. The previous parameter <em>roundCap</em> is deprecated in favor of <em>lineCap</em> and <em>lineJoin</em> and will be deleted in the next release.</p></li>
+<li><p><strong>Fixed</strong> issue #290 (“Memory Leak with getText(‘rawDICT’)”). This bug caused memory not being (completely) freed after invoking the “dict”, “rawdict” and “json” versions of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-14">
+<h2>Changes in Version 1.14.14<a class="headerlink" href="#changes-in-version-1-14-14" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> new low-level function <a class="reference internal" href="functions.html#ImageProperties" title="ImageProperties"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ImageProperties()</span></code></a> to determine a number of characteristics for an image.</p></li>
+<li><p><strong>Added</strong> new low-level function <a class="reference internal" href="functions.html#Document.is_stream" title="Document.is_stream"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.is_stream()</span></code></a>, which checks whether an object is of stream type.</p></li>
+<li><p><strong>Changed</strong> low-level functions <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document._getXrefString()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document._getTrailerString()</span></code> now by default return object definitions in a formatted form which makes parsing easy.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-13">
+<h2>Changes in Version 1.14.13<a class="headerlink" href="#changes-in-version-1-14-13" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> methods working with binary input: while ever supporting bytes and bytearray objects, they now also accept <em>io.BytesIO</em> input, using their <em>getvalue()</em> method. This pertains to document creation, embedded files, FileAttachment annotations, pixmap creation and others. Fixes issue #274 (“Segfault when using BytesIO as a stream for insertImage”).</p></li>
+<li><p><strong>Fixed</strong> issue #278 (“Is insertImage(keep_proportion=True) broken?”). Images are now correctly presented when keeping aspect ratio.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-12">
+<h2>Changes in Version 1.14.12<a class="headerlink" href="#changes-in-version-1-14-12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> the draw methods of <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> and <a class="reference internal" href="shape.html#shape"><span class="std std-ref">Shape</span></a> to support not only RGB, but also GRAY and CMYK colorspaces. This solves issue #270 (“Is there a way to use CMYK color to draw shapes?”). This change also applies to text insertion methods of <a class="reference internal" href="shape.html#shape"><span class="std std-ref">Shape</span></a>, resp. <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a>.</p></li>
+<li><p><strong>Fixed</strong> issue #269 (“AttributeError in Document.insert_page()”), which occurred when using <a class="reference internal" href="document.html#Document.insert_page" title="Document.insert_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.insert_page()</span></code></a> with text insertion.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-11">
+<h2>Changes in Version 1.14.11<a class="headerlink" href="#changes-in-version-1-14-11" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a> to always position the source rectangle centered in the target. This method now also supports <strong>rotation by arbitrary angles</strong>. The argument <em>reuse_xref</em> has been deprecated: prevention of duplicates is now <strong>handled internally</strong>.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertImage()</span></code> to support rotated display of the image and keeping the aspect ratio. Only rotations by multiples of 90 degrees are supported here.</p></li>
+<li><p><strong>Fixed</strong> issue #265 (“TypeError: insertText() got an unexpected keyword argument ‘idx’”). This issue only occurred when using <a class="reference internal" href="document.html#Document.insert_page" title="Document.insert_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.insert_page()</span></code></a> with also inserting text.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-10">
+<h2>Changes in Version 1.14.10<a class="headerlink" href="#changes-in-version-1-14-10" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed</strong> <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a> to support rotation of the source rectangle. Fixes #261 (“Cannot rotate insterted pages”).</p></li>
+<li><p><strong>Fixed</strong> a bug in <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertImage()</span></code> which prevented insertion of multiple images provided as streams.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-9">
+<h2>Changes in Version 1.14.9<a class="headerlink" href="#changes-in-version-1-14-9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> new low-level method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document._getTrailerString()</span></code>, which returns the trailer object of a PDF. This is much like <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document._getXrefString()</span></code> except that the PDF trailer has no / needs no <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> to identify it.</p></li>
+<li><p><strong>Added</strong> new parameters for text insertion methods. You can now set stroke and fill colors of glyphs (text characters) independently, as well as the thickness of the glyph border. A new parameter <em>render_mode</em> controls the use of these colors, and whether the text should be visible at all.</p></li>
+<li><p><strong>Fixed</strong> issue #258 (“Copying image streams to new PDF without size increase”): For JPX images embedded in a PDF, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.extractImage()</span></code> will now return them in their original format. Previously, the MuPDF base library was used, which returns them in PNG format (entailing a massive size increase).</p></li>
+<li><p><strong>Fixed</strong> issue #259 (“Morphing text to fit inside rect”). Clarified use of <a class="reference internal" href="functions.html#getTextlength" title="getTextlength"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTextlength()</span></code></a> and removed extra line breaks for long words.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-8">
+<h2>Changes in Version 1.14.8<a class="headerlink" href="#changes-in-version-1-14-8" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> <a class="reference internal" href="pixmap.html#Pixmap.setRect" title="Pixmap.setRect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setRect()</span></code></a> to change the pixel values in a rectangle. This is also an alternative to setting the color of a complete pixmap (<a class="reference internal" href="pixmap.html#Pixmap.clearWith" title="Pixmap.clearWith"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.clearWith()</span></code></a>).</p></li>
+<li><p><strong>Fixed</strong> an image extraction issue with JBIG2 (monochrome) encoded PDF images. The issue occurred in <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> (parameters “dict” and “rawdict”) and in <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.extractImage()</span></code> methods.</p></li>
+<li><p><strong>Fixed</strong> an issue with not correctly clearing a non-alpha <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> (<a class="reference internal" href="pixmap.html#Pixmap.clearWith" title="Pixmap.clearWith"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.clearWith()</span></code></a>).</p></li>
+<li><p><strong>Fixed</strong> an issue with not correctly inverting colors of a non-alpha <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> (<a class="reference internal" href="pixmap.html#Pixmap.invertIRect" title="Pixmap.invertIRect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.invertIRect()</span></code></a>).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-7">
+<h2>Changes in Version 1.14.7<a class="headerlink" href="#changes-in-version-1-14-7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> <a class="reference internal" href="pixmap.html#Pixmap.setPixel" title="Pixmap.setPixel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setPixel()</span></code></a> to change one pixel value.</p></li>
+<li><p><strong>Added</strong> documentation for image conversion in the <a class="reference internal" href="faq.html#faq"><span class="std std-ref">Collection of Recipes</span></a>.</p></li>
+<li><p><strong>Added</strong> new function <a class="reference internal" href="functions.html#getTextlength" title="getTextlength"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTextlength()</span></code></a> to determine the string length for a given font.</p></li>
+<li><p><strong>Added</strong> Postscript image output (changed <a class="reference internal" href="pixmap.html#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writeImage()</span></code></a> and <a class="reference internal" href="pixmap.html#Pixmap.getImageData" title="Pixmap.getImageData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getImageData()</span></code></a>).</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="pixmap.html#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writeImage()</span></code></a> and <a class="reference internal" href="pixmap.html#Pixmap.getImageData" title="Pixmap.getImageData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getImageData()</span></code></a> to ensure valid combinations of colorspace, alpha and output format.</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="pixmap.html#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writeImage()</span></code></a>: the desired format is now inferred from the filename.</p></li>
+<li><p><strong>Changed</strong> FreeText annotations can now have a transparent background - see <a class="reference internal" href="annot.html#Annot.update" title="Annot.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.update()</span></code></a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-5">
+<h2>Changes in Version 1.14.5<a class="headerlink" href="#changes-in-version-1-14-5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Changed:</strong> <a class="reference internal" href="shape.html#shape"><span class="std std-ref">Shape</span></a> methods now strictly use the transformation matrix of the <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> – instead of “manually” calculating locations.</p></li>
+<li><p><strong>Added</strong> method <a class="reference internal" href="pixmap.html#Pixmap.pixel" title="Pixmap.pixel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.pixel()</span></code></a> which returns the pixel value (a list) for given pixel coordinates.</p></li>
+<li><p><strong>Added</strong> method <a class="reference internal" href="pixmap.html#Pixmap.getImageData" title="Pixmap.getImageData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getImageData()</span></code></a> which returns a bytes object representing the pixmap in a variety of formats. Previously, this could be done for PNG outputs only (<a class="reference internal" href="pixmap.html#Pixmap.getPNGData" title="Pixmap.getPNGData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getPNGData()</span></code></a>).</p></li>
+<li><p><strong>Changed:</strong> output of methods <a class="reference internal" href="pixmap.html#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writeImage()</span></code></a> and (the new) <a class="reference internal" href="pixmap.html#Pixmap.getImageData" title="Pixmap.getImageData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getImageData()</span></code></a> may now also be PSD (Adobe Photoshop Document).</p></li>
+<li><p><strong>Added</strong> method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.drawQuad()</span></code> which draws a <a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a>. This actually is a shorthand for a <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.drawPolyline()</span></code> with the edges of the quad.</p></li>
+<li><p><strong>Changed</strong> method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.drawOval()</span></code>: the argument can now be <strong>either</strong> a rectangle (<a class="reference internal" href="glossary.html#rect_like" title="rect_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">rect_like</span></code></a>) <strong>or</strong> a quadrilateral (<a class="reference internal" href="glossary.html#quad_like" title="quad_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">quad_like</span></code></a>).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-4">
+<h2>Changes in Version 1.14.4<a class="headerlink" href="#changes-in-version-1-14-4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixes</strong> issue #239 “Annotation coordinate consistency”.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-3">
+<h2>Changes in Version 1.14.3<a class="headerlink" href="#changes-in-version-1-14-3" title="Permalink to this headline">¶</a></h2>
+<p>This patch version contains minor bug fixes and CJK font output support.</p>
+<ul class="simple">
+<li><p><strong>Added</strong> support for the four CJK fonts as PyMuPDF generated text output. This pertains to methods <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertFont()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insertText()</span></code>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insertTextbox()</span></code>, and corresponding <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> methods. The new fonts are available under “reserved” fontnames “china-t” (traditional Chinese), “china-s” (simplified Chinese), “japan” (Japanese), and “korea” (Korean).</p></li>
+<li><p><strong>Added</strong> full support for the built-in fonts ‘Symbol’ and ‘Zapfdingbats’.</p></li>
+<li><p><strong>Changed:</strong> The 14 standard fonts can now each be referenced by a 4-letter abbreviation.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-1">
+<h2>Changes in Version 1.14.1<a class="headerlink" href="#changes-in-version-1-14-1" title="Permalink to this headline">¶</a></h2>
+<p>This patch version contains minor performance improvements.</p>
+<ul class="simple">
+<li><p><strong>Added</strong> support for <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> filenames given as <em>pathlib</em> object by using the Python <em>str()</em> function.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-14-0">
+<h2>Changes in Version 1.14.0<a class="headerlink" href="#changes-in-version-1-14-0" title="Permalink to this headline">¶</a></h2>
+<p>To support MuPDF v1.14.0, massive changes were required in PyMuPDF – most of them purely technical, with little visibility to developers. But there are also quite a lot of interesting new and improved features. Following are the details:</p>
+<ul class="simple">
+<li><p><strong>Added</strong> “ink” annotation.</p></li>
+<li><p><strong>Added</strong> “rubber stamp” annotation.</p></li>
+<li><p><strong>Added</strong> “squiggly” text marker annotation.</p></li>
+<li><p><strong>Added</strong> new class <a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a> (quadrilateral or tetragon) – which represents a general four-sided shape in the plane. The special subtype of rectangular, non-empty tetragons is used in text marker annotations and as returned objects in text search methods.</p></li>
+<li><p><strong>Added</strong> a new option “decrypt” to <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.write()</span></code>. Now you can <strong>keep encryption</strong> when saving a password protected PDF.</p></li>
+<li><p><strong>Added</strong> suppression and redirection of unsolicited messages issued by the underlying C-library MuPDF. Consult <a class="reference internal" href="app4.html#redirectmessages"><span class="std std-ref">Redirecting Error and Warning Messages</span></a> for details.</p></li>
+<li><p><strong>Changed:</strong> Changes to annotations now <strong>always require</strong> <a class="reference internal" href="annot.html#Annot.update" title="Annot.update"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.update()</span></code></a> to become effective.</p></li>
+<li><p><strong>Changed</strong> free text annotations to support the full Latin character set and range of appearance options.</p></li>
+<li><p><strong>Changed</strong> text searching, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.searchFor()</span></code>, to optionally return <a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a> instead <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> objects surrounding each search hit.</p></li>
+<li><p><strong>Changed</strong> plain text output: we now add a <em>n</em> to each line if it does not itself end with this character.</p></li>
+<li><p><strong>Fixed</strong> issue 211 (“Something wrong in the doc”).</p></li>
+<li><p><strong>Fixed</strong> issue 213 (“Rewritten outline is displayed only by mupdf-based applications”).</p></li>
+<li><p><strong>Fixed</strong> issue 214 (“PDF decryption GONE!”).</p></li>
+<li><p><strong>Fixed</strong> issue 215 (“Formatting of links added with pyMuPDF”).</p></li>
+<li><p><strong>Fixed</strong> issue 217 (“extraction through json is failing for my pdf”).</p></li>
+</ul>
+<p>Behind the curtain, we have changed the implementation of geometry objects: they now purely exist in Python and no longer have “shadow” twins on the C-level (in MuPDF). This has improved processing speed in that area by more than a factor of two.</p>
+<p>Because of the same reason, most methods involving geometry parameters now also accept the corresponding Python sequence. For example, in method <em>“page.show_pdf_page(rect, …)”</em> parameter <em>rect</em> may now be any <a class="reference internal" href="glossary.html#rect_like" title="rect_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">rect_like</span></code></a> sequence.</p>
+<p>We also invested considerable effort to further extend and improve the <a class="reference internal" href="faq.html#faq"><span class="std std-ref">Collection of Recipes</span></a> chapter.</p>
+</div>
+<div class="section" id="changes-in-version-1-13-19">
+<h2>Changes in Version 1.13.19<a class="headerlink" href="#changes-in-version-1-13-19" title="Permalink to this headline">¶</a></h2>
+<p>This version contains some technical / performance improvements and bug fixes.</p>
+<ul class="simple">
+<li><p><strong>Changed</strong> memory management: for Python 3 builds, Python memory management is exclusively used across all C-level code (i.e. no more native <em>malloc()</em> in MuPDF code or PyMuPDF interface code). This leads to improved memory usage profiles and also some runtime improvements: we have seen &gt; 2% shorter runtimes for text extractions and pixmap creations (on Windows machines only to date).</p></li>
+<li><p><strong>Fixed</strong> an error occurring in Python 2.7, which crashed the interpreter when using <a class="reference internal" href="textpage.html#TextPage.extractRAWDICT" title="TextPage.extractRAWDICT"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractRAWDICT()</span></code></a> (= <em>Page.getText(“rawdict”)</em>).</p></li>
+<li><p><strong>Fixed</strong> an error occurring in Python 2.7, when creating link destinations.</p></li>
+<li><p><strong>Extended</strong> the <a class="reference internal" href="faq.html#faq"><span class="std std-ref">Collection of Recipes</span></a> chapter with more examples.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-18">
+<h2>Changes in Version 1.13.18<a class="headerlink" href="#changes-in-version-1-13-18" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> method <a class="reference internal" href="textpage.html#TextPage.extractRAWDICT" title="TextPage.extractRAWDICT"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractRAWDICT()</span></code></a>, and a corresponding new string parameter “rawdict” to method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code>. It extracts text and images from a page in Python <em>dict</em> form like <a class="reference internal" href="textpage.html#TextPage.extractDICT" title="TextPage.extractDICT"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractDICT()</span></code></a>, but with the detail level of <a class="reference internal" href="textpage.html#TextPage.extractXML" title="TextPage.extractXML"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractXML()</span></code></a>, which is position information down to each single character.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-17">
+<h2>Changes in Version 1.13.17<a class="headerlink" href="#changes-in-version-1-13-17" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> an error that intermittently caused an exception in <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a>, when pages from many different source PDFs were shown.</p></li>
+<li><p><strong>Changed</strong> method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.extractImage()</span></code> to now return more meta information about the extracted imgage. Also, its performance has been greatly improved. Several demo scripts have been changed to make use of this method.</p></li>
+<li><p><strong>Changed</strong> method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document._getXrefStream()</span></code> to now return <em>None</em> if the object is no stream and no longer raise an exception if otherwise.</p></li>
+<li><p><strong>Added</strong> method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document._deleteObject()</span></code> which deletes a PDF object identified by its <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a>. Only to be used by the experienced PDF expert.</p></li>
+<li><p><strong>Added</strong> a method <a class="reference internal" href="functions.html#PaperRect" title="PaperRect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PaperRect()</span></code></a> which returns a <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> for a supplied paper format string. Example: <em>fitz.PaperRect(“letter”) = fitz.Rect(0.0, 0.0, 612.0, 792.0)</em>.</p></li>
+<li><p><strong>Added</strong> a <a class="reference internal" href="faq.html#faq"><span class="std std-ref">Collection of Recipes</span></a> chapter to this document.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-16">
+<h2>Changes in Version 1.13.16<a class="headerlink" href="#changes-in-version-1-13-16" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> support for correctly setting transparency (opacity) for certain annotation types.</p></li>
+<li><p><strong>Added</strong> a tool property (<a class="reference internal" href="tools.html#Tools.fitz_config" title="Tools.fitz_config"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Tools.fitz_config</span></code></a>) showing the configuration of this PyMuPDF version.</p></li>
+<li><p><strong>Fixed</strong> issue #193 (‘insertText(overlay=False) gives “cannot resize a buffer with shared storage” error’) by avoiding read-only buffers.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-15">
+<h2>Changes in Version 1.13.15<a class="headerlink" href="#changes-in-version-1-13-15" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #189 (“cannot find builtin CJK font”), so we are supporting builtin CJK fonts now (CJK = China, Japan, Korea). This should lead to correctly generated pixmaps for documents using these languages. This change has consequences for our binary file size: it will now range between 8 and 10 MB, depending on the OS.</p></li>
+<li><p><strong>Fixed</strong> issue #191 (“Jupyter notebook kernel dies after ca. 40 pages”), which occurred when modifying the contents of an annotation.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-14">
+<h2>Changes in Version 1.13.14<a class="headerlink" href="#changes-in-version-1-13-14" title="Permalink to this headline">¶</a></h2>
+<p>This patch version contains several improvements, mainly for annotations.</p>
+<ul class="simple">
+<li><p><strong>Changed</strong> <code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.lineEnds</span></code> is now a list of two integers representing the line end symbols. Previously was a <em>dict</em> of strings.</p></li>
+<li><p><strong>Added</strong> support of line end symbols for applicable annotations. PyMuPDF now can generate these annotations including the line end symbols.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.setLineEnds()</span></code> adds line end symbols to applicable annotation types (‘Line’, ‘PolyLine’, ‘Polygon’).</p></li>
+<li><p><strong>Changed</strong> technical implementation of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertImage()</span></code> and <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a>: they now create there own contents objects, thereby avoiding changes of potentially large streams with consequential compression / decompression efforts and high change volumes with incremental updates.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-13">
+<h2>Changes in Version 1.13.13<a class="headerlink" href="#changes-in-version-1-13-13" title="Permalink to this headline">¶</a></h2>
+<p>This patch version contains several improvements for embedded files and file attachment annotations.</p>
+<ul class="simple">
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_Upd()</span></code> which allows changing <strong>file content and metadata</strong> of an embedded file. It supersedes the old method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_SetInfo()</span></code> (which will be deleted in a future version). Content is automatically compressed and metadata may be unicode.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_Add()</span></code> to now automatically compress file content. Accompanying metadata can now be unicode (had to be ASCII in the past).</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_Del()</span></code> to now automatically delete <strong>all entries</strong> having the supplied identifying name. The return code is now an integer count of the removed entries (was <em>None</em> previously).</p></li>
+<li><p><strong>Changed</strong> embedded file methods to now also accept or show the PDF unicode filename as additional parameter <em>ufilename</em>.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="page.html#Page.addFileAnnot" title="Page.addFileAnnot"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.addFileAnnot()</span></code></a> which adds a new file attachment annotation.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.fileUpd()</span></code> (file attachment annot) to now also accept the PDF unicode <em>ufilename</em> parameter. The description parameter <em>desc</em> correctly works with unicode. Furthermore, <strong>all</strong> parameters are optional, so metadata may be changed without also replacing the file content.</p></li>
+<li><p><strong>Changed</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.fileInfo()</span></code> (file attachment annot) to now also show the PDF unicode filename as parameter <em>ufilename</em>.</p></li>
+<li><p><strong>Fixed</strong> issue #180 (“page.getText(output=’dict’) return invalid bbox”) to now also work for vertical text.</p></li>
+<li><p><strong>Fixed</strong> issue #185 (“Can’t render the annotations created by PyMuPDF”). The issue’s cause was the minimalistic MuPDF approach when creating annotations. Several annotation types have no <em>/AP</em> (“appearance”) object when created by MuPDF functions. MuPDF, SumatraPDF and hence also PyMuPDF cannot render annotations without such an object. This fix now ensures, that an appearance object is always created together with the annotation itself. We still do not support line end styles.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-12">
+<h2>Changes in Version 1.13.12<a class="headerlink" href="#changes-in-version-1-13-12" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Fixed</strong> issue #180 (“page.getText(output=’dict’) return invalid bbox”). Note that this is a circumvention of an MuPDF error, which generates zero-height character rectangles in some cases. When this happens, this fix ensures a bbox height of at least fontsize.</p></li>
+<li><p><strong>Changed</strong> for ListBox and ComboBox widgets, the attribute list of selectable values has been renamed to <a class="reference internal" href="widget.html#Widget.choice_values" title="Widget.choice_values"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Widget.choice_values</span></code></a>.</p></li>
+<li><p><strong>Changed</strong> when adding widgets, any missing of the <a class="reference internal" href="app4.html#base-14-fonts"><span class="std std-ref">PDF Base 14 Fonts</span></a> is automatically added to the PDF. Widget text fonts can now also be chosen from existing widget fonts. Any specified field values are now honored and lead to a field with a preset value.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.updateWidget()</span></code> which allows changing existing form fields – including the field value.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-11">
+<h2>Changes in Version 1.13.11<a class="headerlink" href="#changes-in-version-1-13-11" title="Permalink to this headline">¶</a></h2>
+<p>While the preceeding patch subversions only contained various fixes, this version again introduces major new features:</p>
+<ul class="simple">
+<li><p><strong>Added</strong> basic support for PDF widget annotations. You can now add PDF form fields of types Text, CheckBox, ListBox and ComboBox. Where necessary, the PDF is tranformed to a Form PDF with the first added widget.</p></li>
+<li><p><strong>Fixed</strong> issues #176 (“wrong file embedding”), #177 (“segment fault when invoking page.getText()”)and #179 (“Segmentation fault using page.getLinks() on encrypted PDF”).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-7">
+<h2>Changes in Version 1.13.7<a class="headerlink" href="#changes-in-version-1-13-7" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Added</strong> support of variable page sizes for reflowable documents (e-books, HTML, etc.): new parameters <em>rect</em> and <em>fontsize</em> in <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> creation (open), and as a separate method <a class="reference internal" href="document.html#Document.layout" title="Document.layout"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.layout()</span></code></a>.</p></li>
+<li><p><strong>Added</strong> <a class="reference internal" href="annot.html#annot"><span class="std std-ref">Annot</span></a> creation of many annotations types: sticky notes, free text, circle, rectangle, line, polygon, polyline and text markers.</p></li>
+<li><p><strong>Added</strong> support of annotation transparency (<a class="reference internal" href="annot.html#Annot.opacity" title="Annot.opacity"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.opacity</span></code></a>, <code class="xref py py-meth docutils literal notranslate"><span class="pre">Annot.setOpacity()</span></code>).</p></li>
+<li><p><strong>Changed</strong> <a class="reference internal" href="annot.html#Annot.vertices" title="Annot.vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.vertices</span></code></a>: point coordinates are now grouped as pairs of floats (no longer as separate floats).</p></li>
+<li><p><strong>Changed</strong> annotation colors dictionary: the two keys are now named <em>“stroke”</em> (formerly <em>“common”</em>) and <em>“fill”</em>.</p></li>
+<li><p><strong>Added</strong> <code class="xref py py-attr docutils literal notranslate"><span class="pre">Document.isDirty</span></code> which is <em>True</em> if a PDF has been changed in this session. Reset to <em>False</em> on each <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.write()</span></code>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-6">
+<h2>Changes in Version 1.13.6<a class="headerlink" href="#changes-in-version-1-13-6" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Fix #173: for memory-resident documents, ensure the stream object will not be garbage-collected by Python before document is closed.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-5">
+<h2>Changes in Version 1.13.5<a class="headerlink" href="#changes-in-version-1-13-5" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>New low-level method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page._setContents()</span></code> defines an object given by its <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> to serve as the <a class="reference internal" href="glossary.html#contents" title="contents"><code class="xref py py-data docutils literal notranslate"><span class="pre">contents</span></code></a> object.</p></li>
+<li><p>Changed and extended PDF form field support: the attribute <em>widget_text</em> has been renamed to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.widget_value</span></code>. Values of all form field types (except signatures) are now supported. A new attribute <code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.widget_choices</span></code> contains the selectable values of listboxes and comboboxes. All these attributes now contain <em>None</em> if no value is present.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-4">
+<h2>Changes in Version 1.13.4<a class="headerlink" href="#changes-in-version-1-13-4" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.convertToPDF()</span></code> now supports page ranges, reverted page sequences and page rotation. If the document already is a PDF, an exception is raised.</p></li>
+<li><p>Fixed a bug (introduced with v1.13.0) that prevented <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertImage()</span></code> for transparent images.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-3">
+<h2>Changes in Version 1.13.3<a class="headerlink" href="#changes-in-version-1-13-3" title="Permalink to this headline">¶</a></h2>
+<p>Introduces a way to convert <strong>any MuPDF supported document</strong> to a PDF. If you ever wanted PDF versions of your XPS, EPUB, CBZ or FB2 files – here is a way to do this.</p>
+<ul class="simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.convertToPDF()</span></code> returns a Python <em>bytes</em> object in PDF format. Can be opened like normal in PyMuPDF, or be written to disk with the <em>“.pdf”</em> extension.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-2">
+<h2>Changes in Version 1.13.2<a class="headerlink" href="#changes-in-version-1-13-2" title="Permalink to this headline">¶</a></h2>
+<p>The major enhancement is PDF form field support. Form fields are annotations of type <em>(19, ‘Widget’)</em>. There is a new document method to check whether a PDF is a form. The <a class="reference internal" href="annot.html#annot"><span class="std std-ref">Annot</span></a> class has new properties describing field details.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="document.html#Document.is_form_pdf" title="Document.is_form_pdf"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Document.is_form_pdf</span></code></a> is true if object type <em>/AcroForm</em> and at least one form field exists.</p></li>
+<li><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.widget_type</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.widget_text</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">Annot.widget_name</span></code> contain the details of a form field (i.e. a “Widget” annotation).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-1">
+<h2>Changes in Version 1.13.1<a class="headerlink" href="#changes-in-version-1-13-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="textpage.html#TextPage.extractDICT" title="TextPage.extractDICT"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractDICT()</span></code></a> is a new method to extract the contents of a document page (text and images). All document types are supported as with the other <a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a> <em>extract*()</em> methods. The returned object is a dictionary of nested lists and other dictionaries, and <strong>exactly equal</strong> to the JSON-deserialization of the old <a class="reference internal" href="textpage.html#TextPage.extractJSON" title="TextPage.extractJSON"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractJSON()</span></code></a>. The difference is that the result is created directly – no JSON module is used. Because the user needs no JSON module to interpet the information, it should be easier to use, and also have a better performance, because it contains images in their original <strong>binary format</strong> – they need not be base64-decoded.</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> correspondingly supports the new parameter value <em>“dict”</em> to invoke the above method.</p></li>
+<li><p><a class="reference internal" href="textpage.html#TextPage.extractJSON" title="TextPage.extractJSON"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractJSON()</span></code></a> (resp. <em>Page.getText(“json”)</em>) is still supported for convenience, but its use is expected to decline.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-13-0">
+<h2>Changes in Version 1.13.0<a class="headerlink" href="#changes-in-version-1-13-0" title="Permalink to this headline">¶</a></h2>
+<p>This version is based on MuPDF v1.13.0. This release is “primarily a bug fix release”.</p>
+<p>In PyMuPDF, we are also doing some bug fixes while introducing minor enhancements. There only very minimal changes to the user’s API.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> construction is more flexible: the new <em>filetype</em> parameter allows setting the document type. If specified, any extension in the filename will be ignored. More completely addresses <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/156">issue #156</a>. As part of this, the documentation has been reworked.</p></li>
+<li><dl class="simple">
+<dt>Changes to <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> constructors:</dt><dd><ul>
+<li><p>Colorspace conversion no longer allows dropping the alpha channel: source and target <strong>alpha will now always be the same</strong>. We have seen exceptions and even interpreter crashes when using <em>alpha = 0</em>.</p></li>
+<li><p>As a replacement, the simple pixmap copy lets you choose the target alpha.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a> again offers the full garbage collection range 0 thru 4. Because of a bug in <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> maintenance, we had to temporarily enforce <em>garbage &gt; 1</em>. Finally resolves <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/148">issue #148</a>.</p></li>
+<li><p><a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a> now offers to “prettify” PDF source via an additional argument.</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertImage()</span></code> has the additional <em>stream</em> -parameter, specifying a memory area holding an image.</p></li>
+<li><p>Issue with garbled PNGs on Linux systems has been resolved (<a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/133">“Problem writing PNG” #133)</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-12-4">
+<h2>Changes in Version 1.12.4<a class="headerlink" href="#changes-in-version-1-12-4" title="Permalink to this headline">¶</a></h2>
+<p>This is an extension of 1.12.3.</p>
+<ul class="simple">
+<li><p>Fix of <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/147">issue #147</a>: methods <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getPageFontlist()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getPageImagelist()</span></code> now also show fonts and images contained in <a class="reference internal" href="glossary.html#resources" title="resources"><code class="xref py py-data docutils literal notranslate"><span class="pre">resources</span></code></a> nested via “Form XObjects”.</p></li>
+<li><p>Temporary fix of <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/issues/148">issue #148</a>: Saving to new PDF files will now automatically use <em>garbage = 2</em> if a lower value is given. Final fix is to be expected with MuPDF’s next version. At that point we will remove this circumvention.</p></li>
+<li><p>Preventive fix of illegally using stencil / image mask pixmaps in some methods.</p></li>
+<li><p>Method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getPageFontlist()</span></code> now includes the encoding name for each font in the list.</p></li>
+<li><p>Method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.getPageImagelist()</span></code> now includes the decode method name for each image in the list.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-12-3">
+<h2>Changes in Version 1.12.3<a class="headerlink" href="#changes-in-version-1-12-3" title="Permalink to this headline">¶</a></h2>
+<p>This is an extension of 1.12.2.</p>
+<ul class="simple">
+<li><p>Many functions now return <em>None</em> instead of <em>0</em>, if the result has no other meaning than just indicating successful execution (<a class="reference internal" href="document.html#Document.close" title="Document.close"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.close()</span></code></a>, <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a>, <a class="reference internal" href="document.html#Document.select" title="Document.select"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.select()</span></code></a>, <a class="reference internal" href="pixmap.html#Pixmap.writePNG" title="Pixmap.writePNG"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writePNG()</span></code></a> and many others).</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-12-2">
+<h2>Changes in Version 1.12.2<a class="headerlink" href="#changes-in-version-1-12-2" title="Permalink to this headline">¶</a></h2>
+<p>This is an extension of 1.12.1.</p>
+<ul class="simple">
+<li><p>Method <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a> now accepts the new <em>clip</em> argument. This specifies an area of the source page to which the display should be restricted.</p></li>
+<li><p>New <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.CropBox</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.MediaBox</span></code> have been included for convenience.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-12-1">
+<h2>Changes in Version 1.12.1<a class="headerlink" href="#changes-in-version-1-12-1" title="Permalink to this headline">¶</a></h2>
+<p>This is an extension of version 1.12.0.</p>
+<ul class="simple">
+<li><p>New method <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a> displays another’s PDF page. This is a <strong>vector</strong> image and therefore remains precise across zooming. Both involved documents must be PDF.</p></li>
+<li><p>New method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getSVGimage()</span></code> creates an SVG image from the page. In contrast to the raster image of a pixmap, this is a vector image format. The return is a unicode text string, which can be saved in a <em>.svg</em> file.</p></li>
+<li><p>Method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTextBlocks()</span></code> now accepts an additional bool parameter “images”. If set to true (default is false), image blocks (metadata only) are included in the produced list and thus allow detecting areas with rendered images.</p></li>
+<li><p>Minor bug fixes.</p></li>
+<li><p>“text” result of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> concatenates all lines within a block using a single space character. MuPDF’s original uses “\n” instead, producing a rather ragged output.</p></li>
+<li><p>New properties of <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> objects <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.MediaBoxSize</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.CropBoxPosition</span></code> provide more information about a page’s dimensions. For non-PDF files (and for most PDF files, too) these will be equal to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.rect.bottom_right</span></code>, resp. <code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.rect.top_left</span></code>. For example, class <a class="reference internal" href="shape.html#shape"><span class="std std-ref">Shape</span></a> makes use of them to correctly position its items.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-12-0">
+<h2>Changes in Version 1.12.0<a class="headerlink" href="#changes-in-version-1-12-0" title="Permalink to this headline">¶</a></h2>
+<p>This version is based on and requires MuPDF v1.12.0. The new MuPDF version contains quite a number of changes – most of them around text extraction. Some of the changes impact the programmer’s API.</p>
+<ul class="simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">Outline.saveText()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">Outline.saveXML()</span></code> have been deleted without replacement. You probably haven’t used them much anyway. But if you are looking for a replacement: the output of <a class="reference internal" href="document.html#Document.get_toc" title="Document.get_toc"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_toc()</span></code></a> can easily be used to produce something equivalent.</p></li>
+<li><p>Class <em>TextSheet</em> does no longer exist.</p></li>
+<li><p>Text “spans” (one of the hierarchy levels of <a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a>) no longer contain positioning information (i.e. no “bbox” key). Instead, spans now provide the font information for its text. This impacts our JSON output variant.</p></li>
+<li><p>HTML output has improved very much: it now creates valid documents which can be displayed by browsers to produce a similar view as the original document.</p></li>
+<li><p>There is a new output format XHTML, which provides text and images in a browser-readable format. The difference to HTML output is, that no effort is made to reproduce the original layout.</p></li>
+<li><p>All output formats of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getText()</span></code> now support creating complete, valid documents, by wrapping them with appropriate header and trailer information. If you are interested in using the HTML output, please make sure to read <a class="reference internal" href="app2.html#htmlquality"><span class="std std-ref">Controlling Quality of HTML Output</span></a>.</p></li>
+<li><p>To support finding text positions, we have added special methods that don’t need detours like <a class="reference internal" href="textpage.html#TextPage.extractJSON" title="TextPage.extractJSON"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractJSON()</span></code></a> or <a class="reference internal" href="textpage.html#TextPage.extractXML" title="TextPage.extractXML"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractXML()</span></code></a>: use <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTextBlocks()</span></code> or resp. <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.getTextWords()</span></code> to create lists of text blocks or resp. words, which are accompanied by their rectangles. This should be much faster than the standard text extraction methods and also avoids using additional packages for interpreting their output.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-11-2">
+<h2>Changes in Version 1.11.2<a class="headerlink" href="#changes-in-version-1-11-2" title="Permalink to this headline">¶</a></h2>
+<p>This is an extension of v1.11.1.</p>
+<ul>
+<li><p>New <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insertFont()</span></code> creates a PDF <em>/Font</em> object and returns its object number.</p></li>
+<li><p>New <code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.extractFont()</span></code> extracts the content of an embedded font given its object number.</p></li>
+<li><p>Methods <strong>FontList(…)</strong> items no longer contain the PDF generation number. This value never had any significance. Instead, the font file extension is included (e.g. “pfa” for a “PostScript Font for ASCII”), which is more valuable information.</p></li>
+<li><p>Fonts other than “simple fonts” (Type1) are now also supported.</p></li>
+<li><p>New options to change <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> size:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Method <a class="reference internal" href="pixmap.html#Pixmap.shrink" title="Pixmap.shrink"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.shrink()</span></code></a> reduces the pixmap proportionally in place.</p></li>
+<li><p>A new <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> copy constructor allows scaling via setting target width and height.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-11-1">
+<h2>Changes in Version 1.11.1<a class="headerlink" href="#changes-in-version-1-11-1" title="Permalink to this headline">¶</a></h2>
+<p>This is an extension of v1.11.0.</p>
+<ul class="simple">
+<li><p>New class <em>Shape</em>. It facilitates and extends the creation of image shapes on PDF pages. It contains multiple methods for creating elementary shapes like lines, rectangles or circles, which can be combined into more complex ones and be given common properties like line width or colors. Combined shapes are handled as a unit and e.g. be “morphed” together. The class can accumulate multiple complex shapes and put them all in the page’s foreground or background – thus also reducing the number of updates to the page’s <a class="reference internal" href="glossary.html#contents" title="contents"><code class="xref py py-data docutils literal notranslate"><span class="pre">contents</span></code></a> object.</p></li>
+<li><p>All <em>Page</em> draw methods now use the new <em>Shape</em> class.</p></li>
+<li><p>Text insertion methods <em>insertText()</em> and <em>insertTextBox()</em> now support morphing in addition to text rotation. They have become part of the <em>Shape</em> class and thus allow text to be freely combined with graphics.</p></li>
+<li><p>A new <em>Pixmap</em> constructor allows creating pixmap copies with an added alpha channel. A new method also allows directly manipulating alpha values.</p></li>
+<li><p>Binary algebraic operations with geometry objects (matrices, rectangles and points) now generally also support lists or tuples as the second operand. You can add a tuple <em>(x, y)</em> of numbers to a <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a>. In this context, such sequences are called “<a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a>” (resp. <a class="reference internal" href="glossary.html#matrix_like" title="matrix_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">matrix_like</span></code></a>, <a class="reference internal" href="glossary.html#rect_like" title="rect_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">rect_like</span></code></a>).</p></li>
+<li><p>Geometry objects now fully support in-place operators. For example, <em>p /= m</em> replaces point p with <em>p * 1/m</em> for a number, or <em>p * ~m</em> for a <a class="reference internal" href="glossary.html#matrix_like" title="matrix_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">matrix_like</span></code></a> object <em>m</em>. Similarly, if <em>r</em> is a rectangle, then <em>r |= (3, 4)</em> is the new rectangle that also includes <em>fitz.Point(3, 4)</em>, and <em>r &amp;= (1, 2, 3, 4)</em> is its intersection with <em>fitz.Rect(1, 2, 3, 4)</em>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-11-0">
+<h2>Changes in Version 1.11.0<a class="headerlink" href="#changes-in-version-1-11-0" title="Permalink to this headline">¶</a></h2>
+<p>This version is based on and requires MuPDF v1.11.</p>
+<p>Though MuPDF has declared it as being mostly a bug fix version, one major new feature is indeed contained: support of embedded files – also called portfolios or collections. We have extended PyMuPDF functionality to embrace this up to an extent just a little beyond the <em>mutool</em> utility as follows.</p>
+<ul>
+<li><p>The <em>Document</em> class now support embedded files with several new methods and one new property:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><em>embfile_Info()</em> returns metadata information about an entry in the list of embedded files. This is more than <em>mutool</em> currently provides: it shows all the information that was used to embed the file (not just the entry’s name).</p></li>
+<li><p><em>embfile_Get()</em> retrieves the (decompressed) content of an entry into a <em>bytes</em> buffer.</p></li>
+<li><p><em>embfile_Add(…)</em> inserts new content into the PDF portfolio. We (in contrast to <em>mutool</em>) <strong>restrict</strong> this to entries with a <strong>new name</strong> (no duplicate names allowed).</p></li>
+<li><p><em>embfile_Del(…)</em> deletes an entry from the portfolio (function not offered in MuPDF).</p></li>
+<li><p><em>embfile_SetInfo()</em> – changes filename or description of an embedded file.</p></li>
+<li><p><em>embfile_Count</em> – contains the number of embedded files.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Several enhancements deal with streamlining geometry objects. These are not connected to the new MuPDF version and most of them are also reflected in PyMuPDF v1.10.0. Among them are new properties to identify the corners of rectangles by name (e.g. <em>Rect.bottom_right</em>) and new methods to deal with set-theoretic questions like <em>Rect.contains(x)</em> or <em>IRect.intersects(x)</em>. Special effort focussed on supporting more “Pythonic” language constructs: <em>if x in rect …</em> is equivalent to <em>rect.contains(x)</em>.</p></li>
+<li><p>The <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> chapter now has more background on empty amd infinite rectangles and how we handle them. The handling itself was also updated for more consistency in this area.</p></li>
+<li><p>We have started basic support for <strong>generation</strong> of PDF content:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><em>Document.insert_page()</em> adds a new page into a PDF, optionally containing some text.</p></li>
+<li><p><em>Page.insertImage()</em> places a new image on a PDF page.</p></li>
+<li><p><em>Page.insertText()</em> puts new text on an existing page</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>For <strong>FileAttachment</strong> annotations, content and name of the attached file can extracted and changed.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-10-0">
+<h2>Changes in Version 1.10.0<a class="headerlink" href="#changes-in-version-1-10-0" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mupdf-v1-10-impact">
+<h3>MuPDF v1.10 Impact<a class="headerlink" href="#mupdf-v1-10-impact" title="Permalink to this headline">¶</a></h3>
+<p>MuPDF version 1.10 has a significant impact on our bindings. Some of the changes also affect the API – in other words, <strong>you</strong> as a PyMuPDF user.</p>
+<ul>
+<li><p>Link destination information has been reduced. Several properties of the <em>linkDest</em> class no longer contain valuable information. In fact, this class as a whole has been deleted from MuPDF’s library and we in PyMuPDF only maintain it to provide compatibilty to existing code.</p></li>
+<li><p>In an effort to minimize memory requirements, several improvements have been built into MuPDF v1.10:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A new <em>config.h</em> file can be used to de-select unwanted features in the C base code. Using this feature we have been able to reduce the size of our binary <em>_fitz.o</em> / <em>_fitz.pyd</em> by about 50% (from 9 MB to 4.5 MB). When UPX-ing this, the size goes even further down to a very handy 2.3 MB.</p></li>
+<li><p>The alpha (transparency) channel for pixmaps is now optional. Letting alpha default to <em>False</em> significantly reduces pixmap sizes (by 20% – CMYK, 25% – RGB, 50% – GRAY). Many <em>Pixmap</em> constructors therefore now accept an <em>alpha</em> boolean to control inclusion of this channel. Other pixmap constructors (e.g. those for file and image input) create pixmaps with no alpha alltogether. On the downside, save methods for pixmaps no longer accept a <em>savealpha</em> option: this channel will always be saved when present. To minimize code breaks, we have left this parameter in the call patterns – it will just be ignored.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><em>DisplayList</em> and <em>TextPage</em> class constructors now <strong>require the mediabox</strong> of the page they are referring to (i.e. the <em>page.bound()</em> rectangle). There is no way to construct this information from other sources, therefore a source code change cannot be avoided in these cases. We assume however, that not many users are actually employing these rather low level classes explixitely. So the impact of that change should be minor.</p></li>
+</ul>
+</div>
+<div class="section" id="other-changes-compared-to-version-1-9-3">
+<h3>Other Changes compared to Version 1.9.3<a class="headerlink" href="#other-changes-compared-to-version-1-9-3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>The new <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> method <em>write()</em> writes an opened PDF to memory (as opposed to a file, like <em>save()</em> does).</p></li>
+<li><p>An annotation can now be scaled and moved around on its page. This is done by modifying its rectangle.</p></li>
+<li><p>Annotations can now be deleted. <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> contains the new method <em>deleteAnnot()</em>.</p></li>
+<li><p>Various annotation attributes can now be modified, e.g. content, dates, title (= author), border, colors.</p></li>
+<li><p>Method <em>Document.insert_pdf()</em> now also copies annotations of source pages.</p></li>
+<li><p>The <em>Pages</em> class has been deleted. As documents can now be accessed with page numbers as indices (like <em>doc[n] = doc.loadPage(n)</em>), and document object can be used as iterators, the benefit of this class was too low to maintain it. See the following comments.</p></li>
+<li><p><em>loadPage(n)</em> / <em>doc[n]</em> now accept arbitrary integers to specify a page number, as long as <em>n &lt; pageCount</em>. So, e.g. <em>doc[-500]</em> is always valid and will load page <em>(-500) % pageCount</em>.</p></li>
+<li><p>A document can now also be used as an iterator like this: <em>for page in doc: …&lt;do something with “page”&gt; …</em>. This will yield all pages of <em>doc</em> as <em>page</em>.</p></li>
+<li><p>The <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> method <em>getSize()</em> has been replaced with property <em>size</em>. As before <em>Pixmap.size == len(Pixmap)</em> is true.</p></li>
+<li><p>In response to transparency (alpha) being optional, several new parameters and properties have been added to <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> and <a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a> classes to support determining their characteristics.</p></li>
+<li><p>The <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> class now contains new properties <em>firstAnnot</em> and <em>firstLink</em> to provide starting points to the respective class chains, where <em>firstLink</em> is just a mnemonic synonym to method <em>loadLinks()</em> which continues to exist. Similarly, the new property <em>rect</em> is a synonym for method <em>bound()</em>, which also continues to exist.</p></li>
+<li><p><a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> methods <em>samplesRGB()</em> and <em>samplesAlpha()</em> have been deleted because pixmaps can now be created without transparency.</p></li>
+<li><p><a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> now has a property <em>irect</em> which is a synonym of method <em>round()</em>. Likewise, <a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a> now has property <em>rect</em> to deliver a <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> which has the same coordinates as floats values.</p></li>
+<li><p>Document has the new method <em>searchPageFor()</em> to search for a text string. It works exactly like the corresponding <em>Page.searchFor()</em> with page number as additional parameter.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="changes-in-version-1-9-3">
+<h2>Changes in Version 1.9.3<a class="headerlink" href="#changes-in-version-1-9-3" title="Permalink to this headline">¶</a></h2>
+<p>This version is also based on MuPDF v1.9a. Changes compared to version 1.9.2:</p>
+<ul>
+<li><p>As a major enhancement, annotations are now supported in a similar way as links. Annotations can be displayed (as pixmaps) and their properties can be accessed.</p></li>
+<li><p>In addition to the document <em>select()</em> method, some simpler methods can now be used to manipulate a PDF:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><em>copyPage()</em> copies a page within a document.</p></li>
+<li><p><em>movePage()</em> is similar, but deletes the original.</p></li>
+<li><p><em>delete_page()</em> deletes a page</p></li>
+<li><p><em>delete_pages()</em> deletes a page range</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><em>rotation</em> or <em>setRotation()</em> access or change a PDF page’s rotation, respectively.</p></li>
+<li><p>Available but undocumented before, <a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a>, <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a>, <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a> and <a class="reference internal" href="matrix.html#matrix"><span class="std std-ref">Matrix</span></a> support the <em>len()</em> method and their coordinate properties can be accessed via indices, e.g. <em>IRect.x1 == IRect[2]</em>.</p></li>
+<li><p>For convenience, documents now support simple indexing: <em>doc.loadPage(n) == doc[n]</em>. The index may however be in range <em>-pageCount &lt; n &lt; pageCount</em>, such that <em>doc[-1]</em> is the last page of the document.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-9-2">
+<h2>Changes in Version 1.9.2<a class="headerlink" href="#changes-in-version-1-9-2" title="Permalink to this headline">¶</a></h2>
+<p>This version is also based on MuPDF v1.9a. Changes compared to version 1.9.1:</p>
+<ul>
+<li><p><em>fitz.open()</em> (no parameters) creates a new empty <strong>PDF</strong> document, i.e. if saved afterwards, it must be given a <em>.pdf</em> extension.</p></li>
+<li><p><a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a> now accepts all of the following formats (<em>Document</em> and <em>open</em> are synonyms):</p>
+<ul class="simple">
+<li><p><em>open()</em>,</p></li>
+<li><p><em>open(filename)</em> (equivalent to <em>open(filename, None)</em>),</p></li>
+<li><p><em>open(filetype, area)</em> (equivalent to <em>open(filetype, stream = area)</em>).</p></li>
+</ul>
+<p>Type of memory area <em>stream</em> may be <em>bytes</em> or <em>bytearray</em>. Thus, e.g. <em>area = open(“file.pdf”, “rb”).read()</em> may be used directly (without first converting it to bytearray).</p>
+</li>
+<li><p>New method <em>Document.insert_pdf()</em> (PDFs only) inserts a range of pages from another PDF.</p></li>
+<li><p><em>Document</em> objects doc now support the <em>len()</em> function: <em>len(doc) == doc.pageCount</em>.</p></li>
+<li><p>New method <em>Document.getPageImageList()</em> creates a list of images used on a page.</p></li>
+<li><p>New method <em>Document.getPageFontList()</em> creates a list of fonts referenced by a page.</p></li>
+<li><p>New pixmap constructor <em>fitz.Pixmap(doc, xref)</em> creates a pixmap based on an opened PDF document and an <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number of the image.</p></li>
+<li><p>New pixmap constructor <em>fitz.Pixmap(cspace, spix)</em> creates a pixmap as a copy of another one <em>spix</em> with the colorspace converted to <em>cspace</em>. This works for all colorspace combinations.</p></li>
+<li><p>Pixmap constructor <em>fitz.Pixmap(colorspace, width, height, samples)</em> now allows <em>samples</em> to also be <em>bytes</em>, not only <em>bytearray</em>.</p></li>
+</ul>
+</div>
+<div class="section" id="changes-in-version-1-9-1">
+<h2>Changes in Version 1.9.1<a class="headerlink" href="#changes-in-version-1-9-1" title="Permalink to this headline">¶</a></h2>
+<p>This version of PyMuPDF is based on MuPDF library source code version 1.9a published on April 21, 2016.</p>
+<p>Please have a look at MuPDF’s website to see which changes and enhancements are contained herein.</p>
+<p>Changes in version 1.9.1 compared to version 1.8.0 are the following:</p>
+<ul class="simple">
+<li><p>New methods <em>getRectArea()</em> for both <em>fitz.Rect</em> and <em>fitz.IRect</em></p></li>
+<li><p>Pixmaps can now be created directly from files using the new constructor <em>fitz.Pixmap(filename)</em>.</p></li>
+<li><p>The Pixmap constructor <em>fitz.Pixmap(image)</em> has been extended accordingly.</p></li>
+<li><p><em>fitz.Rect</em> can now be created with all possible combinations of points and coordinates.</p></li>
+<li><p>PyMuPDF classes and methods now all contain  __doc__ strings,  most of them created by SWIG automatically. While the PyMuPDF documentation certainly is more detailed, this feature should help a lot when programming in Python-aware IDEs.</p></li>
+<li><p>A new document method of <em>getPermits()</em> returns the permissions associated with the current access to the document (print, edit, annotate, copy), as a Python dictionary.</p></li>
+<li><p>The identity matrix <em>fitz.Identity</em> is now <strong>immutable</strong>.</p></li>
+<li><p>The new document method <em>select(list)</em> removes all pages from a document that are not contained in the list. Pages can also be duplicated and re-arranged.</p></li>
+<li><p>Various improvements and new members in our demo and examples collections. Perhaps most prominently: <em>PDF_display</em> now supports scrolling with the mouse wheel, and there is a new example program <em>wxTableExtract</em> which allows to graphically identify and extract table data in documents.</p></li>
+<li><p><em>fitz.open()</em> is now an alias of <em>fitz.Document()</em>.</p></li>
+<li><p>New pixmap method <em>getPNGData()</em> which will return a bytearray formatted as a PNG image of the pixmap.</p></li>
+<li><p>New pixmap method <em>samplesRGB()</em> providing a <em>samples</em> version with alpha bytes stripped off (RGB colorspaces only).</p></li>
+<li><p>New pixmap method <em>samplesAlpha()</em> providing the alpha bytes only of the <em>samples</em> area.</p></li>
+<li><p>New iterator <em>fitz.Pages(doc)</em> over a document’s set of pages.</p></li>
+<li><p>New matrix methods <em>invert()</em> (calculate inverted matrix), <em>concat()</em> (calculate matrix product), <em>preTranslate()</em> (perform a shift operation).</p></li>
+<li><p>New <em>IRect</em> methods <em>intersect()</em> (intersection with another rectangle), <em>translate()</em> (perform a shift operation).</p></li>
+<li><p>New <em>Rect</em> methods <em>intersect()</em> (intersection with another rectangle), <em>transform()</em> (transformation with a matrix), <em>includePoint()</em> (enlarge rectangle to also contain a point), <em>includeRect()</em> (enlarge rectangle to also contain another one).</p></li>
+<li><p>Documented <em>Point.transform()</em> (transform a point with a matrix).</p></li>
+<li><p><em>Matrix</em>, <em>IRect</em>, <em>Rect</em> and <em>Point</em> classes now support compact, algebraic formulations for manipulating such objects.</p></li>
+<li><p>Incremental saves for changes are possible now using the call pattern <em>doc.save(doc.name, incremental=True)</em>.</p></li>
+<li><p>A PDF’s metadata can now be deleted, set or changed by document method <em>set_metadata()</em>. Supports incremental saves.</p></li>
+<li><p>A PDF’s bookmarks (or table of contents) can now be deleted, set or changed with the entries of a list using document method <em>set_toc(list)</em>. Supports incremental saves.</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Change Logs</a><ul>
+<li><a class="reference internal" href="#changes-in-version-1-18-9">Changes in Version 1.18.9</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-8">Changes in Version 1.18.8</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-7">Changes in Version 1.18.7</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-6">Changes in Version 1.18.6</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-5">Changes in Version 1.18.5</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-4">Changes in Version 1.18.4</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-3">Changes in Version 1.18.3</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-2">Changes in Version 1.18.2</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-1">Changes in Version 1.18.1</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-18-0">Changes in Version 1.18.0</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-7">Changes in Version 1.17.7</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-6">Changes in Version 1.17.6</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-5">Changes in Version 1.17.5</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-4">Changes in Version 1.17.4</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-3">Changes in Version 1.17.3</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-2">Changes in Version 1.17.2</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-1">Changes in Version 1.17.1</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-17-0">Changes in Version 1.17.0</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-18">Changes in Version 1.16.18</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-17">Changes in Version 1.16.17</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-16">Changes in Version 1.16.16</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-14">Changes in Version 1.16.14</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-13">Changes in Version 1.16.13</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-12">Changes in Version 1.16.12</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-11">Changes in Version 1.16.11</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-10">Changes in Version 1.16.10</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-9">Changes in Version 1.16.9</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-8">Changes in Version 1.16.8</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-7">Changes in Version 1.16.7</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-6">Changes in Version 1.16.6</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-5">Changes in Version 1.16.5</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-4">Changes in Version 1.16.4</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-3">Changes in Version 1.16.3</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-2">Changes in Version 1.16.2</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-1">Changes in Version 1.16.1</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-16-0">Changes in Version 1.16.0</a></li>
+<li><a class="reference internal" href="#no-version-published-for-mupdf-v1-15-0">No version published for MuPDF v1.15.0</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-20-1-14-21">Changes in Version 1.14.20 / 1.14.21</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-19">Changes in Version 1.14.19</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-17">Changes in Version 1.14.17</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-16">Changes in Version 1.14.16</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-15">Changes in Version 1.14.15</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-14">Changes in Version 1.14.14</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-13">Changes in Version 1.14.13</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-12">Changes in Version 1.14.12</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-11">Changes in Version 1.14.11</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-10">Changes in Version 1.14.10</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-9">Changes in Version 1.14.9</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-8">Changes in Version 1.14.8</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-7">Changes in Version 1.14.7</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-5">Changes in Version 1.14.5</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-4">Changes in Version 1.14.4</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-3">Changes in Version 1.14.3</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-1">Changes in Version 1.14.1</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-14-0">Changes in Version 1.14.0</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-19">Changes in Version 1.13.19</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-18">Changes in Version 1.13.18</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-17">Changes in Version 1.13.17</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-16">Changes in Version 1.13.16</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-15">Changes in Version 1.13.15</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-14">Changes in Version 1.13.14</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-13">Changes in Version 1.13.13</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-12">Changes in Version 1.13.12</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-11">Changes in Version 1.13.11</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-7">Changes in Version 1.13.7</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-6">Changes in Version 1.13.6</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-5">Changes in Version 1.13.5</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-4">Changes in Version 1.13.4</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-3">Changes in Version 1.13.3</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-2">Changes in Version 1.13.2</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-1">Changes in Version 1.13.1</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-13-0">Changes in Version 1.13.0</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-12-4">Changes in Version 1.12.4</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-12-3">Changes in Version 1.12.3</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-12-2">Changes in Version 1.12.2</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-12-1">Changes in Version 1.12.1</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-12-0">Changes in Version 1.12.0</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-11-2">Changes in Version 1.11.2</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-11-1">Changes in Version 1.11.1</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-11-0">Changes in Version 1.11.0</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-10-0">Changes in Version 1.10.0</a><ul>
+<li><a class="reference internal" href="#mupdf-v1-10-impact">MuPDF v1.10 Impact</a></li>
+<li><a class="reference internal" href="#other-changes-compared-to-version-1-9-3">Other Changes compared to Version 1.9.3</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#changes-in-version-1-9-3">Changes in Version 1.9.3</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-9-2">Changes in Version 1.9.2</a></li>
+<li><a class="reference internal" href="#changes-in-version-1-9-1">Changes in Version 1.9.1</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="app4.html"
+                        title="previous chapter">Appendix 4: Assorted Technical Information</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="znames.html"
+                        title="next chapter">Deprecated Names</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="znames.html" title="Deprecated Names"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="app4.html" title="Appendix 4: Assorted Technical Information"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Change Logs</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

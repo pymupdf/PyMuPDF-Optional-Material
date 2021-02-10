@@ -1,0 +1,551 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tools &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Widget" href="widget.html" />
+    <link rel="prev" title="TextWriter" href="textwriter.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="widget.html" title="Widget"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="textwriter.html" title="TextWriter"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tools</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tools">
+<span id="id1"></span><h1>Tools<a class="headerlink" href="#tools" title="Permalink to this headline">¶</a></h1>
+<p>This class is a collection of utility methods and attributes, mainly around memory management. To simplify and speed up its use, it is automatically instantiated under the name <em>TOOLS</em> when PyMuPDF is imported.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Method / Attribute</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#Tools.gen_id" title="Tools.gen_id"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.gen_id()</span></code></a></p></td>
+<td><p>generate a unique identifyer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Tools.image_profile" title="Tools.image_profile"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.image_profile()</span></code></a></p></td>
+<td><p>report basic image properties</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Tools.store_shrink" title="Tools.store_shrink"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.store_shrink()</span></code></a></p></td>
+<td><p>shrink the storables cache <a class="footnote-reference brackets" href="#f1" id="id2">1</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Tools.mupdf_warnings" title="Tools.mupdf_warnings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.mupdf_warnings()</span></code></a></p></td>
+<td><p>return the accumulated MuPDF warnings</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Tools.mupdf_display_errors" title="Tools.mupdf_display_errors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.mupdf_display_errors()</span></code></a></p></td>
+<td><p>return the accumulated MuPDF warnings</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Tools.reset_mupdf_warnings" title="Tools.reset_mupdf_warnings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.reset_mupdf_warnings()</span></code></a></p></td>
+<td><p>empty MuPDF messages on STDOUT</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Tools.set_aa_level" title="Tools.set_aa_level"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.set_aa_level()</span></code></a></p></td>
+<td><p>set the anti-aliasing values</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Tools.set_annot_stem" title="Tools.set_annot_stem"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.set_annot_stem()</span></code></a></p></td>
+<td><p>set the prefix of new annotation / link ids</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Tools.set_small_glyph_heights" title="Tools.set_small_glyph_heights"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.set_small_glyph_heights()</span></code></a></p></td>
+<td><p>search and extract small bbox heights</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Tools.show_aa_level" title="Tools.show_aa_level"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Tools.show_aa_level()</span></code></a></p></td>
+<td><p>return the anti-aliasing values</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Tools.fitz_config" title="Tools.fitz_config"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Tools.fitz_config</span></code></a></p></td>
+<td><p>configuration settings of PyMuPDF</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Tools.store_maxsize" title="Tools.store_maxsize"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Tools.store_maxsize</span></code></a></p></td>
+<td><p>maximum storables cache size</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Tools.store_size" title="Tools.store_size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Tools.store_size</span></code></a></p></td>
+<td><p>current storables cache size</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="Tools">
+<em class="property">class </em><code class="sig-name descname">Tools</code><a class="headerlink" href="#Tools" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Tools.gen_id">
+<code class="sig-name descname">gen_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Tools.gen_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A convenience method returning a unique positive integer which will increase by 1 on every invocation. Example usages include creating unique keys in databases - its creation should be faster than using timestamps by an order of magnitude.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>MuPDF has dropped support for this in v1.14.0, so we have re-implemented a similar function with the following differences:</p>
+<ul class="simple">
+<li><p>It is not part of MuPDF’s global context and not threadsafe (not an issue because we do not support threads in PyMuPDF anyway).</p></li>
+<li><p>It is implemented as <em>int</em>. This means that the maximum number is <em>sys.maxsize</em>. Should this number ever be exceeded, the counter starts over again at 1.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a unique positive integer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.set_annot_stem">
+<code class="sig-name descname">set_annot_stem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stem</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tools.set_annot_stem" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in v1.18.6)</em></p>
+<p>Set or inquire the prefix for the id of new annotations, fields or links.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stem</strong> (<em>str</em>) – if omitted, the current value is returned, default is “fitz”. Annotations, fields / widgets and links technically are subtypes of the same type of object (<cite>/Annot</cite>) in PDF documents. An <cite>/Annot</cite> object may be given a unique identifier within a page. For each of the applicable subtypes, PyMuPDF generates identifiers “stem-Annn”, “stem-Wnnn” or “stem-Lnnn” respectively. The number “nnn” is used to enforce the required uniqueness.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the current value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.set_small_glyph_heights">
+<code class="sig-name descname">set_small_glyph_heights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">on</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tools.set_small_glyph_heights" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in v1.18.5)</em></p>
+<p>Set or inquire reduced bbox heights in text extract and text search methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>on</strong> (<em>bool</em>) – if omitted, the current setting is returned. For other values the <em>bool()</em> function is applied to set a global variable. If <em>True</em>, <a class="reference internal" href="page.html#Page.search_for" title="Page.search_for"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.search_for()</span></code></a> and <a class="reference internal" href="page.html#Page.get_text" title="Page.get_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.get_text()</span></code></a> methods return character, span, line or block bboxes that have a height of <em>font size</em>. If <em>False</em> (the standard setting when PyMuPDF is imported), bbox height will normally equal <em>line height</em>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>True</em> or <em>False</em>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.image_profile">
+<code class="sig-name descname">image_profile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stream</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tools.image_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in v1.16.17)</em> Show important properties of an image provided as a memory area. Its main purpose is to avoid using other Python packages just to determine basic properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stream</strong> (<em>bytes</em><em>,</em><em>bytearray</em>) – the image data.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dictionary with the keys “width”, “height”, “xres”, “yres”, “colorspace” (the <em>colorspace.n</em> value, number of colorants), “cs-name” (the <em>colorspace.name</em> value), “bpc”, “ext” (image type as file extension). The values for these keys are the same as returned by <a class="reference internal" href="functions.html#Document.extract_image" title="Document.extract_image"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.extract_image()</span></code></a>. Please also have a look at <a class="reference internal" href="glossary.html#resolution" title="resolution"><code class="xref py py-data docutils literal notranslate"><span class="pre">resolution</span></code></a>.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>For some “exotic” images (FAX encodings, RAW formats and the like), this method will not work and return <em>None</em>. You can however still work with such images in PyMuPDF, e.g. by using <a class="reference internal" href="functions.html#Document.extract_image" title="Document.extract_image"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.extract_image()</span></code></a> or create pixmaps via <code class="docutils literal notranslate"><span class="pre">Pixmap(doc,</span> <span class="pre">xref)</span></code>. These methods will automatically convert exotic images to the PNG format before returning results.</p></li>
+<li><p>Some examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">fitz</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">stream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="o">&lt;</span><span class="n">image</span><span class="o">.</span><span class="n">file</span><span class="o">&gt;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">image_profile</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>
+<span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mi">439</span><span class="p">,</span>
+<span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mi">501</span><span class="p">,</span>
+<span class="s1">&#39;xres&#39;</span><span class="p">:</span> <span class="mi">96</span><span class="p">,</span>
+<span class="s1">&#39;yres&#39;</span><span class="p">:</span> <span class="mi">96</span><span class="p">,</span>
+<span class="s1">&#39;colorspace&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="s1">&#39;bpc&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+<span class="s1">&#39;ext&#39;</span><span class="p">:</span> <span class="s1">&#39;jpeg&#39;</span><span class="p">,</span>
+<span class="s1">&#39;cs-name&#39;</span><span class="p">:</span> <span class="s1">&#39;DeviceRGB&#39;</span><span class="p">}</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">4</span><span class="p">]:</span> <span class="n">doc</span><span class="o">=</span><span class="n">fitz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="o">&lt;</span><span class="nb">input</span><span class="o">.</span><span class="n">pdf</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">5</span><span class="p">]:</span> <span class="n">stream</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">xref_stream_raw</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># no decompression!</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">6</span><span class="p">]:</span> <span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">image_profile</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">6</span><span class="p">]:</span>
+<span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mi">816</span><span class="p">,</span>
+<span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="mi">1056</span><span class="p">,</span>
+<span class="s1">&#39;xres&#39;</span><span class="p">:</span> <span class="mi">96</span><span class="p">,</span>
+<span class="s1">&#39;yres&#39;</span><span class="p">:</span> <span class="mi">96</span><span class="p">,</span>
+<span class="s1">&#39;colorspace&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="s1">&#39;bpc&#39;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+<span class="s1">&#39;ext&#39;</span><span class="p">:</span> <span class="s1">&#39;jpeg&#39;</span><span class="p">,</span>
+<span class="s1">&#39;cs-name&#39;</span><span class="p">:</span> <span class="s1">&#39;DeviceGray&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.store_shrink">
+<code class="sig-name descname">store_shrink</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">percent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tools.store_shrink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reduce the storables cache by a percentage of its current size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>percent</strong> (<em>int</em>) – the percentage of current size to free. If 100+ the store will be emptied, if zero, nothing will happen. MuPDF’s caching strategy is “least recently used”, so low-usage elements get deleted first.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the new current store size. Depending on the situation, the size reduction may be larger than the requested percentage.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.show_aa_level">
+<code class="sig-name descname">show_aa_level</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Tools.show_aa_level" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.16.14)</em> Return the current anti-aliasing values. These values control the rendering quality of graphics and text elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with the following initial content: <code class="docutils literal notranslate"><span class="pre">{'graphics':</span> <span class="pre">8,</span> <span class="pre">'text':</span> <span class="pre">8,</span> <span class="pre">'graphics_min_line_width':</span> <span class="pre">0.0}</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.set_aa_level">
+<code class="sig-name descname">set_aa_level</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">level</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tools.set_aa_level" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.16.14)</em> Set the new number of bits to use for anti-aliasing. The same value is taken currently for graphics and text rendering. This might change in a future MuPDF release.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>level</strong> (<em>int</em>) – an integer ranging between 0 and 8. Value outside this range will be silently changed to valid values. The value will remain in effect throughout the current session or until changed again.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.reset_mupdf_warnings">
+<code class="sig-name descname">reset_mupdf_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Tools.reset_mupdf_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.16.0)</em></p>
+<p>Empty MuPDF warnings message buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.mupdf_display_errors">
+<code class="sig-name descname">mupdf_display_errors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tools.mupdf_display_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.16.8)</em></p>
+<p>Show or set whether MuPDF errors should be displayed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>bool</em>) – if not a bool, the current setting is returned. If true, MuPDF errors will be shown on <em>sys.stderr</em>, otherwise suppressed. In any case, messages continue to be stored in the warnings store. Upon import of PyMuPDF this value is <em>True</em>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>True</em> or <em>False</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Tools.mupdf_warnings">
+<code class="sig-name descname">mupdf_warnings</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tools.mupdf_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.16.0)</em></p>
+<p>Return all stored MuPDF messages as a string with interspersed line-breaks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reset</strong> (<em>bool</em>) – <em>(new in version 1.16.7)</em> whether to automatically empty the store.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Tools.fitz_config">
+<code class="sig-name descname">fitz_config</code><a class="headerlink" href="#Tools.fitz_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>A dictionary containing the actual values used for configuring PyMuPDF and MuPDF. Also refer to the installation chapter. This is an overview of the keys, each of which describes the status of a support aspect.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Key</strong></p></th>
+<th class="head"><p><strong>Support included for …</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>plotter-g</p></td>
+<td><p>Gray colorspace rendering</p></td>
+</tr>
+<tr class="row-odd"><td><p>plotter-rgb</p></td>
+<td><p>RGB colorspace rendering</p></td>
+</tr>
+<tr class="row-even"><td><p>plotter-cmyk</p></td>
+<td><p>CMYK colorspcae rendering</p></td>
+</tr>
+<tr class="row-odd"><td><p>plotter-n</p></td>
+<td><p>overprint rendering</p></td>
+</tr>
+<tr class="row-even"><td><p>pdf</p></td>
+<td><p>PDF documents</p></td>
+</tr>
+<tr class="row-odd"><td><p>xps</p></td>
+<td><p>XPS documents</p></td>
+</tr>
+<tr class="row-even"><td><p>svg</p></td>
+<td><p>SVG documents</p></td>
+</tr>
+<tr class="row-odd"><td><p>cbz</p></td>
+<td><p>CBZ documents</p></td>
+</tr>
+<tr class="row-even"><td><p>img</p></td>
+<td><p>IMG documents</p></td>
+</tr>
+<tr class="row-odd"><td><p>html</p></td>
+<td><p>HTML documents</p></td>
+</tr>
+<tr class="row-even"><td><p>epub</p></td>
+<td><p>EPUB documents</p></td>
+</tr>
+<tr class="row-odd"><td><p>jpx</p></td>
+<td><p>JPEG2000 images</p></td>
+</tr>
+<tr class="row-even"><td><p>js</p></td>
+<td><p>JavaScript</p></td>
+</tr>
+<tr class="row-odd"><td><p>tofu</p></td>
+<td><p>all TOFU fonts</p></td>
+</tr>
+<tr class="row-even"><td><p>tofu-cjk</p></td>
+<td><p>CJK font subset (China, Japan, Korea)</p></td>
+</tr>
+<tr class="row-odd"><td><p>tofu-cjk-ext</p></td>
+<td><p>CJK font extensions</p></td>
+</tr>
+<tr class="row-even"><td><p>tofu-cjk-lang</p></td>
+<td><p>CJK font language extensions</p></td>
+</tr>
+<tr class="row-odd"><td><p>tofu-emoji</p></td>
+<td><p>TOFU emoji fonts</p></td>
+</tr>
+<tr class="row-even"><td><p>tofu-historic</p></td>
+<td><p>TOFU historic fonts</p></td>
+</tr>
+<tr class="row-odd"><td><p>tofu-symbol</p></td>
+<td><p>TOFU symbol fonts</p></td>
+</tr>
+<tr class="row-even"><td><p>tofu-sil</p></td>
+<td><p>TOFU SIL fonts</p></td>
+</tr>
+<tr class="row-odd"><td><p>icc</p></td>
+<td><p>ICC profiles</p></td>
+</tr>
+<tr class="row-even"><td><p>py-memory</p></td>
+<td><p>using Python memory management <a class="footnote-reference brackets" href="#f2" id="id3">2</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>base14</p></td>
+<td><p>Base-14 fonts (should always be true)</p></td>
+</tr>
+</tbody>
+</table>
+<p>For an explanation of the term “TOFU” see <a class="reference external" href="https://en.wikipedia.org/wiki/Noto_fonts">this Wikipedia article</a>.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="kn">import</span> <span class="nn">fitz</span>
+<span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">TOOLS</span><span class="o">.</span><span class="n">fitz_config</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+<span class="p">{</span><span class="s1">&#39;plotter-g&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;plotter-rgb&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;plotter-cmyk&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;plotter-n&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;pdf&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;xps&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;svg&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;cbz&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;img&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;html&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;epub&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;jpx&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;js&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;tofu&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;tofu-cjk&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;tofu-cjk-ext&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;tofu-cjk-lang&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;tofu-emoji&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;tofu-historic&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;tofu-symbol&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;tofu-sil&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+ <span class="s1">&#39;icc&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+ <span class="s1">&#39;py-memory&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="c1"># (False if Python 2)</span>
+ <span class="s1">&#39;base14&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Tools.store_maxsize">
+<code class="sig-name descname">store_maxsize</code><a class="headerlink" href="#Tools.store_maxsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum storables cache size in bytes. PyMuPDF is generated with a value of 268’435’456 (256 MB, the default value), which you should therefore always see here. If this value is zero, then an “unlimited” growth is permitted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Tools.store_size">
+<code class="sig-name descname">store_size</code><a class="headerlink" href="#Tools.store_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current storables cache size in bytes. This value may change (and will usually increase) with every use of a PyMuPDF function. It will (automatically) decrease only when <code class="xref py py-attr docutils literal notranslate"><span class="pre">Tools.store_maxize</span></code> is going to be exceeded: in this case, MuPDF will evict low-usage objects until the value is again in range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="example-session">
+<h2>Example Session<a class="headerlink" href="#example-session" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>::</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fitz</span>
+<span class="go"># print the maximum and current cache sizes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">store_maxsize</span>
+<span class="go">268435456</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">store_size</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;demo1.pdf&quot;</span><span class="p">)</span>
+<span class="go"># pixmap creation puts lots of object in cache (text, images, fonts),</span>
+<span class="go"># apart from the pixmap itself</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pix</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_pixmap</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">store_size</span>
+<span class="go">454519</span>
+<span class="go"># release (at least) 50% of the storage</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">store_shrink</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="go">13471</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">store_size</span>
+<span class="go">13471</span>
+<span class="go"># get a few unique numbers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">gen_id</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">gen_id</span><span class="p">()</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">gen_id</span><span class="p">()</span>
+<span class="go">3</span>
+<span class="go"># close document and see how much cache is still in use</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz</span><span class="o">.</span><span class="n">TOOLS</span><span class="o">.</span><span class="n">store_size</span>
+<span class="go">0</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p class="rubric">Footnotes</p>
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p>This memory area is internally used by MuPDF, and it serves as a cache for objects that have already been read and interpreted, thus improving performance. The most bulky object types are images and also fonts. When an application starts up the MuPDF library (in our case this happens as part of <em>import fitz</em>), it must specify a maximum size for this area. PyMuPDF’s uses the default value (256 MB) to limit memory consumption. Use the methods here to control or investigate store usage. For example: even after a document has been closed and all related objects have been deleted, the store usage may still not drop down to zero. So you might want to enforce that before opening another document.</p>
+</dd>
+<dt class="label" id="f2"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dd><p>Optionally, all dynamic management of memory can be done using Python C-level calls. MuPDF offers a hook to insert user-preferred memory managers. We are using option this for Python version 3 since PyMuPDF v1.13.19. At the same time, all memory allocation in PyMuPDF itself is also routed to Python (i.e. no more direct <em>malloc()</em> calls in the code). We have seen improved memory usage and slightly reduced runtimes with this option set. If you want to change this, you can set <em>#define JM_MEMORY 0</em> (uses standard C malloc, or 1 for Python allocation )in file <em>fitz.i</em> and then generate PyMuPDF.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tools</a><ul>
+<li><a class="reference internal" href="#example-session">Example Session</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="textwriter.html"
+                        title="previous chapter">TextWriter</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="widget.html"
+                        title="next chapter">Widget</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="widget.html" title="Widget"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="textwriter.html" title="TextWriter"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tools</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

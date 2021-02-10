@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Outline &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Page" href="page.html" />
+    <link rel="prev" title="Matrix" href="matrix.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="page.html" title="Page"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="matrix.html" title="Matrix"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Outline</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="outline">
+<span id="id1"></span><h1>Outline<a class="headerlink" href="#outline" title="Permalink to this headline">¶</a></h1>
+<p><em>outline</em> (or “bookmark”), is a property of <em>Document</em>. If not <em>None</em>, it stands for the first outline item of the document. Its properties in turn define the characteristics of this item and also point to other outline items in “horizontal” or downward direction. The full tree of all outline items for e.g. a conventional table of contents (TOC) can be recovered by following these “pointers”.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Method / Attribute</strong></p></th>
+<th class="head"><p><strong>Short Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#Outline.down" title="Outline.down"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.down</span></code></a></p></td>
+<td><p>next item downwards</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Outline.next" title="Outline.next"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.next</span></code></a></p></td>
+<td><p>next item same level</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Outline.page" title="Outline.page"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.page</span></code></a></p></td>
+<td><p>page number (0-based)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Outline.title" title="Outline.title"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.title</span></code></a></p></td>
+<td><p>title</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Outline.uri" title="Outline.uri"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.uri</span></code></a></p></td>
+<td><p>string further specifying the outline target</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Outline.isExternal" title="Outline.isExternal"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.isExternal</span></code></a></p></td>
+<td><p>target is outside this document</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Outline.is_open" title="Outline.is_open"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.is_open</span></code></a></p></td>
+<td><p>whether sub-outlines are open or collapsed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.isOpen</span></code></p></td>
+<td><p>whether sub-outlines are open or collapsed</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Outline.dest" title="Outline.dest"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Outline.dest</span></code></a></p></td>
+<td><p>points to link destination details</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="Outline">
+<em class="property">class </em><code class="sig-name descname">Outline</code><a class="headerlink" href="#Outline" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py attribute">
+<dt id="Outline.down">
+<code class="sig-name descname">down</code><a class="headerlink" href="#Outline.down" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next outline item on the next level down. Is <em>None</em> if the item has no kids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#outline"><span class="std std-ref">Outline</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Outline.next">
+<code class="sig-name descname">next</code><a class="headerlink" href="#Outline.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next outline item at the same level as this item. Is <em>None</em> if this is the last one in its level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><cite>Outline</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Outline.page">
+<code class="sig-name descname">page</code><a class="headerlink" href="#Outline.page" title="Permalink to this definition">¶</a></dt>
+<dd><p>The page number (0-based) this bookmark points to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Outline.title">
+<code class="sig-name descname">title</code><a class="headerlink" href="#Outline.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>The item’s title as a string or <em>None</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Outline.is_open">
+<code class="sig-name descname">is_open</code><a class="headerlink" href="#Outline.is_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Or <em>isOpen</em> – an indicator showing whether any sub-outlines should be expanded (<em>True</em>) or be collapsed (<em>False</em>). This information should be interpreted by PDF display software accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Outline.isExternal">
+<code class="sig-name descname">isExternal</code><a class="headerlink" href="#Outline.isExternal" title="Permalink to this definition">¶</a></dt>
+<dd><p>A bool specifying whether the target is outside (<em>True</em>) of the current document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Outline.uri">
+<code class="sig-name descname">uri</code><a class="headerlink" href="#Outline.uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string specifying the link target. The meaning of this property should be evaluated in conjunction with <em>isExternal</em>. The value may be <em>None</em>, in which case <em>isExternal == False</em>. If <em>uri</em> starts with <em>file://</em>, <em>mailto:</em>, or an internet resource name, <em>isExternal</em> is <em>True</em>. In all other cases <em>isExternal == False</em> and <em>uri</em> points to an internal location. In case of PDF documents, this should either be <em>#nnnn</em> to indicate a 1-based (!) page number <em>nnnn</em>, or a named location. The format varies for other document types, e.g. <em>uri = ‘../FixedDoc.fdoc#PG_21_LNK_84’</em> for page number 21 (1-based) in an XPS document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Outline.dest">
+<code class="sig-name descname">dest</code><a class="headerlink" href="#Outline.dest" title="Permalink to this definition">¶</a></dt>
+<dd><p>The link destination details object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="linkdest.html#linkdest"><span class="std std-ref">linkDest</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="matrix.html"
+                        title="previous chapter">Matrix</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="page.html"
+                        title="next chapter">Page</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="page.html" title="Page"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="matrix.html" title="Matrix"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Outline</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

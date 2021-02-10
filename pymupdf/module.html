@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using fitz as a Module &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Classes" href="classes.html" />
+    <link rel="prev" title="Collection of Recipes" href="faq.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="classes.html" title="Classes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="Collection of Recipes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using <em>fitz</em> as a Module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="using-fitz-as-a-module">
+<span id="module"></span><h1>Using <em>fitz</em> as a Module<a class="headerlink" href="#using-fitz-as-a-module" title="Permalink to this headline">¶</a></h1>
+<p><em>(New in version 1.16.8)</em></p>
+<p>PyMuPDF can also be used in the command line as a <strong>module</strong> to perform basic utility functions.</p>
+<p>This is work in progress and subject to changes. This feature should obsolete writing some of the most basic scripts.</p>
+<p>As a guideline we are using the feature set of MuPDF command line tools. Admittedly, there is some functional overlap. On the other hand, PDF embedded files are no longer supported by MuPDF, so PyMuPDF is offering something unique here.</p>
+<div class="section" id="invocation">
+<h2>Invocation<a class="headerlink" href="#invocation" title="Permalink to this headline">¶</a></h2>
+<p>Invoke the module like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">fitz</span> <span class="n">command</span> <span class="n">parameters</span>
+</pre></div>
+</div>
+<p>General remarks:</p>
+<ul>
+<li><p>Request help via <em>“-h”</em>, resp. command-specific help via <em>“command -h”</em>.</p></li>
+<li><p>Parameters may be abbreviated as long as the result is not ambiguous (Python 3.5 or later only).</p></li>
+<li><p>Several commands support parameters <em>-pages</em> and <em>-xrefs</em>. They are intended for down-selection. Please note that:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>page numbers</strong> for this utility must be given <strong>1-based</strong>.</p></li>
+<li><p>valid <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> numbers start at 1.</p></li>
+<li><p>Specify any number of either single integers or integer ranges, separated by one comma each. A <strong>range</strong> is a pair of integers separated by one hyphen “-“. Integers must not exceed the maximum page number or resp. <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number. To specify that maximum, the symbolic variable “N” may be used instead of an integer. Integers or ranges may occur several times, in any sequence and may overlap. If in a range the first number is greater than the second one, the respective items will be processed in reversed order.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>You can also use the fitz module inside your script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">fitz.__main__</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">fitz_command</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;clean input.pdf output.pdf -pages 1,N&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># prepare command</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">saved_parms</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># save original parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">cmd</span>  <span class="c1"># store command</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fitz_command</span><span class="p">()</span>  <span class="c1"># execute command</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">saved_parms</span>  <span class="c1"># restore original parameters</span>
+</pre></div>
+</div>
+</li>
+<li><p>You can use the following 2-liner and compile it with <a class="reference external" href="https://pypi.org/project/Nuitka/">Nuitka</a> in either normal or standalone mode, if you want to distribute it. This will give you a command line utility with all the functions explained below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fitz.__main__</span> <span class="kn">import</span> <span class="n">main</span>
+<span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="cleaning-and-copying">
+<h2>Cleaning and Copying<a class="headerlink" href="#cleaning-and-copying" title="Permalink to this headline">¶</a></h2>
+<p>This command will optimize the PDF and store the result in a new file. You can use it also for encryption, decryption and creating sub documents. It is mostly similar to the MuPDF command line utility <em>“mutool clean”</em>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz clean -h
+usage: fitz clean [-h] [-password PASSWORD]
+                [-encryption {keep,none,rc4-40,rc4-128,aes-128,aes-256}]
+                [-owner OWNER] [-user USER] [-garbage {0,1,2,3,4}]
+                [-compress] [-ascii] [-linear] [-permission PERMISSION]
+                [-sanitize] [-pretty] [-pages PAGES]
+                input output
+
+-------------- optimize PDF or create sub-PDF if pages given --------------
+
+positional arguments:
+input                 PDF filename
+output                output PDF filename
+
+optional arguments:
+-h, --help            show this help message and exit
+-password PASSWORD    password
+-encryption {keep,none,rc4-40,rc4-128,aes-128,aes-256}
+                      encryption method
+-owner OWNER          owner password
+-user USER            user password
+-garbage {0,1,2,3,4}  garbage collection level
+-compress             compress (deflate) output
+-ascii                ASCII encode binary data
+-linear               format for fast web display
+-permission PERMISSION
+                      integer with permission levels
+-sanitize             sanitize / clean contents
+-pretty               prettify PDF structure
+-pages PAGES          output selected pages, format: 1,5-7,50-N
+</pre></div>
+</div>
+<p>If you specify “-pages”, be aware that only page-related objects are copied, <strong>no document-level items</strong> like e.g. embedded files.</p>
+<p>Please consult <a class="reference internal" href="document.html#Document.save" title="Document.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.save()</span></code></a> for the parameter meanings.</p>
+</div>
+<div class="section" id="extracting-fonts-and-images">
+<h2>Extracting Fonts and Images<a class="headerlink" href="#extracting-fonts-and-images" title="Permalink to this headline">¶</a></h2>
+<p>Extract fonts or images from selected PDF pages to a desired directory:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz extract -h
+usage: fitz extract [-h] [-images] [-fonts] [-output OUTPUT] [-password PASSWORD]
+                    [-pages PAGES]
+                    input
+
+--------------------- extract images and fonts to disk --------------------
+
+positional arguments:
+input                 PDF filename
+
+optional arguments:
+-h, --help            show this help message and exit
+-images               extract images
+-fonts                extract fonts
+-output OUTPUT        output directory, defaults to current
+-password PASSWORD    password
+-pages PAGES          only consider these pages, format: 1,5-7,50-N
+</pre></div>
+</div>
+<p><strong>Image filenames</strong> are built according to the naming scheme: <strong>“img-xref.ext”</strong>, where “ext” is the extension associated with the image and “xref” the <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> of the image PDF object.</p>
+<p><strong>Font filenames</strong> consist of the fontname and the associated extension. Any spaces in the fontname are replaced with hyphens “-“.</p>
+<p>The output directory must already exist.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Except for output directory creation, this feature is <strong>functionally equivalent</strong> to and obsoletes <a class="reference external" href="https://github.com/pymupdf/PyMuPDF-Utilities/blob/master/extract-imga.py">this script</a>.</p>
+</div>
+</div>
+<div class="section" id="joining-pdf-documents">
+<h2>Joining PDF Documents<a class="headerlink" href="#joining-pdf-documents" title="Permalink to this headline">¶</a></h2>
+<p>To join several PDF files specify:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz join -h
+usage: fitz join [-h] -output OUTPUT [input [input ...]]
+
+---------------------------- join PDF documents ---------------------------
+
+positional arguments:
+input           input filenames
+
+optional arguments:
+-h, --help      show this help message and exit
+-output OUTPUT  output filename
+
+specify each input as &#39;filename[,password[,pages]]&#39;
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Each input must be entered as <strong>“filename,password,pages”</strong>. Password and pages are optional.</p></li>
+<li><p>The password entry <strong>is required</strong> if the “pages” entry is used. If the PDF needs no password, specify two commas.</p></li>
+<li><p>The <strong>“pages”</strong> format is the same as explained at the top of this section.</p></li>
+<li><p>Each input file is immediately closed after use. Therefore you can use one of them as output filename, and thus overwrite it.</p></li>
+</ol>
+</div>
+<p>Example: To join the following files</p>
+<ol class="arabic simple">
+<li><p><strong>file1.pdf:</strong> all pages, back to front, no password</p></li>
+<li><p><strong>file2.pdf:</strong> last page, first page, password: “secret”</p></li>
+<li><p><strong>file3.pdf:</strong> pages 5 to last, no password</p></li>
+</ol>
+<p>and store the result as <strong>output.pdf</strong> enter this command:</p>
+<p><em>python -m fitz join -o output.pdf file1.pdf,,N-1 file2.pdf,secret,N,1 file3.pdf,,5-N</em></p>
+</div>
+<div class="section" id="low-level-information">
+<h2>Low Level Information<a class="headerlink" href="#low-level-information" title="Permalink to this headline">¶</a></h2>
+<p>Display PDF internal information. Again, there are similarities to <em>“mutool show”</em>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz show -h
+usage: fitz show [-h] [-password PASSWORD] [-catalog] [-trailer] [-metadata]
+                [-xrefs XREFS] [-pages PAGES]
+                input
+
+------------------------- display PDF information -------------------------
+
+positional arguments:
+input               PDF filename
+
+optional arguments:
+-h, --help          show this help message and exit
+-password PASSWORD  password
+-catalog            show PDF catalog
+-trailer            show PDF trailer
+-metadata           show PDF metadata
+-xrefs XREFS        show selected objects, format: 1,5-7,N
+-pages PAGES        show selected pages, format: 1,5-7,50-N
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz show x.pdf
+PDF is password protected
+
+python -m fitz show x.pdf -pass hugo
+authentication unsuccessful
+
+python -m fitz show x.pdf -pass jorjmckie
+authenticated as owner
+file &#39;x.pdf&#39;, pages: 1, objects: 19, 58 MB, PDF 1.4, encryption: Standard V5 R6 256-bit AES
+Document contains 15 embedded files.
+
+python -m fitz show FDA-1572_508_R6_FINAL.pdf -tr -m
+&#39;FDA-1572_508_R6_FINAL.pdf&#39;, pages: 2, objects: 1645, 1.4 MB, PDF 1.6, encryption: Standard V4 R4 128-bit AES
+document contains 740 root form fields and is signed
+
+------------------------------- PDF metadata ------------------------------
+       format: PDF 1.6
+        title: FORM FDA 1572
+       author: PSC Publishing Services
+      subject: Statement of Investigator
+     keywords: None
+      creator: PScript5.dll Version 5.2.2
+     producer: Acrobat Distiller 9.0.0 (Windows)
+ creationDate: D:20130522104413-04&#39;00&#39;
+      modDate: D:20190718154905-07&#39;00&#39;
+   encryption: Standard V4 R4 128-bit AES
+
+------------------------------- PDF trailer -------------------------------
+&lt;&lt;
+/DecodeParms &lt;&lt;
+    /Columns 5
+    /Predictor 12
+&gt;&gt;
+/Encrypt 1389 0 R
+/Filter /FlateDecode
+/ID [ &lt;9252E9E39183F2A0B0C51BE557B8A8FC&gt; &lt;85227BE9B84B724E8F678E1529BA8351&gt; ]
+/Index [ 1388 258 ]
+/Info 1387 0 R
+/Length 253
+/Prev 1510559
+/Root 1390 0 R
+/Size 1646
+/Type /XRef
+/W [ 1 3 1 ]
+&gt;&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="embedded-files-commands">
+<h2>Embedded Files Commands<a class="headerlink" href="#embedded-files-commands" title="Permalink to this headline">¶</a></h2>
+<p>The following commands deal with embedded files – which is a feature completely removed from MuPDF after v1.14, and hence from all its command line tools.</p>
+<div class="section" id="information">
+<h3>Information<a class="headerlink" href="#information" title="Permalink to this headline">¶</a></h3>
+<p>Show the embedded file names (long or short format):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-info -h
+usage: fitz embed-info [-h] [-name NAME] [-detail] [-password PASSWORD] input
+
+--------------------------- list embedded files ---------------------------
+
+positional arguments:
+input               PDF filename
+
+optional arguments:
+-h, --help          show this help message and exit
+-name NAME          if given, report only this one
+-detail             show detail information
+-password PASSWORD  password
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-info some.pdf
+&#39;some.pdf&#39; contains the following 15 embedded files.
+
+20110813_180956_0002.jpg
+20110813_181009_0003.jpg
+20110813_181012_0004.jpg
+20110813_181131_0005.jpg
+20110813_181144_0006.jpg
+20110813_181306_0007.jpg
+20110813_181307_0008.jpg
+20110813_181314_0009.jpg
+20110813_181315_0010.jpg
+20110813_181324_0011.jpg
+20110813_181339_0012.jpg
+20110813_181913_0013.jpg
+insta-20110813_180944_0001.jpg
+markiert-20110813_180944_0001.jpg
+neue.datei
+</pre></div>
+</div>
+<p>Detailed output would look like this per entry:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>     name: neue.datei
+ filename: text-tester.pdf
+ufilename: text-tester.pdf
+     desc: nur zum Testen!
+     size: 4639
+   length: 1566
+</pre></div>
+</div>
+</div>
+<div class="section" id="extraction">
+<h3>Extraction<a class="headerlink" href="#extraction" title="Permalink to this headline">¶</a></h3>
+<p>Extract an embedded file like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-extract -h
+usage: fitz embed-extract [-h] -name NAME [-password PASSWORD] [-output OUTPUT]
+                        input
+
+---------------------- extract embedded file to disk ----------------------
+
+positional arguments:
+input                 PDF filename
+
+optional arguments:
+-h, --help            show this help message and exit
+-name NAME            name of entry
+-password PASSWORD    password
+-output OUTPUT        output filename, default is stored name
+</pre></div>
+</div>
+<p>For details consult <a class="reference internal" href="document.html#Document.embfile_get" title="Document.embfile_get"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_get()</span></code></a>. Example (refer to previous section):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-extract some.pdf -name neue.datei
+Saved entry &#39;neue.datei&#39; as &#39;text-tester.pdf&#39;
+</pre></div>
+</div>
+</div>
+<div class="section" id="deletion">
+<h3>Deletion<a class="headerlink" href="#deletion" title="Permalink to this headline">¶</a></h3>
+<p>Delete an embedded file like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-del -h
+usage: fitz embed-del [-h] [-password PASSWORD] [-output OUTPUT] -name NAME input
+
+--------------------------- delete embedded file --------------------------
+
+positional arguments:
+input                 PDF filename
+
+optional arguments:
+-h, --help            show this help message and exit
+-password PASSWORD    password
+-output OUTPUT        output PDF filename, incremental save if none
+-name NAME            name of entry to delete
+</pre></div>
+</div>
+<p>For details consult <a class="reference internal" href="document.html#Document.embfile_del" title="Document.embfile_del"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_del()</span></code></a>.</p>
+</div>
+<div class="section" id="insertion">
+<h3>Insertion<a class="headerlink" href="#insertion" title="Permalink to this headline">¶</a></h3>
+<p>Add a new embedded file using this command:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-add -h
+usage: fitz embed-add [-h] [-password PASSWORD] [-output OUTPUT] -name NAME -path
+                    PATH [-desc DESC]
+                    input
+
+---------------------------- add embedded file ----------------------------
+
+positional arguments:
+input                 PDF filename
+
+optional arguments:
+-h, --help            show this help message and exit
+-password PASSWORD    password
+-output OUTPUT        output PDF filename, incremental save if none
+-name NAME            name of new entry
+-path PATH            path to data for new entry
+-desc DESC            description of new entry
+</pre></div>
+</div>
+<p><em>“NAME”</em> <strong>must not</strong> already exist in the PDF. For details consult <a class="reference internal" href="document.html#Document.embfile_add" title="Document.embfile_add"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_add()</span></code></a>.</p>
+</div>
+<div class="section" id="updates">
+<h3>Updates<a class="headerlink" href="#updates" title="Permalink to this headline">¶</a></h3>
+<p>Update an existing embedded file using this command:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-upd -h
+usage: fitz embed-upd [-h] -name NAME [-password PASSWORD] [-output OUTPUT]
+                    [-path PATH] [-filename FILENAME] [-ufilename UFILENAME]
+                    [-desc DESC]
+                    input
+
+--------------------------- update embedded file --------------------------
+
+positional arguments:
+input                 PDF filename
+
+optional arguments:
+-h, --help            show this help message and exit
+-name NAME            name of entry
+-password PASSWORD    password
+-output OUTPUT        Output PDF filename, incremental save if none
+-path PATH            path to new data for entry
+-filename FILENAME    new filename to store in entry
+-ufilename UFILENAME  new unicode filename to store in entry
+-desc DESC            new description to store in entry
+
+except &#39;-name&#39; all parameters are optional
+</pre></div>
+</div>
+<p>Use this method to change meta-information of the file – just omit the <em>“PATH”</em>. For details consult <a class="reference internal" href="document.html#Document.embfile_upd" title="Document.embfile_upd"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_upd()</span></code></a>.</p>
+</div>
+<div class="section" id="copying">
+<h3>Copying<a class="headerlink" href="#copying" title="Permalink to this headline">¶</a></h3>
+<p>Copy embedded files between PDFs:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>python -m fitz embed-copy -h
+usage: fitz embed-copy [-h] [-password PASSWORD] [-output OUTPUT] -source
+                    SOURCE [-pwdsource PWDSOURCE]
+                    [-name [NAME [NAME ...]]]
+                    input
+
+--------------------- copy embedded files between PDFs --------------------
+
+positional arguments:
+input                 PDF to receive embedded files
+
+optional arguments:
+-h, --help            show this help message and exit
+-password PASSWORD    password of input
+-output OUTPUT        output PDF, incremental save to &#39;input&#39; if omitted
+-source SOURCE        copy embedded files from here
+-pwdsource PWDSOURCE  password of &#39;source&#39; PDF
+-name [NAME [NAME ...]]
+                      restrict copy to these entries
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using <em>fitz</em> as a Module</a><ul>
+<li><a class="reference internal" href="#invocation">Invocation</a></li>
+<li><a class="reference internal" href="#cleaning-and-copying">Cleaning and Copying</a></li>
+<li><a class="reference internal" href="#extracting-fonts-and-images">Extracting Fonts and Images</a></li>
+<li><a class="reference internal" href="#joining-pdf-documents">Joining PDF Documents</a></li>
+<li><a class="reference internal" href="#low-level-information">Low Level Information</a></li>
+<li><a class="reference internal" href="#embedded-files-commands">Embedded Files Commands</a><ul>
+<li><a class="reference internal" href="#information">Information</a></li>
+<li><a class="reference internal" href="#extraction">Extraction</a></li>
+<li><a class="reference internal" href="#deletion">Deletion</a></li>
+<li><a class="reference internal" href="#insertion">Insertion</a></li>
+<li><a class="reference internal" href="#updates">Updates</a></li>
+<li><a class="reference internal" href="#copying">Copying</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="faq.html"
+                        title="previous chapter">Collection of Recipes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="classes.html"
+                        title="next chapter">Classes</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="classes.html" title="Classes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="Collection of Recipes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Using <em>fitz</em> as a Module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

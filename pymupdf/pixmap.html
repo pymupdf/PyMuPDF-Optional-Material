@@ -1,0 +1,917 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixmap &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Point" href="point.html" />
+    <link rel="prev" title="Page" href="page.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="point.html" title="Point"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="page.html" title="Page"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pixmap</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pixmap">
+<span id="id1"></span><h1>Pixmap<a class="headerlink" href="#pixmap" title="Permalink to this headline">¶</a></h1>
+<p>Pixmaps (“pixel maps”) are objects at the heart of MuPDF’s rendering capabilities. They represent plane rectangular sets of pixels. Each pixel is described by a number of bytes (“components”) defining its color, plus an optional alpha byte defining its transparency.</p>
+<p>In PyMuPDF, there exist several ways to create a pixmap. Except the first one, all of them are available as overloaded constructors. A pixmap can be created …</p>
+<ol class="arabic simple">
+<li><p>from a document page (method <a class="reference internal" href="page.html#Page.get_pixmap" title="Page.get_pixmap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.get_pixmap()</span></code></a>)</p></li>
+<li><p>empty, based on <a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a> and <a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a> information</p></li>
+<li><p>from a file</p></li>
+<li><p>from an in-memory image</p></li>
+<li><p>from a memory area of plain pixels</p></li>
+<li><p>from an image inside a PDF document</p></li>
+<li><p>as a copy of another pixmap</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A number of image formats is supported as input for points 3. and 4. above. See section <a class="reference internal" href="#imagefiles"><span class="std std-ref">Supported Input Image Formats</span></a>.</p>
+</div>
+<p>Have a look at the <a class="reference internal" href="faq.html#faq"><span class="std std-ref">Collection of Recipes</span></a> section to see some pixmap usage “at work”.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Method / Attribute</strong></p></th>
+<th class="head"><p><strong>Short Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.clearWith" title="Pixmap.clearWith"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.clearWith()</span></code></a></p></td>
+<td><p>clear parts of a pixmap</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.copyPixmap" title="Pixmap.copyPixmap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.copyPixmap()</span></code></a></p></td>
+<td><p>copy parts of another pixmap</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.gammaWith" title="Pixmap.gammaWith"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.gammaWith()</span></code></a></p></td>
+<td><p>apply a gamma factor to the pixmap</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.getImageData" title="Pixmap.getImageData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getImageData()</span></code></a></p></td>
+<td><p>return a memory area in a variety of formats</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.getPNGData" title="Pixmap.getPNGData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getPNGData()</span></code></a></p></td>
+<td><p>return a PNG as a memory area</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.invertIRect" title="Pixmap.invertIRect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.invertIRect()</span></code></a></p></td>
+<td><p>invert the pixels of a given area</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.pillowWrite" title="Pixmap.pillowWrite"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.pillowWrite()</span></code></a></p></td>
+<td><p>save as image using pillow (experimental)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.pillowData" title="Pixmap.pillowData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.pillowData()</span></code></a></p></td>
+<td><p>write image stream using pillow (experimental)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.pixel" title="Pixmap.pixel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.pixel()</span></code></a></p></td>
+<td><p>return the value of a pixel</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.setAlpha" title="Pixmap.setAlpha"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setAlpha()</span></code></a></p></td>
+<td><p>set alpha values</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.setPixel" title="Pixmap.setPixel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setPixel()</span></code></a></p></td>
+<td><p>set the color of a pixel</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.setRect" title="Pixmap.setRect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setRect()</span></code></a></p></td>
+<td><p>set the color of a rectangle</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.setResolution" title="Pixmap.setResolution"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setResolution()</span></code></a></p></td>
+<td><p>set the image resolution</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.setOrigin" title="Pixmap.setOrigin"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setOrigin()</span></code></a></p></td>
+<td><p>set pixmap x,y values</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.shrink" title="Pixmap.shrink"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.shrink()</span></code></a></p></td>
+<td><p>reduce size keeping proportions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.tintWith" title="Pixmap.tintWith"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.tintWith()</span></code></a></p></td>
+<td><p>tint a pixmap with a color</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writeImage()</span></code></a></p></td>
+<td><p>save a pixmap in a variety of formats</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.writePNG" title="Pixmap.writePNG"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writePNG()</span></code></a></p></td>
+<td><p>save a pixmap as a PNG file</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.alpha" title="Pixmap.alpha"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.alpha</span></code></a></p></td>
+<td><p>transparency indicator</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.colorspace" title="Pixmap.colorspace"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.colorspace</span></code></a></p></td>
+<td><p>pixmap’s <a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.height" title="Pixmap.height"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.height</span></code></a></p></td>
+<td><p>pixmap height</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.interpolate" title="Pixmap.interpolate"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.interpolate</span></code></a></p></td>
+<td><p>interpolation method indicator</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.irect" title="Pixmap.irect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.irect</span></code></a></p></td>
+<td><p><a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a> of the pixmap</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.n" title="Pixmap.n"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.n</span></code></a></p></td>
+<td><p>bytes per pixel</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.samples" title="Pixmap.samples"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.samples</span></code></a></p></td>
+<td><p>pixel area</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.size" title="Pixmap.size"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.size</span></code></a></p></td>
+<td><p>pixmap’s total length</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.stride" title="Pixmap.stride"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.stride</span></code></a></p></td>
+<td><p>size of one image row</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.width" title="Pixmap.width"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.width</span></code></a></p></td>
+<td><p>pixmap width</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.x" title="Pixmap.x"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.x</span></code></a></p></td>
+<td><p>X-coordinate of top-left corner</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.xres" title="Pixmap.xres"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.xres</span></code></a></p></td>
+<td><p>resolution in X-direction</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Pixmap.y" title="Pixmap.y"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.y</span></code></a></p></td>
+<td><p>Y-coordinate of top-left corner</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Pixmap.yres" title="Pixmap.yres"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.yres</span></code></a></p></td>
+<td><p>resolution in Y-direction</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="Pixmap">
+<em class="property">class </em><code class="sig-name descname">Pixmap</code><a class="headerlink" href="#Pixmap" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Pixmap.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">colorspace</span></em>, <em class="sig-param"><span class="n">irect</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>New empty pixmap:</strong> Create an empty pixmap of size and origin given by the rectangle. So, <em>irect.top_left</em> designates the top left corner of the pixmap, and its width and height are <em>irect.width</em> resp. <em>irect.height</em>. Note that the image area is <strong>not initialized</strong> and will contain crap data – use eg. <a class="reference internal" href="#Pixmap.clearWith" title="Pixmap.clearWith"><code class="xref py py-meth docutils literal notranslate"><span class="pre">clearWith()</span></code></a> or <a class="reference internal" href="znames.html#setRect" title="setRect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setRect()</span></code></a> to be sure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colorspace</strong> (<a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a>) – colorspace.</p></li>
+<li><p><strong>irect</strong> (<em>irect_like</em>) – Tte pixmap’s position and dimension.</p></li>
+<li><p><strong>alpha</strong> (<em>bool</em>) – Specifies whether transparency bytes should be included. Default is <em>False</em>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id0">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">colorspace</span></em>, <em class="sig-param"><span class="n">source</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Copy and set colorspace:</strong> Copy <em>source</em> pixmap converting colorspace. Any colorspace combination is possible, but source colorspace must not be <em>None</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colorspace</strong> (<a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a>) – desired <strong>target</strong> colorspace. This <strong>may also be</strong> <em>None</em>. In this case, a “masking” pixmap is created: its <a class="reference internal" href="#Pixmap.samples" title="Pixmap.samples"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.samples</span></code></a> will consist of the source’s alpha bytes only.</p></li>
+<li><p><strong>source</strong> (<em>Pixmap</em>) – the source pixmap.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id2">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">source</em>, <em class="sig-param">width</em>, <em class="sig-param">height</em><span class="optional">[</span>, <em class="sig-param">clip</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Copy and scale:</strong> Copy <em>source</em> pixmap, scaling new width and height values – the image will appear stretched or shrunk accordingly. Supports partial copying. The source colorspace may be <em>None</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>Pixmap</em>) – the source pixmap.</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – desired target width.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – desired target height.</p></li>
+<li><p><strong>clip</strong> (<em>irect_like</em>) – restrict the resulting pixmap to this region of the <strong>scaled</strong> pixmap.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If width or height are not <em>de facto</em> integers (i.e. <em>float(int(value) != value</em>), then the resulting pixmap will have an alpha channel.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id3">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>Copy and add or drop alpha:</strong> Copy <em>source</em> and add or drop its alpha channel. Identical copy if <em>alpha</em> equals <em>source.alpha</em>. If an alpha channel is added, its values will be set to 255.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>Pixmap</em>) – source pixmap.</p></li>
+<li><p><strong>alpha</strong> (<em>bool</em>) – whether the target will have an alpha channel, default and mandatory if source colorspace is <em>None</em>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A typical use includes separation of color and transparency bytes in separate pixmaps. Some applications require this like e.g. <em>wx.Bitmap.FromBufferAndAlpha()</em> of <em>wxPython</em>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># &#39;pix&#39; is an RGBA pixmap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pixcolors</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Pixmap</span><span class="p">(</span><span class="n">pix</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>    <span class="c1"># extract the RGB part (drop alpha)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pixalpha</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Pixmap</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">pix</span><span class="p">)</span>  <span class="c1"># extract the alpha part</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bm</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Bitmap</span><span class="o">.</span><span class="n">FromBufferAndAlpha</span><span class="p">(</span><span class="n">pix</span><span class="o">.</span><span class="n">widht</span><span class="p">,</span> <span class="n">pix</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">pixcolors</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span> <span class="n">pixalpha</span><span class="o">.</span><span class="n">samples</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id4">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>From a file:</strong> Create a pixmap from <em>filename</em>. All properties are inferred from the input. The origin of the resulting pixmap is <em>(0, 0)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Path of the image file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id5">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">stream</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>From memory:</strong> Create a pixmap from a memory area. All properties are inferred from the input. The origin of the resulting pixmap is <em>(0, 0)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stream</strong> (<em>bytes</em><em>,</em><em>bytearray</em><em>,</em><em>BytesIO</em>) – <p>Data containing a complete, valid image. Could have been created by e.g. <em>stream = bytearray(open(‘image.file’, ‘rb’).read())</em>. Type <em>bytes</em> is supported in <strong>Python 3 only</strong>, because <em>bytes == str</em> in Python 2 and the method will interpret the stream as a filename.</p>
+<p><em>Changed in version 1.14.13:</em> <em>io.BytesIO</em> is now also supported.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id6">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">colorspace</span></em>, <em class="sig-param"><span class="n">width</span></em>, <em class="sig-param"><span class="n">height</span></em>, <em class="sig-param"><span class="n">samples</span></em>, <em class="sig-param"><span class="n">alpha</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>From plain pixels:</strong> Create a pixmap from <em>samples</em>. Each pixel must be represented by a number of bytes as controlled by the <em>colorspace</em> and <em>alpha</em> parameters. The origin of the resulting pixmap is <em>(0, 0)</em>. This method is useful when raw image data are provided by some other program – see <a class="reference internal" href="faq.html#faq"><span class="std std-ref">Collection of Recipes</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colorspace</strong> (<a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a>) – Colorspace of image.</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – image width</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – image height</p></li>
+<li><p><strong>samples</strong> (<em>bytes</em><em>,</em><em>bytearray</em><em>,</em><em>BytesIO</em>) – <p>an area containing all pixels of the image. Must include alpha values if specified.</p>
+<p><em>Changed in version 1.14.13:</em> (1) <em>io.BytesIO</em> can now also be used. (2) Data are now <strong>copied</strong> to the pixmap, so may safely be deleted or become unavailable.</p>
+</p></li>
+<li><p><strong>alpha</strong> (<em>bool</em>) – whether a transparency channel is included.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>The following equation <strong>must be true</strong>: <em>(colorspace.n + alpha) * width * height == len(samples)</em>.</p></li>
+<li><p>Starting with version 1.14.13, the samples data are <strong>copied</strong> to the pixmap.</p></li>
+</ol>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="id7">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">doc</span></em>, <em class="sig-param"><span class="n">xref</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>From a PDF image:</strong> Create a pixmap from an image <strong>contained in PDF</strong> <em>doc</em> identified by its <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a>. All pimap properties are set by the image. Have a look at <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/tree/master/demo/extract-img1.py">extract-img1.py</a> and <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/tree/master/demo/extract-img2.py">extract-img2.py</a> to see how this can be used to recover all of a PDF’s images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a>) – an opened <strong>PDF</strong> document.</p></li>
+<li><p><strong>xref</strong> (<em>int</em>) – the <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> of an image object. For example, you can make a list of images used on a particular page with <a class="reference internal" href="document.html#Document.get_page_images" title="Document.get_page_images"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.get_page_images()</span></code></a>, which also shows the <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> numbers of each image.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.clearWith">
+<code class="sig-name descname">clearWith</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">value</em><span class="optional">[</span>, <em class="sig-param">irect</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.clearWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the samples area.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>int</em>) – if specified, values from 0 to 255 are valid. Each color byte of each pixel will be set to this value, while alpha will be set to 255 (non-transparent) if present. If omitted, then all bytes (including any alpha) are cleared to <em>0x00</em>.</p></li>
+<li><p><strong>irect</strong> (<em>irect_like</em>) – the area to be cleared. Omit to clear the whole pixmap. Can only be specified, if <em>value</em> is also specified.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.tintWith">
+<code class="sig-name descname">tintWith</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">red</span></em>, <em class="sig-param"><span class="n">green</span></em>, <em class="sig-param"><span class="n">blue</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.tintWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colorize (tint) a pixmap with a color provided as an integer triple (red, green, blue). Only colorspaces <a class="reference internal" href="vars.html#CS_GRAY" title="CS_GRAY"><code class="xref py py-data docutils literal notranslate"><span class="pre">CS_GRAY</span></code></a> and <a class="reference internal" href="vars.html#CS_RGB" title="CS_RGB"><code class="xref py py-data docutils literal notranslate"><span class="pre">CS_RGB</span></code></a> are supported, others are ignored with a warning.</p>
+<p>If the colorspace is <a class="reference internal" href="vars.html#CS_GRAY" title="CS_GRAY"><code class="xref py py-data docutils literal notranslate"><span class="pre">CS_GRAY</span></code></a>, <em>(red + green + blue)/3</em> will be taken as the tint value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>red</strong> (<em>int</em>) – <em>red</em> component.</p></li>
+<li><p><strong>green</strong> (<em>int</em>) – <em>green</em> component.</p></li>
+<li><p><strong>blue</strong> (<em>int</em>) – <em>blue</em> component.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.gammaWith">
+<code class="sig-name descname">gammaWith</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gamma</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.gammaWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a gamma factor to a pixmap, i.e. lighten or darken it. Pixmaps with colorspace <em>None</em> are ignored with a warning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gamma</strong> (<em>float</em>) – <em>gamma = 1.0</em> does nothing, <em>gamma &lt; 1.0</em> lightens, <em>gamma &gt; 1.0</em> darkens the image.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.shrink">
+<code class="sig-name descname">shrink</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.shrink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shrink the pixmap by dividing both, its width and height by 2<sup>n</sup>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – determines the new pixmap (samples) size. For example, a value of 2 divides width and height by 4 and thus results in a size of one 16<sup>th</sup> of the original. Values less than 1 are ignored with a warning.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Use this methods to reduce a pixmap’s size retaining its proportion. The pixmap is changed “in place”. If you want to keep original and also have more granular choices, use the resp. copy constructor above.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.pixel">
+<code class="sig-name descname">pixel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>New in version:: 1.14.5:</em> Return the value of the pixel at location (x, y) (column, line).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – the column number of the pixel. Must be in <em>range(pix.width)</em>.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – the line number of the pixel, Must be in <em>range(pix.height)</em>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list of color values and, potentially the alpha value. Its length and content depend on the pixmap’s colorspace and the presence of an alpha. For RGBA pixmaps the result would e.g. be <em>[r, g, b, a]</em>. All items are integers in <em>range(256)</em>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.setPixel">
+<code class="sig-name descname">setPixel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">color</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.setPixel" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>New in version 1.14.7:</em> Set the color of the pixel at location (x, y) (column, line).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – the column number of the pixel. Must be in <em>range(pix.width)</em>.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – the line number of the pixel. Must be in <em>range(pix.height)</em>.</p></li>
+<li><p><strong>color</strong> (<em>sequence</em>) – the desired color given as a sequence of integers in <em>range(256)</em>. The length of the sequence must equal <a class="reference internal" href="#Pixmap.n" title="Pixmap.n"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.n</span></code></a>, which includes any alpha byte.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.setRect">
+<code class="sig-name descname">setRect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">irect</span></em>, <em class="sig-param"><span class="n">color</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.setRect" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>New in version 1.14.8:</em> Set the pixels of a rectangle to a color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>irect</strong> (<em>irect_like</em>) – the rectangle to be filled with the color. The actual area is the intersection of this parameter and <a class="reference internal" href="#Pixmap.irect" title="Pixmap.irect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.irect</span></code></a>. For an empty intersection (or an invalid parameter), no change will happen.</p></li>
+<li><p><strong>color</strong> (<em>sequence</em>) – the desired color given as a sequence of integers in <em>range(256)</em>. The length of the sequence must equal <a class="reference internal" href="#Pixmap.n" title="Pixmap.n"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.n</span></code></a>, which includes any alpha byte.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>False</em> if the rectangle was invalid or had an empty intersection with <a class="reference internal" href="#Pixmap.irect" title="Pixmap.irect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.irect</span></code></a>, else <em>True</em>.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>This method is equivalent to <a class="reference internal" href="#Pixmap.setPixel" title="Pixmap.setPixel"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.setPixel()</span></code></a> executed for each pixel in the rectangle, but is obviously <strong>very much faster</strong> if many pixels are involved.</p></li>
+<li><p>This method can be used similar to <a class="reference internal" href="#Pixmap.clearWith" title="Pixmap.clearWith"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.clearWith()</span></code></a> to initialize a pixmap with a certain color like this: <em>pix.setRect(pix.irect, (255, 255, 0))</em> (RGB example, colors the complete pixmap with yellow).</p></li>
+</ol>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.setOrigin">
+<code class="sig-name descname">setOrigin</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.setOrigin" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in v1.17.7)</em> Set the x and y values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x coordinate</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y coordinate</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.setResolution">
+<code class="sig-name descname">setResolution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xres</span></em>, <em class="sig-param"><span class="n">yres</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.setResolution" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in v1.16.17)</em> Set the resolution (dpi) in x and y direction.</p>
+<p><em>(Changed in v1.18.0)</em> When saving as a PNG image, these values will be stored now.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xres</strong> (<em>int</em>) – resolution in x direction.</p></li>
+<li><p><strong>yres</strong> (<em>int</em>) – resolution in y direction.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.setAlpha">
+<code class="sig-name descname">setAlpha</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">alphavalues</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.setAlpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the alpha values. The pixmap must have an alpha channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>alphavalues</strong> (<em>bytes</em><em>,</em><em>bytearray</em><em>,</em><em>BytesIO</em>) – <p>the new alpha values. If provided, its length must be at least <em>width * height</em>. If omitted, all alpha values are set to 255 (no transparency).</p>
+<p><em>Changed in version 1.14.13:</em> <em>io.BytesIO</em> is now also supported.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.invertIRect">
+<code class="sig-name descname">invertIRect</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">irect</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.invertIRect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert the color of all pixels in <a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a> <em>irect</em>. Will have no effect if colorspace is <em>None</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>irect</strong> (<em>irect_like</em>) – The area to be inverted. Omit to invert everything.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.copyPixmap">
+<code class="sig-name descname">copyPixmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">irect</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.copyPixmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy the <em>irect</em> part of the <em>source</em> pixmap into the corresponding area of this one. The two pixmaps may have different dimensions and can each have <a class="reference internal" href="vars.html#CS_GRAY" title="CS_GRAY"><code class="xref py py-data docutils literal notranslate"><span class="pre">CS_GRAY</span></code></a> or <a class="reference internal" href="vars.html#CS_RGB" title="CS_RGB"><code class="xref py py-data docutils literal notranslate"><span class="pre">CS_RGB</span></code></a> colorspaces, but they currently <strong>must</strong> have the same alpha property <a class="footnote-reference brackets" href="#f2" id="id8">2</a>. The copy mechanism automatically adjusts discrepancies between source and target like so:</p>
+<p>If copying from <a class="reference internal" href="vars.html#CS_GRAY" title="CS_GRAY"><code class="xref py py-data docutils literal notranslate"><span class="pre">CS_GRAY</span></code></a> to <a class="reference internal" href="vars.html#CS_RGB" title="CS_RGB"><code class="xref py py-data docutils literal notranslate"><span class="pre">CS_RGB</span></code></a>, the source gray-shade value will be put into each of the three rgb component bytes. If the other way round, <em>(r + g + b) / 3</em> will be taken as the gray-shade value of the target.</p>
+<p>Between <em>irect</em> and the target pixmap’s rectangle, an “intersection” is calculated at first. This takes into account the rectangle coordinates and the current attribute values <em>source.x</em> and <em>source.y</em> (which you are free to modify for this purpose). Then the corresponding data of this intersection are copied. If the intersection is empty, nothing will happen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#pixmap"><span class="std std-ref">Pixmap</span></a>) – source pixmap.</p></li>
+<li><p><strong>irect</strong> (<em>irect_like</em>) – The area to be copied.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.writeImage">
+<code class="sig-name descname">writeImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.writeImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save pixmap as an image file. Depending on the output chosen, only some or all colorspaces are supported and different file extensions can be chosen. Please see the table below. Since MuPDF v1.10a the <em>savealpha</em> option is no longer supported and will be silently ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The filename to save to. The filename’s extension determines the image format, if not overriden by the output parameter.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – The requested image format. The default is the filename’s extension. If not recognized, <em>png</em> is assumed. For other possible values see <a class="reference internal" href="#pixmapoutput"><span class="std std-ref">Supported Output Image Formats</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.writePNG">
+<code class="sig-name descname">writePNG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.writePNG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equal to <em>pix.writeImage(filename, “png”)</em>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.getImageData">
+<code class="sig-name descname">getImageData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">'png'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.getImageData" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>New in version 1.14.5:</em> Return the pixmap as a <em>bytes</em> memory object of the specified format – similar to <a class="reference internal" href="#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">writeImage()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> (<em>str</em>) – The requested image format. The default is “png” for which this function equals <a class="reference internal" href="#Pixmap.getPNGData" title="Pixmap.getPNGData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getPNGData()</span></code></a>. For other possible values see <a class="reference internal" href="#pixmapoutput"><span class="std std-ref">Supported Output Image Formats</span></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.getPNGdata">
+<code class="sig-name descname">getPNGdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.getPNGdata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.getPNGData">
+<code class="sig-name descname">getPNGData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.getPNGData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equal to <em>pix.getImageData(“png”)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.pillowWrite">
+<code class="sig-name descname">pillowWrite</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.pillowWrite" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in v1.17.3)</em></p>
+<p>Write the pixmap as an image file using Pillow. Use this method for image formats or extended image features not supported by MuPDF. Examples are</p>
+<ul class="simple">
+<li><p>Formats JPEG, JPX, J2K, WebP, etc.</p></li>
+<li><p>Storing EXIF information.</p></li>
+<li><p>If you do not provide dpi information, the values <em>xres</em>, <em>yres</em> stored with the pixmap are automatically used.</p></li>
+</ul>
+<p>A simple example: <code class="docutils literal notranslate"><span class="pre">pix.pillowWrite(&quot;some.jpg&quot;,</span> <span class="pre">optimize=True,</span> <span class="pre">dpi=(150,</span> <span class="pre">150))</span></code>. For details on other parameters see the Pillow documentation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>(Changed in v1.18.0)</em> <a class="reference internal" href="#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writeImage()</span></code></a> and <a class="reference internal" href="#Pixmap.writePNG" title="Pixmap.writePNG"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writePNG()</span></code></a> now also set resolution / dpi from <em>xres</em> / <em>yres</em> automatically, when saving a PNG image.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Pixmap.pillowData">
+<code class="sig-name descname">pillowData</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Pixmap.pillowData" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in v1.17.3)</em></p>
+<p>Return an image as a bytes object in the specified format using Pillow. For example <code class="docutils literal notranslate"><span class="pre">stream</span> <span class="pre">=</span> <span class="pre">pix.pillowData(format=&quot;JPEG&quot;,</span> <span class="pre">optimize=True)</span></code>. Also see above. For details on other parameters see the Pillow documentation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.alpha">
+<code class="sig-name descname">alpha</code><a class="headerlink" href="#Pixmap.alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the pixmap contains transparency information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.colorspace">
+<code class="sig-name descname">colorspace</code><a class="headerlink" href="#Pixmap.colorspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>The colorspace of the pixmap. This value may be <em>None</em> if the image is to be treated as a so-called <em>image mask</em> or <em>stencil mask</em> (currently happens for extracted PDF document images only).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.stride">
+<code class="sig-name descname">stride</code><a class="headerlink" href="#Pixmap.stride" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the length of one row of image data in <a class="reference internal" href="#Pixmap.samples" title="Pixmap.samples"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.samples</span></code></a>. This is primarily used for calculation purposes. The following expressions are true:</p>
+<ul class="simple">
+<li><p><em>len(samples) == height * stride</em></p></li>
+<li><p><em>width * n == stride</em>.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.irect">
+<code class="sig-name descname">irect</code><a class="headerlink" href="#Pixmap.irect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the <a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a> of the pixmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.samples">
+<code class="sig-name descname">samples</code><a class="headerlink" href="#Pixmap.samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>The color and (if <a class="reference internal" href="#Pixmap.alpha" title="Pixmap.alpha"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.alpha</span></code></a> is true) transparency values for all pixels. It is an area of <em>width * height * n</em> bytes. Each n bytes define one pixel. Each successive n bytes yield another pixel in scanline order. Subsequent scanlines follow each other with no padding. E.g. for an RGBA colorspace this means, <em>samples</em> is a sequence of bytes like <em>…, R, G, B, A, …</em>, and the four byte values R, G, B, A define one pixel.</p>
+<p>This area can be passed to other graphics libraries like PIL (Python Imaging Library) to do additional processing like saving the pixmap in other image formats.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The underlying data is a typically <strong>large</strong> memory area from which a <em>bytes</em> copy is made for this attribute: for example an RGB-rendered letter page has a samples size of almost 1.4 MB. So consider assigning a new variable if you repeatedly use it.</p></li>
+<li><p>Any changes to the underlying data are available only after again accessing this attribute.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.size">
+<code class="sig-name descname">size</code><a class="headerlink" href="#Pixmap.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains <em>len(pixmap)</em>. This will generally equal <em>len(pix.samples)</em> plus some platform-specific value for defining other attributes of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#Pixmap.width" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.w">
+<code class="sig-name descname">w</code><a class="headerlink" href="#Pixmap.w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of the region in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.height">
+<code class="sig-name descname">height</code><a class="headerlink" href="#Pixmap.height" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.h">
+<code class="sig-name descname">h</code><a class="headerlink" href="#Pixmap.h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Height of the region in pixels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.x">
+<code class="sig-name descname">x</code><a class="headerlink" href="#Pixmap.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>X-coordinate of top-left corner</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.y">
+<code class="sig-name descname">y</code><a class="headerlink" href="#Pixmap.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y-coordinate of top-left corner</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.n">
+<code class="sig-name descname">n</code><a class="headerlink" href="#Pixmap.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of components per pixel. This number depends on colorspace and alpha. If colorspace is not <em>None</em> (stencil masks), then <em>Pixmap.n - Pixmap.aslpha == pixmap.colorspace.n</em> is true. If colorspace is <em>None</em>, then <em>n == alpha == 1</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.xres">
+<code class="sig-name descname">xres</code><a class="headerlink" href="#Pixmap.xres" title="Permalink to this definition">¶</a></dt>
+<dd><p>Horizontal resolution in dpi (dots per inch). Please also see <a class="reference internal" href="glossary.html#resolution" title="resolution"><code class="xref py py-data docutils literal notranslate"><span class="pre">resolution</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.yres">
+<code class="sig-name descname">yres</code><a class="headerlink" href="#Pixmap.yres" title="Permalink to this definition">¶</a></dt>
+<dd><p>Vertical resolution in dpi. Please also see <a class="reference internal" href="glossary.html#resolution" title="resolution"><code class="xref py py-data docutils literal notranslate"><span class="pre">resolution</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Pixmap.interpolate">
+<code class="sig-name descname">interpolate</code><a class="headerlink" href="#Pixmap.interpolate" title="Permalink to this definition">¶</a></dt>
+<dd><p>An information-only boolean flag set to <em>True</em> if the image will be drawn using “linear interpolation”. If <em>False</em> “nearest neighbour sampling” will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="supported-input-image-formats">
+<span id="imagefiles"></span><h2>Supported Input Image Formats<a class="headerlink" href="#supported-input-image-formats" title="Permalink to this headline">¶</a></h2>
+<p>The following file types are supported as <strong>input</strong> to construct pixmaps: <strong>BMP, JPEG, GIF, TIFF, JXR, JPX</strong>, <strong>PNG</strong>, <strong>PAM</strong> and all of the <strong>Portable Anymap</strong> family (<strong>PBM, PGM, PNM, PPM</strong>). This support is two-fold:</p>
+<ol class="arabic simple">
+<li><p>Directly create a pixmap with <em>Pixmap(filename)</em> or <em>Pixmap(byterray)</em>. The pixmap will then have properties as determined by the image.</p></li>
+<li><p>Open such files with <em>fitz.open(…)</em>. The result will then appear as a document containing one single page. Creating a pixmap of this page offers all the options available in this context: apply a matrix, choose colorspace and alpha, confine the pixmap to a clip area, etc.</p></li>
+</ol>
+<p><strong>SVG images</strong> are only supported via method 2 above, not directly as pixmaps. But remember: the result of this is a <strong>raster image</strong> as is always the case with pixmaps <a class="footnote-reference brackets" href="#f1" id="id9">1</a>.</p>
+</div>
+<div class="section" id="supported-output-image-formats">
+<span id="pixmapoutput"></span><h2>Supported Output Image Formats<a class="headerlink" href="#supported-output-image-formats" title="Permalink to this headline">¶</a></h2>
+<p>A number of image <strong>output</strong> formats are supported. You have the option to either write an image directly to a file (<a class="reference internal" href="#Pixmap.writeImage" title="Pixmap.writeImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.writeImage()</span></code></a>), or to generate a bytes object (<a class="reference internal" href="#Pixmap.getImageData" title="Pixmap.getImageData"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Pixmap.getImageData()</span></code></a>). Both methods accept a 3-letter string identifying the desired format (<strong>Format</strong> column below). Please note that not all combinations of pixmap colorspace, transparency support (alpha) and image format are possible.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 20%" />
+<col style="width: 12%" />
+<col style="width: 19%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Format</strong></p></th>
+<th class="head"><p><strong>Colorspaces</strong></p></th>
+<th class="head"><p><strong>alpha</strong></p></th>
+<th class="head"><p><strong>Extensions</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>pam</p></td>
+<td><p>gray, rgb, cmyk</p></td>
+<td><p>yes</p></td>
+<td><p>.pam</p></td>
+<td><p>Portable Arbitrary Map</p></td>
+</tr>
+<tr class="row-odd"><td><p>pbm</p></td>
+<td><p>gray, rgb</p></td>
+<td><p>no</p></td>
+<td><p>.pbm</p></td>
+<td><p>Portable Bitmap</p></td>
+</tr>
+<tr class="row-even"><td><p>pgm</p></td>
+<td><p>gray, rgb</p></td>
+<td><p>no</p></td>
+<td><p>.pgm</p></td>
+<td><p>Portable Graymap</p></td>
+</tr>
+<tr class="row-odd"><td><p>png</p></td>
+<td><p>gray, rgb</p></td>
+<td><p>yes</p></td>
+<td><p>.png</p></td>
+<td><p>Portable Network Graphics</p></td>
+</tr>
+<tr class="row-even"><td><p>pnm</p></td>
+<td><p>gray, rgb</p></td>
+<td><p>no</p></td>
+<td><p>.pnm</p></td>
+<td><p>Portable Anymap</p></td>
+</tr>
+<tr class="row-odd"><td><p>ppm</p></td>
+<td><p>gray, rgb</p></td>
+<td><p>no</p></td>
+<td><p>.ppm</p></td>
+<td><p>Portable Pixmap</p></td>
+</tr>
+<tr class="row-even"><td><p>ps</p></td>
+<td><p>gray, rgb, cmyk</p></td>
+<td><p>no</p></td>
+<td><p>.ps</p></td>
+<td><p>Adobe PostScript Image</p></td>
+</tr>
+<tr class="row-odd"><td><p>psd</p></td>
+<td><p>gray, rgb, cmyk</p></td>
+<td><p>yes</p></td>
+<td><p>.psd</p></td>
+<td><p>Adobe Photoshop Document</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Not all image file types are supported (or at least common) on all OS platforms. E.g. PAM and the Portable Anymap formats are rare or even unknown on Windows.</p></li>
+<li><p>Especially pertaining to CMYK colorspaces, you can always convert a CMYK pixmap to an RGB pixmap with <em>rgb_pix = fitz.Pixmap(fitz.csRGB, cmyk_pix)</em> and then save that in the desired format.</p></li>
+<li><p>As can be seen, MuPDF’s image support range is different for input and output. Among those supported both ways, PNG is probably the most popular. We recommend using Pillow whenever you face a support gap.</p></li>
+<li><p>We also recommend using “ppm” formats as input to tkinter’s <em>PhotoImage</em> method like this: <em>tkimg = tkinter.PhotoImage(data=pix.getImageData(“ppm”))</em> (also see the tutorial). This is <strong>very</strong> fast (<strong>60 times</strong> faster than PNG) and will work under Python 2 or 3.</p></li>
+</ul>
+</div>
+<p class="rubric">Footnotes</p>
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id9">1</a></span></dt>
+<dd><p>If you need a <strong>vector image</strong> from the SVG, you must first convert it to a PDF. Try <a class="reference internal" href="document.html#Document.convert_to_pdf" title="Document.convert_to_pdf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.convert_to_pdf()</span></code></a>. If this is not good enough, look for other SVG-to-PDF conversion tools like the Python packages <a class="reference external" href="https://pypi.org/project/svglib">svglib</a>, <a class="reference external" href="https://pypi.org/project/cairosvg">CairoSVG</a>, <a class="reference external" href="https://sk1project.net/modules.php?name=Products&amp;product=uniconvertor&amp;op=download">Uniconvertor</a> or the Java solution <a class="reference external" href="https://github.com/apache/batik">Apache Batik</a>. Have a look at our Wiki for more examples.</p>
+</dd>
+<dt class="label" id="f2"><span class="brackets"><a class="fn-backref" href="#id8">2</a></span></dt>
+<dd><p>To also set the alpha property, add an additional step to this method by dropping or adding an alpha channel to the result.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Pixmap</a><ul>
+<li><a class="reference internal" href="#supported-input-image-formats">Supported Input Image Formats</a></li>
+<li><a class="reference internal" href="#supported-output-image-formats">Supported Output Image Formats</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="page.html"
+                        title="previous chapter">Page</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="point.html"
+                        title="next chapter">Point</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="point.html" title="Point"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="page.html" title="Page"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Pixmap</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

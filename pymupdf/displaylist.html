@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DisplayList &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Document" href="document.html" />
+    <link rel="prev" title="Colorspace" href="colorspace.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="document.html" title="Document"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="colorspace.html" title="Colorspace"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DisplayList</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="displaylist">
+<span id="id1"></span><h1>DisplayList<a class="headerlink" href="#displaylist" title="Permalink to this headline">¶</a></h1>
+<p>DisplayList is a list containing drawing commands (text, images, etc.). The intent is two-fold:</p>
+<ol class="arabic simple">
+<li><p>as a caching-mechanism to reduce parsing of a page</p></li>
+<li><p>as a data structure in multi-threading setups, where one thread parses the page and another one renders pages. This aspect is currently not supported by PyMuPDF.</p></li>
+</ol>
+<p>A display list is populated with objects from a page, usually by executing <a class="reference internal" href="functions.html#Page.get_displaylist" title="Page.get_displaylist"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.get_displaylist()</span></code></a>. There also exists an independent constructor.</p>
+<p>“Replay” the list (once or many times) by invoking one of its methods <a class="reference internal" href="#DisplayList.run" title="DisplayList.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a>, <a class="reference internal" href="#DisplayList.getPixmap" title="DisplayList.getPixmap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getPixmap()</span></code></a> or <a class="reference internal" href="#DisplayList.get_textpage" title="DisplayList.get_textpage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_textpage()</span></code></a>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Method</strong></p></th>
+<th class="head"><p><strong>Short Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#DisplayList.run" title="DisplayList.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a></p></td>
+<td><p>Run a display list through a device.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DisplayList.getPixmap" title="DisplayList.getPixmap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getPixmap()</span></code></a></p></td>
+<td><p>generate a pixmap</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#DisplayList.get_textpage" title="DisplayList.get_textpage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_textpage()</span></code></a></p></td>
+<td><p>generate a text page</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DisplayList.rect" title="DisplayList.rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">rect</span></code></a></p></td>
+<td><p>mediabox of the display list</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="DisplayList">
+<em class="property">class </em><code class="sig-name descname">DisplayList</code><a class="headerlink" href="#DisplayList" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="DisplayList.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">mediabox</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DisplayList.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new display list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mediabox</strong> (<a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a>) – The page’s rectangle.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><em>DisplayList</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="DisplayList.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">device</span></em>, <em class="sig-param"><span class="n">matrix</span></em>, <em class="sig-param"><span class="n">area</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DisplayList.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the display list through a device. The device will populate the display list with its “commands” (i.e. text extraction or image creation). The display list can later be used to “read” a page many times without having to re-interpret it from the document file.</p>
+<p>You will most probably instead use one of the specialized run methods below – <a class="reference internal" href="znames.html#id11" title="getPixmap"><code class="xref py py-meth docutils literal notranslate"><span class="pre">getPixmap()</span></code></a> or <a class="reference internal" href="#DisplayList.get_textpage" title="DisplayList.get_textpage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_textpage()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<a class="reference internal" href="device.html#device"><span class="std std-ref">Device</span></a>) – Device</p></li>
+<li><p><strong>matrix</strong> (<a class="reference internal" href="matrix.html#matrix"><span class="std std-ref">Matrix</span></a>) – Transformation matrix to apply to the display list contents.</p></li>
+<li><p><strong>area</strong> (<a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a>) – Only the part visible within this area will be considered when the list is run through the device.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="index-0"></span><dl class="py method">
+<dt id="DisplayList.getPixmap">
+<code class="sig-name descname">getPixmap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix</span><span class="o">=</span><span class="default_value">fitz.Identity</span></em>, <em class="sig-param"><span class="n">colorspace</span><span class="o">=</span><span class="default_value">fitz.csRGB</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">clip</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DisplayList.getPixmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the display list through a draw device and return a pixmap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<a class="reference internal" href="matrix.html#matrix"><span class="std std-ref">Matrix</span></a>) – matrix to use. Default is the identity matrix.</p></li>
+<li><p><strong>colorspace</strong> (<a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a>) – the desired colorspace. Default is RGB.</p></li>
+<li><p><strong>alpha</strong> (<em>int</em>) – determine whether or not (0, default) to include a transparency channel.</p></li>
+<li><p><strong>clip</strong> (<a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a> or <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a>) – an area of the full mediabox to which the pixmap should be restricted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pixmap of the display list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="DisplayList.get_textpage">
+<code class="sig-name descname">get_textpage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">flags</span></em><span class="sig-paren">)</span><a class="headerlink" href="#DisplayList.get_textpage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the display list through a text device and return a text page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flags</strong> (<em>int</em>) – control which information is parsed into a text page. Default value in PyMuPDF is <strong>3 = TEXT_PRESERVE_LIGATURES | TEXT_PRESERVE_WHITESPACE</strong>, i.e. ligatures are <strong>passed through</strong>, white spaces are <strong>passed through</strong> (not translated to spaces), and images are <strong>not included</strong>. See <a class="reference internal" href="vars.html#textpreserve"><span class="std std-ref">Preserve Text Flags</span></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>text page of the display list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="DisplayList.rect">
+<code class="sig-name descname">rect</code><a class="headerlink" href="#DisplayList.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the display list’s mediabox. This will equal the page’s rectangle if it was created via <a class="reference internal" href="functions.html#Page.get_displaylist" title="Page.get_displaylist"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.get_displaylist()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="colorspace.html"
+                        title="previous chapter">Colorspace</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="document.html"
+                        title="next chapter">Document</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="document.html" title="Document"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="colorspace.html" title="Colorspace"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DisplayList</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

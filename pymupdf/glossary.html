@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Glossary &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Constants and Enumerations" href="vars.html" />
+    <link rel="prev" title="Working together: DisplayList and TextPage" href="coop_low.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vars.html" title="Constants and Enumerations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="coop_low.html" title="Working together: DisplayList and TextPage"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Glossary</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="glossary">
+<span id="id1"></span><h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<dl class="py data">
+<dt id="matrix_like">
+<code class="sig-name descname">matrix_like</code><a class="headerlink" href="#matrix_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python sequence of 6 numbers.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="rect_like">
+<code class="sig-name descname">rect_like</code><a class="headerlink" href="#rect_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python sequence of 4 numbers.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="irect_like">
+<code class="sig-name descname">irect_like</code><a class="headerlink" href="#irect_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python sequence of 4 integers.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="point_like">
+<code class="sig-name descname">point_like</code><a class="headerlink" href="#point_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python sequence of 2 numbers.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="quad_like">
+<code class="sig-name descname">quad_like</code><a class="headerlink" href="#quad_like" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python sequence of 4 <a class="reference internal" href="#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> items.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="inheritable">
+<code class="sig-name descname">inheritable</code><a class="headerlink" href="#inheritable" title="Permalink to this definition">¶</a></dt>
+<dd><p>A number of values in a PDF can be specified once and then be inherited by objects further down in a parent-child relationship. The mediabox (physical size) of pages can for example be specified in some node(s) of the <a class="reference internal" href="#pagetree" title="pagetree"><code class="xref py py-data docutils literal notranslate"><span class="pre">pagetree</span></code></a> and will then be taken as value for all <em>kids</em>, which do not specify their own value.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="MediaBox">
+<code class="sig-name descname">MediaBox</code><a class="headerlink" href="#MediaBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PDF array of 4 floats specifying a physical page size – (<a class="reference internal" href="#inheritable" title="inheritable"><code class="xref py py-data docutils literal notranslate"><span class="pre">inheritable</span></code></a>).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="CropBox">
+<code class="sig-name descname">CropBox</code><a class="headerlink" href="#CropBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PDF array of 4 floats specifying a page’s visible area – (<a class="reference internal" href="#inheritable" title="inheritable"><code class="xref py py-data docutils literal notranslate"><span class="pre">inheritable</span></code></a>). This value is <strong>not affected</strong> if the page is rotated. In contrast to the page rectangle, <a class="reference internal" href="page.html#Page.rect" title="Page.rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.rect</span></code></a>, the top-left corner of the cropbox may or may not be <em>(0, 0)</em>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="catalog">
+<code class="sig-name descname">catalog</code><a class="headerlink" href="#catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>A central PDF <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> – also called the “root” – containing document-wide parameters and pointers to many other information.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="contents">
+<code class="sig-name descname">contents</code><a class="headerlink" href="#contents" title="Permalink to this definition">¶</a></dt>
+<dd><p>“A <strong>content stream</strong> is a PDF <a class="reference internal" href="#object" title="object"><code class="xref py py-data docutils literal notranslate"><span class="pre">object</span></code></a> with an attached <a class="reference internal" href="#stream" title="stream"><code class="xref py py-data docutils literal notranslate"><span class="pre">stream</span></code></a>, whose data consists of a sequence of instructions describing the graphical elements to be painted on a page.” (<a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> p. 151). For an overview of the mini-language used in these streams see chapter “Operator Summary” on page 985 of the <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>. A PDF <a class="reference internal" href="#page" title="page"><code class="xref py py-data docutils literal notranslate"><span class="pre">page</span></code></a> can have none to many contents objects. If it has none, the page is empty (but still may show annotations). If it has several, they will be interpreted in sequence as if their instructions had been present in one such object (i.e. like in a concatenated string). It should be noted that there are more stream object types which use the same syntax: e.g. appearance dictionaries associated with annotations and Form XObjects.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="resources">
+<code class="sig-name descname">resources</code><a class="headerlink" href="#resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> containing references to any resources (like images or fonts) required by a PDF <a class="reference internal" href="#page" title="page"><code class="xref py py-data docutils literal notranslate"><span class="pre">page</span></code></a> (required, inheritable, <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> p. 145) and certain other objects (Form XObjects). This dictionary appears as a sub-dictionary in the object definition under the key <em>/Resources</em>. Being an inheritable object type, there may exist “parent” resources for all pages or certain subsets of pages.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="dictionary">
+<code class="sig-name descname">dictionary</code><a class="headerlink" href="#dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PDF <a class="reference internal" href="#object" title="object"><code class="xref py py-data docutils literal notranslate"><span class="pre">object</span></code></a> type, which is somewhat comparable to the same-named Python notion: “A dictionary object is an associative table containing pairs of objects, known as the dictionary’s entries. The first element of each entry is the key and the second element is the value. The key must be a name (…). The value can be any kind of object, including another dictionary. A dictionary entry whose value is null (…) is equivalent to an absent entry.” (<a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> p. 59).</p>
+<p>Dictionaries are the most important <a class="reference internal" href="#object" title="object"><code class="xref py py-data docutils literal notranslate"><span class="pre">object</span></code></a> type in PDF. Here is an example (describing a <a class="reference internal" href="#page" title="page"><code class="xref py py-data docutils literal notranslate"><span class="pre">page</span></code></a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;&lt;</span>
+<span class="o">/</span><span class="n">Contents</span> <span class="mi">40</span> <span class="mi">0</span> <span class="n">R</span>                  <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">an</span> <span class="n">indirect</span> <span class="nb">object</span>
+<span class="o">/</span><span class="n">Type</span><span class="o">/</span><span class="n">Page</span>                        <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">a</span> <span class="n">name</span> <span class="nb">object</span>
+<span class="o">/</span><span class="n">MediaBox</span><span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mf">595.32</span> <span class="mf">841.92</span><span class="p">]</span>      <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">an</span> <span class="n">array</span> <span class="nb">object</span>
+<span class="o">/</span><span class="n">Rotate</span> <span class="mi">0</span>                         <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">a</span> <span class="n">number</span> <span class="nb">object</span>
+<span class="o">/</span><span class="n">Parent</span> <span class="mi">12</span> <span class="mi">0</span> <span class="n">R</span>                    <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">an</span> <span class="n">indirect</span> <span class="nb">object</span>
+<span class="o">/</span><span class="n">Resources</span><span class="o">&lt;&lt;</span>                      <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">a</span> <span class="n">dictionary</span> <span class="nb">object</span>
+    <span class="o">/</span><span class="n">ExtGState</span><span class="o">&lt;&lt;/</span><span class="n">R7</span> <span class="mi">26</span> <span class="mi">0</span> <span class="n">R</span><span class="o">&gt;&gt;</span>
+    <span class="o">/</span><span class="n">Font</span><span class="o">&lt;&lt;</span>
+         <span class="o">/</span><span class="n">R8</span> <span class="mi">27</span> <span class="mi">0</span> <span class="n">R</span><span class="o">/</span><span class="n">R10</span> <span class="mi">21</span> <span class="mi">0</span> <span class="n">R</span><span class="o">/</span><span class="n">R12</span> <span class="mi">24</span> <span class="mi">0</span> <span class="n">R</span><span class="o">/</span><span class="n">R14</span> <span class="mi">15</span> <span class="mi">0</span> <span class="n">R</span>
+         <span class="o">/</span><span class="n">R17</span> <span class="mi">4</span> <span class="mi">0</span> <span class="n">R</span><span class="o">/</span><span class="n">R20</span> <span class="mi">30</span> <span class="mi">0</span> <span class="n">R</span><span class="o">/</span><span class="n">R23</span> <span class="mi">7</span> <span class="mi">0</span> <span class="n">R</span> <span class="o">/</span><span class="n">R27</span> <span class="mi">20</span> <span class="mi">0</span> <span class="n">R</span>
+         <span class="o">&gt;&gt;</span>
+    <span class="o">/</span><span class="n">ProcSet</span><span class="p">[</span><span class="o">/</span><span class="n">PDF</span><span class="o">/</span><span class="n">Text</span><span class="p">]</span>           <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">array</span> <span class="n">of</span> <span class="n">two</span> <span class="n">name</span> <span class="n">objects</span>
+    <span class="o">&gt;&gt;</span>
+<span class="o">/</span><span class="n">Annots</span><span class="p">[</span><span class="mi">55</span> <span class="mi">0</span> <span class="n">R</span><span class="p">]</span>                   <span class="o">%</span> <span class="n">value</span><span class="p">:</span> <span class="n">array</span><span class="p">,</span> <span class="n">one</span> <span class="n">entry</span> <span class="p">(</span><span class="n">indirect</span> <span class="nb">object</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span>
+</pre></div>
+</div>
+<p><em>Contents</em>, <em>Type</em>, <em>MediaBox</em>, etc. are <strong>keys</strong>, <em>40 0 R</em>, <em>Page</em>, <em>[0 0 595.32 841.92]</em>, etc. are the respective <strong>values</strong>. The strings <em>“&lt;&lt;”</em> and <em>“&gt;&gt;”</em> are used to enclose object definitions.</p>
+<p>This example also shows the syntax of <strong>nested</strong> dictionary values: <em>Resources</em> has an object as its value, which in turn is a dictionary with keys like <em>ExtGState</em> (with the value <em>&lt;&lt;/R7 26 0 R&gt;&gt;</em>, which is another dictionary), etc.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="page">
+<code class="sig-name descname">page</code><a class="headerlink" href="#page" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PDF page is a <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> object which defines one page in a PDF, see <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> p. 145.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="pagetree">
+<code class="sig-name descname">pagetree</code><a class="headerlink" href="#pagetree" title="Permalink to this definition">¶</a></dt>
+<dd><p>“The pages of a document are accessed through a structure known as the page tree, which defines the ordering of pages in the document. The tree structure allows PDF consumer applications, using only limited memory, to quickly open a document containing thousands of pages. The tree contains nodes of two types: intermediate nodes, called page tree nodes, and leaf nodes, called page objects.” (<a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> p. 143).</p>
+<p>While it is possible to list all page references in just one array, PDFs with many pages are often created using <em>balanced tree</em> structures (“page trees”) for faster access to any single page. In relation to the total number of pages, this can reduce the average page access time by page number from a linear to some logarithmic order of magnitude.</p>
+<p>For fast page access, MuPDF can use its own array in memory – independently from what may or may not be present in the document file. This array is indexed by page number and therefore much faster than even the access via a perfectly balanced page tree.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="object">
+<code class="sig-name descname">object</code><a class="headerlink" href="#object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to Python, PDF supports the notion <em>object</em>, which can come in eight basic types: boolean values, integer and real numbers, strings, names, arrays, dictionaries, streams, and the null object (<a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> p. 51). Objects can be made identifyable by assigning a label. This label is then called <em>indirect</em> object. PyMuPDF supports retrieving definitions of indirect objects via their cross reference number via <a class="reference internal" href="document.html#Document.xref_object" title="Document.xref_object"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xref_object()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="stream">
+<code class="sig-name descname">stream</code><a class="headerlink" href="#stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>A PDF <a class="reference internal" href="#object" title="object"><code class="xref py py-data docutils literal notranslate"><span class="pre">object</span></code></a> type which is followed by a sequence of bytes, similar to a Python <em>string</em> or rather <em>bytes</em>. “However, a PDF application can read a stream incrementally, while a string must be read in its entirety. Furthermore, a stream can be of unlimited length, whereas a string is subject to an implementation limit. For this reason, objects with potentially large amounts of data, such as images and page descriptions, are represented as streams.” “A stream consists of a <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> followed by zero or more bytes bracketed between the keywords <em>stream</em> and <em>endstream</em>”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">nnn</span> <span class="mi">0</span> <span class="n">obj</span>
+<span class="o">&lt;&lt;</span>
+   <span class="n">dictionary</span> <span class="n">definition</span>
+<span class="o">&gt;&gt;</span>
+<span class="n">stream</span>
+<span class="p">(</span><span class="n">zero</span> <span class="ow">or</span> <span class="n">more</span> <span class="nb">bytes</span><span class="p">)</span>
+<span class="n">endstream</span>
+<span class="n">endobj</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> p. 60. PyMuPDF supports retrieving stream content via <a class="reference internal" href="document.html#Document.xref_stream" title="Document.xref_stream"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xref_stream()</span></code></a>. Use <a class="reference internal" href="functions.html#Document.is_stream" title="Document.is_stream"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.is_stream()</span></code></a> to determine whether an object is of stream type.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="unitvector">
+<code class="sig-name descname">unitvector</code><a class="headerlink" href="#unitvector" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mathematical notion meaning a vector of norm (“length”) 1 – usually the Euclidean norm is implied. In PyMuPDF, this term is restricted to <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a> objects, see <a class="reference internal" href="point.html#Point.unit" title="Point.unit"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Point.unit</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="xref">
+<code class="sig-name descname">xref</code><a class="headerlink" href="#xref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abbreviation for cross-reference number: this is an integer unique identification for objects in a PDF. There exists a cross-reference table (which may physically consist of several separate segments) in each PDF, which stores the relative position of each object for quick lookup. The cross-reference table is one entry longer than the number of existing object: item zero is reserved and must not be used in any way. Many PyMuPDF classes have an <em>xref</em> attribute (which is zero for non-PDFs), and one can find out the total number of objects in a PDF via <a class="reference internal" href="functions.html#Document.xref_length" title="Document.xref_length"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.xref_length()</span></code></a> <em>- 1</em>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="resolution">
+<code class="sig-name descname">resolution</code><a class="headerlink" href="#resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Images and <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> objects may contain resolution information provided as “dots per inch”, dpi, in each direction (horizontal and vertical). When MuPDF reads an image form a file or from a PDF object, it will parse this information and put it in <a class="reference internal" href="pixmap.html#Pixmap.xres" title="Pixmap.xres"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.xres</span></code></a>, <a class="reference internal" href="pixmap.html#Pixmap.yres" title="Pixmap.yres"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Pixmap.yres</span></code></a>, respectively. When it finds not meaningful information in the input (like non-positive values or values exceeding 4800), it will use “sane” defaults instead. The usual default value is 96, but it may also be 72 in some cases (e.g. for JPX images).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="OCPD">
+<code class="sig-name descname">OCPD</code><a class="headerlink" href="#OCPD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional content properties dictionary - a sub <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> of the PDF <a class="reference internal" href="#catalog" title="catalog"><code class="xref py py-data docutils literal notranslate"><span class="pre">catalog</span></code></a>. The central place to store optional content information, which is identified by the key <cite>/OCProperties</cite>. This dictionary has two required and one optional entry: (1) <cite>/OCGs</cite>, required, an array listing all optional content groups, (2) <cite>/D</cite>, required, the default optional content configuration dictionary (OCCD), (3) <cite>/Configs</cite>, optional, an array of alternative OCCDs.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="OCCD">
+<code class="sig-name descname">OCCD</code><a class="headerlink" href="#OCCD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional content configuration dictionary - a PDF <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> inside the PDF <a class="reference internal" href="#OCPD" title="OCPD"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCPD</span></code></a>. It stores a setting of ON / OFF states of OCGs and how they are presented to a PDF viewer program. Selecting a configuration is quick way to achieve temporary mass visibility state changes. After opening a PDF, the <cite>/D</cite> configuration of the <a class="reference internal" href="#OCPD" title="OCPD"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCPD</span></code></a> is always activated. Viewer should offer a way to switch between the <cite>/D</cite>, or one of the optional configurations contained in array <cite>/Configs</cite>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="OCG">
+<code class="sig-name descname">OCG</code><a class="headerlink" href="#OCG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional content group – a <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> object used to control the visibility of other PDF objects like images or annotations. Independently on which page they are defined, objects with the same OCG can simultaneously be shown or hidden by setting their OCG to ON or OFF. This can be achieved via the user interface provided by many PDF viewers (Adobe Acrobat), or programmatically.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="OCMD">
+<code class="sig-name descname">OCMD</code><a class="headerlink" href="#OCMD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional content membership dictionary – a <a class="reference internal" href="#dictionary" title="dictionary"><code class="xref py py-data docutils literal notranslate"><span class="pre">dictionary</span></code></a> object which can be used like an <a class="reference internal" href="#OCG" title="OCG"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCG</span></code></a>: it has a visibility state. The visibility of an OCMD is <strong>computed:</strong> it is a logical expression, which uses the state of one or more OCGs to produce a boolean value. The expression’s result is interpreted as ON (true) or OFF (false).</p>
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="coop_low.html"
+                        title="previous chapter">Working together: DisplayList and TextPage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="vars.html"
+                        title="next chapter">Constants and Enumerations</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vars.html" title="Constants and Enumerations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="coop_low.html" title="Working together: DisplayList and TextPage"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Glossary</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

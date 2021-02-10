@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appendix 2: Details on Text Extraction &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Appendix 3: Considerations on Embedded Files" href="app3.html" />
+    <link rel="prev" title="Appendix 1: Performance" href="app1.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="app3.html" title="Appendix 3: Considerations on Embedded Files"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="app1.html" title="Appendix 1: Performance"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appendix 2: Details on Text Extraction</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="appendix-2-details-on-text-extraction">
+<span id="appendix2"></span><h1>Appendix 2: Details on Text Extraction<a class="headerlink" href="#appendix-2-details-on-text-extraction" title="Permalink to this headline">¶</a></h1>
+<p>This chapter provides background on the text extraction methods of PyMuPDF.</p>
+<p>Information of interest are</p>
+<ul class="simple">
+<li><p>what do they provide?</p></li>
+<li><p>what do they imply (processing time / data sizes)?</p></li>
+</ul>
+<div class="section" id="general-structure-of-a-textpage">
+<h2>General structure of a TextPage<a class="headerlink" href="#general-structure-of-a-textpage" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a> is one of PyMuPDF’s classes. It is normally created behind the curtain, when <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> text extraction methods are used, but it is also available directly. In any case, an intermediate class, <a class="reference internal" href="displaylist.html#displaylist"><span class="std std-ref">DisplayList</span></a> must be created first (display lists contain interpreted pages, they also provide the input for <a class="reference internal" href="pixmap.html#pixmap"><span class="std std-ref">Pixmap</span></a> creation). Information contained in a <a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a> has the following hierarchy. Other than its name suggests, images may optionally also be part of a text page:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">page</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">text</span> <span class="n">block</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">line</span><span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="n">span</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">char</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">image</span> <span class="n">block</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">img</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>A <strong>text page</strong> consists of blocks (= roughly paragraphs).</p>
+<p>A <strong>block</strong> consists of either lines and their characters, or an image.</p>
+<p>A <strong>line</strong> consists of spans.</p>
+<p>A <strong>span</strong> consists of adjacent characters with identical font properties: name, size, flags and color.</p>
+</div>
+<div class="section" id="plain-text">
+<h2>Plain Text<a class="headerlink" href="#plain-text" title="Permalink to this headline">¶</a></h2>
+<p>Function <a class="reference internal" href="textpage.html#TextPage.extractText" title="TextPage.extractText"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractText()</span></code></a> (or <em>Page.get_text(“text”)</em>) extracts a page’s plain <strong>text in original order</strong> as specified by the creator of the document (which may not equal a natural reading order).</p>
+<p>An example output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">))</span>
+<span class="go">Some text on first page.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="blocks">
+<h2>BLOCKS<a class="headerlink" href="#blocks" title="Permalink to this headline">¶</a></h2>
+<p>Function <a class="reference internal" href="textpage.html#TextPage.extractBLOCKS" title="TextPage.extractBLOCKS"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractBLOCKS()</span></code></a> (or <em>Page.get_text(“blocks”)</em>) extracts a page’s text blocks as a list of items like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="s2">&quot;lines in block&quot;</span><span class="p">,</span> <span class="n">block_type</span><span class="p">,</span> <span class="n">block_no</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where the first 4 items are the float coordinates of the block’s bbox. The lines within each block are concatenated by a new-line character.</p>
+<p>This is a high-speed method with enough information to re-arrange the page’s text in natural reading order where required.</p>
+<p>Example output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;blocks&quot;</span><span class="p">))</span>
+<span class="go">[(50.0, 88.17500305175781, 166.1709747314453, 103.28900146484375,</span>
+<span class="go">&#39;Some text on first page.&#39;, 0, 0)]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="words">
+<h2>WORDS<a class="headerlink" href="#words" title="Permalink to this headline">¶</a></h2>
+<p>Function <a class="reference internal" href="textpage.html#TextPage.extractWORDS" title="TextPage.extractWORDS"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractWORDS()</span></code></a> (or <em>Page.get_text(“words”)</em>) extracts a page’s text <strong>words</strong> as a list of items like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="s2">&quot;word&quot;</span><span class="p">,</span> <span class="n">block_no</span><span class="p">,</span> <span class="n">line_no</span><span class="p">,</span> <span class="n">word_no</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where the first 4 items are the float coordinates of the words’s bbox. The last three integers provide some more information on the word’s whereabouts.</p>
+<p>This is a high-speed method with enough information to extract text contained in a given rectangle.</p>
+<p>Example output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;words&quot;</span><span class="p">):</span>
+<span class="go">        print(word)</span>
+<span class="go">(50.0, 88.17500305175781, 78.73200225830078, 103.28900146484375,</span>
+<span class="go">&#39;Some&#39;, 0, 0, 0)</span>
+<span class="go">(81.79000091552734, 88.17500305175781, 99.5219955444336, 103.28900146484375,</span>
+<span class="go">&#39;text&#39;, 0, 0, 1)</span>
+<span class="go">(102.57999420166016, 88.17500305175781, 114.8119888305664, 103.28900146484375,</span>
+<span class="go">&#39;on&#39;, 0, 0, 2)</span>
+<span class="go">(117.86998748779297, 88.17500305175781, 135.5909881591797, 103.28900146484375,</span>
+<span class="go">&#39;first&#39;, 0, 0, 3)</span>
+<span class="go">(138.64898681640625, 88.17500305175781, 166.1709747314453, 103.28900146484375,</span>
+<span class="go">&#39;page.&#39;, 0, 0, 4)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="html">
+<h2>HTML<a class="headerlink" href="#html" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="textpage.html#TextPage.extractHTML" title="TextPage.extractHTML"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractHTML()</span></code></a> (or <em>Page.get_text(“html”)</em> output fully reflects the structure of the page’s <em>TextPage</em> – much like DICT / JSON below. This includes images, font information and text positions. If wrapped in HTML header and trailer code, it can readily be displayed by an internet browser. Our above example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;html&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+<span class="go">        print(line)</span>
+
+<span class="go">&lt;div id=&quot;page0&quot; style=&quot;position:relative;width:300pt;height:350pt;</span>
+<span class="go">background-color:white&quot;&gt;</span>
+<span class="go">&lt;p style=&quot;position:absolute;white-space:pre;margin:0;padding:0;top:88pt;</span>
+<span class="go">left:50pt&quot;&gt;&lt;span style=&quot;font-family:Helvetica,sans-serif;</span>
+<span class="go">font-size:11pt&quot;&gt;Some text on first page.&lt;/span&gt;&lt;/p&gt;</span>
+<span class="go">&lt;/div&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="controlling-quality-of-html-output">
+<span id="htmlquality"></span><h2>Controlling Quality of HTML Output<a class="headerlink" href="#controlling-quality-of-html-output" title="Permalink to this headline">¶</a></h2>
+<p>While HTML output has improved a lot in MuPDF v1.12.0, it is not yet bug-free: we have found problems in the areas <strong>font support</strong> and <strong>image positioning</strong>.</p>
+<ul class="simple">
+<li><p>HTML text contains references to the fonts used of the original document. If these are not known to the browser (a fat chance!), it will replace them with others; the results will probably look awkward. This issue varies greatly by browser – on my Windows machine, MS Edge worked just fine, whereas Firefox looked horrible.</p></li>
+<li><p>For PDFs with a complex structure, images may not be positioned and / or sized correctly. This seems to be the case for rotated pages and pages, where the various possible page bbox variants do not coincide (e.g. <em>MediaBox != CropBox</em>). We do not know yet, how to address this – we filed a bug at MuPDF’s site.</p></li>
+</ul>
+<p>To address the font issue, you can use a simple utility script to scan through the HTML file and replace font references. Here is a little example that replaces all fonts with one of the <a class="reference internal" href="app4.html#base-14-fonts"><span class="std std-ref">PDF Base 14 Fonts</span></a>: serifed fonts will become “Times”, non-serifed “Helvetica” and monospaced will become “Courier”. Their respective variations for “bold”, “italic”, etc. are hopefully done correctly by your browser:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">otext</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>                 <span class="c1"># original html text string</span>
+<span class="n">pos1</span> <span class="o">=</span> <span class="mi">0</span>                                      <span class="c1"># search start poition</span>
+<span class="n">font_serif</span> <span class="o">=</span> <span class="s2">&quot;font-family:Times&quot;</span>              <span class="c1"># enter ...</span>
+<span class="n">font_sans</span>  <span class="o">=</span> <span class="s2">&quot;font-family:Helvetica&quot;</span>          <span class="c1"># ... your choices ...</span>
+<span class="n">font_mono</span>  <span class="o">=</span> <span class="s2">&quot;font-family:Courier&quot;</span>            <span class="c1"># ... here</span>
+<span class="n">found_one</span>  <span class="o">=</span> <span class="kc">False</span>                            <span class="c1"># true if search successfull</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">pos0</span> <span class="o">=</span> <span class="n">otext</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;font-family:&quot;</span><span class="p">,</span> <span class="n">pos1</span><span class="p">)</span>   <span class="c1"># start of a font spec</span>
+    <span class="k">if</span> <span class="n">pos0</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>                              <span class="c1"># none found - we are done</span>
+        <span class="k">break</span>
+    <span class="n">pos1</span> <span class="o">=</span> <span class="n">otext</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">pos0</span><span class="p">)</span>              <span class="c1"># end of font spec</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">otext</span><span class="p">[</span><span class="n">pos0</span> <span class="p">:</span> <span class="n">pos1</span><span class="p">]</span>                 <span class="c1"># complete font spec string</span>
+    <span class="n">testn</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>                                <span class="c1"># the new font spec string</span>
+    <span class="k">if</span> <span class="n">test</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;,serif&quot;</span><span class="p">):</span>               <span class="c1"># font with serifs?</span>
+        <span class="n">testn</span> <span class="o">=</span> <span class="n">font_serif</span>                    <span class="c1"># use Times instead</span>
+    <span class="k">elif</span> <span class="n">test</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;,sans-serif&quot;</span><span class="p">):</span>        <span class="c1"># sans serifs font?</span>
+        <span class="n">testn</span> <span class="o">=</span> <span class="n">font_sans</span>                     <span class="c1"># use Helvetica</span>
+    <span class="k">elif</span> <span class="n">test</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;,monospace&quot;</span><span class="p">):</span>         <span class="c1"># monospaced font?</span>
+        <span class="n">testn</span> <span class="o">=</span> <span class="n">font_mono</span>                     <span class="c1"># becomes Courier</span>
+
+    <span class="k">if</span> <span class="n">testn</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>                           <span class="c1"># any of the above found?</span>
+        <span class="n">otext</span> <span class="o">=</span> <span class="n">otext</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">testn</span><span class="p">)</span>    <span class="c1"># change the source</span>
+        <span class="n">found_one</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">pos1</span> <span class="o">=</span> <span class="mi">0</span>                              <span class="c1"># start over</span>
+
+<span class="k">if</span> <span class="n">found_one</span><span class="p">:</span>
+    <span class="n">ofile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.html&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">ofile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">otext</span><span class="p">)</span>
+    <span class="n">ofile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: could not find any font specs!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dict-or-json">
+<h2>DICT (or JSON)<a class="headerlink" href="#dict-or-json" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="textpage.html#TextPage.extractDICT" title="TextPage.extractDICT"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractDICT()</span></code></a> (or <em>Page.get_text(“dict”)</em>) output fully reflects the structure of a <em>TextPage</em> and provides image content and position details (<em>bbox</em> – boundary boxes in pixel units) for every block and line. This information can be used to present text in another reading order if required (e.g. from top-left to bottom-right). Images are stored as <em>bytes</em> (<em>bytearray</em> in Python 2) for DICT output and base64 encoded strings for JSON output.</p>
+<p>For a visuallization of the dictionary structure have a look at <a class="reference internal" href="textpage.html#textpagedict"><span class="std std-ref">Dictionary Structure of extractDICT() and extractRAWDICT()</span></a>.</p>
+<p>Here is how this looks like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mf">300.0</span><span class="p">,</span>
+    <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mf">350.0</span><span class="p">,</span>
+    <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">166.1709747314453</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+        <span class="s2">&quot;lines&quot;</span><span class="p">:</span> <span class="p">[{</span>
+            <span class="s2">&quot;wmode&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;dir&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+            <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">166.1709747314453</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+            <span class="s2">&quot;spans&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mf">11.0</span><span class="p">,</span>
+                <span class="s2">&quot;flags&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;font&quot;</span><span class="p">:</span> <span class="s2">&quot;Helvetica&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;Some text on first page.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">166.1709747314453</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">]</span>
+            <span class="p">}]</span>
+        <span class="p">}]</span>
+    <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rawdict">
+<h2>RAWDICT<a class="headerlink" href="#rawdict" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="textpage.html#TextPage.extractRAWDICT" title="TextPage.extractRAWDICT"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractRAWDICT()</span></code></a> (or <em>Page.get_text(“rawdict”)</em>) is an <strong>information superset of DICT</strong> and takes the detail level one step deeper. It looks exactly like the above, except that the <em>“text”</em> items (<em>string</em>) are replaced by <em>“chars”</em> items (<em>list</em>). Each <em>“chars”</em> entry is a character <em>dict</em>. For example, here is what you would see in place of item <em>“text”: “Text in black color.”</em> above:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;chars&quot;</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">57.336997985839844</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+    <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">57.33700180053711</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">57.33700180053711</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">63.4530029296875</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+    <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;o&quot;</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">63.4530029296875</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">63.4530029296875</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">72.61600494384766</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+    <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">72.61600494384766</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">72.61600494384766</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">78.73200225830078</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+    <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;e&quot;</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">78.73200225830078</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">78.73200225830078</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">81.79000091552734</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+    <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span>
+<span class="o">&lt;</span> <span class="o">...</span> <span class="n">deleted</span> <span class="o">...</span> <span class="o">&gt;</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">163.11297607421875</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">163.11297607421875</span><span class="p">,</span> <span class="mf">88.17500305175781</span><span class="p">,</span> <span class="mf">166.1709747314453</span><span class="p">,</span> <span class="mf">103.28900146484375</span><span class="p">],</span>
+    <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span>
+<span class="p">}],</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="xml">
+<h2>XML<a class="headerlink" href="#xml" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="textpage.html#TextPage.extractXML" title="TextPage.extractXML"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractXML()</span></code></a> (or <em>Page.get_text(“xml”)</em>) version extracts text (no images) with the detail level of RAWDICT:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;xml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+<span class="go">    print(line)</span>
+
+<span class="go">&lt;page id=&quot;page0&quot; width=&quot;300&quot; height=&quot;350&quot;&gt;</span>
+<span class="go">&lt;block bbox=&quot;50 88.175 166.17098 103.289&quot;&gt;</span>
+<span class="go">&lt;line bbox=&quot;50 88.175 166.17098 103.289&quot; wmode=&quot;0&quot; dir=&quot;1 0&quot;&gt;</span>
+<span class="go">&lt;font name=&quot;Helvetica&quot; size=&quot;11&quot;&gt;</span>
+<span class="go">&lt;char quad=&quot;50 88.175 57.336999 88.175 50 103.289 57.336999 103.289&quot; x=&quot;50&quot;</span>
+<span class="go">y=&quot;100&quot; color=&quot;#000000&quot; c=&quot;S&quot;/&gt;</span>
+<span class="go">&lt;char quad=&quot;57.337 88.175 63.453004 88.175 57.337 103.289 63.453004 103.289&quot; x=&quot;57.337&quot;</span>
+<span class="go">y=&quot;100&quot; color=&quot;#000000&quot; c=&quot;o&quot;/&gt;</span>
+<span class="go">&lt;char quad=&quot;63.453004 88.175 72.616008 88.175 63.453004 103.289 72.616008 103.289&quot; x=&quot;63.453004&quot;</span>
+<span class="go">y=&quot;100&quot; color=&quot;#000000&quot; c=&quot;m&quot;/&gt;</span>
+<span class="go">&lt;char quad=&quot;72.616008 88.175 78.732 88.175 72.616008 103.289 78.732 103.289&quot; x=&quot;72.616008&quot;</span>
+<span class="go">y=&quot;100&quot; color=&quot;#000000&quot; c=&quot;e&quot;/&gt;</span>
+<span class="go">&lt;char quad=&quot;78.732 88.175 81.79 88.175 78.732 103.289 81.79 103.289&quot; x=&quot;78.732&quot;</span>
+<span class="go">y=&quot;100&quot; color=&quot;#000000&quot; c=&quot; &quot;/&gt;</span>
+
+<span class="gp">... </span><span class="n">deleted</span> <span class="o">...</span>
+
+<span class="go">&lt;char quad=&quot;163.11298 88.175 166.17098 88.175 163.11298 103.289 166.17098 103.289&quot; x=&quot;163.11298&quot;</span>
+<span class="go">y=&quot;100&quot; color=&quot;#000000&quot; c=&quot;.&quot;/&gt;</span>
+<span class="go">&lt;/font&gt;</span>
+<span class="go">&lt;/line&gt;</span>
+<span class="go">&lt;/block&gt;</span>
+<span class="go">&lt;/page&gt;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We have successfully tested <a class="reference external" href="https://pypi.org/project/lxml/">lxml</a> to interpret this output.</p>
+</div>
+</div>
+<div class="section" id="xhtml">
+<h2>XHTML<a class="headerlink" href="#xhtml" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="textpage.html#TextPage.extractXHTML" title="TextPage.extractXHTML"><code class="xref py py-meth docutils literal notranslate"><span class="pre">TextPage.extractXHTML()</span></code></a> (or <em>Page.get_text(“xhtml”)</em>) is a variation of TEXT but in HTML format, containing the bare text and images (“semantic” output):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;page0&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">Some</span> <span class="n">text</span> <span class="n">on</span> <span class="n">first</span> <span class="n">page</span><span class="o">.&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-extraction-flags-defaults">
+<span id="text-extraction-flags"></span><h2>Text Extraction Flags Defaults<a class="headerlink" href="#text-extraction-flags-defaults" title="Permalink to this headline">¶</a></h2>
+<p><em>(New in version 1.16.2)</em> Method <a class="reference internal" href="page.html#Page.get_text" title="Page.get_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.get_text()</span></code></a> supports a keyword parameter <em>flags</em> <em>(int)</em> to control the amount and the quality of extracted data. The following table shows the defaults settings (flags parameter omitted or None) for each extraction variant. If you specify flags with a value other than <em>None</em>, be aware that you must set <strong>all desired</strong> options. A description of the respective bit settings can be found in <a class="reference internal" href="vars.html#textpreserve"><span class="std std-ref">Preserve Text Flags</span></a>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 9%" />
+<col style="width: 5%" />
+<col style="width: 7%" />
+<col style="width: 12%" />
+<col style="width: 9%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Indicator</p></th>
+<th class="head"><p>text</p></th>
+<th class="head"><p>html</p></th>
+<th class="head"><p>xhtml</p></th>
+<th class="head"><p>xml</p></th>
+<th class="head"><p>dict</p></th>
+<th class="head"><p>rawdict</p></th>
+<th class="head"><p>words</p></th>
+<th class="head"><p>blocks</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>preserve ligatures</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>preserve whitespace</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>preserve images</p></td>
+<td><p>n/a</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>n/a</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>n/a</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>inhibit spaces</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>dehyphenate</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p><strong>“json”</strong> is handled exactly like <strong>“dict”</strong> and is hence left out.</p></li>
+<li><p>An “n/a” specification means a value of 0 and setting this bit never has any effect on the output (but an adverse effect on performance).</p></li>
+<li><p>If you are not interested in images when using an output variant which includes them by default, then by all means set the respective bit off: You will experience a better performance and much lower space requirements.</p></li>
+</ul>
+<p>To show the effect of <em>TEXT_INHIBIT_SPACES</em> have a look at this example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">))</span>
+<span class="go">H a l l o !</span>
+<span class="go">Mo r e  t e x t</span>
+<span class="go">i s  f o l l o w i n g</span>
+<span class="go">i n  E n g l i s h</span>
+<span class="go">. . .  l e t &#39; s  s e e</span>
+<span class="go">w h a t  h a p p e n s .</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">fitz</span><span class="o">.</span><span class="n">TEXT_INHIBIT_SPACES</span><span class="p">))</span>
+<span class="go">Hallo!</span>
+<span class="go">More text</span>
+<span class="go">is following</span>
+<span class="go">in English</span>
+<span class="gp">... </span><span class="n">let</span><span class="s1">&#39;s see</span>
+<span class="go">what happens.</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="performance">
+<h2>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h2>
+<p>The text extraction methods differ significantly: in terms of information they supply, and in terms of resource requirements and runtimes. Generally, more information of course means that more processing is required and a higher data volume is generated.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Especially images have a <strong>very significant</strong> impact. Make sure to exclude them (via the <em>flags</em> parameter) whenever you do not need them. To process the below mentioned 2’700 total pages with default flags settings required 160 seconds across all extraction methods. When all images where excluded, less than 50% of that time (77 seconds) were needed.</p>
+</div>
+<p>To begin with, all methods are <strong>very fast</strong> in relation to other products out there in the market. In terms of processing speed, we are not aware of a faster (free) tool. Even the most detailed method, RAWDICT, processes all 1’310 pages of the <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> in less than 5 seconds (simple text needs less than 2 seconds here).</p>
+<p>The following table shows average relative speeds (“RSpeed”, baseline 1.00 is TEXT), taken across ca. 1400 text-heavy and 1300 image-heavy pages.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 7%" />
+<col style="width: 75%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>RSpeed</p></th>
+<th class="head"><p>Comments</p></th>
+<th class="head"><p>no images</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TEXT</p></td>
+<td><p>1.00</p></td>
+<td><p>no images, <strong>plain</strong> text, line breaks</p></td>
+<td><p>1.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>BLOCKS</p></td>
+<td><p>1.00</p></td>
+<td><p>image bboxes (only), <strong>block</strong> level text with bboxes, line breaks</p></td>
+<td><p>1.00</p></td>
+</tr>
+<tr class="row-even"><td><p>WORDS</p></td>
+<td><p>1.02</p></td>
+<td><p>no images, <strong>word</strong> level text with bboxes</p></td>
+<td><p>1.02</p></td>
+</tr>
+<tr class="row-odd"><td><p>XML</p></td>
+<td><p>2.72</p></td>
+<td><p>no images, <strong>char</strong> level text, layout and font details</p></td>
+<td><p>2.72</p></td>
+</tr>
+<tr class="row-even"><td><p>XHTML</p></td>
+<td><p>3.32</p></td>
+<td><p><strong>base64</strong> images, <strong>span</strong> level text, no layout info</p></td>
+<td><p>1.00</p></td>
+</tr>
+<tr class="row-odd"><td><p>HTML</p></td>
+<td><p>3.54</p></td>
+<td><p><strong>base64</strong> images, <strong>span</strong> level text, layout and font details</p></td>
+<td><p>1.01</p></td>
+</tr>
+<tr class="row-even"><td><p>DICT</p></td>
+<td><p>3.93</p></td>
+<td><p><strong>binary</strong> images, <strong>span</strong> level text, layout and font details</p></td>
+<td><p>1.04</p></td>
+</tr>
+<tr class="row-odd"><td><p>RAWDICT</p></td>
+<td><p>4.50</p></td>
+<td><p><strong>binary</strong> images, <strong>char</strong> level text, layout and font details</p></td>
+<td><p>1.68</p></td>
+</tr>
+</tbody>
+</table>
+<p>As mentioned: when excluding all images (last column), the relative speeds are changing drastically: except RAWDICT and XML, the other methods are almost equally fast, and RAWDICT requires 40% less execution time than the <strong>now slowest XML</strong>.</p>
+<p>Look at chapter <strong>Appendix 1</strong> for more performance information.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Appendix 2: Details on Text Extraction</a><ul>
+<li><a class="reference internal" href="#general-structure-of-a-textpage">General structure of a TextPage</a></li>
+<li><a class="reference internal" href="#plain-text">Plain Text</a></li>
+<li><a class="reference internal" href="#blocks">BLOCKS</a></li>
+<li><a class="reference internal" href="#words">WORDS</a></li>
+<li><a class="reference internal" href="#html">HTML</a></li>
+<li><a class="reference internal" href="#controlling-quality-of-html-output">Controlling Quality of HTML Output</a></li>
+<li><a class="reference internal" href="#dict-or-json">DICT (or JSON)</a></li>
+<li><a class="reference internal" href="#rawdict">RAWDICT</a></li>
+<li><a class="reference internal" href="#xml">XML</a></li>
+<li><a class="reference internal" href="#xhtml">XHTML</a></li>
+<li><a class="reference internal" href="#text-extraction-flags-defaults">Text Extraction Flags Defaults</a></li>
+<li><a class="reference internal" href="#performance">Performance</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="app1.html"
+                        title="previous chapter">Appendix 1: Performance</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="app3.html"
+                        title="next chapter">Appendix 3: Considerations on Embedded Files</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="app3.html" title="Appendix 3: Considerations on Embedded Files"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="app1.html" title="Appendix 1: Performance"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appendix 2: Details on Text Extraction</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,488 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IRect &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Link" href="link.html" />
+    <link rel="prev" title="Identity" href="identity.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="link.html" title="Link"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="identity.html" title="Identity"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">IRect</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="irect">
+<span id="id1"></span><h1>IRect<a class="headerlink" href="#irect" title="Permalink to this headline">¶</a></h1>
+<p>IRect is a rectangular bounding box similar to <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a>, except that all corner coordinates are integers. IRect is used to specify an area of pixels, e.g. to receive image data during rendering. Otherwise, many similarities exist, e.g. considerations concerning emptiness and finiteness of rectangles also apply to this class.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Attribute / Method</strong></p></th>
+<th class="head"><p><strong>Short Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.contains" title="IRect.contains"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.contains()</span></code></a></p></td>
+<td><p>checks containment of another object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.getArea" title="IRect.getArea"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.getArea()</span></code></a></p></td>
+<td><p>calculate rectangle area</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.getRect" title="IRect.getRect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.getRect()</span></code></a></p></td>
+<td><p>return a <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> with same coordinates</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.getRectArea" title="IRect.getRectArea"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.getRectArea()</span></code></a></p></td>
+<td><p>calculate rectangle area</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.intersect" title="IRect.intersect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.intersect()</span></code></a></p></td>
+<td><p>common part with another rectangle</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.intersects" title="IRect.intersects"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.intersects()</span></code></a></p></td>
+<td><p>checks for non-empty intersection</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.morph" title="IRect.morph"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.morph()</span></code></a></p></td>
+<td><p>transform with a point and a matrix</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.norm" title="IRect.norm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.norm()</span></code></a></p></td>
+<td><p>the Euclidean norm</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.normalize" title="IRect.normalize"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IRect.normalize()</span></code></a></p></td>
+<td><p>makes a rectangle finite</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.bottom_left" title="IRect.bottom_left"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.bottom_left</span></code></a></p></td>
+<td><p>bottom left point, synonym <em>bl</em></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.bottom_right" title="IRect.bottom_right"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.bottom_right</span></code></a></p></td>
+<td><p>bottom right point, synonym <em>br</em></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.height" title="IRect.height"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.height</span></code></a></p></td>
+<td><p>height of the rectangle</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.isEmpty" title="IRect.isEmpty"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.isEmpty</span></code></a></p></td>
+<td><p>whether rectangle is empty</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.isInfinite" title="IRect.isInfinite"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.isInfinite</span></code></a></p></td>
+<td><p>whether rectangle is infinite</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.rect</span></code></p></td>
+<td><p>equals result of method <em>getRect()</em></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.top_left" title="IRect.top_left"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.top_left</span></code></a></p></td>
+<td><p>top left point, synonym <em>tl</em></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.top_right" title="IRect.top_right"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.top_right</span></code></a></p></td>
+<td><p>top_right point, synonym <em>tr</em></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.quad" title="IRect.quad"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.quad</span></code></a></p></td>
+<td><p><a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a> made from rectangle corners</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.width" title="IRect.width"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.width</span></code></a></p></td>
+<td><p>width of the rectangle</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.x0" title="IRect.x0"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.x0</span></code></a></p></td>
+<td><p>X-coordinate of the top left corner</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.x1" title="IRect.x1"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.x1</span></code></a></p></td>
+<td><p>X-coordinate of the bottom right corner</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#IRect.y0" title="IRect.y0"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.y0</span></code></a></p></td>
+<td><p>Y-coordinate of the top left corner</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#IRect.y1" title="IRect.y1"><code class="xref py py-attr docutils literal notranslate"><span class="pre">IRect.y1</span></code></a></p></td>
+<td><p>Y-coordinate of the bottom right corner</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="IRect">
+<em class="property">class </em><code class="sig-name descname">IRect</code><a class="headerlink" href="#IRect" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="IRect.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#IRect.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id0">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">x0</span></em>, <em class="sig-param"><span class="n">y0</span></em>, <em class="sig-param"><span class="n">x1</span></em>, <em class="sig-param"><span class="n">y1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id2">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">irect</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id3">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded constructors. Also see examples below and those for the <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> class.</p>
+<p>If another irect is specified, a <strong>new copy</strong> will be made.</p>
+<p>If sequence is specified, it must be a Python sequence type of 4 numbers (see <a class="reference internal" href="app4.html#sequencetypes"><span class="std std-ref">Using Python Sequences as Arguments in PyMuPDF</span></a>). Non-integer numbers will be truncated, non-numeric entries will raise an exception.</p>
+<p>The other parameters mean integer coordinates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.getRect">
+<code class="sig-name descname">getRect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#IRect.getRect" title="Permalink to this definition">¶</a></dt>
+<dd><p>A convenience function returning a <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> with the same coordinates. Also available as attribute <em>rect</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.getRectArea">
+<code class="sig-name descname">getRectArea</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">unit</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#IRect.getRectArea" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="IRect.getArea">
+<code class="sig-name descname">getArea</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">unit</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#IRect.getArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the area of the rectangle and, with no parameter, equals <em>abs(IRect)</em>. Like an empty rectangle, the area of an infinite rectangle is also zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unit</strong> (<em>str</em>) – Specify required unit: respective squares of “px” (pixels, default), “in” (inches), “cm” (centimeters), or “mm” (millimeters).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.intersect">
+<code class="sig-name descname">intersect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#IRect.intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>The intersection (common rectangular area) of the current rectangle and <em>ir</em> is calculated and replaces the current rectangle. If either rectangle is empty, the result is also empty. If either rectangle is infinite, the other one is taken as the result – and hence also infinite if both rectangles were infinite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ir</strong> (<em>rect_like</em>) – Second rectangle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.contains">
+<code class="sig-name descname">contains</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em><span class="sig-paren">)</span><a class="headerlink" href="#IRect.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether <em>x</em> is contained in the rectangle. It may be <a class="reference internal" href="glossary.html#rect_like" title="rect_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">rect_like</span></code></a>, <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> or a number. If <em>x</em> is an empty rectangle, this is always true. Conversely, if the rectangle is empty this is always <em>False</em>, if <em>x</em> is not an empty rectangle and not a number. If <em>x</em> is a number, it will be checked to be one of the four components. <em>x in irect</em> and <em>irect.contains(x)</em> are equivalent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<a class="reference internal" href="#irect"><span class="std std-ref">IRect</span></a> or <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> or <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a> or int) – the object to check.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.intersects">
+<code class="sig-name descname">intersects</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">r</span></em><span class="sig-paren">)</span><a class="headerlink" href="#IRect.intersects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the rectangle and the <a class="reference internal" href="glossary.html#rect_like" title="rect_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">rect_like</span></code></a> “r” contain a common non-empty <a class="reference internal" href="#irect"><span class="std std-ref">IRect</span></a>. This will always be <em>False</em> if either is infinite or empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>r</strong> (<em>rect_like</em>) – the rectangle to check.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.morph">
+<code class="sig-name descname">morph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fixpoint</span></em>, <em class="sig-param"><span class="n">matrix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#IRect.morph" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.17.0)</em></p>
+<p>Return a new quad after applying a matrix to it using a fixed point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fixpoint</strong> (<em>point_like</em>) – the fixed point.</p></li>
+<li><p><strong>matrix</strong> (<em>matrix_like</em>) – the matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a new <a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a>. This a wrapper of the same-named quad method.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.norm">
+<code class="sig-name descname">norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#IRect.norm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.16.0)</em></p>
+<p>Return the Euclidean norm of the rectangle treated as a vector of four numbers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="IRect.normalize">
+<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#IRect.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the rectangle finite. This is done by shuffling rectangle corners. After this, the bottom right corner will indeed be south-eastern to the top left one. See <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a> for a more details.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.top_left">
+<code class="sig-name descname">top_left</code><a class="headerlink" href="#IRect.top_left" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.tl">
+<code class="sig-name descname">tl</code><a class="headerlink" href="#IRect.tl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equals <em>Point(x0, y0)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.top_right">
+<code class="sig-name descname">top_right</code><a class="headerlink" href="#IRect.top_right" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.tr">
+<code class="sig-name descname">tr</code><a class="headerlink" href="#IRect.tr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equals <em>Point(x1, y0)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.bottom_left">
+<code class="sig-name descname">bottom_left</code><a class="headerlink" href="#IRect.bottom_left" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.bl">
+<code class="sig-name descname">bl</code><a class="headerlink" href="#IRect.bl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equals <em>Point(x0, y1)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.bottom_right">
+<code class="sig-name descname">bottom_right</code><a class="headerlink" href="#IRect.bottom_right" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.br">
+<code class="sig-name descname">br</code><a class="headerlink" href="#IRect.br" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equals <em>Point(x1, y1)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.quad">
+<code class="sig-name descname">quad</code><a class="headerlink" href="#IRect.quad" title="Permalink to this definition">¶</a></dt>
+<dd><p>The quadrilateral <em>Quad(irect.tl, irect.tr, irect.bl, irect.br)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#IRect.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the width of the bounding box. Equals <em>abs(x1 - x0)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.height">
+<code class="sig-name descname">height</code><a class="headerlink" href="#IRect.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the height of the bounding box. Equals <em>abs(y1 - y0)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.x0">
+<code class="sig-name descname">x0</code><a class="headerlink" href="#IRect.x0" title="Permalink to this definition">¶</a></dt>
+<dd><p>X-coordinate of the left corners.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.y0">
+<code class="sig-name descname">y0</code><a class="headerlink" href="#IRect.y0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y-coordinate of the top corners.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.x1">
+<code class="sig-name descname">x1</code><a class="headerlink" href="#IRect.x1" title="Permalink to this definition">¶</a></dt>
+<dd><p>X-coordinate of the right corners.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.y1">
+<code class="sig-name descname">y1</code><a class="headerlink" href="#IRect.y1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y-coordinate of the bottom corners.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.isInfinite">
+<code class="sig-name descname">isInfinite</code><a class="headerlink" href="#IRect.isInfinite" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>True</em> if rectangle is infinite, <em>False</em> otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="IRect.isEmpty">
+<code class="sig-name descname">isEmpty</code><a class="headerlink" href="#IRect.isEmpty" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>True</em> if rectangle is empty, <em>False</em> otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This class adheres to the Python sequence protocol, so components can be accessed via their index, too. Also refer to <a class="reference internal" href="app4.html#sequencetypes"><span class="std std-ref">Using Python Sequences as Arguments in PyMuPDF</span></a>.</p></li>
+<li><p>Rectangles can be used with arithmetic operators – see chapter <a class="reference internal" href="algebra.html#algebra"><span class="std std-ref">Operator Algebra for Geometry Objects</span></a>.</p></li>
+</ul>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="identity.html"
+                        title="previous chapter">Identity</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="link.html"
+                        title="next chapter">Link</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="link.html" title="Link"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="identity.html" title="Identity"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">IRect</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

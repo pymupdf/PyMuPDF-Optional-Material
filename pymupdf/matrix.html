@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matrix &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Outline" href="outline.html" />
+    <link rel="prev" title="linkDest" href="linkdest.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="outline.html" title="Outline"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="linkdest.html" title="linkDest"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Matrix</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="matrix">
+<span id="id1"></span><h1>Matrix<a class="headerlink" href="#matrix" title="Permalink to this headline">¶</a></h1>
+<p>Matrix is a row-major 3x3 matrix used by image transformations in MuPDF (which complies with the respective concepts laid down in the <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>). With matrices you can manipulate the rendered image of a page in a variety of ways: (parts of) the page can be rotated, zoomed, flipped, sheared and shifted by setting some or all of just six float values.</p>
+<p>Since all points or pixels live in a two-dimensional space, one column vector of that matrix is a constant unit vector, and only the remaining six elements are used for manipulations. These six elements are usually represented by <em>[a, b, c, d, e, f]</em>. Here is how they are positioned in the matrix:</p>
+<p><img alt="matrix" src="_images/img-matrix.png" /></p>
+<p>Please note:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the below methods are just convenience functions – everything they do, can also be achieved by directly manipulating the six numerical values</p></li>
+<li><p>all manipulations can be combined – you can construct a matrix that rotates <strong>and</strong> shears <strong>and</strong> scales <strong>and</strong> shifts, etc. in one go. If you however choose to do this, do have a look at the <strong>remarks</strong> further down or at the <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>.</p></li>
+</ul>
+</div></blockquote>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Method / Attribute</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#Matrix.preRotate" title="Matrix.preRotate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Matrix.preRotate()</span></code></a></p></td>
+<td><p>perform a rotation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Matrix.preScale" title="Matrix.preScale"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Matrix.preScale()</span></code></a></p></td>
+<td><p>perform a scaling</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Matrix.preShear" title="Matrix.preShear"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Matrix.preShear()</span></code></a></p></td>
+<td><p>perform a shearing (skewing)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Matrix.preTranslate" title="Matrix.preTranslate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Matrix.preTranslate()</span></code></a></p></td>
+<td><p>perform a translation (shifting)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Matrix.concat" title="Matrix.concat"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Matrix.concat()</span></code></a></p></td>
+<td><p>perform a matrix multiplication</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Matrix.invert" title="Matrix.invert"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Matrix.invert()</span></code></a></p></td>
+<td><p>calculate the inverted matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Matrix.norm" title="Matrix.norm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Matrix.norm()</span></code></a></p></td>
+<td><p>the Euclidean norm</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Matrix.a" title="Matrix.a"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Matrix.a</span></code></a></p></td>
+<td><p>zoom factor X direction</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Matrix.b" title="Matrix.b"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Matrix.b</span></code></a></p></td>
+<td><p>shearing effect Y direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Matrix.c" title="Matrix.c"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Matrix.c</span></code></a></p></td>
+<td><p>shearing effect X direction</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Matrix.d" title="Matrix.d"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Matrix.d</span></code></a></p></td>
+<td><p>zoom factor Y direction</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Matrix.e" title="Matrix.e"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Matrix.e</span></code></a></p></td>
+<td><p>horizontal shift</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Matrix.f" title="Matrix.f"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Matrix.f</span></code></a></p></td>
+<td><p>vertical shift</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Matrix.isRectilinear" title="Matrix.isRectilinear"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Matrix.isRectilinear</span></code></a></p></td>
+<td><p>true if rect corners will remain rect corners</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="Matrix">
+<em class="property">class </em><code class="sig-name descname">Matrix</code><a class="headerlink" href="#Matrix" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Matrix.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id0">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">zoom-x</em>, <em class="sig-param">zoom-y</em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id2">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">shear-x</em>, <em class="sig-param">shear-y</em>, <em class="sig-param">1</em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id3">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">a</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">d</span></em>, <em class="sig-param"><span class="n">e</span></em>, <em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id4">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">matrix</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id5">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">degree</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="id6">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">sequence</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overloaded constructors.</p>
+<p>Without parameters, the zero matrix <em>Matrix(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)</em> will be created.</p>
+<p><em>zoom-*</em> and <em>shear-*</em> specify zoom or shear values (float) and create a zoom or shear matrix, respectively.</p>
+<p>For “matrix” a <strong>new copy</strong> of another matrix will be made.</p>
+<p>Float value “degree” specifies the creation of a rotation matrix which rotates anit-clockwise.</p>
+<p>A “sequence” must be any Python sequence object with exactly 6 float entries (see <a class="reference internal" href="app4.html#sequencetypes"><span class="std std-ref">Using Python Sequences as Arguments in PyMuPDF</span></a>).</p>
+<p><em>fitz.Matrix(1, 1)</em>, <em>fitz.Matrix(0.0)</em> and <em>fitz.Matrix(fitz.Identity)</em> create modifyable versions of the <a class="reference internal" href="identity.html#identity"><span class="std std-ref">Identity</span></a> matrix, which looks like <em>[1, 0, 0, 1, 0, 0]</em>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Matrix.norm">
+<code class="sig-name descname">norm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.norm" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>(New in version 1.16.0)</em></p>
+<p>Return the Euclidean norm of the matrix as a vector.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Matrix.preRotate">
+<code class="sig-name descname">preRotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">deg</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.preRotate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the matrix to perform a counter-clockwise rotation for positive <em>deg</em> degrees, else clockwise. The matrix elements of an identity matrix will change in the following way:</p>
+<p><em>[1, 0, 0, 1, 0, 0] -&gt; [cos(deg), sin(deg), -sin(deg), cos(deg), 0, 0]</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>deg</strong> (<em>float</em>) – The rotation angle in degrees (use conventional notation based on Pi = 180 degrees).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Matrix.preScale">
+<code class="sig-name descname">preScale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sx</span></em>, <em class="sig-param"><span class="n">sy</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.preScale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the matrix to scale by the zoom factors sx and sy. Has effects on attributes <em>a</em> thru <em>d</em> only: <em>[a, b, c, d, e, f] -&gt; [a*sx, b*sx, c*sy, d*sy, e, f]</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sx</strong> (<em>float</em>) – Zoom factor in X direction. For the effect see description of attribute <em>a</em>.</p></li>
+<li><p><strong>sy</strong> (<em>float</em>) – Zoom factor in Y direction. For the effect see description of attribute <em>d</em>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Matrix.preShear">
+<code class="sig-name descname">preShear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sx</span></em>, <em class="sig-param"><span class="n">sy</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.preShear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the matrix to perform a shearing, i.e. transformation of rectangles into parallelograms (rhomboids). Has effects on attributes <em>a</em> thru <em>d</em> only: <em>[a, b, c, d, e, f] -&gt; [c*sy, d*sy, a*sx, b*sx, e, f]</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sx</strong> (<em>float</em>) – Shearing effect in X direction. See attribute <em>c</em>.</p></li>
+<li><p><strong>sy</strong> (<em>float</em>) – Shearing effect in Y direction. See attribute <em>b</em>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Matrix.preTranslate">
+<code class="sig-name descname">preTranslate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tx</span></em>, <em class="sig-param"><span class="n">ty</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.preTranslate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify the matrix to perform a shifting / translation operation along the x and / or y axis. Has effects on attributes <em>e</em> and <em>f</em> only: <em>[a, b, c, d, e, f] -&gt; [a, b, c, d, tx*a + ty*c, tx*b + ty*d]</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tx</strong> (<em>float</em>) – Translation effect in X direction. See attribute <em>e</em>.</p></li>
+<li><p><strong>ty</strong> (<em>float</em>) – Translation effect in Y direction. See attribute <em>f</em>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Matrix.concat">
+<code class="sig-name descname">concat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m1</span></em>, <em class="sig-param"><span class="n">m2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.concat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the matrix product <em>m1 * m2</em> and store the result in the current matrix. Any of <em>m1</em> or <em>m2</em> may be the current matrix. Be aware that matrix multiplication is not commutative. So the sequence of <em>m1</em>, <em>m2</em> is important.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m1</strong> (<a class="reference internal" href="#matrix"><span class="std std-ref">Matrix</span></a>) – First (left) matrix.</p></li>
+<li><p><strong>m2</strong> (<a class="reference internal" href="#matrix"><span class="std std-ref">Matrix</span></a>) – Second (right) matrix.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Matrix.invert">
+<code class="sig-name descname">invert</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Matrix.invert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the matrix inverse of <em>m</em> and store the result in the current matrix. Returns <em>1</em> if <em>m</em> is not invertible (“degenerate”). In this case the current matrix <strong>will not change</strong>. Returns <em>0</em> if <em>m</em> is invertible, and the current matrix is replaced with the inverted <em>m</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>m</strong> (<a class="reference internal" href="#matrix"><span class="std std-ref">Matrix</span></a>) – Matrix to be inverted. If not provided, the current matrix will be used.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Matrix.a">
+<code class="sig-name descname">a</code><a class="headerlink" href="#Matrix.a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scaling in X-direction <strong>(width)</strong>. For example, a value of 0.5 performs a shrink of the <strong>width</strong> by a factor of 2. If a &lt; 0, a left-right flip will (additionally) occur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Matrix.b">
+<code class="sig-name descname">b</code><a class="headerlink" href="#Matrix.b" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes a shearing effect: each <em>Point(x, y)</em> will become <em>Point(x, y - b*x)</em>. Therefore, looking from left to right, e.g. horizontal lines will be “tilt” – downwards if b &gt; 0, upwards otherwise (b is the tangens of the tilting angle).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Matrix.c">
+<code class="sig-name descname">c</code><a class="headerlink" href="#Matrix.c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes a shearing effect: each <em>Point(x, y)</em> will become <em>Point(x - c*y, y)</em>. Therefore, looking upwards, vertical lines will be “tilt” – to the left if c &gt; 0, to the right otherwise (c ist the tangens of the tilting angle).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Matrix.d">
+<code class="sig-name descname">d</code><a class="headerlink" href="#Matrix.d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scaling in Y-direction <strong>(height)</strong>. For example, a value of 1.5 performs a stretch of the <strong>height</strong> by 50%. If d &lt; 0, an up-down flip will (additionally) occur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Matrix.e">
+<code class="sig-name descname">e</code><a class="headerlink" href="#Matrix.e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes a horizontal shift effect: Each <em>Point(x, y)</em> will become <em>Point(x + e, y)</em>. Positive (negative) values of <em>e</em> will shift right (left).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Matrix.f">
+<code class="sig-name descname">f</code><a class="headerlink" href="#Matrix.f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes a vertical shift effect: Each <em>Point(x, y)</em> will become <em>Point(x, y - f)</em>. Positive (negative) values of <em>f</em> will shift down (up).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Matrix.isRectilinear">
+<code class="sig-name descname">isRectilinear</code><a class="headerlink" href="#Matrix.isRectilinear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectilinear means that no shearing is present and that any rotations are integer multiples of 90 degrees. Usually this is used to confirm that (axis-aligned) rectangles before the transformation are still axis-aligned rectangles afterwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This class adheres to the Python sequence protocol, so components can be accessed via their index, too. Also refer to <a class="reference internal" href="app4.html#sequencetypes"><span class="std std-ref">Using Python Sequences as Arguments in PyMuPDF</span></a>.</p></li>
+<li><p>A matrix can be used with arithmetic operators – see chapter <a class="reference internal" href="algebra.html#algebra"><span class="std std-ref">Operator Algebra for Geometry Objects</span></a>.</p></li>
+<li><p>Changes of matrix properties and execution of matrix methods can be executed consecutively. This is the same as multiplying the respective matrices.</p></li>
+<li><p>Matrix multiplication is <strong>not commutative</strong> – changing the execution sequence in general changes the result. So it can quickly become unclear which result a transformation will yield.</p></li>
+</ul>
+</div>
+<p>To keep results foreseeable for a series of matrix operations, Adobe recommends the following approach (<a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>, page 206):</p>
+<ol class="arabic simple">
+<li><p>Shift (“translate”)</p></li>
+<li><p>Rotate</p></li>
+<li><p>Scale or shear (“skew”)</p></li>
+</ol>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Here are examples to illustrate some of the effects achievable. The following pictures start with a page of the PDF version of this help file. We show what happens when a matrix is being applied (though always full pages are created, only parts are displayed here to save space).</p>
+<p>This is the original page image:</p>
+<p><img alt="original" src="_images/img-original.png" /></p>
+</div>
+<div class="section" id="shifting">
+<h2>Shifting<a class="headerlink" href="#shifting" title="Permalink to this headline">¶</a></h2>
+<p>We transform it with a matrix where <em>e = 100</em> (right shift by 100 pixels).</p>
+<p><img alt="e100" src="_images/img-e-is-100.png" /></p>
+<p>Next we do a down shift by 100 pixels: <em>f = 100</em>.</p>
+<p><img alt="f100" src="_images/img-f-is-100.png" /></p>
+</div>
+<div class="section" id="flipping">
+<h2>Flipping<a class="headerlink" href="#flipping" title="Permalink to this headline">¶</a></h2>
+<p>Flip the page left-right (<em>a = -1</em>).</p>
+<p><img alt="aminus1" src="_images/img-a-is--1.png" /></p>
+<p>Flip up-down (<em>d = -1</em>).</p>
+<p><img alt="dminus1" src="_images/img-d-is--1.png" /></p>
+</div>
+<div class="section" id="shearing">
+<h2>Shearing<a class="headerlink" href="#shearing" title="Permalink to this headline">¶</a></h2>
+<p>First a shear in Y direction (<em>b = 0.5</em>).</p>
+<p><img alt="bnull5" src="_images/img-b-is-0.5.png" /></p>
+<p>Second a shear in X direction (<em>c = 0.5</em>).</p>
+<p><img alt="cnull5" src="_images/img-c-is-0.5.png" /></p>
+</div>
+<div class="section" id="rotating">
+<h2>Rotating<a class="headerlink" href="#rotating" title="Permalink to this headline">¶</a></h2>
+<p>Finally a rotation by 30 clockwise degrees (<em>preRotate(-30)</em>).</p>
+<p><img alt="rot60" src="_images/img-rot-60.png" /></p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Matrix</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#shifting">Shifting</a></li>
+<li><a class="reference internal" href="#flipping">Flipping</a></li>
+<li><a class="reference internal" href="#shearing">Shearing</a></li>
+<li><a class="reference internal" href="#rotating">Rotating</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="linkdest.html"
+                        title="previous chapter">linkDest</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="outline.html"
+                        title="next chapter">Outline</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="outline.html" title="Outline"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="linkdest.html" title="linkDest"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Matrix</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

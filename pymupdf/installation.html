@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Installation &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>PyMuPDF can be installed from sources as follows or from wheels, see <a class="reference internal" href="#installbinary"><span class="std std-ref">Option 2: Install from Binaries</span></a>.</p>
+<div class="section" id="option-1-install-from-sources">
+<span id="installsource"></span><h2>Option 1: Install from Sources<a class="headerlink" href="#option-1-install-from-sources" title="Permalink to this headline">¶</a></h2>
+<p>This is a three-step process.</p>
+<div class="section" id="step-1-download-pymupdf">
+<h3>Step 1: Download PyMuPDF<a class="headerlink" href="#step-1-download-pymupdf" title="Permalink to this headline">¶</a></h3>
+<p>Download the sources from <a class="reference external" href="https://pypi.org/project/PyMuPDF/#files">https://pypi.org/project/PyMuPDF/#files</a> and decompress them.</p>
+</div>
+<div class="section" id="step-2-download-and-generate-mupdf">
+<h3>Step 2: Download and Generate MuPDF<a class="headerlink" href="#step-2-download-and-generate-mupdf" title="Permalink to this headline">¶</a></h3>
+<p>Download <em>mupdf-x.xx.x-source.tar.gz</em> from <a class="reference external" href="https://mupdf.com/downloads/archive">Mupdf</a> and unzip / decompress it. Make sure to download the (sub-) version for which PyMuPDF has stated its compatibility.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The latest MuPDF <strong>development sources</strong> are available on <a class="reference external" href="https://github.com/ArtifexSoftware/mupdf">https://github.com/ArtifexSoftware/mupdf</a> – this is <strong>not</strong> what you want here.</p>
+</div>
+<p><strong>Applying any Changes and Hot Fixes to MuPDF Sources</strong></p>
+<p>On occasion, vital hot fixes or functional enhancements must be applied to MuPDF sources before it is generated.</p>
+<p>Any such files are contained in the <em>fitz</em> directory of the <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/tree/master/fitz">PyMuPDF homepage</a> – their names all start with an underscore <em>“_”</em>. Currently (v1.16.x), these files and their copy destinations are the following:</p>
+<ul class="simple">
+<li><p><em>_config.h</em> – <strong>(Optional)</strong> PyMuPDF’s configuration to control the binary file size. Copy-rename it to <em>/include/mupdf/fitz/config.h</em>. This reduces the size of the PyMuPDF binary extension module to around 11 MB. If omitting this change, that size will be over 30 MB – without impacting functionality.</p></li>
+</ul>
+<p><strong>Generate MuPDF</strong></p>
+<p>The MuPDF source includes generation procedures / makefiles for numerous platforms. For Windows platforms, Visual Studio solution and project definitions are provided.</p>
+<p>PyMuPDF’s <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/">homepage</a> contains additional details and hints.</p>
+</div>
+<div class="section" id="step-3-build-setup-pymupdf">
+<h3>Step 3: Build / Setup PyMuPDF<a class="headerlink" href="#step-3-build-setup-pymupdf" title="Permalink to this headline">¶</a></h3>
+<p>Adjust the setup.py script as necessary. E.g. make sure that:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the include directories are correctly set in sync with your directory structure</p></li>
+<li><p>the object code libraries are correctly defined</p></li>
+</ul>
+</div></blockquote>
+<p>Now perform a <em>python setup.py install</em>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also install from the sources of the Github repository. These <strong>do not contain</strong> the pre-generated files <em>fitz.py</em> or <em>fitz_wrap.c</em>, which instead are generated by the installation script <em>setup.py</em>. To use it, <a class="reference external" href="https://www.swig.org/">SWIG</a> must be installed on your system.</p>
+</div>
+</div>
+</div>
+<div class="section" id="option-2-install-from-binaries">
+<span id="installbinary"></span><h2>Option 2: Install from Binaries<a class="headerlink" href="#option-2-install-from-binaries" title="Permalink to this headline">¶</a></h2>
+<p>You can install PyMuPDF from Python wheels. The wheels are <em>self-contained</em>, i.e. you will <strong>not need any other software</strong> nor download / install MuPDF to run PyMuPDF scripts.
+This installation option is available for all MS Windows and the most <strong>popular 64-bit</strong> Mac OSX and Linux platforms for Python versions 3.6 through 3.9.
+Windows binaries are provided for Python <strong>32-bit and 64-bit</strong> versions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the time being, wheels for Python versions 2.7 and 3.5 are generated as well, but not uploaded to PyPI until explicitely requested via an issue. Starting year 2021, support for these wheel versions will be dropped entirely.</p>
+</div>
+<p><strong>Overview of wheel names (PyMuPDF version is x.xx.xx):</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp36</span><span class="o">-</span><span class="n">cp36m</span><span class="o">-</span><span class="n">macosx_10_9_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp36</span><span class="o">-</span><span class="n">cp36m</span><span class="o">-</span><span class="n">manylinux2010_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp36</span><span class="o">-</span><span class="n">cp36m</span><span class="o">-</span><span class="n">win32</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp36</span><span class="o">-</span><span class="n">cp36m</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp37</span><span class="o">-</span><span class="n">cp37m</span><span class="o">-</span><span class="n">macosx_10_9_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp37</span><span class="o">-</span><span class="n">cp37m</span><span class="o">-</span><span class="n">manylinux2010_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp37</span><span class="o">-</span><span class="n">cp37m</span><span class="o">-</span><span class="n">win32</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp37</span><span class="o">-</span><span class="n">cp37m</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">macosx_10_9_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">manylinux2010_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">win32</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">macosx_10_9_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">manylinux2010_x86_64</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">win32</span><span class="o">.</span><span class="n">whl</span>
+<span class="n">PyMuPDF</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">xx</span><span class="o">.</span><span class="n">xx</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">cp39</span><span class="o">-</span><span class="n">win_amd64</span><span class="o">.</span><span class="n">whl</span>
+</pre></div>
+</div>
+<p>Older versions can be found in the releases directory of our home page <a class="reference external" href="https://github.com/pymupdf/PyMuPDF/releases">https://github.com/pymupdf/PyMuPDF/releases</a>.</p>
+<p>If you unexpectedly run into problems installing the wheel for your system, please make sure you have updated your PIP to the current version.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#option-1-install-from-sources">Option 1: Install from Sources</a><ul>
+<li><a class="reference internal" href="#step-1-download-pymupdf">Step 1: Download PyMuPDF</a></li>
+<li><a class="reference internal" href="#step-2-download-and-generate-mupdf">Step 2: Download and Generate MuPDF</a></li>
+<li><a class="reference internal" href="#step-3-build-setup-pymupdf">Step 3: Build / Setup PyMuPDF</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#option-2-install-from-binaries">Option 2: Install from Binaries</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial.html"
+                        title="next chapter">Tutorial</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Installation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

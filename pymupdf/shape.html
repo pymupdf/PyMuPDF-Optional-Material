@@ -1,0 +1,833 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shape &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TextPage" href="textpage.html" />
+    <link rel="prev" title="Rect" href="rect.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="textpage.html" title="TextPage"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rect.html" title="Rect"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Shape</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="shape">
+<span id="id1"></span><h1>Shape<a class="headerlink" href="#shape" title="Permalink to this headline">¶</a></h1>
+<p>This class allows creating interconnected graphical elements on a PDF page. Its methods have the same meaning and name as the corresponding <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> methods.</p>
+<p>In fact, each <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> draw method is just a convenience wrapper for (1) one shape draw method, (2) the <code class="xref py py-meth docutils literal notranslate"><span class="pre">finish()</span></code> method, and (3) the <code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code> method. For page text insertion, only the <code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code> method is invoked. If many draw and text operations are executed for a page, you should always consider using a Shape object.</p>
+<p>Several draw methods can be executed in a row and each one of them will contribute to one drawing. Once the drawing is complete, the <code class="xref py py-meth docutils literal notranslate"><span class="pre">finish()</span></code> method must be invoked to apply color, dashing, width, morphing and other attributes.</p>
+<p><strong>Draw</strong> methods of this class (and <code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_textbox()</span></code>) are logging the area they are covering in a rectangle (<a class="reference internal" href="#Shape.rect" title="Shape.rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.rect</span></code></a>). This property can for instance be used to set <a class="reference internal" href="page.html#Page.cropbox_position" title="Page.cropbox_position"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.cropbox_position</span></code></a>.</p>
+<p><strong>Text insertions</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_text()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_textbox()</span></code> implicitely execute a “finish” and therefore only require <code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code> to become effective. As a consequence, both include parameters for controlling prperties like colors, etc.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Method / Attribute</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.commit" title="Shape.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.commit()</span></code></a></p></td>
+<td><p>update the page’s contents</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.draw_bezier" title="Shape.draw_bezier"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_bezier()</span></code></a></p></td>
+<td><p>draw a cubic Bezier curve</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.draw_circle" title="Shape.draw_circle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_circle()</span></code></a></p></td>
+<td><p>draw a circle around a point</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.draw_curve" title="Shape.draw_curve"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_curve()</span></code></a></p></td>
+<td><p>draw a cubic Bezier using one helper point</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.draw_line" title="Shape.draw_line"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_line()</span></code></a></p></td>
+<td><p>draw a line</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.draw_oval" title="Shape.draw_oval"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_oval()</span></code></a></p></td>
+<td><p>draw an ellipse</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.draw_polyline" title="Shape.draw_polyline"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_polyline()</span></code></a></p></td>
+<td><p>connect a sequence of points</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.draw_quad" title="Shape.draw_quad"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_quad()</span></code></a></p></td>
+<td><p>draw a quadrilateral</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.draw_rect" title="Shape.draw_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_rect()</span></code></a></p></td>
+<td><p>draw a rectangle</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.draw_sector" title="Shape.draw_sector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_sector()</span></code></a></p></td>
+<td><p>draw a circular sector or piece of pie</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.draw_squiggle" title="Shape.draw_squiggle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_squiggle()</span></code></a></p></td>
+<td><p>draw a squiggly line</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.draw_zigzag" title="Shape.draw_zigzag"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_zigzag()</span></code></a></p></td>
+<td><p>draw a zigzag line</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.finish" title="Shape.finish"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.finish()</span></code></a></p></td>
+<td><p>finish a set of draw commands</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.insert_text" title="Shape.insert_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_text()</span></code></a></p></td>
+<td><p>insert text lines</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.insert_textbox" title="Shape.insert_textbox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_textbox()</span></code></a></p></td>
+<td><p>fit text into a rectangle</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.doc" title="Shape.doc"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.doc</span></code></a></p></td>
+<td><p>stores the page’s document</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.draw_cont" title="Shape.draw_cont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.draw_cont</span></code></a></p></td>
+<td><p>draw commands since last <em>finish()</em></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.height" title="Shape.height"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.height</span></code></a></p></td>
+<td><p>stores the page’s height</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.lastPoint" title="Shape.lastPoint"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.lastPoint</span></code></a></p></td>
+<td><p>stores the current point</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.page" title="Shape.page"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.page</span></code></a></p></td>
+<td><p>stores the owning page</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.rect" title="Shape.rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.rect</span></code></a></p></td>
+<td><p>rectangle surrounding drawings</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.text_cont" title="Shape.text_cont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.text_cont</span></code></a></p></td>
+<td><p>accumulated text insertions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Shape.totalcont" title="Shape.totalcont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.totalcont</span></code></a></p></td>
+<td><p>accumulated string to be stored in <a class="reference internal" href="glossary.html#contents" title="contents"><code class="xref py py-data docutils literal notranslate"><span class="pre">contents</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Shape.width" title="Shape.width"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.width</span></code></a></p></td>
+<td><p>stores the page’s width</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="Shape">
+<em class="property">class </em><code class="sig-name descname">Shape</code><a class="headerlink" href="#Shape" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Shape.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">page</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new drawing. During importing PyMuPDF, the <em>fitz.Page</em> object is being given the convenience method <em>new_shape()</em> to construct a <em>Shape</em> object. During instantiation, a check will be made whether we do have a PDF page. An exception is otherwise raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>page</strong> (<a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a>) – an existing page of a PDF document.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_line">
+<code class="sig-name descname">draw_line</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a line from <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> objects <em>p1</em> to <em>p2</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>point_like</em>) – starting point</p></li>
+<li><p><strong>p2</strong> (<em>point_like</em>) – end point</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the end point, <em>p2</em>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="index-0"></span><dl class="py method">
+<dt id="Shape.draw_squiggle">
+<code class="sig-name descname">draw_squiggle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span></em>, <em class="sig-param"><span class="n">breadth</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_squiggle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a squiggly (wavy, undulated) line from <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> objects <em>p1</em> to <em>p2</em>. An integer number of full wave periods will always be drawn, one period having a length of <em>4 * breadth</em>. The breadth parameter will be adjusted as necessary to meet this condition. The drawn line will always turn “left” when leaving <em>p1</em> and always join <em>p2</em> from the “right”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>point_like</em>) – starting point</p></li>
+<li><p><strong>p2</strong> (<em>point_like</em>) – end point</p></li>
+<li><p><strong>breadth</strong> (<em>float</em>) – the amplitude of each wave. The condition <em>2 * breadth &lt; abs(p2 - p1)</em> must be true to fit in at least one wave. See the following picture, which shows two points connected by one full period.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the end point, <em>p2</em>.</p>
+</dd>
+</dl>
+<img alt="_images/img-breadth.png" src="_images/img-breadth.png" />
+<p>Here is an example of three connected lines, forming a closed, filled triangle. Little arrows indicate the stroking direction.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fitz</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span><span class="o">=</span><span class="n">fitz</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">page</span><span class="o">=</span><span class="n">doc</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">=</span><span class="n">page</span><span class="o">.</span><span class="n">new_shape</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">draw_squiggle</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">tl</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">tr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">draw_squiggle</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">tr</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">br</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">draw_squiggle</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">br</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">tl</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">fill</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;x.pdf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/img-squiggly.png" src="_images/img-squiggly.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Waves drawn are <strong>not</strong> trigonometric (sine / cosine). If you need that, have a look at <a class="reference external" href="https://github.com/pymupdf/PyMuPDF-Utilities/tree/master/demo/draw-sines.py">draw-sines.py</a>.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-1"></span><dl class="py method">
+<dt id="Shape.draw_zigzag">
+<code class="sig-name descname">draw_zigzag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span></em>, <em class="sig-param"><span class="n">breadth</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_zigzag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a zigzag line from <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> objects <em>p1</em> to <em>p2</em>. Otherwise works exactly like <a class="reference internal" href="#Shape.draw_squiggle" title="Shape.draw_squiggle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_squiggle()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>point_like</em>) – starting point</p></li>
+<li><p><strong>p2</strong> (<em>point_like</em>) – end point</p></li>
+<li><p><strong>breadth</strong> (<em>float</em>) – the amplitude of the movement. The condition <em>2 * breadth &lt; abs(p2 - p1)</em> must be true to fit in at least one period.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the end point, <em>p2</em>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_polyline">
+<code class="sig-name descname">draw_polyline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">points</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_polyline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw several connected lines between points contained in the sequence <em>points</em>. This can be used for creating arbitrary polygons by setting the last item equal to the first one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>points</strong> (<em>sequence</em>) – a sequence of <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> objects. Its length must at least be 2 (in which case it is equivalent to <em>draw_line()</em>).</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>points[-1]</em> – the last point in the argument sequence.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_bezier">
+<code class="sig-name descname">draw_bezier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span></em>, <em class="sig-param"><span class="n">p3</span></em>, <em class="sig-param"><span class="n">p4</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_bezier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a standard cubic Bézier curve from <em>p1</em> to <em>p4</em>, using <em>p2</em> and <em>p3</em> as control points.</p>
+<p>All arguments are <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the end point, <em>p4</em>.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The points do not need to be different – experiment a bit with some of them being equal!</p>
+</div>
+<p>Example:</p>
+<img alt="_images/img-drawBezier.png" src="_images/img-drawBezier.png" />
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_oval">
+<code class="sig-name descname">draw_oval</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tetra</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_oval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an “ellipse” inside the given tetragon (quadrilateral). If it is a square, a regular circle is drawn, a general rectangle will result in an ellipse. If a quadrilateral is used instead, a plethora of shapes can be the result.</p>
+<p>The drawing starts and ends at the middle point of the line connecting bottom-left and top-left corners in an anti-clockwise movement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tetra</strong> (<em>rect_like</em><em>,</em><em>quad_like</em>) – <p><a class="reference internal" href="glossary.html#rect_like" title="rect_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">rect_like</span></code></a> or <a class="reference internal" href="glossary.html#quad_like" title="quad_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">quad_like</span></code></a>.</p>
+<p><em>Changed in version 1.14.5:</em>  tetragons are now also supported.</p>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the middle point of line from <em>rect.bl</em> to <em>rect.tl</em>, or from <em>quad.ll</em> to <em>quad.ul</em>, respectively. Look at just a few examples here, or at the <em>quad-show?.py</em> scripts in the PyMuPDF-Utilities repository.</p>
+</dd>
+</dl>
+<a class="reference internal image-reference" href="_images/img-drawquad.jpg"><img alt="_images/img-drawquad.jpg" src="_images/img-drawquad.jpg" style="width: 787.0px; height: 281.5px;" /></a>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_circle">
+<code class="sig-name descname">draw_circle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">center</span></em>, <em class="sig-param"><span class="n">radius</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a circle given its center and radius. The drawing starts and ends at point <em>center - (radius, 0)</em> in an anti-clockwise movement. This corresponds to the middle point of the enclosing rectangle’s left side.</p>
+<p>The method is a shortcut for <em>draw_sector(center, start, 360, fullSector=False)</em>. To draw a circle in a clockwise movement, change the sign of the degree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>point_like</em>) – the center of the circle.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – the radius of the circle. Must be positive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>center - (radius, 0)</em>.</p>
+</dd>
+</dl>
+<a class="reference internal image-reference" href="_images/img-drawcircle.jpg"><img alt="_images/img-drawcircle.jpg" src="_images/img-drawcircle.jpg" style="width: 236.39999999999998px; height: 232.2px;" /></a>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_curve">
+<code class="sig-name descname">draw_curve</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span></em>, <em class="sig-param"><span class="n">p3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>A special case of <em>draw_bezier()</em>: Draw a cubic Bezier curve from <em>p1</em> to <em>p3</em>. On each of the two lines from <em>p1</em> to <em>p2</em> and from <em>p2</em> to <em>p3</em> one control point is generated. This guaranties that the curve’s curvature does not change its sign. If these two connecting lines intersect with an angle of 90 degrees, then the resulting curve is a quarter ellipse (or quarter circle, if of same length) circumference.</p>
+<p>All arguments are <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the end point, <em>p3</em>.</p>
+</dd>
+</dl>
+<p>Example: a filled quarter ellipse segment.</p>
+<img alt="_images/img-drawCurve.png" src="_images/img-drawCurve.png" />
+</dd></dl>
+
+<span class="target" id="index-2"></span><dl class="py method">
+<dt id="Shape.draw_sector">
+<code class="sig-name descname">draw_sector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">center</span></em>, <em class="sig-param"><span class="n">point</span></em>, <em class="sig-param"><span class="n">angle</span></em>, <em class="sig-param"><span class="n">fullSector</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_sector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a circular sector, optionally connecting the arc to the circle’s center (like a piece of pie).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>point_like</em>) – the center of the circle.</p></li>
+<li><p><strong>point</strong> (<em>point_like</em>) – one of the two end points of the pie’s arc segment. The other one is calculated from the <em>angle</em>.</p></li>
+<li><p><strong>angle</strong> (<em>float</em>) – the angle of the sector in degrees. Used to calculate the other end point of the arc. Depending on its sign, the arc is drawn anti-clockwise (postive) or clockwise.</p></li>
+<li><p><strong>fullSector</strong> (<em>bool</em>) – whether to draw connecting lines from the ends of the arc to the circle center. If a fill color is specified, the full “pie” is colored, otherwise just the sector.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the other end point of the arc. Can be used as starting point for a following invocation to create logically connected pies charts.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+</dl>
+<p>Examples:</p>
+<img alt="_images/img-drawSector1.png" src="_images/img-drawSector1.png" />
+<img alt="_images/img-drawSector2.png" src="_images/img-drawSector2.png" />
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_rect">
+<code class="sig-name descname">draw_rect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rect</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a rectangle. The drawing starts and ends at the top-left corner in an anti-clockwise movement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rect</strong> (<em>rect_like</em>) – where to put the rectangle on the page.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>top-left corner of the rectangle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Shape.draw_quad">
+<code class="sig-name descname">draw_quad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quad</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.draw_quad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a quadrilateral. The drawing starts and ends at the top-left corner (<a class="reference internal" href="quad.html#Quad.ul" title="Quad.ul"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Quad.ul</span></code></a>) in an anti-clockwise movement. It invokes <a class="reference internal" href="#Shape.draw_polyline" title="Shape.draw_polyline"><code class="xref py py-meth docutils literal notranslate"><span class="pre">draw_polyline()</span></code></a> with the argument <em>[ul, ll, lr, ur, ul]</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>quad</strong> (<em>quad_like</em>) – where to put the tetragon on the page.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><a class="reference internal" href="quad.html#Quad.ul" title="Quad.ul"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Quad.ul</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="index-3"></span><dl class="py method">
+<dt id="Shape.insert_text">
+<code class="sig-name descname">insert_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">point</span></em>, <em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">fontsize</span><span class="o">=</span><span class="default_value">11</span></em>, <em class="sig-param"><span class="n">fontname</span><span class="o">=</span><span class="default_value">'helv'</span></em>, <em class="sig-param"><span class="n">fontfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">set_simple</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">TEXT_ENCODING_LATIN</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fill</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">render_mode</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">border_width</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">rotate</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">morph</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stroke_opacity</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">fill_opacity</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">oc</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.insert_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Insert text lines start at <em>point</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<em>point_like</em>) – <p>the bottom-left position of the first character of <em>text</em> in pixels. It is important to understand, how this works in conjunction with the <em>rotate</em> parameter. Please have a look at the following picture. The small red dots indicate the positions of <em>point</em> in each of the four possible cases.</p>
+<a class="reference internal" href="_images/img-inserttext.jpg"><img alt="_images/img-inserttext.jpg" src="_images/img-inserttext.jpg" style="width: 221.76000000000002px; height: 260.7px;" /></a></p></li>
+<li><p><strong>text</strong> (<em>str/sequence</em>) – the text to be inserted. May be specified as either a string type or as a sequence type. For sequences, or strings containing line breaks <em>n</em>, several lines will be inserted. No care will be taken if lines are too wide, but the number of inserted lines will be limited by “vertical” space on the page (in the sense of reading direction as established by the <em>rotate</em> parameter). Any rest of <em>text</em> is discarded – the return code however contains the number of inserted lines.</p></li>
+<li><p><strong>stroke_opacity</strong> (<em>float</em>) – <em>(new in v1.18.1)</em> set transparency for stroke colors. Negative values and values &gt; 1 will be ignored. Default is 1 (intransparent).</p></li>
+<li><p><strong>fill_opacity</strong> (<em>float</em>) – <em>(new in v1.18.1)</em> set transparency for fill colors. Default is 1 (intransparent). Use this value to control transparency of the text color. Stroke opacity <strong>only</strong> affects the border line of characters.</p></li>
+<li><p><strong>rotate</strong> (<em>int</em>) – determines whether to rotate the text. Acceptable values are multiples of 90 degrees. Default is 0 (no rotation), meaning horizontal text lines oriented from left to right. 180 means text is shown upside down from <strong>right to left</strong>. 90 means anti-clockwise rotation, text running <strong>upwards</strong>. 270 (or -90) means clockwise rotation, text running <strong>downwards</strong>. In any case, <em>point</em> specifies the bottom-left coordinates of the first character’s rectangle. Multiple lines, if present, always follow the reading direction established by this parameter. So line 2 is located <strong>above</strong> line 1 in case of <em>rotate = 180</em>, etc.</p></li>
+<li><p><strong>oc</strong> (<em>int</em>) – <em>(new in v1.18.4)</em> the <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number of an <a class="reference internal" href="glossary.html#OCG" title="OCG"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCG</span></code></a> or <a class="reference internal" href="glossary.html#OCMD" title="OCMD"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCMD</span></code></a> to make this text conditionally displayable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>number of lines inserted.</p>
+</dd>
+</dl>
+<p>For a description of the other parameters see <a class="reference internal" href="#commonparms"><span class="std std-ref">Common Parameters</span></a>.</p>
+</dd></dl>
+
+<span class="target" id="index-4"></span><dl class="py method">
+<dt id="Shape.insert_textbox">
+<code class="sig-name descname">insert_textbox</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rect</span></em>, <em class="sig-param"><span class="n">buffer</span></em>, <em class="sig-param"><span class="n">fontsize</span><span class="o">=</span><span class="default_value">11</span></em>, <em class="sig-param"><span class="n">fontname</span><span class="o">=</span><span class="default_value">'helv'</span></em>, <em class="sig-param"><span class="n">fontfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">set_simple</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">TEXT_ENCODING_LATIN</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fill</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">render_mode</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">border_width</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">expandtabs</span><span class="o">=</span><span class="default_value">8</span></em>, <em class="sig-param"><span class="n">align</span><span class="o">=</span><span class="default_value">TEXT_ALIGN_LEFT</span></em>, <em class="sig-param"><span class="n">rotate</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">morph</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stroke_opacity</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">fill_opacity</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">oc</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.insert_textbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>PDF only: Insert text into the specified rectangle. The text will be split into lines and words and then filled into the available space, starting from one of the four rectangle corners, which depends on <em>rotate</em>. Line feeds will be respected as well as multiple spaces will be.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rect</strong> (<em>rect_like</em>) – the area to use. It must be finite and not empty.</p></li>
+<li><p><strong>buffer</strong> (<em>str/sequence</em>) – the text to be inserted. Must be specified as a string or a sequence of strings. Line breaks are respected also when occurring in a sequence entry.</p></li>
+<li><p><strong>align</strong> (<em>int</em>) – align each text line. Default is 0 (left). Centered, right and justified are the other supported options, see <a class="reference internal" href="vars.html#textalign"><span class="std std-ref">Text Alignment</span></a>. Please note that the effect of parameter value <em>TEXT_ALIGN_JUSTIFY</em> is only achievable with “simple” (single-byte) fonts (including the <a class="reference internal" href="app4.html#base-14-fonts"><span class="std std-ref">PDF Base 14 Fonts</span></a>). Refer to <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>, section 5.2.2, page 399.</p></li>
+<li><p><strong>expandtabs</strong> (<em>int</em>) – controls handling of tab characters <em>t</em> using the <em>string.expandtabs()</em> method <strong>per each line</strong>.</p></li>
+<li><p><strong>stroke_opacity</strong> (<em>float</em>) – <em>(new in v1.18.1)</em> set transparency for stroke colors. Negative values and values &gt; 1 will be ignored. Default is 1 (intransparent).</p></li>
+<li><p><strong>fill_opacity</strong> (<em>float</em>) – <em>(new in v1.18.1)</em> set transparency for fill colors. Default is 1 (intransparent). Use this value to control transparency of the text color. Stroke opacity <strong>only</strong> affects the border line of characters.</p></li>
+<li><p><strong>rotate</strong> (<em>int</em>) – requests text to be rotated in the rectangle. This value must be a multiple of 90 degrees. Default is 0 (no rotation). Effectively, four different values are processed: 0, 90, 180 and 270 (= -90), each causing the text to start in a different rectangle corner. Bottom-left is 90, bottom-right is 180, and -90 / 270 is top-right. See the example how text is filled in a rectangle. This argument takes precedence over morphing. See the second example, which shows text first rotated left by 90 degrees and then the whole rectangle rotated clockwise around is lower left corner.</p></li>
+<li><p><strong>oc</strong> (<em>int</em>) – <em>(new in v1.18.4)</em> the <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number of an <a class="reference internal" href="glossary.html#OCG" title="OCG"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCG</span></code></a> or <a class="reference internal" href="glossary.html#OCMD" title="OCMD"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCMD</span></code></a> to make this text conditionally displayable.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p><strong>If positive or zero</strong>: successful execution. The value returned is the unused rectangle line space in pixels. This may safely be ignored – or be used to optimize the rectangle, position subsequent items, etc.</p>
+<p><strong>If negative</strong>: no execution. The value returned is the space deficit to store text lines. Enlarge rectangle, decrease <em>fontsize</em>, decrease text amount, etc.</p>
+</p>
+</dd>
+</dl>
+<img alt="_images/img-rotate.png" src="_images/img-rotate.png" />
+<img alt="_images/img-rot+morph.png" src="_images/img-rot+morph.png" />
+<p>For a description of the other parameters see <a class="reference internal" href="#commonparms"><span class="std std-ref">Common Parameters</span></a>.</p>
+</dd></dl>
+
+<span class="target" id="index-5"></span><dl class="py method">
+<dt id="Shape.finish">
+<code class="sig-name descname">finish</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fill</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lineCap</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">lineJoin</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">dashes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">closePath</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">even_odd</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">morph</span><span class="o">=</span><span class="default_value">(fixpoint, matrix)</span></em>, <em class="sig-param"><span class="n">stroke_opacity</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">fill_opacity</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">oc</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.finish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finish a set of <em>draw*()</em> methods by applying <a class="reference internal" href="#commonparms"><span class="std std-ref">Common Parameters</span></a> to all of them. This method also supports morphing the resulting compound drawing using a fixpoint <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>morph</strong> (<em>sequence</em>) – morph the text or the compound drawing around some arbitrary <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a> <em>fixpoint</em> by applying <a class="reference internal" href="matrix.html#matrix"><span class="std std-ref">Matrix</span></a> <em>matrix</em> to it. This implies that <em>fixpoint</em> is a <strong>fixed point</strong> of this operation: it will not change its position. Default is no morphing (<em>None</em>). The matrix can contain any values in its first 4 components, <em>matrix.e == matrix.f == 0</em> must be true, however. This means that any combination of scaling, shearing, rotating, flipping, etc. is possible, but translations are not.</p></li>
+<li><p><strong>stroke_opacity</strong> (<em>float</em>) – <em>(new in v1.18.1)</em> set transparency for stroke colors. Value &lt; 0 or &gt; 1 will be ignored. Default is 1 (intransparent).</p></li>
+<li><p><strong>fill_opacity</strong> (<em>float</em>) – <em>(new in v1.18.1)</em> set transparency for fill colors. Default is 1 (intransparent).</p></li>
+<li><p><strong>even_odd</strong> (<em>bool</em>) – request the <strong>“even-odd rule”</strong> for filling operations. Default is <em>False</em>, so that the <strong>“nonzero winding number rule”</strong> is used. These rules are alternative methods to apply the fill color where areas overlap. Only with fairly complex shapes a different behavior is to be expected with these rules. For an in-depth explanation, see <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>, pp. 232 ff. Here is an example to demonstrate the difference.</p></li>
+<li><p><strong>oc</strong> (<em>int</em>) – <em>(new in v1.18.4)</em> the <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number of an <a class="reference internal" href="glossary.html#OCG" title="OCG"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCG</span></code></a> or <a class="reference internal" href="glossary.html#OCMD" title="OCMD"><code class="xref py py-data docutils literal notranslate"><span class="pre">OCMD</span></code></a> to make this drawing conditionally displayable.</p></li>
+</ul>
+</dd>
+</dl>
+<img alt="_images/img-even-odd.png" src="_images/img-even-odd.png" />
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For each pixel in a drawing the following will happen:</p>
+<ol class="arabic simple">
+<li><p>Rule <strong>“even-odd”</strong> counts, how many areas contain the pixel. If this count is <strong>odd,</strong> the pixel is regarded <strong>inside</strong>, if it is <strong>even</strong>, the pixel is <strong>outside</strong>.</p></li>
+<li><p>Default rule <strong>“nonzero winding”</strong> also looks at the <em>“orientation”</em> of each area containing the pixel: it <strong>adds 1</strong> if an area is drawn anit-clockwise and it <strong>subtracts 1</strong> for clockwise areas. If the result is zero, the pixel is regarded <strong>outside</strong>, pixels with a non-zero count are <strong>inside</strong>.</p></li>
+</ol>
+<p>Of the four shapes in above image, the top two each show three circles drawn in standard manner (anti-clockwise, look at the arrows). The lower two shapes contain one (the top-left) circle drawn clockwise. As can be seen, area orientation is irrelevant for the even-odd rule.</p>
+</div>
+</dd></dl>
+
+<span class="target" id="index-6"></span><dl class="py method">
+<dt id="Shape.commit">
+<code class="sig-name descname">commit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">overlay</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Shape.commit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the page’s <a class="reference internal" href="glossary.html#contents" title="contents"><code class="xref py py-data docutils literal notranslate"><span class="pre">contents</span></code></a> with the accumulated draw commands and text insertions. If a <em>Shape</em> is <strong>not committed, the page will not be changed!</strong></p>
+<p>The method will reset attributes <a class="reference internal" href="#Shape.rect" title="Shape.rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.rect</span></code></a>, <a class="reference internal" href="#Shape.lastPoint" title="Shape.lastPoint"><code class="xref py py-attr docutils literal notranslate"><span class="pre">lastPoint</span></code></a>, <a class="reference internal" href="#Shape.draw_cont" title="Shape.draw_cont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">draw_cont</span></code></a>, <a class="reference internal" href="#Shape.text_cont" title="Shape.text_cont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">text_cont</span></code></a> and <a class="reference internal" href="#Shape.totalcont" title="Shape.totalcont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">totalcont</span></code></a>. Afterwards, the shape object can be reused for the <strong>same page</strong>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>overlay</strong> (<em>bool</em>) – determine whether to put content in foreground (default) or background. Relevant only, if the page already has a non-empty <a class="reference internal" href="glossary.html#contents" title="contents"><code class="xref py py-data docutils literal notranslate"><span class="pre">contents</span></code></a> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.doc">
+<code class="sig-name descname">doc</code><a class="headerlink" href="#Shape.doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>For reference only: the page’s document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.page">
+<code class="sig-name descname">page</code><a class="headerlink" href="#Shape.page" title="Permalink to this definition">¶</a></dt>
+<dd><p>For reference only: the owning page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.height">
+<code class="sig-name descname">height</code><a class="headerlink" href="#Shape.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy of the page’s height</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.width">
+<code class="sig-name descname">width</code><a class="headerlink" href="#Shape.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy of the page’s width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.draw_cont">
+<code class="sig-name descname">draw_cont</code><a class="headerlink" href="#Shape.draw_cont" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accumulated command buffer for <strong>draw methods</strong> since last finish.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.text_cont">
+<code class="sig-name descname">text_cont</code><a class="headerlink" href="#Shape.text_cont" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accumulated text buffer. All <strong>text insertions</strong> go here. On <a class="reference internal" href="#Shape.commit" title="Shape.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">commit()</span></code></a> this buffer will be appended to <a class="reference internal" href="#Shape.totalcont" title="Shape.totalcont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">totalcont</span></code></a>, so that text will never be covered by drawings in the same Shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.rect">
+<code class="sig-name descname">rect</code><a class="headerlink" href="#Shape.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rectangle surrounding drawings. This attribute is at your disposal and may be changed at any time. Its value is set to <em>None</em> when a shape is created or committed. Every <em>draw*</em> method, and <a class="reference internal" href="#Shape.insert_textbox" title="Shape.insert_textbox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_textbox()</span></code></a> update this property (i.e. <strong>enlarge</strong> the rectangle as needed). <strong>Morphing</strong> operations, however (<a class="reference internal" href="#Shape.finish" title="Shape.finish"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.finish()</span></code></a>, <a class="reference internal" href="#Shape.insert_textbox" title="Shape.insert_textbox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_textbox()</span></code></a>) are ignored.</p>
+<p>A typical use of this attribute would be setting <a class="reference internal" href="page.html#Page.cropbox_position" title="Page.cropbox_position"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.cropbox_position</span></code></a> to this value, when you are creating shapes for later or external use. If you have not manipulated the attribute yourself, it should reflect a rectangle that contains all drawings so far.</p>
+<p>If you have used morphing and need a rectangle containing the morphed objects, use the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># assuming ...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">morph</span> <span class="o">=</span> <span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">matrix</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># ... recalculate the shape rectangle like so:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">rect</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="o">.</span><span class="n">rect</span> <span class="o">-</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">point</span><span class="p">))</span> <span class="o">*</span> <span class="o">~</span><span class="n">matrix</span> <span class="o">+</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Rect</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.totalcont">
+<code class="sig-name descname">totalcont</code><a class="headerlink" href="#Shape.totalcont" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total accumulated command buffer for draws and text insertions. This will be used by <a class="reference internal" href="#Shape.commit" title="Shape.commit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.commit()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Shape.lastPoint">
+<code class="sig-name descname">lastPoint</code><a class="headerlink" href="#Shape.lastPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>For reference only: the current point of the drawing path. It is <em>None</em> at <em>Shape</em> creation and after each <em>finish()</em> and <em>commit()</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>A drawing object is constructed by <em>shape = page.new_shape()</em>. After this, as many draw, finish and text insertions methods as required may follow. Each sequence of draws must be finished before the drawing is committed. The overall coding pattern looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">new_shape</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">draw1</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">draw2</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">width</span><span class="o">=...</span><span class="p">,</span> <span class="n">color</span><span class="o">=...</span><span class="p">,</span> <span class="n">fill</span><span class="o">=...</span><span class="p">,</span> <span class="n">morph</span><span class="o">=...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">draw3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">draw4</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">width</span><span class="o">=...</span><span class="p">,</span> <span class="n">color</span><span class="o">=...</span><span class="p">,</span> <span class="n">fill</span><span class="o">=...</span><span class="p">,</span> <span class="n">morph</span><span class="o">=...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">insert_text</span><span class="o">*</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">....</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Each <em>finish()</em> combines the preceding draws into one logical shape, giving it common colors, line width, morphing, etc. If <em>closePath</em> is specified, it will also connect the end point of the last draw with the starting point of the first one.</p></li>
+<li><p>To successfully create compound graphics, let each draw method use the end point of the previous one as its starting point. In the above pseudo code, <em>draw2</em> should hence use the returned <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a> of <em>draw1</em> as its starting point. Failing to do so, would automatically start a new path and <em>finish()</em> may not work as expected (but it won’t complain either).</p></li>
+<li><p>Text insertions may occur anywhere before the commit (they neither touch <a class="reference internal" href="#Shape.draw_cont" title="Shape.draw_cont"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.draw_cont</span></code></a> nor <a class="reference internal" href="#Shape.lastPoint" title="Shape.lastPoint"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Shape.lastPoint</span></code></a>). They are appended to <em>Shape.totalcont</em> directly, whereas draws will be appended by <em>Shape.finish</em>.</p></li>
+<li><p>Each <em>commit</em> takes all text insertions and shapes and places them in foreground or background on the page – thus providing a way to control graphical layers.</p></li>
+<li><p><strong>Only</strong> <em>commit</em> <strong>will update</strong> the page’s contents, the other methods are basically string manipulations.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p>Create a full circle of pieces of pie in different colors:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">new_shape</span><span class="p">()</span>  <span class="c1"># start a new shape</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span>  <span class="c1"># a sequence of RGB color triples</span>
+<span class="n">pieces</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>  <span class="c1"># number of pieces to draw</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="mf">360.</span> <span class="o">/</span> <span class="n">pieces</span>  <span class="c1"># angle of each piece of pie</span>
+<span class="n">center</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>  <span class="c1"># center of the pie</span>
+<span class="n">p0</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>  <span class="c1"># starting point</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pieces</span><span class="p">):</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">draw_sector</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span>
+                          <span class="n">fullSector</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># draw piece</span>
+    <span class="c1"># now fill it but do not connect ends of the arc</span>
+    <span class="n">shape</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">cols</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">closePath</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">shape</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>  <span class="c1"># update the page</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Here is an example for 5 colors:</p>
+<img alt="_images/img-cake.png" src="_images/img-cake.png" />
+<ol class="arabic" start="2">
+<li><p>Create a regular n-edged polygon (fill yellow, red border). We use <em>draw_sector()</em> only to calculate the points on the circumference, and empty the draw command buffer again before drawing the polygon:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">new_shape</span><span class="p">()</span> <span class="c1"># start a new shape</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="o">-</span><span class="mf">360.0</span> <span class="o">/</span> <span class="n">n</span>  <span class="c1"># our angle, drawn clockwise</span>
+<span class="n">center</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>  <span class="c1"># center of circle</span>
+<span class="n">p0</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>  <span class="c1"># start here (1st edge)</span>
+<span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">p0</span><span class="p">]</span>  <span class="c1"># store polygon edges</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>  <span class="c1"># calculate the edges</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">draw_sector</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">p0</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p0</span><span class="p">)</span>
+<span class="n">shape</span><span class="o">.</span><span class="n">draw_cont</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># do not draw the circle sectors</span>
+<span class="n">shape</span><span class="o">.</span><span class="n">draw_polyline</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>  <span class="c1"># draw the polygon</span>
+<span class="n">shape</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">fill</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">closePath</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">shape</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Here is the polygon for n = 7:</p>
+<img alt="_images/img-7edges.png" src="_images/img-7edges.png" />
+</div>
+<div class="section" id="common-parameters">
+<span id="commonparms"></span><h2>Common Parameters<a class="headerlink" href="#common-parameters" title="Permalink to this headline">¶</a></h2>
+<p><strong>fontname</strong> (<em>str</em>)</p>
+<blockquote>
+<div><p>In general, there are three options:</p>
+<ol class="arabic simple">
+<li><p>Use one of the standard <a class="reference internal" href="app4.html#base-14-fonts"><span class="std std-ref">PDF Base 14 Fonts</span></a>. In this case, <em>fontfile</em> <strong>must not</strong> be specified and <em>“Helvetica”</em> is used if this parameter is omitted, too.</p></li>
+<li><p>Choose a font already in use by the page. Then specify its <strong>reference</strong> name prefixed with a slash “/”, see example below.</p></li>
+<li><p>Specify a font file present on your system. In this case choose an arbitrary, but new name for this parameter (without “/” prefix).</p></li>
+</ol>
+<p>If inserted text should re-use one of the page’s fonts, use its reference name appearing in <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_fonts()</span></code> like so:</p>
+<p>Suppose the font list has the item <em>[1024, 0, ‘Type1’, ‘NimbusMonL-Bold’, ‘R366’]</em>, then specify <em>fontname = “/R366”, fontfile = None</em> to use font <em>NimbusMonL-Bold</em>.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>fontfile</strong> (<em>str</em>)</p>
+<blockquote>
+<div><p>File path of a font existing on your computer. If you specify <em>fontfile</em>, make sure you use a <em>fontname</em> <strong>not occurring</strong> in the above list. This new font will be embedded in the PDF upon <em>doc.save()</em>. Similar to new images, a font file will be embedded only once. A table of MD5 codes for the binary font contents is used to ensure this.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>set_simple</strong> (<em>bool</em>)</p>
+<blockquote>
+<div><p>Fonts installed from files are installed as <strong>Type0</strong> fonts by default. If you want to use 1-byte characters only, set this to true. This setting cannot be reverted. Subsequent changes are ignored.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>fontsize</strong> (<em>float</em>)</p>
+<blockquote>
+<div><p>Font size of text. This also determines the line height as <em>fontsize * 1.2</em>.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>dashes</strong> (<em>str</em>)</p>
+<blockquote>
+<div><p>Causes lines to be drawn dashed. The general format is <code class="docutils literal notranslate"><span class="pre">&quot;[n</span> <span class="pre">m]</span> <span class="pre">p&quot;</span></code>. The square brackets denote a PDF array of one or two floats. Float p is called the “dash phase” and specifies how many pixels should be skipped before the dashing starts.</p>
+<p>A continuous line (no dashes) is drawn with <em>“[] 0”</em> or <em>None</em> or <em>“”</em>. Specifying <code class="docutils literal notranslate"><span class="pre">&quot;[3</span> <span class="pre">4]</span> <span class="pre">0&quot;</span></code> means dashes of 3 and gaps of 4 pixels following each other. <code class="docutils literal notranslate"><span class="pre">&quot;[3</span> <span class="pre">3]</span> <span class="pre">0&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;[3]</span> <span class="pre">0&quot;</span></code> do the same thing. For (the rather complex) details on how to achieve sophisticated dashing effects, see <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>, page 217.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>color / fill</strong> (<em>list, tuple</em>)</p>
+<blockquote>
+<div><p>Line and fill colors can be specified as tuples or list of of floats from 0 to 1. These sequences must have a length of 1 (GRAY), 3 (RGB) or 4 (CMYK). For GRAY colorspace, a single float instead of the unwieldy <em>(float,)</em> or <em>[float]</em> is also accepted.</p>
+<p>To simplify color specification, method <em>getColor()</em> in <em>fitz.utils</em> may be used to get predefined RGB color triples by name. It accepts a string as the name of the color and returns the corresponding triple. The method knows over 540 color names – see section <a class="reference internal" href="colors.html#colordatabase"><span class="std std-ref">Color Database</span></a>.</p>
+<p>Please note that the term <em>color</em> usually means “stroke” color when used in conjunction with fill color.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>stroke_opacity / fill_opacity</strong> (<em>floats</em>)</p>
+<blockquote>
+<div><p>Both values are floats in range [0, 1]. Negative values or values &gt; 1 will ignored (in most cases). Both set the transparency such that a value 0.5 corresponds to 50% transparency, 0 means invisible and 1 means intransparent. For e.g. a rectangle the stroke opacity applies to its border and fill opacity to its interior.</p>
+<p>For text insertions (<a class="reference internal" href="#Shape.insert_text" title="Shape.insert_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_text()</span></code></a> and <a class="reference internal" href="#Shape.insert_textbox" title="Shape.insert_textbox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_textbox()</span></code></a>), use <em>fill_opacity</em> for the text. At first sight this seems surprising, but it becomes obvious when you look further down to <em>render_mode</em>: <em>fill_opacity</em> applies to the yellow and <em>stroke_opacity</em> applies to the blue color.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>border_width</strong> (<em>float</em>)</p>
+<blockquote>
+<div><p>Set the border width for text insertions. New in v1.14.9. Relevant only if the render mode argument is used with a value greater zero.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>render_mode</strong> (<em>int</em>)</p>
+<blockquote>
+<div><p><em>New in version 1.14.9:</em> Integer in <em>range(8)</em> which controls the text appearance (<a class="reference internal" href="#Shape.insert_text" title="Shape.insert_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_text()</span></code></a> and <a class="reference internal" href="#Shape.insert_textbox" title="Shape.insert_textbox"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_textbox()</span></code></a>). See page 398 in <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>. New in v1.14.9. These methods now also differentiate between fill and stroke colors.</p>
+<ul class="simple">
+<li><p>For default 0, only the text fill color is used to paint the text. For backward compatibility, using the <em>color</em> parameter instead also works.</p></li>
+<li><p>For render mode 1, only the border of each glyph (i.e. text character) is drawn with a thickness as set in argument <em>border_width</em>. The color chosen in the <em>color</em> argument is taken for this, the <em>fill</em> parameter is ignored.</p></li>
+<li><p>For render mode 2, the glyphs are filled and stroked, using both color parameters and the specified border width. You can use this value to simulate <strong>bold text</strong> without using another font: choose the same value for <em>fill</em> and <em>color</em> and an appropriate value for <em>border_width</em>.</p></li>
+<li><p>For render mode 3, the glyphs are neither stroked nor filled: the text becomes invisible.</p></li>
+</ul>
+<p>The following examples use border_width=0.3, together with a fontsize of 15. Stroke color is blue and fill color is some yellow.</p>
+<img alt="_images/img-rendermode.jpg" src="_images/img-rendermode.jpg" />
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>overlay</strong> (<em>bool</em>)</p>
+<blockquote>
+<div><p>Causes the item to appear in foreground (default) or background.</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>morph</strong> (<em>sequence</em>)</p>
+<blockquote>
+<div><p>Causes “morphing” of either a shape, created by the <em>draw*()</em> methods, or the text inserted by page methods <em>insert_textbox()</em> / <em>insert_text()</em>. If not <em>None</em>, it must be a pair <em>(fixpoint, matrix)</em>, where <em>fixpoint</em> is a <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a> and <em>matrix</em> is a <a class="reference internal" href="matrix.html#matrix"><span class="std std-ref">Matrix</span></a>. The matrix can be anything except translations, i.e. <em>matrix.e == matrix.f == 0</em> must be true. The point is used as a fixed point for the matrix operation. For example, if <em>matrix</em> is a rotation or scaling, then <em>fixpoint</em> is its center. Similarly, if <em>matrix</em> is a left-right or up-down flip, then the mirroring axis will be the vertical, respectively horizontal line going through <em>fixpoint</em>, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Several methods contain checks whether the to be inserted items will actually fit into the page (like <a class="reference internal" href="#Shape.insert_text" title="Shape.insert_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.insert_text()</span></code></a>, or <a class="reference internal" href="#Shape.draw_rect" title="Shape.draw_rect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Shape.draw_rect()</span></code></a>). For the result of a morphing operation there is however no such guaranty: this is entirely the rpogrammer’s responsibility.</p>
+</div>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>lineCap (deprecated: “roundCap”)</strong> (<em>int</em>)</p>
+<blockquote>
+<div><p>Controls the look of line ends. The default value 0 lets each line end at exactly the given coordinate in a sharp edge. A value of 1 adds a semi-circle to the ends, whose center is the end point and whose diameter is the line width. Value 2 adds a semi-square with an edge length of line width and a center of the line end.</p>
+<p><em>Changed in version 1.14.15</em></p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>lineJoin</strong> (<em>int</em>)</p>
+<blockquote>
+<div><p><em>New in version 1.14.15:</em> Controls the way how line connections look like. This may be either as a sharp edge (0), a rounded join (1), or a cut-off edge (2, “butt”).</p>
+</div></blockquote>
+<hr class="docutils" />
+<p><strong>closePath</strong> (<em>bool</em>)</p>
+<blockquote>
+<div><p>Causes the end point of a drawing to be automatically connected with the starting point (by a straight line).</p>
+</div></blockquote>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shape</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#common-parameters">Common Parameters</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="rect.html"
+                        title="previous chapter">Rect</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="textpage.html"
+                        title="next chapter">TextPage</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="textpage.html" title="TextPage"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="rect.html" title="Rect"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Shape</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

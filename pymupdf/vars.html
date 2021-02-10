@@ -1,0 +1,766 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Constants and Enumerations &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Color Database" href="colors.html" />
+    <link rel="prev" title="Glossary" href="glossary.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="colors.html" title="Color Database"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="glossary.html" title="Glossary"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Constants and Enumerations</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="constants-and-enumerations">
+<h1>Constants and Enumerations<a class="headerlink" href="#constants-and-enumerations" title="Permalink to this headline">¶</a></h1>
+<p>Constants and enumerations of MuPDF as implemented by PyMuPDF. Each of the following variables is accessible as <em>fitz.variable</em>.</p>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt id="Base14_Fonts">
+<code class="sig-name descname">Base14_Fonts</code><a class="headerlink" href="#Base14_Fonts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predefined Python list of valid <a class="reference internal" href="app4.html#base-14-fonts"><span class="std std-ref">PDF Base 14 Fonts</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="csRGB">
+<code class="sig-name descname">csRGB</code><a class="headerlink" href="#csRGB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predefined RGB colorspace <em>fitz.Colorspace(fitz.CS_RGB)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="csGRAY">
+<code class="sig-name descname">csGRAY</code><a class="headerlink" href="#csGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predefined GRAY colorspace <em>fitz.Colorspace(fitz.CS_GRAY)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="csCMYK">
+<code class="sig-name descname">csCMYK</code><a class="headerlink" href="#csCMYK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predefined CMYK colorspace <em>fitz.Colorspace(fitz.CS_CMYK)</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="CS_RGB">
+<code class="sig-name descname">CS_RGB</code><a class="headerlink" href="#CS_RGB" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 – Type of <a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a> is RGBA</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="CS_GRAY">
+<code class="sig-name descname">CS_GRAY</code><a class="headerlink" href="#CS_GRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>2 – Type of <a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a> is GRAY</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="CS_CMYK">
+<code class="sig-name descname">CS_CMYK</code><a class="headerlink" href="#CS_CMYK" title="Permalink to this definition">¶</a></dt>
+<dd><p>3 – Type of <a class="reference internal" href="colorspace.html#colorspace"><span class="std std-ref">Colorspace</span></a> is CMYK</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="VersionBind">
+<code class="sig-name descname">VersionBind</code><a class="headerlink" href="#VersionBind" title="Permalink to this definition">¶</a></dt>
+<dd><p>‘x.xx.x’ – version of PyMuPDF (these bindings)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="VersionFitz">
+<code class="sig-name descname">VersionFitz</code><a class="headerlink" href="#VersionFitz" title="Permalink to this definition">¶</a></dt>
+<dd><p>‘x.xxx’ – version of MuPDF</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="VersionDate">
+<code class="sig-name descname">VersionDate</code><a class="headerlink" href="#VersionDate" title="Permalink to this definition">¶</a></dt>
+<dd><p>ISO timestamp <em>YYYY-MM-DD HH:MM:SS</em> when these bindings were built.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The docstring of <em>fitz</em> contains information of the above which can be retrieved like so: <em>print(fitz.__doc__)</em>, and should look like: <em>PyMuPDF 1.10.0: Python bindings for the MuPDF 1.10 library, built on 2016-11-30 13:09:13</em>.</p>
+</div>
+<dl class="py data">
+<dt id="version">
+<code class="sig-name descname">version</code><a class="headerlink" href="#version" title="Permalink to this definition">¶</a></dt>
+<dd><p>(VersionBind, VersionFitz, timestamp) – combined version information where <em>timestamp</em> is the generation point in time formatted as “YYYYMMDDhhmmss”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="document-permissions">
+<span id="permissioncodes"></span><h2>Document Permissions<a class="headerlink" href="#document-permissions" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 76%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Code</p></th>
+<th class="head"><p>Permitted Action</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PDF_PERM_PRINT</p></td>
+<td><p>Print the document</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF_PERM_MODIFY</p></td>
+<td><p>Modify the document’s contents</p></td>
+</tr>
+<tr class="row-even"><td><p>PDF_PERM_COPY</p></td>
+<td><p>Copy or otherwise extract text and graphics</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF_PERM_ANNOTATE</p></td>
+<td><p>Add or modify text annotations and interactive form fields</p></td>
+</tr>
+<tr class="row-even"><td><p>PDF_PERM_FORM</p></td>
+<td><p>Fill in forms and sign the document</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF_PERM_ACCESSIBILITY</p></td>
+<td><p>Obsolete, always permitted</p></td>
+</tr>
+<tr class="row-even"><td><p>PDF_PERM_ASSEMBLE</p></td>
+<td><p>Insert, rotate, or delete pages, bookmarks, thumbnail images</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF_PERM_PRINT_HQ</p></td>
+<td><p>High quality printing</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="pdf-encryption-method-codes">
+<span id="encryptionmethods"></span><h2>PDF encryption method codes<a class="headerlink" href="#pdf-encryption-method-codes" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Code</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PDF_ENCRYPT_KEEP</p></td>
+<td><p>do not change</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF_ENCRYPT_NONE</p></td>
+<td><p>remove any encryption</p></td>
+</tr>
+<tr class="row-even"><td><p>PDF_ENCRYPT_RC4_40</p></td>
+<td><p>RC4 40 bit</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF_ENCRYPT_RC4_128</p></td>
+<td><p>RC4 128 bit</p></td>
+</tr>
+<tr class="row-even"><td><p>PDF_ENCRYPT_AES_128</p></td>
+<td><p><em>Advanced Encryption Standard</em> 128 bit</p></td>
+</tr>
+<tr class="row-odd"><td><p>PDF_ENCRYPT_AES_256</p></td>
+<td><p><em>Advanced Encryption Standard</em> 256 bit</p></td>
+</tr>
+<tr class="row-even"><td><p>PDF_ENCRYPT_UNKNOWN</p></td>
+<td><p>unknown</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="font-file-extensions">
+<span id="fontextensions"></span><h2>Font File Extensions<a class="headerlink" href="#font-file-extensions" title="Permalink to this headline">¶</a></h2>
+<p>The table show file extensions you should use when extracting fonts from a PDF file.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 5%" />
+<col style="width: 95%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ext</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ttf</p></td>
+<td><p>TrueType font</p></td>
+</tr>
+<tr class="row-odd"><td><p>pfa</p></td>
+<td><p>Postscript for ASCII font (various subtypes)</p></td>
+</tr>
+<tr class="row-even"><td><p>cff</p></td>
+<td><p>Type1C font (compressed font equivalent to Type1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>cid</p></td>
+<td><p>character identifier font (postscript format)</p></td>
+</tr>
+<tr class="row-even"><td><p>otf</p></td>
+<td><p>OpenType font</p></td>
+</tr>
+<tr class="row-odd"><td><p>n/a</p></td>
+<td><p>built-in font (<a class="reference internal" href="app4.html#base-14-fonts"><span class="std std-ref">PDF Base 14 Fonts</span></a> or CJK: cannot be extracted)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="text-alignment">
+<span id="textalign"></span><h2>Text Alignment<a class="headerlink" href="#text-alignment" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt id="TEXT_ALIGN_LEFT">
+<code class="sig-name descname">TEXT_ALIGN_LEFT</code><a class="headerlink" href="#TEXT_ALIGN_LEFT" title="Permalink to this definition">¶</a></dt>
+<dd><p>0 – align left.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_ALIGN_CENTER">
+<code class="sig-name descname">TEXT_ALIGN_CENTER</code><a class="headerlink" href="#TEXT_ALIGN_CENTER" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 – align center.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_ALIGN_RIGHT">
+<code class="sig-name descname">TEXT_ALIGN_RIGHT</code><a class="headerlink" href="#TEXT_ALIGN_RIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><p>2 – align right.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_ALIGN_JUSTIFY">
+<code class="sig-name descname">TEXT_ALIGN_JUSTIFY</code><a class="headerlink" href="#TEXT_ALIGN_JUSTIFY" title="Permalink to this definition">¶</a></dt>
+<dd><p>3 – align justify.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="preserve-text-flags">
+<span id="textpreserve"></span><h2>Preserve Text Flags<a class="headerlink" href="#preserve-text-flags" title="Permalink to this headline">¶</a></h2>
+<p>Options controlling the amount of data a text device parses into a <a class="reference internal" href="textpage.html#textpage"><span class="std std-ref">TextPage</span></a>.</p>
+<dl class="py data">
+<dt id="TEXT_PRESERVE_LIGATURES">
+<code class="sig-name descname">TEXT_PRESERVE_LIGATURES</code><a class="headerlink" href="#TEXT_PRESERVE_LIGATURES" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 – If set, ligatures are passed through to the application in their original form. Otherwise ligatures are expanded into their constituent parts, e.g. the ligature ffi is expanded into three  eparate characters f, f and i.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_PRESERVE_WHITESPACE">
+<code class="sig-name descname">TEXT_PRESERVE_WHITESPACE</code><a class="headerlink" href="#TEXT_PRESERVE_WHITESPACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>2 – If set, whitespace is passed through to the application in its original form. Otherwise any type of horizontal whitespace (including horizontal tabs) will be replaced with space characters of variable width.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_PRESERVE_IMAGES">
+<code class="sig-name descname">TEXT_PRESERVE_IMAGES</code><a class="headerlink" href="#TEXT_PRESERVE_IMAGES" title="Permalink to this definition">¶</a></dt>
+<dd><p>4 – If set, then images will be stored in the structured text structure.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_INHIBIT_SPACES">
+<code class="sig-name descname">TEXT_INHIBIT_SPACES</code><a class="headerlink" href="#TEXT_INHIBIT_SPACES" title="Permalink to this definition">¶</a></dt>
+<dd><p>8 – If set, we will not try to add missing space characters where there are large gaps between characters.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_DEHYPHENATE">
+<code class="sig-name descname">TEXT_DEHYPHENATE</code><a class="headerlink" href="#TEXT_DEHYPHENATE" title="Permalink to this definition">¶</a></dt>
+<dd><p>16 – Ignore hyphens at line ends and join with next line. Used mainly with search function</p>
+</dd></dl>
+
+<dl class="py data">
+<dt id="TEXT_PRESERVE_SPANS">
+<code class="sig-name descname">TEXT_PRESERVE_SPANS</code><a class="headerlink" href="#TEXT_PRESERVE_SPANS" title="Permalink to this definition">¶</a></dt>
+<dd><p>32 – Generate a new line for every span. Not used in PyMuPDF.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="link-destination-kinds">
+<span id="linkdest-kinds"></span><h2>Link Destination Kinds<a class="headerlink" href="#link-destination-kinds" title="Permalink to this headline">¶</a></h2>
+<p>Possible values of <a class="reference internal" href="linkdest.html#linkDest.kind" title="linkDest.kind"><code class="xref py py-attr docutils literal notranslate"><span class="pre">linkDest.kind</span></code></a> (link destination kind). For details consult <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>, chapter 8.2 on pp. 581.</p>
+<dl class="py data">
+<dt id="LINK_NONE">
+<code class="sig-name descname">LINK_NONE</code><a class="headerlink" href="#LINK_NONE" title="Permalink to this definition">¶</a></dt>
+<dd><p>0 – No destination. Indicates a dummy link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_GOTO">
+<code class="sig-name descname">LINK_GOTO</code><a class="headerlink" href="#LINK_GOTO" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 – Points to a place in this document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_URI">
+<code class="sig-name descname">LINK_URI</code><a class="headerlink" href="#LINK_URI" title="Permalink to this definition">¶</a></dt>
+<dd><p>2 – Points to a URI – typically a resource specified with internet syntax.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_LAUNCH">
+<code class="sig-name descname">LINK_LAUNCH</code><a class="headerlink" href="#LINK_LAUNCH" title="Permalink to this definition">¶</a></dt>
+<dd><p>3 – Launch (open) another file (of any “executable” type).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_NAMED">
+<code class="sig-name descname">LINK_NAMED</code><a class="headerlink" href="#LINK_NAMED" title="Permalink to this definition">¶</a></dt>
+<dd><p>4 – points to a named location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_GOTOR">
+<code class="sig-name descname">LINK_GOTOR</code><a class="headerlink" href="#LINK_GOTOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>5 – Points to a place in another PDF document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="link-destination-flags">
+<span id="linkdest-flags"></span><h2>Link Destination Flags<a class="headerlink" href="#link-destination-flags" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The rightmost byte of this integer is a bit field, so test the truth of these bits with the <em>&amp;</em> operator.</p>
+</div>
+<dl class="py data">
+<dt id="LINK_FLAG_L_VALID">
+<code class="sig-name descname">LINK_FLAG_L_VALID</code><a class="headerlink" href="#LINK_FLAG_L_VALID" title="Permalink to this definition">¶</a></dt>
+<dd><p>1  (bit 0) Top left x value is valid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_FLAG_T_VALID">
+<code class="sig-name descname">LINK_FLAG_T_VALID</code><a class="headerlink" href="#LINK_FLAG_T_VALID" title="Permalink to this definition">¶</a></dt>
+<dd><p>2  (bit 1) Top left y value is valid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_FLAG_R_VALID">
+<code class="sig-name descname">LINK_FLAG_R_VALID</code><a class="headerlink" href="#LINK_FLAG_R_VALID" title="Permalink to this definition">¶</a></dt>
+<dd><p>4  (bit 2) Bottom right x value is valid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_FLAG_B_VALID">
+<code class="sig-name descname">LINK_FLAG_B_VALID</code><a class="headerlink" href="#LINK_FLAG_B_VALID" title="Permalink to this definition">¶</a></dt>
+<dd><p>8  (bit 3) Bottom right y value is valid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_FLAG_FIT_H">
+<code class="sig-name descname">LINK_FLAG_FIT_H</code><a class="headerlink" href="#LINK_FLAG_FIT_H" title="Permalink to this definition">¶</a></dt>
+<dd><p>16 (bit 4) Horizontal fit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_FLAG_FIT_V">
+<code class="sig-name descname">LINK_FLAG_FIT_V</code><a class="headerlink" href="#LINK_FLAG_FIT_V" title="Permalink to this definition">¶</a></dt>
+<dd><p>32 (bit 5) Vertical fit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt id="LINK_FLAG_R_IS_ZOOM">
+<code class="sig-name descname">LINK_FLAG_R_IS_ZOOM</code><a class="headerlink" href="#LINK_FLAG_R_IS_ZOOM" title="Permalink to this definition">¶</a></dt>
+<dd><p>64 (bit 6) Bottom right x is a zoom figure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="annotation-related-constants">
+<h2>Annotation Related Constants<a class="headerlink" href="#annotation-related-constants" title="Permalink to this headline">¶</a></h2>
+<p>See chapter 8.4.5, pp. 615 of the <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> for details.</p>
+<div class="section" id="annotation-types">
+<span id="annotationtypes"></span><h3>Annotation Types<a class="headerlink" href="#annotation-types" title="Permalink to this headline">¶</a></h3>
+<p>These identifiers also cover <strong>links</strong> and <strong>widgets</strong>: the PDF specification technically handles them all in the same way, whereas <strong>MuPDF</strong> (and PyMuPDF) treats them as three basically different types of objects.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_ANNOT_TEXT</span> <span class="mi">0</span>
+<span class="n">PDF_ANNOT_LINK</span> <span class="mi">1</span>  <span class="c1"># &lt;=== Link object in PyMuPDF</span>
+<span class="n">PDF_ANNOT_FREE_TEXT</span> <span class="mi">2</span>
+<span class="n">PDF_ANNOT_LINE</span> <span class="mi">3</span>
+<span class="n">PDF_ANNOT_SQUARE</span> <span class="mi">4</span>
+<span class="n">PDF_ANNOT_CIRCLE</span> <span class="mi">5</span>
+<span class="n">PDF_ANNOT_POLYGON</span> <span class="mi">6</span>
+<span class="n">PDF_ANNOT_POLY_LINE</span> <span class="mi">7</span>
+<span class="n">PDF_ANNOT_HIGHLIGHT</span> <span class="mi">8</span>
+<span class="n">PDF_ANNOT_UNDERLINE</span> <span class="mi">9</span>
+<span class="n">PDF_ANNOT_SQUIGGLY</span> <span class="mi">10</span>
+<span class="n">PDF_ANNOT_STRIKE_OUT</span> <span class="mi">11</span>
+<span class="n">PDF_ANNOT_REDACT</span> <span class="mi">12</span>
+<span class="n">PDF_ANNOT_STAMP</span> <span class="mi">13</span>
+<span class="n">PDF_ANNOT_CARET</span> <span class="mi">14</span>
+<span class="n">PDF_ANNOT_INK</span> <span class="mi">15</span>
+<span class="n">PDF_ANNOT_POPUP</span> <span class="mi">16</span>
+<span class="n">PDF_ANNOT_FILE_ATTACHMENT</span> <span class="mi">17</span>
+<span class="n">PDF_ANNOT_SOUND</span> <span class="mi">18</span>
+<span class="n">PDF_ANNOT_MOVIE</span> <span class="mi">19</span>
+<span class="n">PDF_ANNOT_RICH_MEDIA</span> <span class="mi">20</span>
+<span class="n">PDF_ANNOT_WIDGET</span> <span class="mi">21</span>  <span class="c1"># &lt;=== Widget object in PyMuPDF</span>
+<span class="n">PDF_ANNOT_SCREEN</span> <span class="mi">22</span>
+<span class="n">PDF_ANNOT_PRINTER_MARK</span> <span class="mi">23</span>
+<span class="n">PDF_ANNOT_TRAP_NET</span> <span class="mi">24</span>
+<span class="n">PDF_ANNOT_WATERMARK</span> <span class="mi">25</span>
+<span class="n">PDF_ANNOT_3D</span> <span class="mi">26</span>
+<span class="n">PDF_ANNOT_PROJECTION</span> <span class="mi">27</span>
+<span class="n">PDF_ANNOT_UNKNOWN</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="annotation-flag-bits">
+<span id="annotationflags"></span><h3>Annotation Flag Bits<a class="headerlink" href="#annotation-flag-bits" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_ANNOT_IS_INVISIBLE</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_HIDDEN</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">2</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_PRINT</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_NO_ZOOM</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">4</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_NO_ROTATE</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">5</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_NO_VIEW</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">6</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_READ_ONLY</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">7</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_LOCKED</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">8</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_TOGGLE_NO_VIEW</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">9</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">PDF_ANNOT_IS_LOCKED_CONTENTS</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">10</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="annotation-line-ending-styles">
+<span id="annotationlineends"></span><h3>Annotation Line Ending Styles<a class="headerlink" href="#annotation-line-ending-styles" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_ANNOT_LE_NONE</span> <span class="mi">0</span>
+<span class="n">PDF_ANNOT_LE_SQUARE</span> <span class="mi">1</span>
+<span class="n">PDF_ANNOT_LE_CIRCLE</span> <span class="mi">2</span>
+<span class="n">PDF_ANNOT_LE_DIAMOND</span> <span class="mi">3</span>
+<span class="n">PDF_ANNOT_LE_OPEN_ARROW</span> <span class="mi">4</span>
+<span class="n">PDF_ANNOT_LE_CLOSED_ARROW</span> <span class="mi">5</span>
+<span class="n">PDF_ANNOT_LE_BUTT</span> <span class="mi">6</span>
+<span class="n">PDF_ANNOT_LE_R_OPEN_ARROW</span> <span class="mi">7</span>
+<span class="n">PDF_ANNOT_LE_R_CLOSED_ARROW</span> <span class="mi">8</span>
+<span class="n">PDF_ANNOT_LE_SLASH</span> <span class="mi">9</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="widget-constants">
+<h2>Widget Constants<a class="headerlink" href="#widget-constants" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="widget-types-field-type">
+<span id="widgettypes"></span><h3>Widget Types (<em>field_type</em>)<a class="headerlink" href="#widget-types-field-type" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_WIDGET_TYPE_UNKNOWN</span> <span class="mi">0</span>
+<span class="n">PDF_WIDGET_TYPE_BUTTON</span> <span class="mi">1</span>
+<span class="n">PDF_WIDGET_TYPE_CHECKBOX</span> <span class="mi">2</span>
+<span class="n">PDF_WIDGET_TYPE_COMBOBOX</span> <span class="mi">3</span>
+<span class="n">PDF_WIDGET_TYPE_LISTBOX</span> <span class="mi">4</span>
+<span class="n">PDF_WIDGET_TYPE_RADIOBUTTON</span> <span class="mi">5</span>
+<span class="n">PDF_WIDGET_TYPE_SIGNATURE</span> <span class="mi">6</span>
+<span class="n">PDF_WIDGET_TYPE_TEXT</span> <span class="mi">7</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-widget-subtypes-text-format">
+<h3>Text Widget Subtypes (<em>text_format</em>)<a class="headerlink" href="#text-widget-subtypes-text-format" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_WIDGET_TX_FORMAT_NONE</span> <span class="mi">0</span>
+<span class="n">PDF_WIDGET_TX_FORMAT_NUMBER</span> <span class="mi">1</span>
+<span class="n">PDF_WIDGET_TX_FORMAT_SPECIAL</span> <span class="mi">2</span>
+<span class="n">PDF_WIDGET_TX_FORMAT_DATE</span> <span class="mi">3</span>
+<span class="n">PDF_WIDGET_TX_FORMAT_TIME</span> <span class="mi">4</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="widget-flags-field-flags">
+<h3>Widget flags (<em>field_flags</em>)<a class="headerlink" href="#widget-flags-field-flags" title="Permalink to this headline">¶</a></h3>
+<p><strong>Common to all field types</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_FIELD_IS_READ_ONLY</span> <span class="mi">1</span>
+<span class="n">PDF_FIELD_IS_REQUIRED</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
+<span class="n">PDF_FIELD_IS_NO_EXPORT</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p><strong>Text widgets</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_TX_FIELD_IS_MULTILINE</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span>
+<span class="n">PDF_TX_FIELD_IS_PASSWORD</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">13</span>
+<span class="n">PDF_TX_FIELD_IS_FILE_SELECT</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">20</span>
+<span class="n">PDF_TX_FIELD_IS_DO_NOT_SPELL_CHECK</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">22</span>
+<span class="n">PDF_TX_FIELD_IS_DO_NOT_SCROLL</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">23</span>
+<span class="n">PDF_TX_FIELD_IS_COMB</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">24</span>
+<span class="n">PDF_TX_FIELD_IS_RICH_TEXT</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">25</span>
+</pre></div>
+</div>
+<p><strong>Button widgets</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_BTN_FIELD_IS_NO_TOGGLE_TO_OFF</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span>
+<span class="n">PDF_BTN_FIELD_IS_RADIO</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">15</span>
+<span class="n">PDF_BTN_FIELD_IS_PUSHBUTTON</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span>
+<span class="n">PDF_BTN_FIELD_IS_RADIOS_IN_UNISON</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">25</span>
+</pre></div>
+</div>
+<p><strong>Choice widgets</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_CH_FIELD_IS_COMBO</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">17</span>
+<span class="n">PDF_CH_FIELD_IS_EDIT</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span>
+<span class="n">PDF_CH_FIELD_IS_SORT</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">19</span>
+<span class="n">PDF_CH_FIELD_IS_MULTI_SELECT</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">21</span>
+<span class="n">PDF_CH_FIELD_IS_DO_NOT_SPELL_CHECK</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">22</span>
+<span class="n">PDF_CH_FIELD_IS_COMMIT_ON_SEL_CHANGE</span>  <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">26</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="pdf-standard-blend-modes">
+<span id="blendmodes"></span><h2>PDF Standard Blend Modes<a class="headerlink" href="#pdf-standard-blend-modes" title="Permalink to this headline">¶</a></h2>
+<p>For an explanation see <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>, page 520:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PDF_BM_Color</span> <span class="s2">&quot;Color&quot;</span>
+<span class="n">PDF_BM_ColorBurn</span> <span class="s2">&quot;ColorBurn&quot;</span>
+<span class="n">PDF_BM_ColorDodge</span> <span class="s2">&quot;ColorDodge&quot;</span>
+<span class="n">PDF_BM_Darken</span> <span class="s2">&quot;Darken&quot;</span>
+<span class="n">PDF_BM_Difference</span> <span class="s2">&quot;Difference&quot;</span>
+<span class="n">PDF_BM_Exclusion</span> <span class="s2">&quot;Exclusion&quot;</span>
+<span class="n">PDF_BM_HardLight</span> <span class="s2">&quot;HardLight&quot;</span>
+<span class="n">PDF_BM_Hue</span> <span class="s2">&quot;Hue&quot;</span>
+<span class="n">PDF_BM_Lighten</span> <span class="s2">&quot;Lighten&quot;</span>
+<span class="n">PDF_BM_Luminosity</span> <span class="s2">&quot;Luminosity&quot;</span>
+<span class="n">PDF_BM_Multiply</span> <span class="s2">&quot;Multiply&quot;</span>
+<span class="n">PDF_BM_Normal</span> <span class="s2">&quot;Normal&quot;</span>
+<span class="n">PDF_BM_Overlay</span> <span class="s2">&quot;Overlay&quot;</span>
+<span class="n">PDF_BM_Saturation</span> <span class="s2">&quot;Saturation&quot;</span>
+<span class="n">PDF_BM_Screen</span> <span class="s2">&quot;Screen&quot;</span>
+<span class="n">PDF_BM_SoftLight</span> <span class="s2">&quot;Softlight&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stamp-annotation-icons">
+<span id="stampicons"></span><h2>Stamp Annotation Icons<a class="headerlink" href="#stamp-annotation-icons" title="Permalink to this headline">¶</a></h2>
+<p>MuPDF has defined the following icons for <strong>rubber stamp</strong> annotations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">STAMP_Approved</span> <span class="mi">0</span>
+<span class="n">STAMP_AsIs</span> <span class="mi">1</span>
+<span class="n">STAMP_Confidential</span> <span class="mi">2</span>
+<span class="n">STAMP_Departmental</span> <span class="mi">3</span>
+<span class="n">STAMP_Experimental</span> <span class="mi">4</span>
+<span class="n">STAMP_Expired</span> <span class="mi">5</span>
+<span class="n">STAMP_Final</span> <span class="mi">6</span>
+<span class="n">STAMP_ForComment</span> <span class="mi">7</span>
+<span class="n">STAMP_ForPublicRelease</span> <span class="mi">8</span>
+<span class="n">STAMP_NotApproved</span> <span class="mi">9</span>
+<span class="n">STAMP_NotForPublicRelease</span> <span class="mi">10</span>
+<span class="n">STAMP_Sold</span> <span class="mi">11</span>
+<span class="n">STAMP_TopSecret</span> <span class="mi">12</span>
+<span class="n">STAMP_Draft</span> <span class="mi">13</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Constants and Enumerations</a><ul>
+<li><a class="reference internal" href="#constants">Constants</a></li>
+<li><a class="reference internal" href="#document-permissions">Document Permissions</a></li>
+<li><a class="reference internal" href="#pdf-encryption-method-codes">PDF encryption method codes</a></li>
+<li><a class="reference internal" href="#font-file-extensions">Font File Extensions</a></li>
+<li><a class="reference internal" href="#text-alignment">Text Alignment</a></li>
+<li><a class="reference internal" href="#preserve-text-flags">Preserve Text Flags</a></li>
+<li><a class="reference internal" href="#link-destination-kinds">Link Destination Kinds</a></li>
+<li><a class="reference internal" href="#link-destination-flags">Link Destination Flags</a></li>
+<li><a class="reference internal" href="#annotation-related-constants">Annotation Related Constants</a><ul>
+<li><a class="reference internal" href="#annotation-types">Annotation Types</a></li>
+<li><a class="reference internal" href="#annotation-flag-bits">Annotation Flag Bits</a></li>
+<li><a class="reference internal" href="#annotation-line-ending-styles">Annotation Line Ending Styles</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#widget-constants">Widget Constants</a><ul>
+<li><a class="reference internal" href="#widget-types-field-type">Widget Types (<em>field_type</em>)</a></li>
+<li><a class="reference internal" href="#text-widget-subtypes-text-format">Text Widget Subtypes (<em>text_format</em>)</a></li>
+<li><a class="reference internal" href="#widget-flags-field-flags">Widget flags (<em>field_flags</em>)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pdf-standard-blend-modes">PDF Standard Blend Modes</a></li>
+<li><a class="reference internal" href="#stamp-annotation-icons">Stamp Annotation Icons</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="glossary.html"
+                        title="previous chapter">Glossary</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="colors.html"
+                        title="next chapter">Color Database</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="colors.html" title="Color Database"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="glossary.html" title="Glossary"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Constants and Enumerations</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

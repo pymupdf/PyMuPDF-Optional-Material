@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appendix 4: Assorted Technical Information &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Change Logs" href="changes.html" />
+    <link rel="prev" title="Appendix 3: Considerations on Embedded Files" href="app3.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="changes.html" title="Change Logs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="app3.html" title="Appendix 3: Considerations on Embedded Files"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appendix 4: Assorted Technical Information</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="appendix-4-assorted-technical-information">
+<span id="appendix-4"></span><h1>Appendix 4: Assorted Technical Information<a class="headerlink" href="#appendix-4-assorted-technical-information" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pdf-base-14-fonts">
+<span id="base-14-fonts"></span><h2>PDF Base 14 Fonts<a class="headerlink" href="#pdf-base-14-fonts" title="Permalink to this headline">¶</a></h2>
+<p>The following 14 builtin font names <strong>must be supported by every PDF viewer</strong> application. They are available as a dictionary, which maps their full names amd their abbreviations in lower case to the full font basename. Whereever a <strong>fontname</strong> must be provided in PyMuPDF, any <strong>key or value</strong> from the dictionary may be used:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Base14_fontdict</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+<span class="p">{</span><span class="s1">&#39;courier&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier&#39;</span><span class="p">,</span>
+<span class="s1">&#39;courier-oblique&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier-Oblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;courier-bold&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier-Bold&#39;</span><span class="p">,</span>
+<span class="s1">&#39;courier-boldoblique&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier-BoldOblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;helvetica&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica&#39;</span><span class="p">,</span>
+<span class="s1">&#39;helvetica-oblique&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica-Oblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;helvetica-bold&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica-Bold&#39;</span><span class="p">,</span>
+<span class="s1">&#39;helvetica-boldoblique&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica-BoldOblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;times-roman&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-Roman&#39;</span><span class="p">,</span>
+<span class="s1">&#39;times-italic&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-Italic&#39;</span><span class="p">,</span>
+<span class="s1">&#39;times-bold&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-Bold&#39;</span><span class="p">,</span>
+<span class="s1">&#39;times-bolditalic&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-BoldItalic&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symbol&#39;</span><span class="p">:</span> <span class="s1">&#39;Symbol&#39;</span><span class="p">,</span>
+<span class="s1">&#39;zapfdingbats&#39;</span><span class="p">:</span> <span class="s1">&#39;ZapfDingbats&#39;</span><span class="p">,</span>
+<span class="s1">&#39;helv&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica&#39;</span><span class="p">,</span>
+<span class="s1">&#39;heit&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica-Oblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hebo&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica-Bold&#39;</span><span class="p">,</span>
+<span class="s1">&#39;hebi&#39;</span><span class="p">:</span> <span class="s1">&#39;Helvetica-BoldOblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;cour&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier&#39;</span><span class="p">,</span>
+<span class="s1">&#39;coit&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier-Oblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;cobo&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier-Bold&#39;</span><span class="p">,</span>
+<span class="s1">&#39;cobi&#39;</span><span class="p">:</span> <span class="s1">&#39;Courier-BoldOblique&#39;</span><span class="p">,</span>
+<span class="s1">&#39;tiro&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-Roman&#39;</span><span class="p">,</span>
+<span class="s1">&#39;tibo&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-Bold&#39;</span><span class="p">,</span>
+<span class="s1">&#39;tiit&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-Italic&#39;</span><span class="p">,</span>
+<span class="s1">&#39;tibi&#39;</span><span class="p">:</span> <span class="s1">&#39;Times-BoldItalic&#39;</span><span class="p">,</span>
+<span class="s1">&#39;symb&#39;</span><span class="p">:</span> <span class="s1">&#39;Symbol&#39;</span><span class="p">,</span>
+<span class="s1">&#39;zadb&#39;</span><span class="p">:</span> <span class="s1">&#39;ZapfDingbats&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In contrast to their obligation, not all PDF viewers support these fonts correctly and completely – this is especially true for Symbol and ZapfDingbats. Also, the glyph (visual) images will be specific to every reader.</p>
+<p>To see how these fonts can be used – including the <strong>CJK built-in</strong> fonts – look at the table in <a class="reference internal" href="page.html#Page.insert_font" title="Page.insert_font"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insert_font()</span></code></a>.</p>
+<hr class="docutils" />
+</div>
+<div class="section" id="adobe-pdf-references">
+<span id="adobemanual"></span><h2>Adobe PDF References<a class="headerlink" href="#adobe-pdf-references" title="Permalink to this headline">¶</a></h2>
+<p>This PDF Reference manual published by Adobe is frequently quoted throughout this documentation. It can be viewed and downloaded from <a class="reference external" href="http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_reference_1-7.pdf">here</a>.</p>
+<p>There is a newer version of this, which can be found <a class="reference external" href="https://www.adobe.com/content/dam/acom/en/devnet/pdf/pdfs/PDF32000_2008.pdf">here</a>. Redaction annotations are an example contained in this one, but not in the earlier version.</p>
+<hr class="docutils" />
+</div>
+<div class="section" id="using-python-sequences-as-arguments-in-pymupdf">
+<span id="sequencetypes"></span><h2>Using Python Sequences as Arguments in PyMuPDF<a class="headerlink" href="#using-python-sequences-as-arguments-in-pymupdf" title="Permalink to this headline">¶</a></h2>
+<p>When PyMuPDF objects and methods require a Python <strong>list</strong> of numerical values, other Python <strong>sequence types</strong> are also allowed. Python classes are said to implement the <strong>sequence protocol</strong>, if they have a <em>__getitem__()</em> method.</p>
+<p>This basically means, you can interchangeably use Python <em>list</em> or <em>tuple</em> or even <em>array.array</em>, <em>numpy.array</em> and <em>bytearray</em> types in these cases.</p>
+<p>For example, specifying a sequence <em>“s”</em> in any of the following ways</p>
+<ul class="simple">
+<li><p><em>s = [1, 2]</em></p></li>
+<li><p><em>s = (1, 2)</em></p></li>
+<li><p><em>s = array.array(“i”, (1, 2))</em></p></li>
+<li><p><em>s = numpy.array((1, 2))</em></p></li>
+<li><p><em>s = bytearray((1, 2))</em></p></li>
+</ul>
+<p>will make it usable in the following example expressions:</p>
+<ul class="simple">
+<li><p><em>fitz.Point(s)</em></p></li>
+<li><p><em>fitz.Point(x, y) + s</em></p></li>
+<li><p><em>doc.select(s)</em></p></li>
+</ul>
+<p>Similarly with all geometry objects <a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a>, <a class="reference internal" href="irect.html#irect"><span class="std std-ref">IRect</span></a>, <a class="reference internal" href="matrix.html#matrix"><span class="std std-ref">Matrix</span></a> and <a class="reference internal" href="point.html#point"><span class="std std-ref">Point</span></a>.</p>
+<p>Because all PyMuPDF geometry classes themselves are special cases of sequences, they (with the exception of <a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a> – see below) can be freely used where numerical sequences can be used, e.g. as arguments for functions like <em>list()</em>, <em>tuple()</em>, <em>array.array()</em> or <em>numpy.array()</em>. Look at the following snippet to see this work.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fitz</span><span class="o">,</span> <span class="nn">array</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">tuple</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+<span class="go">array(&#39;f&#39;, [1.0, 2.0, 3.0, 4.0, 5.0, 6.0])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="go">array([1., 2., 3., 4., 5., 6.])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="quad.html#quad"><span class="std std-ref">Quad</span></a> is a Python sequence object as well and has a length of 4. Its items however are <a class="reference internal" href="glossary.html#point_like" title="point_like"><code class="xref py py-data docutils literal notranslate"><span class="pre">point_like</span></code></a> – not numbers. Therefore, the above remarks do not apply.</p>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="ensuring-consistency-of-important-objects-in-pymupdf">
+<span id="referenialintegrity"></span><h2>Ensuring Consistency of Important Objects in PyMuPDF<a class="headerlink" href="#ensuring-consistency-of-important-objects-in-pymupdf" title="Permalink to this headline">¶</a></h2>
+<p>PyMuPDF is a Python binding for the C library MuPDF. While a lot of effort has been invested by MuPDF’s creators to approximate some sort of an object-oriented behavior, they certainly could not overcome basic shortcomings of the C language in that respect.</p>
+<p>Python on the other hand implements the OO-model in a very clean way. The interface code between PyMuPDF and MuPDF consists of two basic files: <em>fitz.py</em> and <em>fitz_wrap.c</em>. They are created by the excellent SWIG tool for each new version.</p>
+<p>When you use one of PyMuPDF’s objects or methods, this will result in excution of some code in <em>fitz.py</em>, which in turn will call some C code compiled with <em>fitz_wrap.c</em>.</p>
+<p>Because SWIG goes a long way to keep the Python and the C level in sync, everything works fine, if a certain set of rules is being strictly followed. For example: <strong>never access</strong> a <a class="reference internal" href="page.html#page"><span class="std std-ref">Page</span></a> object, after you have closed (or deleted or set to <em>None</em>) the owning <a class="reference internal" href="document.html#document"><span class="std std-ref">Document</span></a>. Or, less obvious: <strong>never access</strong> a page or any of its children (links or annotations) after you have executed one of the document methods <em>select()</em>, <em>delete_page()</em>, <em>insert_page()</em> … and more.</p>
+<p>But just no longer accessing invalidated objects is actually not enough: They should rather be actively deleted entirely, to also free C-level resources (meaning allocated memory).</p>
+<p>The reason for these rules lies in the fact that there is a hierachical 2-level one-to-many relationship between a document and its pages and also between a page and its links / annotations. To maintain a consistent situation, any of the above actions must lead to a complete reset – in <strong>Python and, synchronously, in C</strong>.</p>
+<p>SWIG cannot know about this and consequently does not do it.</p>
+<p>The required logic has therefore been built into PyMuPDF itself in the following way.</p>
+<ol class="arabic simple">
+<li><p>If a page “loses” its owning document or is being deleted itself, all of its currently existing annotations and links will be made unusable in Python, and their C-level counterparts will be deleted and deallocated.</p></li>
+<li><p>If a document is closed (or deleted or set to <em>None</em>) or if its structure has changed, then similarly all currently existing pages and their children will be made unusable, and corresponding C-level deletions will take place. “Structure changes” include methods like <em>select()</em>, <em>delePage()</em>, <em>insert_page()</em>, <em>insert_pdf()</em> and so on: all of these will result in a cascade of object deletions.</p></li>
+</ol>
+<p>The programmer will normally not realize any of this. If he, however, tries to access invalidated objects, exceptions will be raised.</p>
+<p>Invalidated objects cannot be directly deleted as with Python statements like <em>del page</em> or <em>page = None</em>, etc. Instead, their <em>__del__</em> method must be invoked.</p>
+<p>All pages, links and annotations have the property <em>parent</em>, which points to the owning object. This is the property that can be checked on the application level: if <em>obj.parent == None</em> then the object’s parent is gone, and any reference to its properties or methods will raise an exception informing about this “orphaned” state.</p>
+<p>A sample session:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">page</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">first_annot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span><span class="o">.</span><span class="n">type</span>                    <span class="c1"># everything works fine</span>
+<span class="go">[5, &#39;Circle&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">page</span> <span class="o">=</span> <span class="kc">None</span>                   <span class="c1"># this turns &#39;annot&#39; into an orphan</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span><span class="o">.</span><span class="n">type</span>
+<span class="go">&lt;... omitted lines ...&gt;</span>
+<span class="go">RuntimeError: orphaned object: parent is None</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># same happens, if you do this:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">first_annot</span>     <span class="c1"># deletes the page again immediately!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span><span class="o">.</span><span class="n">type</span>                    <span class="c1"># so, &#39;annot&#39; is &#39;born&#39; orphaned</span>
+<span class="go">&lt;... omitted lines ...&gt;</span>
+<span class="go">RuntimeError: orphaned object: parent is None</span>
+</pre></div>
+</div>
+<p>This shows the cascading effect:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">doc</span> <span class="o">=</span> <span class="n">fitz</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;some.pdf&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">page</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">first_annot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">page</span><span class="o">.</span><span class="n">rect</span>
+<span class="go">fitz.Rect(0.0, 0.0, 595.0, 842.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span><span class="o">.</span><span class="n">type</span>
+<span class="go">[5, &#39;Circle&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">del</span> <span class="n">doc</span>                       <span class="c1"># or doc = None or doc.close()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">page</span><span class="o">.</span><span class="n">rect</span>
+<span class="go">&lt;... omitted lines ...&gt;</span>
+<span class="go">RuntimeError: orphaned object: parent is None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">annot</span><span class="o">.</span><span class="n">type</span>
+<span class="go">&lt;... omitted lines ...&gt;</span>
+<span class="go">RuntimeError: orphaned object: parent is None</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Objects outside the above relationship are not included in this mechanism. If you e.g. created a table of contents by <em>toc = doc.get_toc()</em>, and later close or change the document, then this cannot and does not change variable <em>toc</em> in any way. It is your responsibility to refresh such variables as required.</p>
+</div>
+<hr class="docutils" />
+</div>
+<div class="section" id="design-of-method-page-show-pdf-page">
+<span id="formxobject"></span><h2>Design of Method <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a><a class="headerlink" href="#design-of-method-page-show-pdf-page" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="purpose-and-capabilities">
+<h3>Purpose and Capabilities<a class="headerlink" href="#purpose-and-capabilities" title="Permalink to this headline">¶</a></h3>
+<p>The method displays an image of a (“source”) page of another PDF document within a specified rectangle of the current (“containing”, “target”) page.</p>
+<ul class="simple">
+<li><p><strong>In contrast</strong> to <a class="reference internal" href="page.html#Page.insert_image" title="Page.insert_image"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insert_image()</span></code></a>, this display is vector-based and hence remains accurate across zooming levels.</p></li>
+<li><p><strong>Just like</strong> <a class="reference internal" href="page.html#Page.insert_image" title="Page.insert_image"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.insert_image()</span></code></a>, the size of the display is adjusted to the given rectangle.</p></li>
+</ul>
+<p>The following variations of the display are currently supported:</p>
+<ul class="simple">
+<li><p>Bool parameter <em>keep_proportion</em> controls whether to maintain the aspect ratio (default) or not.</p></li>
+<li><p>Rectangle parameter <em>clip</em> restricts the visible part of the source page rectangle. Default is the full page.</p></li>
+<li><p>float <em>rotation</em> rotates the display by an arbitrary angle (degrees). If the angle is not an integer multiple of 90, only 2 of the 4 corners may be positioned on the target border if also <em>keep_proportion</em> is true.</p></li>
+<li><p>Bool parameter <em>overlay</em> controls whether to put the image on top (foreground, default) of current page content or not (background).</p></li>
+</ul>
+<p>Use cases include (but are not limited to) the following:</p>
+<ol class="arabic simple">
+<li><p>“Stamp” a series of pages of the current document with the same image, like a company logo or a watermark.</p></li>
+<li><p>Combine arbitrary input pages into one output page to support “booklet” or double-sided printing (known as “4-up”, “n-up”).</p></li>
+<li><p>Split up (large) input pages into several arbitrary pieces. This is also called “posterization”, because you e.g. can split an A4 page horizontally and vertically, print the 4 pieces enlarged to separate A4 pages, and end up with an A2 version of your original page.</p></li>
+</ol>
+</div>
+<div class="section" id="technical-implementation">
+<h3>Technical Implementation<a class="headerlink" href="#technical-implementation" title="Permalink to this headline">¶</a></h3>
+<p>This is done using PDF <strong>“Form XObjects”</strong>, see section 4.9 on page 355 of <a class="reference internal" href="#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>. On execution of a <em>Page.show_pdf_page(rect, src, pno, …)</em>, the following things happen:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>The <a class="reference internal" href="glossary.html#resources" title="resources"><code class="xref py py-data docutils literal notranslate"><span class="pre">resources</span></code></a> and <a class="reference internal" href="glossary.html#contents" title="contents"><code class="xref py py-data docutils literal notranslate"><span class="pre">contents</span></code></a> objects of page <em>pno</em> in document <em>src</em> are copied over to the current document, jointly creating a new <strong>Form XObject</strong> with the following properties. The PDF <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number of this object is returned by the method.</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p><em>/BBox</em> equals <em>/Mediabox</em> of the source page</p></li>
+<li><p><em>/Matrix</em> equals the identity matrix <em>[1 0 0 1 0 0]</em></p></li>
+<li><p><em>/Resources</em> equals that of the source page. This involves a “deep-copy” of hierarchically nested other objects (including fonts, images, etc.). The complexity involved here is covered by MuPDF’s grafting <a class="footnote-reference brackets" href="#f1" id="id2">1</a> technique functions.</p></li>
+<li><p>This is a stream object type, and its stream is an exact copy of the combined data of the source page’s <em>/Contents</em> objects.</p></li>
+</ol>
+<p>This step is only executed once per shown source page. Subsequent displays of the same page only create pointers (done in next step) to this object.</p>
+</div></blockquote>
+</li>
+<li><p>A second <strong>Form XObject</strong> is then created which the target page uses to invoke the display. This object has the following properties:</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p><em>/BBox</em> equals the <em>/CropBox</em> of the source page (or <em>clip</em>).</p></li>
+<li><p><em>/Matrix</em> represents the mapping of <em>/BBox</em> to the target rectangle.</p></li>
+<li><p><em>/XObject</em> references the previous XObject via the fixed name <em>fullpage</em>.</p></li>
+<li><p>The stream of this object contains exactly one fixed statement: <em>/fullpage Do</em>.</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>The <a class="reference internal" href="glossary.html#resources" title="resources"><code class="xref py py-data docutils literal notranslate"><span class="pre">resources</span></code></a> and <a class="reference internal" href="glossary.html#contents" title="contents"><code class="xref py py-data docutils literal notranslate"><span class="pre">contents</span></code></a> objects of the target page are now modified as follows.</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li><p>Add an entry to the <em>/XObject</em> dictionary of <em>/Resources</em> with the name <em>fzFrm&lt;n&gt;</em> (with n chosen such that this entry is unique on the page).</p></li>
+<li><p>Depending on <em>overlay</em>, prepend or append a new object to the page’s <em>/Contents</em> array, containing the statement <em>q /fzFrm&lt;n&gt; Do Q</em>.</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="redirecting-error-and-warning-messages">
+<span id="redirectmessages"></span><h2>Redirecting Error and Warning Messages<a class="headerlink" href="#redirecting-error-and-warning-messages" title="Permalink to this headline">¶</a></h2>
+<p>Since MuPDF version 1.16 error and warning messages can be redirected via an official plugin.</p>
+<p>PyMuPDF will put error messages to <em>sys.stderr</em> prefixed with the string “mupdf:”. Warnings are internally stored and can be accessed via <em>fitz.TOOLS.mupdf_warnings()</em>. There also is a function to empty this store.</p>
+<p class="rubric">Footnotes</p>
+<dl class="footnote brackets">
+<dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p>MuPDF supports “deep-copying” objects between PDF documents. To avoid duplicate data in the target, it uses so-called “graftmaps”, like a form of scratchpad: for each object to be copied, its <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number is looked up in the graftmap. If found, copying is skipped. Otherwise, the new <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> is recorded and the copy takes place. PyMuPDF makes use of this technique in two places so far: <a class="reference internal" href="document.html#Document.insert_pdf" title="Document.insert_pdf"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.insert_pdf()</span></code></a> and <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a>. This process is fast and very efficient, because it prevents multiple copies of typically large and frequently referenced data, like images and fonts. However, you may still want to consider using garbage collection (option 4) in any of the following cases:</p>
+<ol class="arabic simple">
+<li><p>The target PDF is not new / empty: grafting does not check for resource types that already existed (e.g. images, fonts) in the target document</p></li>
+<li><p>Using <a class="reference internal" href="page.html#Page.show_pdf_page" title="Page.show_pdf_page"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a> for more than one source document: each grafting occurs <strong>within one source</strong> PDF only, not across multiple.</p></li>
+</ol>
+</dd>
+</dl>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Appendix 4: Assorted Technical Information</a><ul>
+<li><a class="reference internal" href="#pdf-base-14-fonts">PDF Base 14 Fonts</a></li>
+<li><a class="reference internal" href="#adobe-pdf-references">Adobe PDF References</a></li>
+<li><a class="reference internal" href="#using-python-sequences-as-arguments-in-pymupdf">Using Python Sequences as Arguments in PyMuPDF</a></li>
+<li><a class="reference internal" href="#ensuring-consistency-of-important-objects-in-pymupdf">Ensuring Consistency of Important Objects in PyMuPDF</a></li>
+<li><a class="reference internal" href="#design-of-method-page-show-pdf-page">Design of Method <code class="xref py py-meth docutils literal notranslate"><span class="pre">Page.show_pdf_page()</span></code></a><ul>
+<li><a class="reference internal" href="#purpose-and-capabilities">Purpose and Capabilities</a></li>
+<li><a class="reference internal" href="#technical-implementation">Technical Implementation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#redirecting-error-and-warning-messages">Redirecting Error and Warning Messages</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="app3.html"
+                        title="previous chapter">Appendix 3: Considerations on Embedded Files</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="changes.html"
+                        title="next chapter">Change Logs</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="changes.html" title="Change Logs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="app3.html" title="Appendix 3: Considerations on Embedded Files"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appendix 4: Assorted Technical Information</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

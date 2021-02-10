@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Link &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="linkDest" href="linkdest.html" />
+    <link rel="prev" title="IRect" href="irect.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="linkdest.html" title="linkDest"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="irect.html" title="IRect"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" accesskey="U">Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Link</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="link">
+<span id="id1"></span><h1>Link<a class="headerlink" href="#link" title="Permalink to this headline">¶</a></h1>
+<p>Represents a pointer to somewhere (this document, other documents, the internet). Links exist per document page, and they are forward-chained to each other, starting from an initial link which is accessible by the <a class="reference internal" href="page.html#Page.first_link" title="Page.first_link"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Page.first_link</span></code></a> property.</p>
+<p>There is a parent-child relationship between a link and its page. If the page object becomes unusable (closed document, any document structure change, etc.), then so does every of its existing link objects – an exception is raised saying that the object is “orphaned”, whenever a link property or method is accessed.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Attribute</strong></p></th>
+<th class="head"><p><strong>Short Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#Link.setBorder" title="Link.setBorder"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Link.setBorder()</span></code></a></p></td>
+<td><p>modify border properties</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Link.setColors" title="Link.setColors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Link.setColors()</span></code></a></p></td>
+<td><p>modify color properties</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Link.border" title="Link.border"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.border</span></code></a></p></td>
+<td><p>border characteristics</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Link.colors" title="Link.colors"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.colors</span></code></a></p></td>
+<td><p>border line color</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Link.dest" title="Link.dest"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.dest</span></code></a></p></td>
+<td><p>points to link destination details</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Link.isExternal" title="Link.isExternal"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.isExternal</span></code></a></p></td>
+<td><p>external link destination?</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Link.next" title="Link.next"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.next</span></code></a></p></td>
+<td><p>points to next link</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Link.rect" title="Link.rect"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.rect</span></code></a></p></td>
+<td><p>clickable area in untransformed coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Link.uri" title="Link.uri"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.uri</span></code></a></p></td>
+<td><p>link destination</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Link.xref" title="Link.xref"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Link.xref</span></code></a></p></td>
+<td><p><a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a> number of the entry</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Class API</strong></p>
+<dl class="py class">
+<dt id="Link">
+<em class="property">class </em><code class="sig-name descname">Link</code><a class="headerlink" href="#Link" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="Link.setBorder">
+<code class="sig-name descname">setBorder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">border</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">style</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dashes</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Link.setBorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>PDF only: Change border width and dashing properties.</p>
+<p><em>(Changed in version 1.16.9)</em> Allow specification without using a dictionary. The direct parameters are used if <em>border</em> is not a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>border</strong> (<em>dict</em>) – a dictionary as returned by the <a class="reference internal" href="#Link.border" title="Link.border"><code class="xref py py-attr docutils literal notranslate"><span class="pre">border</span></code></a> property, with keys <em>“width”</em> (<em>float</em>), <em>“style”</em> (<em>str</em>) and <em>“dashes”</em> (<em>sequence</em>). Omitted keys will leave the resp. property unchanged. To e.g. remove dashing use: <em>“dashes”: []</em>. If dashes is not an empty sequence, “style” will automatically be set to “D” (dashed).</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – see above.</p></li>
+<li><p><strong>style</strong> (<em>str</em>) – see above.</p></li>
+<li><p><strong>dashes</strong> (<em>sequence</em>) – see above.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Link.setColors">
+<code class="sig-name descname">setColors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">stroke</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fill</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#Link.setColors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the “stroke” and “fill” colors.</p>
+<p><em>(Changed in version 1.16.9)</em> Allow colors to be directly set. These parameters are used if <em>colors</em> is not a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colors</strong> (<em>dict</em>) – a dictionary containing color specifications. For accepted dictionary keys and values see below. The most practical way should be to first make a copy of the <em>colors</em> property and then modify this dictionary as required.</p></li>
+<li><p><strong>stroke</strong> (<em>sequence</em>) – see above.</p></li>
+<li><p><strong>fill</strong> (<em>sequence</em>) – see above.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.colors">
+<code class="sig-name descname">colors</code><a class="headerlink" href="#Link.colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Meaningful for PDF only: A dictionary of two lists of floats in range <em>0 &lt;= float &lt;= 1</em> specifying the <em>stroke</em> and the interior (<em>fill</em>) colors. If not a PDF, <em>None</em> is returned. The stroke color is used for borders and everything that is actively painted or written (“stroked”). The lengths of these lists implicitely determine the colorspaces used: 1 = GRAY, 3 = RGB, 4 = CMYK. So <em>[1.0, 0.0, 0.0]</em> stands for RGB color red. Both lists can be <em>[]</em> if no color is specified. The value of each float <em>f</em> is mapped to the integer value <em>i</em> in range 0 to 255 via the computation <em>f = i / 255</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.border">
+<code class="sig-name descname">border</code><a class="headerlink" href="#Link.border" title="Permalink to this definition">¶</a></dt>
+<dd><p>Meaningful for PDF only: A dictionary containing border characteristics. It will be <em>None</em> for non-PDFs and an empty dictionary if no border information exists. The following keys can occur:</p>
+<ul class="simple">
+<li><p><em>width</em> – a float indicating the border thickness in points. The value is -1.0 if no width is specified.</p></li>
+<li><p><em>dashes</em> – a sequence of integers specifying a line dash pattern. <em>[]</em> means no dashes, <em>[n]</em> means equal on-off lengths of <em>n</em> points, longer lists will be interpreted as specifying alternating on-off length values. See the <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a> page 217 for more details.</p></li>
+<li><p><em>style</em> – 1-byte border style: <em>S</em> (Solid) = solid rectangle surrounding the annotation, <em>D</em> (Dashed) = dashed rectangle surrounding the link, the dash pattern is specified by the <em>dashes</em> entry, <em>B</em> (Beveled) = a simulated embossed rectangle that appears to be raised above the surface of the page, <em>I</em> (Inset) = a simulated engraved rectangle that appears to be recessed below the surface of the page, <em>U</em> (Underline) = a single line along the bottom of the annotation rectangle.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.rect">
+<code class="sig-name descname">rect</code><a class="headerlink" href="#Link.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>The area that can be clicked in untransformed coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rect.html#rect"><span class="std std-ref">Rect</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.isExternal">
+<code class="sig-name descname">isExternal</code><a class="headerlink" href="#Link.isExternal" title="Permalink to this definition">¶</a></dt>
+<dd><p>A bool specifying whether the link target is outside of the current document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.uri">
+<code class="sig-name descname">uri</code><a class="headerlink" href="#Link.uri" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string specifying the link target. The meaning of this property should be evaluated in conjunction with property <em>isExternal</em>. The value may be <em>None</em>, in which case <em>isExternal == False</em>. If <em>uri</em> starts with <em>file://</em>, <em>mailto:</em>, or an internet resource name, <em>isExternal</em> is <em>True</em>. In all other cases <em>isExternal == False</em> and <em>uri</em> points to an internal location. In case of PDF documents, this should either be <em>#nnnn</em> to indicate a 1-based (!) page number <em>nnnn</em>, or a named location. The format varies for other document types, e.g. <em>uri = ‘../FixedDoc.fdoc#PG_2_LNK_1’</em> for page number 2 (1-based) in an XPS document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.xref">
+<code class="sig-name descname">xref</code><a class="headerlink" href="#Link.xref" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer specifying the PDF <a class="reference internal" href="glossary.html#xref" title="xref"><code class="xref py py-data docutils literal notranslate"><span class="pre">xref</span></code></a>. Zero if not a PDF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.next">
+<code class="sig-name descname">next</code><a class="headerlink" href="#Link.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>The next link or <em>None</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Link</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="Link.dest">
+<code class="sig-name descname">dest</code><a class="headerlink" href="#Link.dest" title="Permalink to this definition">¶</a></dt>
+<dd><p>The link destination details object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="linkdest.html#linkdest"><span class="std std-ref">linkDest</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="irect.html"
+                        title="previous chapter">IRect</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="linkdest.html"
+                        title="next chapter">linkDest</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="linkdest.html" title="linkDest"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="irect.html" title="IRect"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="classes.html" >Classes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Link</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>

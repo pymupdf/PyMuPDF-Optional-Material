@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appendix 3: Considerations on Embedded Files &#8212; PyMuPDF 1.18.9 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pyramid.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/PyMuPDF.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Appendix 4: Assorted Technical Information" href="app4.html" />
+    <link rel="prev" title="Appendix 2: Details on Text Extraction" href="app2.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="app4.html" title="Appendix 4: Assorted Technical Information"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="app2.html" title="Appendix 2: Details on Text Extraction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appendix 3: Considerations on Embedded Files</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="appendix-3-considerations-on-embedded-files">
+<span id="appendix-3"></span><h1>Appendix 3: Considerations on Embedded Files<a class="headerlink" href="#appendix-3-considerations-on-embedded-files" title="Permalink to this headline">¶</a></h1>
+<p>This chapter provides some background on embedded files support in PyMuPDF.</p>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>Starting with version 1.4, PDF supports embedding arbitrary files as part (“Embedded File Streams”) of a PDF document file (see chapter 3.10.3, pp. 184 of the <a class="reference internal" href="app4.html#adobemanual"><span class="std std-ref">Adobe PDF References</span></a>).</p>
+<p>In many aspects, this is comparable to concepts also found in ZIP files or the OLE technique in MS Windows. PDF embedded files do, however, <em>not</em> support directory structures as does the ZIP format. An embedded file can in turn contain embedded files itself.</p>
+<p>Advantages of this concept are that embedded files are under the PDF umbrella, benefitting from its permissions / password protection and integrity aspects: all data, which a PDF may reference or even may be dependent on, can be bundled into it and so form a single, consistent unit of information.</p>
+<p>In addition to embedded files, PDF 1.7 adds <em>collections</em> to its support range. This is an advanced way of storing and presenting meta information (i.e. arbitrary and extensible properties) of embedded files.</p>
+</div>
+<div class="section" id="mupdf-support">
+<h2>MuPDF Support<a class="headerlink" href="#mupdf-support" title="Permalink to this headline">¶</a></h2>
+<p>After adding initial support for collections (portfolios) and <em>/EmbeddedFiles</em> in MuPDF version 1.11, this support was dropped again in version 1.15.</p>
+<p>As a consequence, the cli utility <em>mutool</em> no longer offers access to embedded files.</p>
+<p>PyMuPDF – having implemented an <em>/EmbeddedFiles</em> API in response in its version 1.11.0 – was therefore forced to change gears starting with its version 1.16.0 (we never published a MuPDF v1.15.x compatible PyMuPDF).</p>
+<p>We are now maintaining our own code basis supporting embedded files. This code makes use of basic MuPDF dictionary and array functions only.</p>
+</div>
+<div class="section" id="pymupdf-support">
+<h2>PyMuPDF Support<a class="headerlink" href="#pymupdf-support" title="Permalink to this headline">¶</a></h2>
+<p>We continue to support the full old API with respect to embedded files – with only minor, cosmetic changes.</p>
+<p>There even also is a new function, which delivers a list of all names under which embedded data are resgistered in a PDF, <a class="reference internal" href="document.html#Document.embfile_names" title="Document.embfile_names"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Document.embfile_names()</span></code></a>.</p>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Appendix 3: Considerations on Embedded Files</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
+<li><a class="reference internal" href="#mupdf-support">MuPDF Support</a></li>
+<li><a class="reference internal" href="#pymupdf-support">PyMuPDF Support</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="app2.html"
+                        title="previous chapter">Appendix 2: Details on Text Extraction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="app4.html"
+                        title="next chapter">Appendix 4: Assorted Technical Information</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="app4.html" title="Appendix 4: Assorted Technical Information"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="app2.html" title="Appendix 2: Details on Text Extraction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyMuPDF 1.18.9 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Appendix 3: Considerations on Embedded Files</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015-2021, Jorj X. McKie.
+      Last updated on 10. Feb 2021.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+    </div>
+  </body>
+</html>
