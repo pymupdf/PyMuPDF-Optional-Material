@@ -1,6 +1,6 @@
 # PyMuPDF Optional Material
 
-![logo](https://github.com/rk700/PyMuPDF/blob/master/demo/pymupdf.jpg)
+![logo](https://github.com/pymupdf/PyMuPDF/blob/master/demo/pymupdf.jpg)
 
 This repository contains additional material for [PyMuPDF](https://github.com/rk700/PyMuPDF), the Python bindings for MuPDF.
 
