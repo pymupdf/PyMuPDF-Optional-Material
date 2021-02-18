@@ -12,8 +12,9 @@ Please note, that we no longer provide binary files in zip format. If you prefer
 Contains pre-generated documentation files:
 
 * Windows help file ``PyMuPDF.chm``.
+* PyMuPDF help as zipped HTML `pymupdf.zip`.
 
-This material is subject to copyright of (c) 2016-2020 Jorj X. McKie.
+This material is subject to copyright of (c) 2016-2021 Jorj X. McKie.
 
 # License
 Material in folder ``binary_setups`` is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE Version 3, contained in file COPYING.
